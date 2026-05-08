@@ -10,6 +10,7 @@ import { renderShop } from './shop-ui';
 import { renderChapterClear, renderWin, renderLose, renderTrueEndingChoice, renderTrueWin } from './end-ui';
 import { renderEvent } from './event-ui';
 import { renderStats } from './stats-ui';
+import { renderHelp } from './help-ui';
 
 export function render(): void {
   const root = document.getElementById('app');
@@ -62,6 +63,9 @@ export function render(): void {
       break;
     case 'stats':
       view = renderStats();
+      break;
+    case 'help':
+      view = renderHelp();
       break;
   }
   root.appendChild(view);

@@ -98,16 +98,20 @@ export function renderTitle(): HTMLElement {
       ),
     );
 
-    wrapper.appendChild(
-      el(
-        'button',
-        {
-          style: { marginTop: '8px', background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
-          onClick: () => setScreen('stats'),
-        },
-        '📊 통계 보기',
-      ),
+    const utilRow = el('div', { style: { display: 'flex', gap: '8px', marginTop: '8px' } });
+    utilRow.appendChild(
+      el('button', {
+        style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
+        onClick: () => setScreen('help'),
+      }, '❓ 도움말'),
     );
+    utilRow.appendChild(
+      el('button', {
+        style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
+        onClick: () => setScreen('stats'),
+      }, '📊 통계'),
+    );
+    wrapper.appendChild(utilRow);
 
     // Audio settings row
     const audioRow = el('div', { class: 'audio-row' });
