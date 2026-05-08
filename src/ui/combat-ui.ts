@@ -266,11 +266,17 @@ function renderMid(state: CombatState): HTMLElement {
   return el('div', { class: 'combat-mid' }, playerStats, relicBar, potionBar, piles, endTurn);
 }
 
+// Preserve hand scroll position across rerenders
+let savedHandScroll = 0;
+
 function renderHand(state: CombatState): HTMLElement {
   const hand = el('div', { class: 'combat-bottom' });
+  hand.addEventListener('scroll', () => { savedHandScroll = hand.scrollLeft; });
   state.player.hand.forEach((c, i) => {
     hand.appendChild(renderCard(state, c, i));
   });
+  // Restore on next frame so the layout is settled
+  requestAnimationFrame(() => { hand.scrollLeft = savedHandScroll; });
   return hand;
 }
 
