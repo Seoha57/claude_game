@@ -23,6 +23,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  height: 100dvh;
   background: var(--bg);
   color: var(--text);
   overflow: hidden;
@@ -31,6 +32,8 @@ html, body {
 #app {
   width: 100vw;
   height: 100vh;
+  /* Use dynamic viewport on browsers that support it (avoids iOS toolbar clipping) */
+  height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -1246,10 +1249,11 @@ button:disabled {
     /* keep default flex:1 so enemy fills remaining space, content centers */
   }
   .combat-bottom {
-    height: 200px;            /* fits bigger cards */
+    height: auto;
+    min-height: 200px;
     flex-shrink: 0;
     gap: 10px;
-    padding: 14px 12px 6px;
+    padding: 14px 12px max(10px, env(safe-area-inset-bottom));
     justify-content: flex-start;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
