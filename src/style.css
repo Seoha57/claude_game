@@ -1214,36 +1214,78 @@ button:disabled {
   .card-name { font-size: 11px; padding-bottom: 2px; margin-bottom: 4px; }
   .card-desc { font-size: 10px; line-height: 1.3; }
   .card-type { font-size: 9px; }
-  .card-cost { width: 24px; height: 24px; font-size: 14px; top: -8px; left: -8px; }
-  .card-hotkey { width: 16px; height: 16px; font-size: 9px; top: -6px; right: -6px; }
+  /* Bring cost circle and hotkey badge fully INSIDE the card to avoid overlap with neighbors */
+  .card-cost {
+    width: 24px; height: 24px; font-size: 14px;
+    top: 4px; left: 4px;
+  }
+  .card-hotkey {
+    width: 16px; height: 16px; font-size: 9px;
+    top: 4px; right: 4px;
+  }
 
   /* Combat layout */
   .combat-top { padding: 6px; gap: 8px; }
   .combat-bottom {
     height: 170px;
-    gap: 4px;
-    padding: 6px 12px;
+    gap: 10px;            /* more gap so badges don't visually crowd */
+    padding: 12px 12px 6px;
     justify-content: flex-start;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+
+  /* Combat-mid: stack into 2 rows for clean grouping */
   .combat-mid {
-    padding: 6px 8px;
+    padding: 6px 10px;
+    gap: 6px 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .player-stats {
     gap: 8px;
     flex-wrap: wrap;
+    flex: 1 1 100%;       /* row 1: player stats fills */
+    order: 1;
   }
-  .player-stats { gap: 8px; flex-wrap: wrap; }
+  .relic-bar {
+    flex: 1 1 100%;
+    order: 2;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .potion-bar { order: 3; }
+  .pile-counts {
+    order: 4;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    flex: 1;
+  }
+  .end-turn-btn {
+    order: 5;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
   .energy-orb { width: 38px; height: 38px; font-size: 14px; }
-  .hp-bar { width: 110px !important; height: 14px; }
-  .relic-bar { gap: 2px; }
+  .hp-bar { width: 130px !important; height: 16px; }
   .relic-chip { font-size: 10px; padding: 1px 5px; }
-  .pile-counts { gap: 6px; flex-wrap: wrap; font-size: 11px; }
-  .pile-link { padding: 1px 6px; }
+  .pile-link { padding: 2px 7px; min-height: 28px; display: inline-flex; align-items: center; }
 
   /* Enemies row may overflow horizontally */
   .enemies > div { gap: 12px !important; flex-wrap: wrap; justify-content: center; }
   .enemy-art { font-size: 56px !important; }
-  .combat-log { font-size: 10px; max-height: 80px; }
+  /* Combat log: smaller and out of the way */
+  .combat-log {
+    width: 150px;
+    max-height: 70px;
+    font-size: 9px;
+    right: 6px;
+    top: 6px;
+    padding: 4px 6px;
+    opacity: 0.85;
+  }
 
   /* Header */
   .map-header .info {
