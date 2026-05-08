@@ -43,6 +43,15 @@ export const ENEMY_ART: Record<string, string> = {
   sirocco_phantom: '🐲',
   death_apostle: '☠️',
   isaris_overlord: '👹',
+  goblin_berserker: '👺',
+  wandering_swordsman: '🥷',
+  frenzy_gremlin: '😈',
+  arcane_scholar: '📜',
+  black_butcher: '🔪',
+  heavy_armored: '🛡️',
+  dark_knight: '⚔️',
+  corrupted_beast: '🦂',
+  dragonling: '🐉',
 };
 
 let lastPhasePlayed: string | null = null;

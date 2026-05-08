@@ -594,6 +594,202 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
       }
     },
   },
+
+  // ─────────────────────────────────────────────────────────
+  // New enemies (chapter 1)
+  // ─────────────────────────────────────────────────────────
+  goblin_berserker: {
+    id: 'goblin_berserker',
+    name: '고블린 광전사',
+    hpRange: [38, 44],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 4;
+      if (i === 0) return attack(8, 1);
+      if (i === 1) return attack(6, 2);
+      if (i === 2) return { kind: 'buff', label: '광기: 힘 +1' };
+      return attack(10, 1);
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') applyStatus(self, 'strength', 1);
+      else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) dealDamage(state, self, state.player, it.damage, true);
+      }
+    },
+  },
+  wandering_swordsman: {
+    id: 'wandering_swordsman',
+    name: '유랑 검사',
+    hpRange: [32, 38],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 4;
+      if (i === 0) return attack(7, 1);
+      if (i === 1) return { kind: 'block', block: 8, label: '방어 8' };
+      if (i === 2) return attack(5, 1);
+      return { kind: 'attack', damage: 5, hits: 1, label: '5 + 취약' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'block' && it.block) gainBlock(self, it.block);
+      else if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if ((self.turn % 4) === 3) applyStatus(state.player, 'vulnerable', 1);
+      }
+    },
+  },
+  frenzy_gremlin: {
+    id: 'frenzy_gremlin',
+    name: '광폭 그렘린',
+    hpRange: [62, 70],
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '분노: 힘 +2' };
+      const i = (turn - 1) % 4;
+      if (i === 0) return attack(4, 3);
+      if (i === 1) return attack(11, 1);
+      if (i === 2) return { kind: 'buff', label: '힘 +1' };
+      return attack(7, 2);
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') applyStatus(self, 'strength', self.turn === 0 ? 2 : 1);
+      else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) dealDamage(state, self, state.player, it.damage, true);
+      }
+    },
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // New enemies (chapter 2)
+  // ─────────────────────────────────────────────────────────
+  arcane_scholar: {
+    id: 'arcane_scholar',
+    name: '마도 학자',
+    hpRange: [42, 48],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 4;
+      if (i === 0) return attack(8, 1);
+      if (i === 1) return { kind: 'debuff', label: '취약 +2' };
+      if (i === 2) return attack(12, 1);
+      return { kind: 'debuff', label: '약화 +2' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = self.turn % 4;
+      if (it.kind === 'debuff') {
+        if (i === 1) applyStatus(state.player, 'vulnerable', 2);
+        else applyStatus(state.player, 'weak', 2);
+      } else if (it.damage) dealDamage(state, self, state.player, it.damage, true);
+    },
+  },
+  black_butcher: {
+    id: 'black_butcher',
+    name: '흑의 도살자',
+    hpRange: [52, 60],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 3;
+      if (i === 0) return attack(11, 1);
+      if (i === 1) return attack(11, 1);
+      return { kind: 'attack', damage: 7, hits: 1, label: '7 + 약화' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if ((self.turn % 3) === 2) applyStatus(state.player, 'weak', 1);
+      }
+    },
+  },
+  heavy_armored: {
+    id: 'heavy_armored',
+    name: '중장 기갑병',
+    hpRange: [70, 78],
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '가시 +3' };
+      const i = (turn - 1) % 4;
+      if (i === 0) return attack(13, 1);
+      if (i === 1) return { kind: 'block', block: 10, label: '방어 10' };
+      if (i === 2) return { kind: 'buff', label: '가시 +2' };
+      return attack(8, 2);
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') applyStatus(self, 'thorns', self.turn === 0 ? 3 : 2);
+      else if (it.kind === 'block' && it.block) gainBlock(self, it.block);
+      else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) dealDamage(state, self, state.player, it.damage, true);
+      }
+    },
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // New enemies (chapter 3)
+  // ─────────────────────────────────────────────────────────
+  dark_knight: {
+    id: 'dark_knight',
+    name: '암흑 기사',
+    hpRange: [58, 66],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 4;
+      if (i === 0) return attack(13, 1);
+      if (i === 1) return { kind: 'attack_block', damage: 8, block: 8, label: '8 / 방어 8' };
+      if (i === 2) return attack(7, 2);
+      return { kind: 'attack', damage: 10, hits: 1, label: '10 + 취약' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'attack_block' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.block) gainBlock(self, it.block);
+      } else if (it.damage) {
+        const hits = it.hits ?? 1;
+        for (let h = 0; h < hits; h++) dealDamage(state, self, state.player, it.damage, true);
+        if ((self.turn % 4) === 3) applyStatus(state.player, 'vulnerable', 1);
+      }
+    },
+  },
+  corrupted_beast: {
+    id: 'corrupted_beast',
+    name: '부패한 마수',
+    hpRange: [50, 58],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 4;
+      if (i === 0) return { kind: 'attack', damage: 6, hits: 1, label: '6 + 중독 +5' };
+      if (i === 1) return attack(10, 1);
+      if (i === 2) return { kind: 'attack', damage: 8, hits: 1, label: '8 + 약화' };
+      return attack(13, 1);
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        const i = self.turn % 4;
+        if (i === 0) applyStatus(state.player, 'poison', 5);
+        else if (i === 2) applyStatus(state.player, 'weak', 1);
+      }
+    },
+  },
+  dragonling: {
+    id: 'dragonling',
+    name: '마룡 새끼',
+    hpRange: [92, 102],
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '용의 분노: 힘 +1' };
+      const i = (turn - 1) % 4;
+      if (i === 0) return attack(15, 1);
+      if (i === 1) return attack(8, 2);
+      if (i === 2) return { kind: 'buff', label: '힘 +2' };
+      return { kind: 'attack', damage: 10, hits: 1, label: '10 + 취약 +1' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') applyStatus(self, 'strength', self.turn === 0 ? 1 : 2);
+      else if (it.damage) {
+        const hits = it.hits ?? 1;
+        for (let h = 0; h < hits; h++) dealDamage(state, self, state.player, it.damage, true);
+        if (((self.turn - 1) % 4) === 3) applyStatus(state.player, 'vulnerable', 1);
+      }
+    },
+  },
 };
 
 // ── Encounter tables ──
@@ -601,6 +797,8 @@ export const EASY_ENCOUNTERS: string[][] = [
   ['jaw_worm'],
   ['cultist'],
   ['fungi_beast', 'fungi_beast'],
+  ['wandering_swordsman'],
+  ['goblin_berserker'],
 ];
 
 export const NORMAL_ENCOUNTERS: string[][] = [
@@ -608,11 +806,15 @@ export const NORMAL_ENCOUNTERS: string[][] = [
   ['cultist', 'fungi_beast'],
   ['sentinel'],
   ['jaw_worm', 'jaw_worm'],
+  ['goblin_berserker', 'fungi_beast'],
+  ['wandering_swordsman', 'cultist'],
+  ['goblin_berserker', 'wandering_swordsman'],
 ];
 
 export const ELITE_ENCOUNTERS: string[][] = [
   ['gremlin_nob'],
   ['sentinel', 'sentinel'],
+  ['frenzy_gremlin'],
 ];
 
 export const BOSS_ENCOUNTERS: string[][] = [['hexaghost'], ['mad_butcher'], ['obsidian_golem']];
@@ -624,12 +826,18 @@ export const CH2_NORMAL_ENCOUNTERS: string[][] = [
   ['blue_slaver', 'shield_gremlin'],
   ['red_slaver', 'fungi_beast'],
   ['shield_gremlin', 'shield_gremlin'],
+  ['arcane_scholar'],
+  ['black_butcher'],
+  ['arcane_scholar', 'shield_gremlin'],
+  ['black_butcher', 'arcane_scholar'],
 ];
 
 export const CH2_ELITE_ENCOUNTERS: string[][] = [
   ['taskmaster'],
   ['book_of_stabbing'],
   ['taskmaster', 'shield_gremlin'],
+  ['heavy_armored'],
+  ['heavy_armored', 'arcane_scholar'],
 ];
 
 export const CH2_BOSS_ENCOUNTERS: string[][] = [['the_collector'], ['karnak_runemaster'], ['sirocco_phantom']];
@@ -641,11 +849,18 @@ export const CH3_NORMAL_ENCOUNTERS: string[][] = [
   ['centurion'],
   ['looter', 'dark_slime'],
   ['centurion', 'shield_gremlin'],
+  ['dark_knight'],
+  ['corrupted_beast'],
+  ['dark_knight', 'corrupted_beast'],
+  ['dark_knight', 'dark_slime'],
+  ['corrupted_beast', 'looter'],
 ];
 
 export const CH3_ELITE_ENCOUNTERS: string[][] = [
   ['writhing_mass'],
   ['book_of_stabbing', 'taskmaster'],
+  ['dragonling'],
+  ['dragonling', 'corrupted_beast'],
 ];
 
 export const CH3_BOSS_ENCOUNTERS: string[][] = [['void_heart'], ['death_apostle'], ['isaris_overlord']];
