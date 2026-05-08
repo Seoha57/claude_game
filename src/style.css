@@ -1239,16 +1239,15 @@ button:disabled {
     top: 4px; right: 4px;
   }
 
-  /* Combat layout — give cards more room, cap enemy area */
+  /* Combat layout — let enemy area fill naturally; hand has fixed room */
   .combat-top {
-    padding: 6px;
+    padding: 8px;
     gap: 8px;
-    flex: 0 1 auto;
-    max-height: 36vh;        /* don't let enemy area dominate */
-    min-height: 180px;
+    /* keep default flex:1 so enemy fills remaining space, content centers */
   }
   .combat-bottom {
-    height: 200px;            /* was 170 — fit bigger cards */
+    height: 200px;            /* fits bigger cards */
+    flex-shrink: 0;
     gap: 10px;
     padding: 14px 12px 6px;
     justify-content: flex-start;
