@@ -5,6 +5,7 @@ import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
 import { makeRng, shuffle } from '../rng';
 import { getModifiers } from '../ascension';
 import { playSfx } from '../audio';
+import { recordCard, recordRelic } from '../codex';
 
 const BASE_CARD_PRICE: Record<string, number> = { common: 50, uncommon: 75, rare: 125 };
 const BASE_RELIC_PRICE = 150;
@@ -44,6 +45,7 @@ function buildShop(): ShopItem[] {
     if (card) {
       picked.add(card.id);
       items.push({ kind: 'card', id: card.id, price: scaledPrice(BASE_CARD_PRICE[card.rarity] ?? 50, mult), sold: false });
+      recordCard(card.id);
     }
   }
 
@@ -52,6 +54,7 @@ function buildShop(): ShopItem[] {
   const relic = relicCandidates.find((r) => !run.player.relics.includes(r.id));
   if (relic) {
     items.push({ kind: 'relic', id: relic.id, price: scaledPrice(BASE_RELIC_PRICE, mult), sold: false });
+    recordRelic(relic.id);
   }
 
   // card removal service

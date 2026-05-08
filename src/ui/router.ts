@@ -11,6 +11,7 @@ import { renderChapterClear, renderWin, renderLose, renderTrueEndingChoice, rend
 import { renderEvent } from './event-ui';
 import { renderStats } from './stats-ui';
 import { renderHelp } from './help-ui';
+import { renderCodex } from './codex-ui';
 
 export function render(): void {
   const root = document.getElementById('app');
@@ -66,6 +67,9 @@ export function render(): void {
       break;
     case 'help':
       view = renderHelp();
+      break;
+    case 'codex':
+      view = renderCodex();
       break;
   }
   root.appendChild(view);

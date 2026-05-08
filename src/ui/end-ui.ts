@@ -2,6 +2,7 @@ import { el } from './dom';
 import { endRun, getRun, getRunOrNull, setScreen, startNextChapter, makeCard } from '../state';
 import { showChapterIntro } from './splash-overlay';
 import { playSfx } from '../audio';
+import { recordRelics } from '../codex';
 import { unlockNextAscension, getUnlockedMax } from '../ascension';
 import { BOSS_RELICS } from '../content/relics';
 import { makeRng, shuffle } from '../rng';
@@ -24,6 +25,7 @@ export function renderChapterClear(): HTMLElement {
   const rng = makeRng(run.seed * 31 + cleared * 77);
   const candidates = shuffle(rng, BOSS_RELICS.slice()).filter((r) => !run.player.relics.includes(r.id));
   const choices = candidates.slice(0, 3);
+  recordRelics(choices.map((r) => r.id));
 
   // Track which chapters we've already claimed a boss relic for (explicit & robust)
   const pickedChapters: number[] = (run as any)._bossRelicPickedChapters ?? [];

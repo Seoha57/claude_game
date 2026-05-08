@@ -5,6 +5,7 @@ import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
 import { nodeById } from '../map/map';
 import { makeRng, pick, shuffle } from '../rng';
 import { playSfx } from '../audio';
+import { recordCards, recordRelic } from '../codex';
 
 interface RewardChoiceUI {
   cardChoices: string[];
@@ -58,6 +59,9 @@ function ensureReward(): RewardChoiceUI {
   const relicId = isElite ? pick(rng, PICKABLE_RELICS).id : null;
 
   cachedReward = { cardChoices: choices, gold, relicId, picked: false };
+  // Codex: shown card choices + relic option
+  recordCards(choices);
+  if (relicId) recordRelic(relicId);
   return cachedReward;
 }
 

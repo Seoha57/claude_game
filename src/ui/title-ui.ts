@@ -98,12 +98,18 @@ export function renderTitle(): HTMLElement {
       ),
     );
 
-    const utilRow = el('div', { style: { display: 'flex', gap: '8px', marginTop: '8px' } });
+    const utilRow = el('div', { style: { display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap', justifyContent: 'center' } });
     utilRow.appendChild(
       el('button', {
         style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
         onClick: () => setScreen('help'),
       }, '❓ 도움말'),
+    );
+    utilRow.appendChild(
+      el('button', {
+        style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
+        onClick: () => setScreen('codex'),
+      }, '📖 도감'),
     );
     utilRow.appendChild(
       el('button', {

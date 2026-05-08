@@ -931,6 +931,123 @@ button:disabled {
   accent-color: var(--accent);
 }
 
+/* ── Codex screen ── */
+.codex-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 100%;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  gap: 12px;
+  padding: 28px 20px 60px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.codex-screen h1 { text-align: center; }
+.codex-tabs {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+.codex-tab {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 8px 18px;
+  font-size: 14px;
+}
+.codex-tab.active {
+  background: var(--accent);
+  color: #1a1416;
+  border-color: var(--accent);
+  font-weight: bold;
+}
+.codex-filter-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.codex-filter {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 4px 12px;
+  font-size: 12px;
+}
+.codex-filter.active {
+  background: var(--panel-2);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.codex-stats {
+  text-align: center;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: bold;
+  margin: 4px 0;
+}
+
+.codex-card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 8px;
+}
+.codex-card-slot.unseen {
+  filter: grayscale(1) brightness(0.5);
+  cursor: default;
+}
+.codex-card-slot.unseen .card-name {
+  color: #555;
+}
+
+.codex-relic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+.codex-relic-slot {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+.codex-relic-slot.unseen {
+  filter: grayscale(1) brightness(0.5);
+}
+.codex-relic-slot.unseen .codex-relic-name { color: #555; }
+.codex-relic-name {
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--fg);
+}
+.codex-relic-desc {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  flex: 1;
+}
+.codex-relic-rarity {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .codex-card-grid { gap: 6px; }
+  .codex-relic-grid { grid-template-columns: 1fr; }
+}
+
 /* ── Help screen ── */
 .help-screen {
   display: flex;

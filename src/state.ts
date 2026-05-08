@@ -4,6 +4,7 @@ import { generateMap, startNode } from './map/map';
 import { uid } from './rng';
 import { getModifiers } from './ascension';
 import { recordRunStart, recordWin, recordTrueWin, recordLoss } from './stats';
+import { recordCards, recordRelic } from './codex';
 
 let runState: RunState | null = null;
 let combatState: CombatState | null = null;
@@ -160,6 +161,9 @@ export function startNewRun(seed: number, ascension = 0, characterClass: Charact
   };
   combatState = null;
   recordRunStart(characterClass);
+  // Codex: starter deck + starting relic
+  recordCards(deck.map((c) => c.defId));
+  recordRelic(startingRelic);
   setScreen('map');
 }
 

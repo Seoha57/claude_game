@@ -6,6 +6,7 @@ import { POTION_LIST } from '../content/potions';
 import { makeRng, pick, shuffle } from '../rng';
 import { PICKABLE_RELICS } from '../content/relics';
 import { playSfx } from '../audio';
+import { recordCard, recordRelic } from '../codex';
 import {
   COMMON_CARDS,
   UNCOMMON_CARDS,
@@ -146,6 +147,7 @@ export function renderEvent(): HTMLElement {
           if (unowned.length > 0) {
             const chosen = pick(rng, unowned);
             run.player.relics.push(chosen.id);
+            recordRelic(chosen.id);
             playSfx('relic');
           }
           break;
@@ -172,6 +174,7 @@ export function renderEvent(): HTMLElement {
           if (pool.length > 0) {
             const chosen = pick(rng, pool);
             run.player.deck.push(makeCard(chosen.id));
+            recordCard(chosen.id);
           }
           break;
         }
