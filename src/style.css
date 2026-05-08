@@ -79,6 +79,22 @@ button:disabled {
   padding: 12px 32px;
 }
 
+/* Character select — scrollable, fits on mobile */
+.character-select-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 28px 16px 60px;
+  gap: 14px;
+}
+.character-select-screen button {
+  font-size: 18px;
+  padding: 12px 32px;
+}
+
 /* ── Map ── */
 .map-screen {
   display: flex;
@@ -1240,6 +1256,12 @@ button:disabled {
   /* Title screen */
   .title-screen h1 { font-size: 32px; }
   .title-screen .subtitle { font-size: 13px; }
+
+  /* Character select cards — full width on mobile */
+  .character-select-screen [data-char-card] {
+    width: 100% !important;
+    max-width: 360px;
+  }
 
   /* Reward / shop / rest grids */
   .reward-cards { gap: 6px; flex-wrap: wrap; justify-content: center; }

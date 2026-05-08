@@ -50,7 +50,7 @@ const CHARACTERS: CharacterInfo[] = [
 export function renderCharacterSelect(seed: number, ascension: number): HTMLElement {
   let selected: CharacterClass = 'swordmaster';
 
-  const wrapper = el('div', { class: 'title-screen' });
+  const wrapper = el('div', { class: 'character-select-screen' });
 
   const rebuild = () => {
     wrapper.innerHTML = '';
@@ -68,17 +68,27 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
       const card = el(
         'div',
         {
+          'data-char-card': '1',
           style: {
             border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
             borderRadius: '12px',
             padding: '20px',
             width: '220px',
             cursor: 'pointer',
-            background: isSelected ? 'rgba(212,180,100,0.08)' : 'var(--card-bg)',
-            transition: 'border-color 0.15s',
+            background: isSelected ? 'rgba(212,180,100,0.10)' : 'var(--card-bg)',
+            boxShadow: isSelected ? '0 0 18px rgba(212,160,91,0.45)' : 'none',
+            transition: 'border-color 0.15s, box-shadow 0.15s, background 0.15s',
+            position: 'relative',
+            WebkitTapHighlightColor: 'rgba(212,160,91,0.3)',
           },
           onClick: () => { selected = ch.id; rebuild(); },
         },
+        isSelected ? el('div', {
+          style: {
+            position: 'absolute', top: '8px', right: '10px',
+            color: 'var(--accent)', fontSize: '13px', fontWeight: 'bold',
+          },
+        }, '✓ 선택됨') : el('div'),
         el('div', { style: { fontSize: '36px', marginBottom: '8px' } }, ch.emoji),
         el('div', { style: { fontWeight: 'bold', fontSize: '18px', marginBottom: '2px' } }, ch.name),
         el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '12px' } }, ch.subname),
