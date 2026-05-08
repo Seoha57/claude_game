@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a2a30"/>
+      <stop offset="1" stop-color="#1a1416"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="2" width="26" height="28" rx="3" fill="url(#bg)" stroke="#d4a05b" stroke-width="2"/>
+  <text x="16" y="22"
+        text-anchor="middle"
+        font-family="Trebuchet MS, Segoe UI, sans-serif"
+        font-size="13"
+        font-weight="bold"
+        fill="#d4a05b"
+        stroke="#b06030"
+        stroke-width="0.4">DnC</text>
+</svg>
