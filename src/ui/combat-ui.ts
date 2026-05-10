@@ -553,6 +553,28 @@ function spawnAttackFx(target: HTMLElement, cc: string): void {
     ring.className = 'hit-ring';
     wrap.appendChild(ring);
     setTimeout(() => wrap.remove(), 600);
+  } else if (cc === 'magician') {
+    wrap.classList.add('magic-fx');
+    // Central sparkle burst
+    const burst = document.createElement('div');
+    burst.className = 'magic-burst';
+    burst.textContent = '✨';
+    wrap.appendChild(burst);
+    // Expanding arcane ring
+    const ring = document.createElement('div');
+    ring.className = 'magic-ring';
+    wrap.appendChild(ring);
+    // Orbital sparkle particles
+    for (let i = 0; i < 5; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'magic-dot';
+      const angle = (i / 5) * Math.PI * 2 + Math.random() * 0.4;
+      dot.style.left = `${50 + Math.cos(angle) * 18}%`;
+      dot.style.top = `${50 + Math.sin(angle) * 18}%`;
+      dot.style.animationDelay = `${i * 0.04}s`;
+      wrap.appendChild(dot);
+    }
+    setTimeout(() => wrap.remove(), 750);
   } else {
     wrap.classList.add('slash-fx');
     const b1 = document.createElement('div');
