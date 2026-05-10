@@ -14,7 +14,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_reload: {
     id: 'g_reload',
-    name: '전술 재장전',
+    name: '고각도 슬라이딩',
     type: 'skill',
     rarity: 'starter',
     cost: 1,
@@ -26,7 +26,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   // ── Common attacks ──
   g_headshot: {
     id: 'g_headshot',
-    name: '헤드샷',
+    name: '더스트 샷',
     type: 'attack',
     rarity: 'common',
     cost: 2,
@@ -39,7 +39,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_double_gunhawk: {
     id: 'g_double_gunhawk',
-    name: '더블 건호크',
+    name: '잭스파이크',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -49,7 +49,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_western_fire: {
     id: 'g_western_fire',
-    name: '웨스턴 파이어',
+    name: '마하킥',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -59,7 +59,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_frag: {
     id: 'g_frag',
-    name: '파열류탄',
+    name: '윈드밀',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -72,7 +72,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_cannonball: {
     id: 'g_cannonball',
-    name: '캐넌볼',
+    name: 'M-137 개틀링건',
     type: 'attack',
     rarity: 'common',
     cost: 2,
@@ -82,7 +82,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_burst_fire: {
     id: 'g_burst_fire',
-    name: '집중 사격',
+    name: '퍼니셔',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -95,7 +95,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_barrage: {
     id: 'g_barrage',
-    name: '난사',
+    name: '공중사격',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -107,7 +107,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   // ── Common skills ──
   g_smoke: {
     id: 'g_smoke',
-    name: '스모크 그레네이드',
+    name: '라이징 윈드밀',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -117,7 +117,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_booster: {
     id: 'g_booster',
-    name: '부스터',
+    name: '패스티스트 건',
     type: 'skill',
     rarity: 'common',
     cost: 0,
@@ -127,7 +127,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_reposit: {
     id: 'g_reposit',
-    name: '전술 재배치',
+    name: '회심의 랜드러너',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -140,7 +140,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_ammo: {
     id: 'g_ammo',
-    name: '강화 탄약',
+    name: '조준 사격',
     type: 'skill',
     rarity: 'common',
     cost: 0,
@@ -154,7 +154,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_armor: {
     id: 'g_armor',
-    name: '철갑탄',
+    name: '냉동탄',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -182,7 +182,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_viper: {
     id: 'g_viper',
-    name: '바이퍼',
+    name: '바베~큐',
     type: 'attack',
     rarity: 'uncommon',
     cost: 1,
@@ -195,7 +195,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_optical: {
     id: 'g_optical',
-    name: '옵티컬 캐모플라쥬',
+    name: '슈타이어 중저격총',
     type: 'skill',
     rarity: 'uncommon',
     cost: 0,
@@ -208,7 +208,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_napalm: {
     id: 'g_napalm',
-    name: '네이팜탄',
+    name: 'M-3 화염방사기',
     type: 'attack',
     rarity: 'uncommon',
     cost: 2,
@@ -232,7 +232,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_reinforce: {
     id: 'g_reinforce',
-    name: '무장 강화',
+    name: '슈타이어 대전차포',
     type: 'power',
     rarity: 'uncommon',
     cost: 1,
@@ -242,7 +242,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_sparrow: {
     id: 'g_sparrow',
-    name: '스패로우 팩토리',
+    name: 'RX-78 랜드러너',
     type: 'power',
     rarity: 'uncommon',
     cost: 1,
@@ -254,7 +254,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   // ── Rare (1차 각성기) ──
   g_overheat: {
     id: 'g_overheat',
-    name: '스커드 제노사이드',
+    name: '부스트 : 서프레스',
     type: 'attack',
     rarity: 'rare',
     cost: 3,
@@ -267,7 +267,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_mech_drop: {
     id: 'g_mech_drop',
-    name: '게이볼그 펀치',
+    name: 'Ez-8 카운트다운',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -277,7 +277,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_arms_dealer: {
     id: 'g_arms_dealer',
-    name: '부스트 : 데스필드',
+    name: '뽑아치기',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -291,7 +291,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_airstrike: {
     id: 'g_airstrike',
-    name: '특수기동전대 블랙로즈',
+    name: '은탄',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -304,30 +304,30 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
 
 const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_rising_shot:    { name: '라이징 샷+',       description: '9 데미지.',                        effects: [{ kind: 'damage', amount: 9 }] },
-  g_reload:         { name: '전술 재장전+',      description: '방어도 +8.',                       effects: [{ kind: 'block', amount: 8 }] },
-  g_headshot:       { name: '헤드샷+',           description: '10 데미지. 취약 +3.',              effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
-  g_double_gunhawk: { name: '더블 건호크+',      description: '7 데미지를 두 번.',                effects: [{ kind: 'damage', amount: 7, times: 2 }] },
-  g_western_fire:   { name: '웨스턴 파이어+',    description: '모든 적에게 11 데미지.',           effects: [{ kind: 'damage_all', amount: 11 }] },
-  g_frag:           { name: '파열류탄+',         description: '모든 적에게 7 데미지. 취약 +1.',   effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
-  g_cannonball:     { name: '캐넌볼+',           description: '18 데미지.',                       effects: [{ kind: 'damage', amount: 18 }] },
-  g_burst_fire:     { name: '집중 사격+',        description: '10 데미지. 2장 드로우.',           effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 2 }] },
-  g_barrage:        { name: '난사+',             description: '5 데미지를 세 번.',                effects: [{ kind: 'damage', amount: 5, times: 3 }] },
-  g_smoke:          { name: '스모크 그레네이드+', description: '모든 적에게 약화 +3.',            effects: [{ kind: 'apply_all', status: 'weak', amount: 3 }] },
-  g_booster:        { name: '부스터+',           description: '힘 +4.',                           effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
-  g_reposit:        { name: '전술 재배치+',      description: '방어도 +11. 1장 드로우.',          effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
-  g_ammo:           { name: '강화 탄약+',        description: '2장 드로우. 무작위 카드 1장 소멸.',effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
-  g_armor:          { name: '철갑탄+',           description: '방어도 +9. 무작위 카드 1장 소멸.', effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
+  g_reload:         { name: '고각도 슬라이딩+',      description: '방어도 +8.',                       effects: [{ kind: 'block', amount: 8 }] },
+  g_headshot:       { name: '더스트 샷+',           description: '10 데미지. 취약 +3.',              effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
+  g_double_gunhawk: { name: '잭스파이크+',      description: '7 데미지를 두 번.',                effects: [{ kind: 'damage', amount: 7, times: 2 }] },
+  g_western_fire:   { name: '마하킥+',    description: '모든 적에게 11 데미지.',           effects: [{ kind: 'damage_all', amount: 11 }] },
+  g_frag:           { name: '윈드밀+',         description: '모든 적에게 7 데미지. 취약 +1.',   effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
+  g_cannonball:     { name: 'M-137 개틀링건+',           description: '18 데미지.',                       effects: [{ kind: 'damage', amount: 18 }] },
+  g_burst_fire:     { name: '퍼니셔+',        description: '10 데미지. 2장 드로우.',           effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 2 }] },
+  g_barrage:        { name: '공중사격+',             description: '5 데미지를 세 번.',                effects: [{ kind: 'damage', amount: 5, times: 3 }] },
+  g_smoke:          { name: '라이징 윈드밀+', description: '모든 적에게 약화 +3.',            effects: [{ kind: 'apply_all', status: 'weak', amount: 3 }] },
+  g_booster:        { name: '패스티스트 건+',           description: '힘 +4.',                           effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
+  g_reposit:        { name: '회심의 랜드러너+',      description: '방어도 +11. 1장 드로우.',          effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
+  g_ammo:           { name: '조준 사격+',        description: '2장 드로우. 무작위 카드 1장 소멸.',effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
+  g_armor:          { name: '냉동탄+',           description: '방어도 +9. 무작위 카드 1장 소멸.', effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
   g_satellite:      { name: '새틀라이트 빔+',           description: '모든 적에게 24 데미지. 약화 +3.',      effects: [{ kind: 'damage_all', amount: 24 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
-  g_viper:          { name: '바이퍼+',                  description: '7 데미지. 중독 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
-  g_optical:        { name: '옵티컬 캐모플라쥬+',       description: 'HP -2. 에너지 +3.',                    effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
-  g_napalm:         { name: '네이팜탄+',                description: '모든 적에게 14 데미지.',               effects: [{ kind: 'damage_all', amount: 14 }] },
+  g_viper:          { name: '바베~큐+',                  description: '7 데미지. 중독 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
+  g_optical:        { name: '슈타이어 중저격총+',       description: 'HP -2. 에너지 +3.',                    effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
+  g_napalm:         { name: 'M-3 화염방사기+',                description: '모든 적에게 14 데미지.',               effects: [{ kind: 'damage_all', amount: 14 }] },
   g_g14:            { name: 'G-14 파열류탄+',           description: '11 데미지. 취약 +3.',                  effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
-  g_reinforce:      { name: '무장 강화+',               description: '힘 +3.',                               effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
-  g_sparrow:        { name: '스패로우 팩토리+',         description: '턴 종료 시 방어도 +4.',                effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
-  g_overheat:       { name: '스커드 제노사이드+',       description: '42 데미지. 취약 +3.',                  effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
-  g_mech_drop:      { name: '게이볼그 펀치+',           description: '34 데미지.',                           effects: [{ kind: 'damage', amount: 34 }] },
-  g_arms_dealer:    { name: '부스트 : 데스필드+',       description: 'HP -3. 30 데미지.',                    effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 30 }] },
-  g_airstrike:      { name: '특수기동전대 블랙로즈+',   description: '모든 적에게 24 데미지.',               effects: [{ kind: 'damage_all', amount: 24 }] },
+  g_reinforce:      { name: '슈타이어 대전차포+',               description: '힘 +3.',                               effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
+  g_sparrow:        { name: 'RX-78 랜드러너+',         description: '턴 종료 시 방어도 +4.',                effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
+  g_overheat:       { name: '부스트 : 서프레스+',       description: '42 데미지. 취약 +3.',                  effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
+  g_mech_drop:      { name: 'Ez-8 카운트다운+',           description: '34 데미지.',                           effects: [{ kind: 'damage', amount: 34 }] },
+  g_arms_dealer:    { name: '뽑아치기+',       description: 'HP -3. 30 데미지.',                    effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 30 }] },
+  g_airstrike:      { name: '은탄+',   description: '모든 적에게 24 데미지.',               effects: [{ kind: 'damage_all', amount: 24 }] },
 };
 
 export function gunnerGetEffectiveDef(card: CardInstance): CardDef {

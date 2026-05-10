@@ -19,11 +19,11 @@ export function renderHelp(): HTMLElement {
   ]));
 
   wrapper.appendChild(section('🎯 카드 타게팅 — 중요!', [
-    '적을 직접 지정하는 카드(예: 귀참, 헤드샷)는:',
+    '적을 직접 지정하는 카드(예: 귀참, 더스트 샷)는:',
     { text: '  ① 카드를 한 번 탭/클릭 → 카드가 위로 떠오름 (선택됨)', highlight: true },
     { text: '  ② 그 다음 공격할 적을 탭/클릭 → 발동', highlight: true },
     '적 1마리만 남아있으면 ②번 자동으로 처리됨.',
-    '전체 공격(공중연속베기) / 자기 강화(발도, 격노) 같은 건 한 번 탭으로 즉시 발동.',
+    '전체 공격(공중 연속 베기) / 자기 강화(가드, 소검 마스터리) 같은 건 한 번 탭으로 즉시 발동.',
   ]));
 
   wrapper.appendChild(section('⚡ 에너지 & 턴', [
