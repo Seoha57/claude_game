@@ -1,6 +1,6 @@
 import { el } from './dom';
 import { getRun, makeCard, setScreen } from '../state';
-import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS } from '../content/cards';
+import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS } from '../content/cards';
 import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
 import { nodeById } from '../map/map';
 import { makeRng, pick, shuffle } from '../rng';
@@ -26,9 +26,18 @@ function ensureReward(): RewardChoiceUI {
   const rng = makeRng(run.seed * 7 + (run.floor + 1) * 91);
 
   const cc = run.characterClass;
-  const commonPool   = cc === 'gunner' ? GUNNER_COMMON_CARDS   : cc === 'fighter' ? FIGHTER_COMMON_CARDS   : COMMON_CARDS;
-  const uncommonPool = cc === 'gunner' ? GUNNER_UNCOMMON_CARDS : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS : UNCOMMON_CARDS;
-  const rarePool     = cc === 'gunner' ? GUNNER_RARE_CARDS     : cc === 'fighter' ? FIGHTER_RARE_CARDS     : RARE_CARDS;
+  const commonPool   = cc === 'gunner'  ? GUNNER_COMMON_CARDS
+                     : cc === 'fighter' ? FIGHTER_COMMON_CARDS
+                     : cc === 'magician'? MAGICIAN_COMMON_CARDS
+                     : COMMON_CARDS;
+  const uncommonPool = cc === 'gunner'  ? GUNNER_UNCOMMON_CARDS
+                     : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS
+                     : cc === 'magician'? MAGICIAN_UNCOMMON_CARDS
+                     : UNCOMMON_CARDS;
+  const rarePool     = cc === 'gunner'  ? GUNNER_RARE_CARDS
+                     : cc === 'fighter' ? FIGHTER_RARE_CARDS
+                     : cc === 'magician'? MAGICIAN_RARE_CARDS
+                     : RARE_CARDS;
 
   // pool: 60% common, 35% uncommon, 5% rare on regular; elite shifts toward rare
   const choices: string[] = [];

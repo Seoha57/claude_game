@@ -1,6 +1,6 @@
 import { el } from './dom';
 import { getRun, makeCard, setScreen } from '../state';
-import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS } from '../content/cards';
+import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS } from '../content/cards';
 import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
 import { makeRng, shuffle } from '../rng';
 import { getModifiers } from '../ascension';
@@ -35,9 +35,10 @@ function buildShop(): ShopItem[] {
 
   // 3 cards: 1 common, 1 uncommon, 1 rare (floor-weighted)
   const pools =
-    cc === 'gunner'  ? [GUNNER_COMMON_CARDS,  GUNNER_UNCOMMON_CARDS,  GUNNER_RARE_CARDS] :
-    cc === 'fighter' ? [FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS] :
-                       [COMMON_CARDS,         UNCOMMON_CARDS,         RARE_CARDS];
+    cc === 'gunner'   ? [GUNNER_COMMON_CARDS,   GUNNER_UNCOMMON_CARDS,   GUNNER_RARE_CARDS] :
+    cc === 'fighter'  ? [FIGHTER_COMMON_CARDS,  FIGHTER_UNCOMMON_CARDS,  FIGHTER_RARE_CARDS] :
+    cc === 'magician' ? [MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS] :
+                        [COMMON_CARDS,          UNCOMMON_CARDS,          RARE_CARDS];
   const picked = new Set<string>();
   for (const pool of pools) {
     const candidates = shuffle(rng, pool.slice());

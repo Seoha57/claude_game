@@ -42,8 +42,18 @@ const CHARACTERS: CharacterInfo[] = [
     hp: 80,
     startRelic: '투혼',
     description: '전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.',
-    starterCards: '질풍각×5 · 넨 가드×4 · 올려차기×1',
+    starterCards: '질풍각×5 · 철금강×4 · 무즈 어퍼×1',
     emoji: '🥊',
+  },
+  {
+    id: 'magician',
+    name: '마법사',
+    subname: '(엘레멘탈마스터·소환사·배틀메이지·마도학자·인챈트리스)',
+    hp: 65,
+    startRelic: '마탑의 결정',
+    description: '매 턴 시작 시 무작위 적에게 3 데미지. 다양한 원소 마법으로 광역 전투에 강하다.',
+    starterCards: '매직 미사일×5 · 오라 실드×4 · 위상변화×1',
+    emoji: '🔮',
   },
 ];
 

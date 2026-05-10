@@ -39,6 +39,7 @@ function emptyStats(): AggregateStats {
       swordmaster: { ...EMPTY_CHAR },
       gunner: { ...EMPTY_CHAR },
       fighter: { ...EMPTY_CHAR },
+      magician: { ...EMPTY_CHAR },
     },
   };
 }

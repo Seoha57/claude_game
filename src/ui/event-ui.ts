@@ -17,6 +17,9 @@ import {
   FIGHTER_COMMON_CARDS,
   FIGHTER_UNCOMMON_CARDS,
   FIGHTER_RARE_CARDS,
+  MAGICIAN_COMMON_CARDS,
+  MAGICIAN_UNCOMMON_CARDS,
+  MAGICIAN_RARE_CARDS,
   canUpgrade,
 } from '../content/cards';
 
@@ -165,6 +168,11 @@ export function renderEvent(): HTMLElement {
               effect.rarity === 'common' ? FIGHTER_COMMON_CARDS :
               effect.rarity === 'uncommon' ? FIGHTER_UNCOMMON_CARDS :
               FIGHTER_RARE_CARDS;
+          } else if (cls === 'magician') {
+            pool =
+              effect.rarity === 'common' ? MAGICIAN_COMMON_CARDS :
+              effect.rarity === 'uncommon' ? MAGICIAN_UNCOMMON_CARDS :
+              MAGICIAN_RARE_CARDS;
           } else {
             pool =
               effect.rarity === 'common' ? COMMON_CARDS :

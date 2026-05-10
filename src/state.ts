@@ -117,17 +117,19 @@ export function setScreen(s: Screen): void {
 
 export function startNewRun(seed: number, ascension = 0, characterClass: CharacterClass = 'swordmaster'): void {
   const mods = getModifiers(ascension);
-  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80 };
+  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65 };
   const baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
   const deck =
     characterClass === 'gunner' ? makeGunnerStarterDeck() :
     characterClass === 'fighter' ? makeFighterStarterDeck() :
+    characterClass === 'magician' ? makeMagicianStarterDeck() :
     makeStarterDeck();
   for (let i = 0; i < mods.cursesInDeck; i++) deck.push(makeCard('wound'));
   const relicMap: Record<CharacterClass, string> = {
     swordmaster: 'burning_blood',
     gunner: 'bag_of_marbles',
     fighter: 'fighting_spirit',
+    magician: 'mage_orb',
   };
   const startingRelic = relicMap[characterClass];
 
@@ -188,6 +190,14 @@ function makeFighterStarterDeck(): CardInstance[] {
   for (let i = 0; i < 5; i++) deck.push(makeCard('f_quick_kick'));
   for (let i = 0; i < 4; i++) deck.push(makeCard('f_nen_guard'));
   deck.push(makeCard('f_upper_kick'));
+  return deck;
+}
+
+function makeMagicianStarterDeck(): CardInstance[] {
+  const deck: CardInstance[] = [];
+  for (let i = 0; i < 5; i++) deck.push(makeCard('m_magic_missile'));
+  for (let i = 0; i < 4; i++) deck.push(makeCard('m_aura_shield'));
+  deck.push(makeCard('m_phase_shift'));
   return deck;
 }
 

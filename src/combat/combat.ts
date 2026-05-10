@@ -75,6 +75,17 @@ export function beginPlayerTurn(state: CombatState): void {
   const run = getRunOrNull();
   if (run) {
     if (run.player.relics.includes('demon_seal')) applyStatus(p, 'strength', 1);
+    if (run.player.relics.includes('mage_orb')) {
+      const alive = state.enemies.filter((e) => e.hp > 0);
+      if (alive.length > 0) {
+        const target = alive[Math.floor(state.rng() * alive.length)];
+        // Direct damage (non-attack, no strength/vuln scaling)
+        const absorbed = Math.min(target.block, 3);
+        target.block -= absorbed;
+        target.hp = Math.max(0, target.hp - (3 - absorbed));
+        state.log.push(`마탑의 결정 → ${target.defId}에게 3 데미지`);
+      }
+    }
   }
 
   // Start-of-turn statuses for player

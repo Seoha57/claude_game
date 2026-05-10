@@ -55,6 +55,12 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '전투 시작 시 힘 +2.',
     rarity: 'starter',
   },
+  mage_orb: {
+    id: 'mage_orb',
+    name: '마탑의 결정',
+    description: '매 턴 시작 시 무작위 적에게 3 데미지.',
+    rarity: 'starter',
+  },
 
   // ── Common ──
   frozen_dart: {

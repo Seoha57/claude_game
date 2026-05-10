@@ -1,8 +1,10 @@
 import type { CardDef } from '../types';
 import { GUNNER_CARD_DEFS, gunnerGetEffectiveDef, canUpgradeGunner } from './gunner-cards';
 import { FIGHTER_CARD_DEFS, fighterGetEffectiveDef, canUpgradeFighter } from './fighter-cards';
+import { MAGICIAN_CARD_DEFS, magicianGetEffectiveDef, canUpgradeMagician } from './magician-cards';
 export { GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS } from './gunner-cards';
 export { FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS } from './fighter-cards';
+export { MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS } from './magician-cards';
 
 export const CARD_DEFS: Record<string, CardDef> = {
   // ── Curse ──
@@ -314,9 +316,9 @@ export const CARD_DEFS: Record<string, CardDef> = {
 };
 
 // Merge all character cards into CARD_DEFS so getEffectiveDef works universally
-Object.assign(CARD_DEFS, GUNNER_CARD_DEFS, FIGHTER_CARD_DEFS);
+Object.assign(CARD_DEFS, GUNNER_CARD_DEFS, FIGHTER_CARD_DEFS, MAGICIAN_CARD_DEFS);
 
-export const CARD_LIST = Object.values(CARD_DEFS).filter((c) => !c.id.startsWith('g_') && !c.id.startsWith('f_'));
+export const CARD_LIST = Object.values(CARD_DEFS).filter((c) => !c.id.startsWith('g_') && !c.id.startsWith('f_') && !c.id.startsWith('m_'));
 export const COMMON_CARDS   = CARD_LIST.filter((c) => c.rarity === 'common');
 export const UNCOMMON_CARDS = CARD_LIST.filter((c) => c.rarity === 'uncommon');
 export const RARE_CARDS     = CARD_LIST.filter((c) => c.rarity === 'rare');
@@ -355,6 +357,7 @@ import type { CardInstance } from '../types';
 export function getEffectiveDef(card: CardInstance): CardDef {
   if (card.defId.startsWith('g_')) return gunnerGetEffectiveDef(card);
   if (card.defId.startsWith('f_')) return fighterGetEffectiveDef(card);
+  if (card.defId.startsWith('m_')) return magicianGetEffectiveDef(card);
   const base = CARD_DEFS[card.defId];
   if (!card.upgraded) return base;
   const up = UPGRADE_MAP[card.defId];
@@ -365,5 +368,6 @@ export function getEffectiveDef(card: CardInstance): CardDef {
 export function canUpgrade(card: CardInstance): boolean {
   if (card.defId.startsWith('g_')) return canUpgradeGunner(card);
   if (card.defId.startsWith('f_')) return canUpgradeFighter(card);
+  if (card.defId.startsWith('m_')) return canUpgradeMagician(card);
   return !card.upgraded && card.defId in UPGRADE_MAP;
 }
