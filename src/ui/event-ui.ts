@@ -30,82 +30,68 @@ export function renderEvent(): HTMLElement {
 
   let resultText: string | null = null;
 
-  const wrapper = el('div', { class: 'end-screen' });
+  const wrapper = el('div', { class: `event-screen mood-${eventDef.mood ?? 'mystic'}` });
   const rebuild = () => {
     while (wrapper.firstChild) wrapper.removeChild(wrapper.firstChild);
     appendContent();
   };
 
   const appendContent = () => {
-    wrapper.appendChild(el('h2', { style: { color: 'var(--accent)', margin: '0 0 8px 0' } }, eventDef.title));
+    // Hero section with emoji + title
+    const hero = el('div', { class: 'event-hero' });
+    hero.appendChild(el('div', { class: 'event-emoji' }, eventDef.emoji));
+    hero.appendChild(el('h2', { class: 'event-title' }, eventDef.title));
+    wrapper.appendChild(hero);
+
+    // Description in a flavor panel
     wrapper.appendChild(
-      el('div', {
-        style: {
-          color: 'var(--text)',
-          fontSize: '14px',
-          maxWidth: '480px',
-          textAlign: 'center',
-          lineHeight: '1.6',
-          marginBottom: '24px',
-        },
-      }, eventDef.description),
+      el('div', { class: 'event-description' }, eventDef.description),
     );
 
     if (resultText !== null) {
       wrapper.appendChild(
-        el('div', {
-          style: {
-            color: 'var(--good)',
-            fontSize: '14px',
-            maxWidth: '480px',
-            textAlign: 'center',
-            lineHeight: '1.6',
-            marginBottom: '20px',
-            padding: '12px 20px',
-            background: 'var(--panel)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-          },
-        }, resultText),
+        el('div', { class: 'event-result' }, resultText),
       );
       wrapper.appendChild(
         el('button', {
+          class: 'event-continue',
           onClick: () => setScreen('map'),
         }, '지도로 돌아가기'),
       );
       return;
     }
 
-    const choicesEl = el('div', {
-      style: { display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', maxWidth: '480px' },
-    });
-
+    const choicesEl = el('div', { class: 'event-choices' });
     for (const choice of eventDef.choices) {
-      const disabled = isChoiceDisabled(choice);
-      const btn = el(
-        'button',
-        {
-          disabled: disabled ? true : undefined,
-          style: {
-            width: '100%',
-            textAlign: 'left',
-            padding: '12px 16px',
-            opacity: disabled ? '0.4' : '1',
-          },
-          onClick: () => {
-            if (disabled) return;
-            applyEffects(choice.effects);
-            resultText = choice.result;
-            rebuild();
-          },
-        },
-        choice.label,
-      );
-      choicesEl.appendChild(btn);
+      choicesEl.appendChild(buildChoiceButton(choice));
     }
-
     wrapper.appendChild(choicesEl);
   };
+
+  function buildChoiceButton(choice: EventChoice): HTMLElement {
+    const disabled = isChoiceDisabled(choice);
+    const tone = choiceTone(choice);
+    const btn = el(
+      'button',
+      {
+        class: `event-choice tone-${tone} ${disabled ? 'disabled' : ''}`,
+        disabled: disabled ? true : undefined,
+        onClick: () => {
+          if (disabled) return;
+          applyEffects(choice.effects);
+          resultText = choice.result;
+          rebuild();
+        },
+      },
+      el('div', { class: 'choice-label' }, choice.label),
+    );
+
+    // Effect preview chips
+    const chips = renderEffectChips(choice.effects);
+    if (chips) btn.appendChild(chips);
+
+    return btn;
+  }
 
   function isChoiceDisabled(choice: EventChoice): boolean {
     if (!choice.condition) return false;
@@ -127,6 +113,7 @@ export function renderEvent(): HTMLElement {
           break;
         case 'gold':
           run.player.gold += effect.amount;
+          playSfx('gold');
           break;
         case 'lose_gold':
           run.player.gold = Math.max(0, run.player.gold - effect.amount);
@@ -143,6 +130,7 @@ export function renderEvent(): HTMLElement {
           for (const card of toUpgrade) {
             card.upgraded = true;
           }
+          if (toUpgrade.length > 0) playSfx('upgrade');
           break;
         }
         case 'add_random_relic': {
@@ -156,29 +144,7 @@ export function renderEvent(): HTMLElement {
           break;
         }
         case 'add_card': {
-          let pool: { id: string }[];
-          const cls = run.characterClass;
-          if (cls === 'gunner') {
-            pool =
-              effect.rarity === 'common' ? GUNNER_COMMON_CARDS :
-              effect.rarity === 'uncommon' ? GUNNER_UNCOMMON_CARDS :
-              GUNNER_RARE_CARDS;
-          } else if (cls === 'fighter') {
-            pool =
-              effect.rarity === 'common' ? FIGHTER_COMMON_CARDS :
-              effect.rarity === 'uncommon' ? FIGHTER_UNCOMMON_CARDS :
-              FIGHTER_RARE_CARDS;
-          } else if (cls === 'magician') {
-            pool =
-              effect.rarity === 'common' ? MAGICIAN_COMMON_CARDS :
-              effect.rarity === 'uncommon' ? MAGICIAN_UNCOMMON_CARDS :
-              MAGICIAN_RARE_CARDS;
-          } else {
-            pool =
-              effect.rarity === 'common' ? COMMON_CARDS :
-              effect.rarity === 'uncommon' ? UNCOMMON_CARDS :
-              RARE_CARDS;
-          }
+          const pool = poolFor(effect.rarity);
           if (pool.length > 0) {
             const chosen = pick(rng, pool);
             run.player.deck.push(makeCard(chosen.id));
@@ -190,6 +156,7 @@ export function renderEvent(): HTMLElement {
           if (run.player.potions.length < 3) {
             const chosen = pick(rng, POTION_LIST);
             run.player.potions.push(chosen.id);
+            playSfx('potion');
           }
           break;
         }
@@ -202,6 +169,72 @@ export function renderEvent(): HTMLElement {
     }
   }
 
+  function poolFor(rarity: 'common' | 'uncommon' | 'rare'): { id: string }[] {
+    const cls = run.characterClass;
+    if (cls === 'gunner') {
+      return rarity === 'common' ? GUNNER_COMMON_CARDS : rarity === 'uncommon' ? GUNNER_UNCOMMON_CARDS : GUNNER_RARE_CARDS;
+    }
+    if (cls === 'fighter') {
+      return rarity === 'common' ? FIGHTER_COMMON_CARDS : rarity === 'uncommon' ? FIGHTER_UNCOMMON_CARDS : FIGHTER_RARE_CARDS;
+    }
+    if (cls === 'magician') {
+      return rarity === 'common' ? MAGICIAN_COMMON_CARDS : rarity === 'uncommon' ? MAGICIAN_UNCOMMON_CARDS : MAGICIAN_RARE_CARDS;
+    }
+    return rarity === 'common' ? COMMON_CARDS : rarity === 'uncommon' ? UNCOMMON_CARDS : RARE_CARDS;
+  }
+
   appendContent();
   return wrapper;
+}
+
+// ── Choice helpers ──────────────────────────────────────────────
+
+type ChoiceTone = 'positive' | 'risky' | 'neutral';
+
+function choiceTone(choice: EventChoice): ChoiceTone {
+  if (choice.effects.length === 0) return 'neutral';
+  let hasCost = false;
+  let hasGain = false;
+  for (const e of choice.effects) {
+    if (e.kind === 'lose_hp' || e.kind === 'lose_gold' || e.kind === 'add_curse') hasCost = true;
+    if (e.kind === 'max_hp' && e.amount < 0) hasCost = true;
+    if (e.kind === 'heal' || e.kind === 'gold' || e.kind === 'add_random_relic'
+        || e.kind === 'add_card' || e.kind === 'add_potion'
+        || e.kind === 'upgrade_random') hasGain = true;
+    if (e.kind === 'max_hp' && e.amount > 0) hasGain = true;
+  }
+  if (hasCost && hasGain) return 'risky';
+  if (hasCost) return 'risky';
+  if (hasGain) return 'positive';
+  return 'neutral';
+}
+
+function renderEffectChips(effects: EventEffect[]): HTMLElement | null {
+  if (effects.length === 0) return null;
+  const row = el('div', { class: 'effect-chips' });
+  for (const e of effects) {
+    const chip = effectChip(e);
+    if (chip) row.appendChild(chip);
+  }
+  return row;
+}
+
+function effectChip(e: EventEffect): HTMLElement | null {
+  let label = '';
+  let cls = 'chip';
+  switch (e.kind) {
+    case 'heal':           label = `❤ +${e.amount}`;        cls += ' gain'; break;
+    case 'lose_hp':        label = `💔 -${e.amount}`;       cls += ' cost'; break;
+    case 'gold':           label = `💰 +${e.amount}`;       cls += ' gain'; break;
+    case 'lose_gold':      label = `💰 -${e.amount}`;       cls += ' cost'; break;
+    case 'max_hp':         label = e.amount >= 0 ? `❤ 최대 +${e.amount}` : `💔 최대 ${e.amount}`;
+                           cls += e.amount >= 0 ? ' gain' : ' cost'; break;
+    case 'add_card':       label = `🃏 카드 (${e.rarity})`;  cls += ' gain'; break;
+    case 'add_potion':     label = `🧪 물약`;                cls += ' gain'; break;
+    case 'add_random_relic': label = `💎 유물`;              cls += ' gain'; break;
+    case 'upgrade_random': label = `✦ 강화 ×${e.count}`;    cls += ' gain'; break;
+    case 'add_curse':      label = `☠ 저주 ×${e.count}`;    cls += ' cost'; break;
+    default: return null;
+  }
+  return el('span', { class: cls }, label);
 }
