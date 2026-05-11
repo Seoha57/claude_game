@@ -1,10 +1,12 @@
-// Lightweight Web Audio synth-based SFX engine. No external files needed.
+// Lightweight Web Audio synth-based SFX + procedural BGM engine.
 
 const STORAGE_KEY = 'dungeoncard_audio';
 
 interface AudioPrefs {
   muted: boolean;
-  volume: number; // 0..1
+  volume: number;     // master volume 0..1
+  bgmMuted: boolean;
+  bgmVolume: number;  // bgm sub-mix 0..1
 }
 
 function loadPrefs(): AudioPrefs {
@@ -15,19 +17,22 @@ function loadPrefs(): AudioPrefs {
       return {
         muted: typeof p.muted === 'boolean' ? p.muted : false,
         volume: typeof p.volume === 'number' ? Math.max(0, Math.min(1, p.volume)) : 0.5,
+        bgmMuted: typeof p.bgmMuted === 'boolean' ? p.bgmMuted : true,  // default OFF
+        bgmVolume: typeof p.bgmVolume === 'number' ? Math.max(0, Math.min(1, p.bgmVolume)) : 0.35,
       };
     }
   } catch { /* ignore */ }
-  return { muted: false, volume: 0.5 };
+  return { muted: false, volume: 0.5, bgmMuted: true, bgmVolume: 0.35 };
 }
 
 function savePrefs(): void {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ muted, volume })); } catch { /* ignore */ }
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ muted, volume, bgmMuted, bgmVolume })); } catch { /* ignore */ }
 }
 
 let ctx: AudioContext | null = null;
 let masterGain: GainNode | null = null;
-let { muted, volume } = loadPrefs();
+let bgmGain: GainNode | null = null;
+let { muted, volume, bgmMuted, bgmVolume } = loadPrefs();
 
 function ensureCtx(): boolean {
   if (typeof window === 'undefined') return false;
@@ -39,6 +44,10 @@ function ensureCtx(): boolean {
     masterGain = ctx.createGain();
     masterGain.gain.value = muted ? 0 : volume;
     masterGain.connect(ctx.destination);
+    // BGM sub-mix routed through master
+    bgmGain = ctx.createGain();
+    bgmGain.gain.value = bgmMuted ? 0 : bgmVolume;
+    bgmGain.connect(masterGain);
     return true;
   } catch { return false; }
 }
@@ -46,7 +55,13 @@ function ensureCtx(): boolean {
 // Resume audio on first user gesture (browser autoplay policy)
 if (typeof window !== 'undefined') {
   const onGesture = () => {
-    if (ensureCtx() && ctx?.state === 'suspended') ctx.resume().catch(() => { /* ignore */ });
+    if (ensureCtx() && ctx?.state === 'suspended') {
+      ctx.resume().catch(() => { /* ignore */ });
+    }
+    // If BGM enabled but not playing yet (deferred from before interaction), start it
+    if (!bgmMuted && intendedTrack && !activeTrack) {
+      actuallyStartBgm(intendedTrack);
+    }
   };
   window.addEventListener('pointerdown', onGesture, { once: false });
   window.addEventListener('keydown', onGesture, { once: false });
@@ -193,3 +208,182 @@ export function playSfx(name: SfxName): void {
       break;
   }
 }
+
+// ─────────────────────────────────────────────────────────────
+// Procedural BGM
+// ─────────────────────────────────────────────────────────────
+
+export type BgmTrack = 'title' | 'map' | 'combat' | 'boss';
+
+interface TrackDef {
+  pads: number[];      // chord drone frequencies (low Hz)
+  arp: number[];       // arpeggio note sequence (mid Hz)
+  bpm: number;         // arpeggio tempo
+  filterHz: number;    // pad lowpass cutoff
+  padWave: OscillatorType;
+  arpWave: OscillatorType;
+  padGain: number;
+  arpGain: number;
+}
+
+const TRACKS: Record<BgmTrack, TrackDef> = {
+  // Atmospheric, slow, mysterious
+  title: {
+    pads: [110, 138.6, 164.8],          // A2 dim chord (A C# E)... actually A C E = A minor
+    arp:  [440, 523.3, 659.3, 880, 659.3, 523.3],
+    bpm: 80,
+    filterHz: 700,
+    padWave: 'sine',
+    arpWave: 'triangle',
+    padGain: 0.09,
+    arpGain: 0.04,
+  },
+  // Exploring, mid-tempo, adventurous
+  map: {
+    pads: [146.8, 174.6, 220],          // D3 minor (D F A)
+    arp:  [293.7, 349.2, 440, 587.3, 440, 349.2],
+    bpm: 100,
+    filterHz: 1100,
+    padWave: 'triangle',
+    arpWave: 'triangle',
+    padGain: 0.08,
+    arpGain: 0.04,
+  },
+  // Tense, faster, combat
+  combat: {
+    pads: [82.4, 103.8, 123.5],         // E2 minor (E G B)
+    arp:  [329.6, 392, 493.9, 659.3, 493.9, 392, 329.6, 246.9],
+    bpm: 130,
+    filterHz: 1400,
+    padWave: 'sawtooth',
+    arpWave: 'square',
+    padGain: 0.06,
+    arpGain: 0.04,
+  },
+  // Heavy, slower, ominous
+  boss: {
+    pads: [65.4, 82.4, 98],             // C2 minor (C Eb G)... low E G
+    arp:  [261.6, 311.1, 392, 523.3, 392, 311.1],
+    bpm: 95,
+    filterHz: 600,
+    padWave: 'sawtooth',
+    arpWave: 'triangle',
+    padGain: 0.07,
+    arpGain: 0.05,
+  },
+};
+
+let activeTrack: BgmTrack | null = null;
+let intendedTrack: BgmTrack | null = null;
+let activeNodes: AudioNode[] = [];
+let arpTimer: number | null = null;
+
+function clearActiveNodes(): void {
+  if (arpTimer !== null) { clearInterval(arpTimer); arpTimer = null; }
+  if (ctx) {
+    const fadeEnd = ctx.currentTime + 0.25;
+    for (const n of activeNodes) {
+      try {
+        if ((n as OscillatorNode).stop) {
+          (n as OscillatorNode).stop(fadeEnd + 0.05);
+        }
+      } catch { /* ignore */ }
+    }
+  }
+  // Disconnect after fade
+  const toCleanup = activeNodes;
+  activeNodes = [];
+  setTimeout(() => {
+    for (const n of toCleanup) try { (n as any).disconnect(); } catch { /* ignore */ }
+  }, 400);
+}
+
+function actuallyStartBgm(name: BgmTrack): void {
+  if (!ensureCtx() || !ctx || !bgmGain) return;
+  const t = TRACKS[name];
+  if (!t) return;
+
+  activeTrack = name;
+  const now = ctx.currentTime;
+
+  // Start pad drones
+  for (const freq of t.pads) {
+    const osc = ctx.createOscillator();
+    osc.type = t.padWave;
+    osc.frequency.value = freq;
+    osc.detune.value = (Math.random() - 0.5) * 6;  // mild detune for warmth
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = t.filterHz;
+    filter.Q.value = 0.7;
+
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(t.padGain, now + 0.5);
+
+    osc.connect(filter); filter.connect(g); g.connect(bgmGain);
+    osc.start(now);
+    activeNodes.push(osc, filter, g);
+  }
+
+  // Arpeggio loop
+  const stepMs = (60 / t.bpm / 2) * 1000;  // 8th notes
+  let step = 0;
+  arpTimer = window.setInterval(() => {
+    if (!ctx || !bgmGain || activeTrack !== name) return;
+    const noteFreq = t.arp[step % t.arp.length];
+    step++;
+    const nt = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = t.arpWave;
+    osc.frequency.value = noteFreq;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, nt);
+    g.gain.exponentialRampToValueAtTime(t.arpGain, nt + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, nt + 0.4);
+    osc.connect(g); g.connect(bgmGain);
+    osc.start(nt);
+    osc.stop(nt + 0.45);
+  }, stepMs);
+}
+
+export function playBgm(name: BgmTrack): void {
+  intendedTrack = name;
+  if (bgmMuted) return;
+  if (activeTrack === name) return;
+  if (activeTrack) {
+    clearActiveNodes();
+    setTimeout(() => actuallyStartBgm(name), 300);
+  } else {
+    actuallyStartBgm(name);
+  }
+}
+
+export function stopBgm(): void {
+  intendedTrack = null;
+  if (activeTrack) {
+    clearActiveNodes();
+    activeTrack = null;
+  }
+}
+
+export function setBgmMuted(m: boolean): void {
+  bgmMuted = m;
+  if (bgmGain) bgmGain.gain.value = m ? 0 : bgmVolume;
+  if (m && activeTrack) {
+    clearActiveNodes();
+    activeTrack = null;
+  } else if (!m && intendedTrack && !activeTrack) {
+    actuallyStartBgm(intendedTrack);
+  }
+  savePrefs();
+}
+export function getBgmMuted(): boolean { return bgmMuted; }
+
+export function setBgmVolume(v: number): void {
+  bgmVolume = Math.max(0, Math.min(1, v));
+  if (bgmGain && !bgmMuted) bgmGain.gain.value = bgmVolume;
+  savePrefs();
+}
+export function getBgmVolume(): number { return bgmVolume; }

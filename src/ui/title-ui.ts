@@ -1,7 +1,7 @@
 import { el } from './dom';
 import { setScreen, hasSave, loadRun, clearSave } from '../state';
 import { getUnlockedMax } from '../ascension';
-import { getMuted, setMuted, getVolume, setVolume, playSfx } from '../audio';
+import { getMuted, setMuted, getVolume, setVolume, playSfx, getBgmMuted, setBgmMuted, getBgmVolume, setBgmVolume } from '../audio';
 
 let pendingSeed = 0;
 let pendingAscension = 0;
@@ -153,6 +153,40 @@ export function renderTitle(): HTMLElement {
       audioRow.appendChild(slider);
     }
     wrapper.appendChild(audioRow);
+
+    // BGM row (independent toggle + volume)
+    const bgmRow = el('div', { class: 'audio-row' });
+    const bgmM = getBgmMuted();
+    bgmRow.appendChild(
+      el(
+        'button',
+        {
+          class: 'audio-toggle',
+          onClick: () => {
+            setBgmMuted(!getBgmMuted());
+            rebuild();
+          },
+        },
+        bgmM ? '🎵 BGM OFF' : '🎵 BGM ON',
+      ),
+    );
+    if (!bgmM) {
+      const bv = getBgmVolume();
+      bgmRow.appendChild(
+        el('input', {
+          type: 'range',
+          min: '0',
+          max: '100',
+          value: String(Math.round(bv * 100)),
+          class: 'volume-slider',
+          onInput: (e: Event) => {
+            const v = parseInt((e.target as HTMLInputElement).value, 10) / 100;
+            setBgmVolume(v);
+          },
+        }),
+      );
+    }
+    wrapper.appendChild(bgmRow);
   };
 
   append();

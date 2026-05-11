@@ -5,6 +5,8 @@ import { uid } from './rng';
 import { getModifiers } from './ascension';
 import { recordRunStart, recordWin, recordTrueWin, recordLoss } from './stats';
 import { recordCards, recordRelic } from './codex';
+import { playBgm, stopBgm } from './audio';
+import type { BgmTrack } from './audio';
 
 let runState: RunState | null = null;
 let combatState: CombatState | null = null;
@@ -112,7 +114,35 @@ export function setScreen(s: Screen): void {
   }
   // Clear save on terminal screens.
   if (s === 'win' || s === 'true_win' || s === 'lose' || s === 'title') clearSave();
+  // BGM track based on screen
+  updateBgmForScreen(s);
   rerender();
+}
+
+function updateBgmForScreen(s: Screen): void {
+  const track = bgmTrackForScreen(s);
+  if (track) playBgm(track);
+  else stopBgm();
+}
+
+function bgmTrackForScreen(s: Screen): BgmTrack | null {
+  if (s === 'combat') {
+    if (runState?.currentNodeId) {
+      const n = runState.map.find((m) => m.id === runState!.currentNodeId);
+      if (n?.kind === 'boss') return 'boss';
+    }
+    return 'combat';
+  }
+  if (s === 'map' || s === 'reward' || s === 'rest' || s === 'shop' || s === 'event' || s === 'chapter_clear') {
+    return 'map';
+  }
+  if (s === 'title' || s === 'character_select' || s === 'help' || s === 'stats' || s === 'codex') {
+    return 'title';
+  }
+  if (s === 'true_ending_choice') return 'boss';
+  if (s === 'win' || s === 'true_win') return 'title';
+  // 'lose' — no BGM (silent)
+  return null;
 }
 
 export function startNewRun(seed: number, ascension = 0, characterClass: CharacterClass = 'swordmaster'): void {
