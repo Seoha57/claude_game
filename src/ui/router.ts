@@ -12,6 +12,7 @@ import { renderEvent } from './event-ui';
 import { renderStats } from './stats-ui';
 import { renderHelp } from './help-ui';
 import { renderCodex } from './codex-ui';
+import { renderAchievements } from './achievements-ui';
 
 export function render(): void {
   const root = document.getElementById('app');
@@ -70,6 +71,9 @@ export function render(): void {
       break;
     case 'codex':
       view = renderCodex();
+      break;
+    case 'achievements':
+      view = renderAchievements();
       break;
   }
   root.appendChild(view);

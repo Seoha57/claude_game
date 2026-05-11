@@ -4,6 +4,7 @@ import { generateMap, startNode } from './map/map';
 import { uid } from './rng';
 import { getModifiers } from './ascension';
 import { recordRunStart, recordWin, recordTrueWin, recordLoss } from './stats';
+import { checkWin, checkTrueWin } from './achievements';
 import { recordCards, recordRelic } from './codex';
 import { playBgm, stopBgm } from './audio';
 import type { BgmTrack } from './audio';
@@ -106,8 +107,10 @@ export function setScreen(s: Screen): void {
   if (runState) {
     if (s === 'win') {
       recordWin(runState.characterClass, runState.ascension);
+      checkWin(runState.characterClass, runState.ascension);
     } else if (s === 'true_win') {
       recordTrueWin(runState.characterClass, runState.ascension);
+      checkTrueWin(runState.characterClass, runState.ascension);
     } else if (s === 'lose') {
       recordLoss(runState.characterClass);
     }

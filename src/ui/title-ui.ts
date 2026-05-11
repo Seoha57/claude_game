@@ -114,6 +114,12 @@ export function renderTitle(): HTMLElement {
     utilRow.appendChild(
       el('button', {
         style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
+        onClick: () => setScreen('achievements'),
+      }, '🏅 도전과제'),
+    );
+    utilRow.appendChild(
+      el('button', {
+        style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
         onClick: () => setScreen('stats'),
       }, '📊 통계'),
     );

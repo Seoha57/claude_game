@@ -14,6 +14,7 @@ import { POTION_DEFS, POTION_LIST } from '../content/potions';
 import { isCurseLike } from './deck-overlay';
 import { playSfx } from '../audio';
 import { makeRng, pick } from '../rng';
+import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain } from '../achievements';
 
 let selectedCardUid: string | null = null;
 let selectedPotionId: string | null = null;
@@ -58,8 +59,14 @@ let lastPhasePlayed: string | null = null;
 
 export function renderCombat(): HTMLElement {
   const state = getCombat();
+  // Achievement spot checks (idempotent)
+  checkCombatAchievements(state);
   if (state.phase === 'won') {
-    if (lastPhasePlayed !== 'won') { playSfx('victory'); lastPhasePlayed = 'won'; }
+    if (lastPhasePlayed !== 'won') {
+      playSfx('victory');
+      checkTurnCount(state.turn);
+      lastPhasePlayed = 'won';
+    }
     return renderCombatVictory(state);
   }
   if (state.phase === 'lost') {
@@ -464,6 +471,16 @@ function checkCombatEnd(state: CombatState): void {
   }
 }
 
+function checkCombatAchievements(state: CombatState): void {
+  const strength = state.player.statuses.strength ?? 0;
+  if (strength >= 8) checkStrength(strength);
+  if (state.player.block >= 50) checkBlock(state.player.block);
+  for (const e of state.enemies) {
+    const fz = e.statuses.freeze ?? 0;
+    if (fz >= 4) checkFreezeChain(fz);
+  }
+}
+
 // ── Visual effects (attack hit marks, block gain, damage numbers) ──
 type PendingFx =
   | { kind: 'attack'; enemyUid: string; damage: number }
@@ -486,6 +503,7 @@ function detectFx(state: CombatState, before: ReturnType<typeof snapshotFx>): vo
     const dmg = b.total - (e.hp + e.block);
     if (dmg > 0) {
       pendingFx.push({ kind: 'attack', enemyUid: e.uid, damage: dmg });
+      checkDamage(dmg);
     }
   }
   const blockGained = state.player.block - before.playerBlock;

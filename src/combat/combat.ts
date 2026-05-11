@@ -5,6 +5,7 @@ import { applyStatus, getStatus } from './statuses';
 import { makeRng, randInt, uid } from '../rng';
 import { getModifiers } from '../ascension';
 import { getRunOrNull } from '../state';
+import { checkBurnKill } from '../achievements';
 
 const PLAYER_DRAW = 5;
 
@@ -171,9 +172,14 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
   // Burn — direct damage at end of turn (block doesn't absorb), then decay
   const burn = getStatus(c.statuses, 'burn');
   if (burn > 0) {
+    const wasAlive = c.hp > 0;
     c.hp = Math.max(0, c.hp - burn);
     state.log.push(`${name} 화상 ${burn} 데미지`);
     applyStatus(c, 'burn', -1);
+    // Achievement: enemy killed by burn (c is enemy if it's not the player object)
+    if (wasAlive && c.hp <= 0 && c !== state.player) {
+      checkBurnKill();
+    }
   }
   // decay debuffs/buffs that decay
   for (const k of ['vulnerable', 'weak', 'frail'] as const) {

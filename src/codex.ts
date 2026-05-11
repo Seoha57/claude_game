@@ -1,5 +1,7 @@
 // Persistent "discovered cards / relics" codex.
 
+import { checkCodexCards, checkCodexRelics } from './achievements';
+
 const STORAGE_KEY = 'dungeoncard_codex';
 const CODEX_VERSION = 1;
 
@@ -38,6 +40,7 @@ export function recordCard(id: string): void {
   if (!d.cards.includes(id)) {
     d.cards.push(id);
     persist(d);
+    checkCodexCards(d.cards.length);
   }
 }
 
@@ -47,7 +50,10 @@ export function recordCards(ids: string[]): void {
   for (const id of ids) {
     if (!d.cards.includes(id)) { d.cards.push(id); changed = true; }
   }
-  if (changed) persist(d);
+  if (changed) {
+    persist(d);
+    checkCodexCards(d.cards.length);
+  }
 }
 
 export function recordRelic(id: string): void {
@@ -55,6 +61,7 @@ export function recordRelic(id: string): void {
   if (!d.relics.includes(id)) {
     d.relics.push(id);
     persist(d);
+    checkCodexRelics(d.relics.length);
   }
 }
 
@@ -64,7 +71,10 @@ export function recordRelics(ids: string[]): void {
   for (const id of ids) {
     if (!d.relics.includes(id)) { d.relics.push(id); changed = true; }
   }
-  if (changed) persist(d);
+  if (changed) {
+    persist(d);
+    checkCodexRelics(d.relics.length);
+  }
 }
 
 export function getSeenCards(): Set<string> {
