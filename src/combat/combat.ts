@@ -124,10 +124,17 @@ export function endPlayerTurn(state: CombatState): void {
     const enemyName = ENEMY_DEFS[e.defId]?.name ?? e.defId;
     applyStartOfTurnStatuses(e, state, enemyName);
     if (e.hp <= 0) continue;
-    ENEMY_DEFS[e.defId].act(state, e);
-    if (state.player.hp <= 0) {
-      state.phase = 'lost';
-      return;
+    // Freeze — skip enemy action, consume one stack
+    const frozen = getStatus(e.statuses, 'freeze');
+    if (frozen > 0) {
+      state.log.push(`${enemyName} 빙결 — 행동 불가`);
+      applyStatus(e, 'freeze', -1);
+    } else {
+      ENEMY_DEFS[e.defId].act(state, e);
+      if (state.player.hp <= 0) {
+        state.phase = 'lost';
+        return;
+      }
     }
     endOfTurnStatuses(e, state, enemyName);
     e.turn += 1;
@@ -160,6 +167,13 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
   const metal = getStatus(c.statuses, 'metallicize');
   if (metal > 0) {
     c.block += metal;
+  }
+  // Burn — direct damage at end of turn (block doesn't absorb), then decay
+  const burn = getStatus(c.statuses, 'burn');
+  if (burn > 0) {
+    c.hp = Math.max(0, c.hp - burn);
+    state.log.push(`${name} 화상 ${burn} 데미지`);
+    applyStatus(c, 'burn', -1);
   }
   // decay debuffs/buffs that decay
   for (const k of ['vulnerable', 'weak', 'frail'] as const) {

@@ -75,6 +75,20 @@ export const STATUS_INFO: Record<StatusKey, StatusInfo> = {
     decay: false,
     buff: true,
   },
+  burn: {
+    key: 'burn',
+    name: '화상',
+    description: '턴 종료 시 N 데미지. 매 턴 N 1 감소',
+    decay: true,
+    buff: false,
+  },
+  freeze: {
+    key: 'freeze',
+    name: '빙결',
+    description: '다음 N턴 행동 불가',
+    decay: true,
+    buff: false,
+  },
 };
 
 export function applyStatus(c: Combatant, key: StatusKey, amount: number): void {

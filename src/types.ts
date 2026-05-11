@@ -12,7 +12,9 @@ export type StatusKey =
   | 'regen'
   | 'frail'
   | 'ritual'
-  | 'metallicize';
+  | 'metallicize'
+  | 'burn'
+  | 'freeze';
 
 export type Effect =
   | { kind: 'damage'; amount: number; times?: number }
