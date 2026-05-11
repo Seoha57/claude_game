@@ -95,10 +95,10 @@ export const CARD_DEFS: Record<string, CardDef> = {
     rarity: 'common',
     cost: 1,
     target: 'all_enemies',
-    description: '모든 적에게 4 데미지. 취약 +1.',
+    description: '모든 적에게 4 데미지. 화상 +2.',
     effects: [
       { kind: 'damage_all', amount: 4 },
-      { kind: 'apply_all', status: 'vulnerable', amount: 1 },
+      { kind: 'apply_all', status: 'burn', amount: 2 },
     ],
   },
   heavy_blade: {
@@ -331,7 +331,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   cleave:           { name: '공중 연속 베기+',  description: '모든 적에게 11 데미지.',              effects: [{ kind: 'damage_all', amount: 11 }] },
   twin_strike:      { name: '어퍼 슬래쉬+',   description: '7 데미지를 두 번.',                   effects: [{ kind: 'damage', amount: 7, times: 2 }] },
   pommel_strike:    { name: '블러드러스트+', description: '10 데미지. 2장 드로우.',              effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 2 }] },
-  thunderclap:      { name: '열파참+',        description: '모든 적에게 7 데미지. 취약 +1.',     effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
+  thunderclap:      { name: '열파참+',        description: '모든 적에게 7 데미지. 화상 +3.',     effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'burn', amount: 3 }] },
   heavy_blade:      { name: '단공참+',   description: '18 데미지.',                          effects: [{ kind: 'damage', amount: 18 }] },
   iron_wave:        { name: '고어 크로스+',  description: '7 데미지. 방어도 +7.',               effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
   shrug_it_off:     { name: '달빛 베기+',        description: '방어도 +11. 1장 드로우.',            effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },

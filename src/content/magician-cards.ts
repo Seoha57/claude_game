@@ -115,11 +115,12 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'common',
     cost: 1,
     target: 'enemy',
-    description: '5 데미지. 빙결 +1.',
+    description: '5 데미지. 빙결 +1. 소멸.',
     effects: [
       { kind: 'damage', amount: 5 },
       { kind: 'apply_enemy', status: 'freeze', amount: 1 },
     ],
+    exhaust: true,
   },
   m_disenchant: {
     id: 'm_disenchant',
@@ -300,7 +301,7 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_air_lantern:    { name: '공중 랜턴 파이어+',           description: '모든 적에게 11 데미지.',                 effects: [{ kind: 'damage_all', amount: 11 }] },
   m_petal:          { name: '낙화장+',                     description: '모든 적에게 7 데미지. 취약 +1.',         effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
   m_pluto:          { name: '플루토+',                     description: '7 데미지. 방어도 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
-  m_frost:          { name: '프로스트 헤드+',              description: '7 데미지. 빙결 +2.',                     effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
+  m_frost:          { name: '프로스트 헤드+',              description: '7 데미지. 빙결 +2. 소멸.',               effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
   m_disenchant:     { name: '디스인챈트+',                 description: '힘 +4.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
   m_no_entry:       { name: '접근 금지!+',                 description: '방어도 +9. 무작위 카드 1장 소멸.',       effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
   m_summon_horus:   { name: '계약소환 : 기갑 호도르+',     description: '2장 드로우. 무작위 카드 1장 소멸.',      effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },

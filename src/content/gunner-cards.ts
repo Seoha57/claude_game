@@ -155,15 +155,16 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   g_armor: {
     id: 'g_armor',
     name: '냉동탄',
-    type: 'skill',
+    type: 'attack',
     rarity: 'common',
     cost: 1,
-    target: 'self',
-    description: '방어도 +7. 무작위 카드 1장 소멸.',
+    target: 'enemy',
+    description: '5 데미지. 빙결 +1. 소멸.',
     effects: [
-      { kind: 'block', amount: 7 },
-      { kind: 'exhaust_random_hand' },
+      { kind: 'damage', amount: 5 },
+      { kind: 'apply_enemy', status: 'freeze', amount: 1 },
     ],
+    exhaust: true,
   },
 
   // ── Uncommon ──
@@ -316,7 +317,7 @@ const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_booster:        { name: '패스티스트 건+',           description: '힘 +4.',                           effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
   g_reposit:        { name: '회심의 랜드러너+',      description: '방어도 +11. 1장 드로우.',          effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
   g_ammo:           { name: '조준 사격+',        description: '2장 드로우. 무작위 카드 1장 소멸.',effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
-  g_armor:          { name: '냉동탄+',           description: '방어도 +9. 무작위 카드 1장 소멸.', effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
+  g_armor:          { name: '냉동탄+',           description: '7 데미지. 빙결 +2. 소멸.',              effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
   g_satellite:      { name: '새틀라이트 빔+',           description: '모든 적에게 24 데미지. 약화 +3.',      effects: [{ kind: 'damage_all', amount: 24 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
   g_viper:          { name: '바베~큐+',                  description: '7 데미지. 중독 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
   g_optical:        { name: '슈타이어 중저격총+',       description: 'HP -2. 에너지 +3.',                    effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },

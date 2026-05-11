@@ -77,8 +77,11 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'common',
     cost: 2,
     target: 'enemy',
-    description: '14 데미지.',
-    effects: [{ kind: 'damage', amount: 14 }],
+    description: '11 데미지. 빙결 +1.',
+    effects: [
+      { kind: 'damage', amount: 11 },
+      { kind: 'apply_enemy', status: 'freeze', amount: 1 },
+    ],
   },
   f_combo: {
     id: 'f_combo',
@@ -293,7 +296,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_low_kick:      { name: '로킥+',                     description: '7 데미지를 두 번.',                     effects: [{ kind: 'damage', amount: 7, times: 2 }] },
   f_aerial_stomp:  { name: '공중 밟기+',                description: '모든 적에게 11 데미지.',                effects: [{ kind: 'damage_all', amount: 11 }] },
   f_dragon_kick:   { name: '호신연격+',                     description: '모든 적에게 7 데미지. 취약 +1.',        effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
-  f_heavy_punch:   { name: '해머 킥+',                description: '18 데미지.',                            effects: [{ kind: 'damage', amount: 18 }] },
+  f_heavy_punch:   { name: '해머 킥+',                description: '14 데미지. 빙결 +1.',                  effects: [{ kind: 'damage', amount: 14 }, { kind: 'apply_enemy', status: 'freeze', amount: 1 }] },
   f_combo:         { name: '호포+',                description: '10 데미지. 2장 드로우.',                effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 2 }] },
   f_nen_bullet:    { name: '넨탄+',                    description: '5 데미지를 세 번.',                     effects: [{ kind: 'damage', amount: 5, times: 3 }] },
   f_iron_body:     { name: '헬터 스켈터+',                description: '7 데미지. 방어도 +7.',                  effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
