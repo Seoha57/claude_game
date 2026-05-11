@@ -755,6 +755,27 @@ button:disabled {
 .card.rarity-rare::before     { background: #d4aa44; }
 .card.rarity-starter::before  { background: #555; }
 
+/* Card draw — newly drawn cards slide+fade in from below */
+.card-fresh {
+  animation: card-draw-in 0.36s cubic-bezier(0.2, 1.1, 0.4, 1) backwards;
+}
+@keyframes card-draw-in {
+  0%   { opacity: 0; transform: translateY(130px) scale(0.7) rotate(-6deg); }
+  55%  { opacity: 1; transform: translateY(-10px) scale(1.04) rotate(1deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+}
+
+/* Card play — clone lifts up and fades out */
+.card-playing {
+  animation: card-play-out 0.5s ease-out forwards;
+  box-shadow: 0 0 24px rgba(212, 160, 91, 0.6);
+}
+@keyframes card-play-out {
+  0%   { transform: translateY(0) scale(1) rotate(0deg);       opacity: 1; }
+  35%  { transform: translateY(-90px) scale(1.15) rotate(-2deg); opacity: 1; }
+  100% { transform: translateY(-220px) scale(0.55) rotate(6deg); opacity: 0; }
+}
+
 /* Curse cards (wounds) — distinct dark/purple look */
 .card.curse {
   border-color: #6a3a8a !important;

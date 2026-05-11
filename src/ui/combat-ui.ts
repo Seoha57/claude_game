@@ -268,13 +268,24 @@ function renderMid(state: CombatState): HTMLElement {
 
 // Preserve hand scroll position across rerenders
 let savedHandScroll = 0;
+// Track which card UIDs were in hand last render — newly drawn cards animate in
+let previousHandUids = new Set<string>();
 
 function renderHand(state: CombatState): HTMLElement {
   const hand = el('div', { class: 'combat-bottom' });
   hand.addEventListener('scroll', () => { savedHandScroll = hand.scrollLeft; });
+  const newHandUids = new Set<string>();
   state.player.hand.forEach((c, i) => {
-    hand.appendChild(renderCard(state, c, i));
+    const isFresh = !previousHandUids.has(c.uid);
+    newHandUids.add(c.uid);
+    const cardEl = renderCard(state, c, i);
+    if (isFresh) {
+      cardEl.classList.add('card-fresh');
+      cardEl.style.animationDelay = `${i * 55}ms`;
+    }
+    hand.appendChild(cardEl);
   });
+  previousHandUids = newHandUids;
   // Restore on next frame so the layout is settled
   requestAnimationFrame(() => { hand.scrollLeft = savedHandScroll; });
   return hand;
@@ -293,13 +304,14 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
     'div',
     {
       class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''} ${canPlay ? '' : 'disabled'} ${noEnergy ? 'no-energy' : ''} ${selected ? 'selected' : ''}`,
-      onClick: () => {
+      onClick: (e: MouseEvent) => {
         if (!canPlay) return;
         if (def.target === 'enemy') {
           selectedCardUid = selected ? null : c.uid;
           rerender();
         } else {
           selectedCardUid = null;
+          spawnCardPlayAnim(e.currentTarget as HTMLElement);
           const before = snapshotFx(state);
           state.player.energy -= def.cost;
           playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
@@ -432,6 +444,9 @@ function playSelectedCard(target: Enemy): void {
   if (!card) return;
   const def = getEffectiveDef(card);
   if (state.player.energy < def.cost) return;
+  // Animate the selected card flying out before rerender wipes it
+  const selectedEl = document.querySelector('.card.selected') as HTMLElement | null;
+  if (selectedEl) spawnCardPlayAnim(selectedEl);
   const before = snapshotFx(state);
   state.player.energy -= def.cost;
   selectedCardUid = null;
@@ -516,6 +531,27 @@ function spawnDamageNumber(target: HTMLElement, amount: number): void {
   float.style.left = `${42 + Math.random() * 16}%`;
   target.appendChild(float);
   setTimeout(() => float.remove(), 1000);
+}
+
+function spawnCardPlayAnim(cardEl: HTMLElement): void {
+  const rect = cardEl.getBoundingClientRect();
+  // Avoid animating cards that aren't actually visible
+  if (rect.width === 0 || rect.height === 0) return;
+  const clone = cardEl.cloneNode(true) as HTMLElement;
+  clone.style.position = 'fixed';
+  clone.style.left = `${rect.left}px`;
+  clone.style.top = `${rect.top}px`;
+  clone.style.width = `${rect.width}px`;
+  clone.style.height = `${rect.height}px`;
+  clone.style.margin = '0';
+  clone.style.zIndex = '1500';
+  clone.style.pointerEvents = 'none';
+  clone.classList.add('card-playing');
+  // Strip any hotkey badge — distracting on the floating clone
+  const hotkey = clone.querySelector('.card-hotkey');
+  if (hotkey) (hotkey as HTMLElement).style.display = 'none';
+  document.body.appendChild(clone);
+  setTimeout(() => clone.remove(), 520);
 }
 
 function spawnPlayerDamageNumber(amount: number): void {
@@ -732,6 +768,12 @@ function playCardWithFx(state: CombatState, card: CardInstance, target: Enemy | 
   const def = getEffectiveDef(card);
   playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
   if (state.player.energy < def.cost) return;
+  // Animate via hotkey: find the card element in current hand DOM
+  const handCards = document.querySelectorAll('.combat-bottom .card');
+  const idxInHand = state.player.hand.findIndex((c) => c.uid === card.uid);
+  if (idxInHand >= 0 && handCards[idxInHand]) {
+    spawnCardPlayAnim(handCards[idxInHand] as HTMLElement);
+  }
   const before = snapshotFx(state);
   state.player.energy -= def.cost;
   selectedCardUid = null;
