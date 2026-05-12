@@ -318,7 +318,7 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
           rerender();
         } else {
           selectedCardUid = null;
-          spawnCardPlayAnim(e.currentTarget as HTMLElement);
+          spawnCardPlayAnim(e.currentTarget as HTMLElement, { exhaust: !!def.exhaust });
           const before = snapshotFx(state);
           state.player.energy -= def.cost;
           playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
@@ -453,7 +453,7 @@ function playSelectedCard(target: Enemy): void {
   if (state.player.energy < def.cost) return;
   // Animate the selected card flying out before rerender wipes it
   const selectedEl = document.querySelector('.card.selected') as HTMLElement | null;
-  if (selectedEl) spawnCardPlayAnim(selectedEl);
+  if (selectedEl) spawnCardPlayAnim(selectedEl, { exhaust: !!def.exhaust });
   const before = snapshotFx(state);
   state.player.energy -= def.cost;
   selectedCardUid = null;
@@ -551,7 +551,7 @@ function spawnDamageNumber(target: HTMLElement, amount: number): void {
   setTimeout(() => float.remove(), 1000);
 }
 
-function spawnCardPlayAnim(cardEl: HTMLElement): void {
+function spawnCardPlayAnim(cardEl: HTMLElement, opts: { exhaust?: boolean } = {}): void {
   const rect = cardEl.getBoundingClientRect();
   // Avoid animating cards that aren't actually visible
   if (rect.width === 0 || rect.height === 0) return;
@@ -564,12 +564,40 @@ function spawnCardPlayAnim(cardEl: HTMLElement): void {
   clone.style.margin = '0';
   clone.style.zIndex = '1500';
   clone.style.pointerEvents = 'none';
-  clone.classList.add('card-playing');
   // Strip any hotkey badge — distracting on the floating clone
   const hotkey = clone.querySelector('.card-hotkey');
   if (hotkey) (hotkey as HTMLElement).style.display = 'none';
-  document.body.appendChild(clone);
-  setTimeout(() => clone.remove(), 520);
+
+  if (opts.exhaust) {
+    clone.classList.add('card-exhausting');
+    document.body.appendChild(clone);
+    // Spawn dissipating particles
+    spawnExhaustParticles(rect);
+    setTimeout(() => clone.remove(), 820);
+  } else {
+    clone.classList.add('card-playing');
+    document.body.appendChild(clone);
+    setTimeout(() => clone.remove(), 520);
+  }
+}
+
+function spawnExhaustParticles(rect: DOMRect): void {
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const count = 12;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'exhaust-particle';
+    const angle = (i / count) * Math.PI * 2 + Math.random() * 0.4;
+    const dist = 60 + Math.random() * 80;
+    p.style.left = `${cx}px`;
+    p.style.top = `${cy}px`;
+    p.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+    p.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+    p.style.animationDelay = `${Math.random() * 0.1}s`;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 900);
+  }
 }
 
 function spawnPlayerDamageNumber(amount: number): void {
@@ -790,7 +818,7 @@ function playCardWithFx(state: CombatState, card: CardInstance, target: Enemy | 
   const handCards = document.querySelectorAll('.combat-bottom .card');
   const idxInHand = state.player.hand.findIndex((c) => c.uid === card.uid);
   if (idxInHand >= 0 && handCards[idxInHand]) {
-    spawnCardPlayAnim(handCards[idxInHand] as HTMLElement);
+    spawnCardPlayAnim(handCards[idxInHand] as HTMLElement, { exhaust: !!def.exhaust });
   }
   const before = snapshotFx(state);
   state.player.energy -= def.cost;

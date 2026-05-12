@@ -776,6 +776,53 @@ button:disabled {
   100% { transform: translateY(-220px) scale(0.55) rotate(6deg); opacity: 0; }
 }
 
+/* Card exhaust — purple glow, distortion, dissolve */
+.card-exhausting {
+  animation: card-exhaust-out 0.8s ease-in forwards;
+  box-shadow: 0 0 30px rgba(180, 60, 220, 0.9), 0 0 60px rgba(140, 40, 200, 0.6);
+  border-color: #b040d0 !important;
+}
+.card-exhausting::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(180, 60, 220, 0.35), rgba(80, 20, 120, 0.55));
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: exhaust-tint 0.8s ease-in forwards;
+}
+@keyframes card-exhaust-out {
+  0%   { transform: scale(1) rotate(0deg);                    opacity: 1; filter: hue-rotate(0deg) brightness(1); }
+  30%  { transform: scale(1.08) rotate(-3deg) translateY(-12px); opacity: 1; filter: hue-rotate(40deg) brightness(1.2); }
+  100% { transform: scale(0.6) rotate(8deg) translateY(20px);  opacity: 0; filter: hue-rotate(80deg) brightness(0.6) blur(6px); }
+}
+@keyframes exhaust-tint {
+  0%   { opacity: 0; }
+  30%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Exhaust particles — purple sparkles flying outward */
+.exhaust-particle {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  margin: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, #d090ff 35%, #8020c0 100%);
+  box-shadow: 0 0 8px #c060ff, 0 0 14px rgba(180, 60, 220, 0.6);
+  z-index: 1499;
+  pointer-events: none;
+  opacity: 0;
+  animation: exhaust-particle-fly 0.85s ease-out forwards;
+}
+@keyframes exhaust-particle-fly {
+  0%   { opacity: 0;   transform: translate(0, 0) scale(0.5); }
+  20%  { opacity: 1;   transform: translate(calc(var(--dx) * 0.3), calc(var(--dy) * 0.3)) scale(1.2); }
+  100% { opacity: 0;   transform: translate(var(--dx), var(--dy)) scale(0.3); }
+}
+
 /* Curse cards (wounds) — distinct dark/purple look */
 .card.curse {
   border-color: #6a3a8a !important;
