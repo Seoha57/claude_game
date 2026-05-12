@@ -6,6 +6,7 @@ import { makeRng, randInt, uid } from '../rng';
 import { getModifiers } from '../ascension';
 import { getRunOrNull } from '../state';
 import { checkBurnKill } from '../achievements';
+import { getEffectiveDef } from '../content/cards';
 
 const PLAYER_DRAW = 5;
 
@@ -72,6 +73,23 @@ export function beginPlayerTurn(state: CombatState): void {
   p.energy = p.maxEnergy;
   state.flags.firstAttackThisTurn = true;
 
+  // Innate cards — on turn 1 only, pull all innates from draw pile to hand
+  // up to hand cap (10). Then normal draw fills the rest.
+  if (state.turn === 1) {
+    const innates: typeof p.draw = [];
+    const rest: typeof p.draw = [];
+    for (const c of p.draw) {
+      const def = getEffectiveDef(c);
+      if (def.innate) innates.push(c);
+      else rest.push(c);
+    }
+    p.draw = rest;
+    for (const c of innates) {
+      if (p.hand.length >= 10) break;
+      p.hand.push(c);
+    }
+  }
+
   // Per-turn relic effects
   const run = getRunOrNull();
   if (run) {
@@ -107,9 +125,22 @@ function applyStartOfTurnStatuses(c: any, state: CombatState, name: string): voi
 
 export function endPlayerTurn(state: CombatState): void {
   const p = state.player;
-  // Discard hand
-  for (const c of p.hand) p.discard.push(c);
-  p.hand = [];
+  // End-of-turn hand handling:
+  // - retain: stays in hand
+  // - ethereal (and not retain): exhausts
+  // - others: discard
+  const retained: typeof p.hand = [];
+  for (const c of p.hand) {
+    const def = getEffectiveDef(c);
+    if (def.retain) {
+      retained.push(c);
+    } else if (def.ethereal) {
+      p.exhaust.push(c);
+    } else {
+      p.discard.push(c);
+    }
+  }
+  p.hand = retained;
 
   // Player end-of-turn statuses
   endOfTurnStatuses(p, state, '플레이어');

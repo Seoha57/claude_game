@@ -270,8 +270,9 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 3,
     target: 'self',
-    description: '턴 시작 시 힘 +2.',
+    description: '턴 시작 시 힘 +2. 선천.',
     effects: [{ kind: 'apply_self', status: 'ritual', amount: 2 }],
+    innate: true,
   },
   f_my_rhythm: {
     id: 'f_my_rhythm',
@@ -312,7 +313,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_double_open:   { name: '이중개방+',                 description: '턴 종료 시 방어도 +4.',                 effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
   f_golden_thunder: { name: '금뇌호 : 심판의 넨수+',   description: '42 데미지. 취약 +3.',                   effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   f_flame_kick:    { name: '화염의 각+',                description: '모든 적에게 28 데미지.',                effects: [{ kind: 'damage_all', amount: 28 }] },
-  f_sky_fall:      { name: '천붕지괴+',                 description: '턴 시작 시 힘 +3.',                     effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
+  f_sky_fall:      { name: '천붕지괴+',                 description: '턴 시작 시 힘 +3. 선천.',               effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   f_my_rhythm:     { name: '나의 공격 리듬은!!+',       description: 'HP -3. 24 데미지.',                     effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
 };
 

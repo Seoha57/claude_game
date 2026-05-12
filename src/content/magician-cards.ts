@@ -251,11 +251,12 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 2,
     target: 'enemy',
-    description: 'HP -5. 18 데미지.',
+    description: 'HP -5. 18 데미지. 유지. 소멸.',
     effects: [
       { kind: 'lose_hp', amount: 5 },
       { kind: 'damage', amount: 18 },
     ],
+    retain: true,
     exhaust: true,
   },
   m_quasar: {
@@ -275,8 +276,9 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 3,
     target: 'self',
-    description: '턴 시작 시 힘 +2.',
+    description: '턴 시작 시 힘 +2. 선천.',
     effects: [{ kind: 'apply_self', status: 'ritual', amount: 2 }],
+    innate: true,
   },
   m_marionette: {
     id: 'm_marionette',
@@ -312,9 +314,9 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_mirror:         { name: '미러이미지+',                 description: '힘 +3.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   m_goblin_charge:  { name: '계약소환: 고블린 돌격대+',   description: '턴 종료 시 방어도 +4.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
   m_astral_storm:   { name: '애스트럴 스톰+',              description: '42 데미지.',                             effects: [{ kind: 'damage', amount: 42 }] },
-  m_kasiyas:        { name: '정복자 카시야스+',            description: 'HP -3. 24 데미지.',                      effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
+  m_kasiyas:        { name: '정복자 카시야스+',            description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
   m_quasar:         { name: '퀘이사 익스플로전+',          description: '모든 적에게 28 데미지.',                 effects: [{ kind: 'damage_all', amount: 28 }] },
-  m_fusion:         { name: '퓨전 크래프트+',              description: '턴 시작 시 힘 +3.',                      effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
+  m_fusion:         { name: '퓨전 크래프트+',              description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   m_marionette:     { name: '마리오네트+',                 description: '모든 적에게 6 데미지.',                  effects: [{ kind: 'damage_all', amount: 6 }] },
 };
 

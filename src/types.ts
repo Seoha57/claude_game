@@ -42,6 +42,8 @@ export interface CardDef {
   effects: Effect[];
   exhaust?: boolean;
   ethereal?: boolean; // exhausts at end of turn if not played
+  innate?: boolean;   // always in opening hand
+  retain?: boolean;   // stays in hand at end of turn (not discarded)
 }
 
 export interface CardInstance {

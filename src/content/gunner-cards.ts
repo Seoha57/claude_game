@@ -260,11 +260,12 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 3,
     target: 'enemy',
-    description: '32 데미지. 취약 +2.',
+    description: '32 데미지. 취약 +2. 유지.',
     effects: [
       { kind: 'damage', amount: 32 },
       { kind: 'apply_enemy', status: 'vulnerable', amount: 2 },
     ],
+    retain: true,
   },
   g_mech_drop: {
     id: 'g_mech_drop',
@@ -325,7 +326,7 @@ const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_g14:            { name: 'G-14 파열류탄+',           description: '11 데미지. 취약 +3.',                  effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   g_reinforce:      { name: '슈타이어 대전차포+',               description: '힘 +3.',                               effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   g_sparrow:        { name: 'RX-78 랜드러너+',         description: '턴 종료 시 방어도 +4.',                effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
-  g_overheat:       { name: '부스트 : 서프레스+',       description: '42 데미지. 취약 +3.',                  effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
+  g_overheat:       { name: '부스트 : 서프레스+',       description: '42 데미지. 취약 +3. 유지.',            effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   g_mech_drop:      { name: 'Ez-8 카운트다운+',           description: '34 데미지.',                           effects: [{ kind: 'damage', amount: 34 }] },
   g_arms_dealer:    { name: '뽑아치기+',       description: 'HP -3. 30 데미지.',                    effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 30 }] },
   g_airstrike:      { name: '은탄+',   description: '모든 적에게 24 데미지.',               effects: [{ kind: 'damage_all', amount: 24 }] },
