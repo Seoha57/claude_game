@@ -13,6 +13,7 @@ import { renderStats } from './stats-ui';
 import { renderHelp } from './help-ui';
 import { renderCodex } from './codex-ui';
 import { renderAchievements } from './achievements-ui';
+import { renderNeowBlessing } from './neow-ui';
 
 export function render(): void {
   const root = document.getElementById('app');
@@ -74,6 +75,9 @@ export function render(): void {
       break;
     case 'achievements':
       view = renderAchievements();
+      break;
+    case 'neow_blessing':
+      view = renderNeowBlessing();
       break;
   }
   root.appendChild(view);

@@ -1,6 +1,5 @@
 import { el } from './dom';
 import { startNewRun, setScreen } from '../state';
-import { showChapterIntro } from './splash-overlay';
 import type { CharacterClass } from '../types';
 
 interface CharacterInfo {
@@ -116,8 +115,9 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
         'button',
         {
           onClick: () => {
-            startNewRun(seed, ascension, selected);
-            showChapterIntro(1);
+            // startNewRun creates the run state; neow blessing screen lets
+            // the player apply a bonus before the map appears.
+            startNewRun(seed, ascension, selected, { goToScreen: 'neow_blessing' });
           },
         },
         `${CHARACTERS.find((c) => c.id === selected)?.name ?? ''} 시작`,

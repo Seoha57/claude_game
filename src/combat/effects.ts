@@ -11,7 +11,7 @@ import { ENEMY_DEFS } from '../content/enemies';
 
 // Apply raw damage to a combatant, accounting for block. Returns hp damage dealt (post-block).
 export function dealDamage(
-  _state: CombatState,
+  state: CombatState,
   attacker: { statuses: any },
   target: { hp: number; block: number; statuses: any; maxHp: number },
   rawAmount: number,
@@ -35,6 +35,19 @@ export function dealDamage(
       const ab = Math.min(a.block ?? 0, thorns);
       if (a.block !== undefined) a.block -= ab;
       a.hp = Math.max(0, a.hp - (thorns - ab));
+    }
+  }
+
+  // Phase transition: if target is an enemy and just crossed half HP, fire onHalfHp
+  const t = target as Partial<Enemy>;
+  if (t.defId !== undefined && t.hp !== undefined && t.hp > 0 && !t.phaseTriggered) {
+    if (t.hp <= target.maxHp / 2) {
+      const def = ENEMY_DEFS[t.defId];
+      if (def?.onHalfHp) {
+        t.phaseTriggered = true;
+        const flavor = def.onHalfHp(state, target as Enemy);
+        state.log.push(`⚡ ${def.name}: ${flavor}`);
+      }
     }
   }
   return hpDmg;

@@ -116,6 +116,11 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '헥사고스트',
     hpRange: [200, 212],
     isBoss: true,
+    onHalfHp(_state, self) {
+      applyStatus(self, 'strength', 3);
+      applyStatus(self, 'ritual', 1);
+      return '6개의 영혼이 깨어났다! (힘 +3, 의식 +1)';
+    },
     decideIntent(_state, _self, turn) {
       // Pattern: turn 0 ritual, then 1: inferno (4x4), 2: sear (5+vuln), 3: inflame, 4: tackle (5x2), repeat 1..4
       if (turn === 0) return { kind: 'buff', label: '의식 +1' };
@@ -146,6 +151,10 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '광폭한 도살자',
     hpRange: [200, 215],
     isBoss: true,
+    onHalfHp(_state, self) {
+      applyStatus(self, 'ritual', 2);
+      return '광기가 폭주한다! (의식 +2)';
+    },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '광기: 힘 +2' };
       const cycle = (turn - 1) % 4;
@@ -170,6 +179,11 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '흑요암 골렘',
     hpRange: [215, 225],
     isBoss: true,
+    onHalfHp(_state, self) {
+      applyStatus(self, 'thorns', 5);
+      applyStatus(self, 'metallicize', 3);
+      return '균열에서 빛이 솟구친다! (가시 +5, 금속화 +3)';
+    },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '가시 +3' };
       const cycle = (turn - 1) % 4;
@@ -358,6 +372,11 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '수집가',
     hpRange: [250, 265],
     isBoss: true,
+    onHalfHp(state, self) {
+      applyStatus(self, 'strength', 3);
+      applyStatus(state.player, 'weak', 2);
+      return '수집의 광기! (힘 +3, 플레이어 약화 +2)';
+    },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '힘 +2, 가시 준비' };
       const cycle = (turn - 1) % 4;
@@ -391,6 +410,11 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '카르낙 룬마스터',
     hpRange: [255, 268],
     isBoss: true,
+    onHalfHp(state, self) {
+      applyStatus(self, 'strength', 4);
+      applyStatus(state.player, 'vulnerable', 2);
+      return '룬이 폭주한다! (힘 +4, 플레이어 취약 +2)';
+    },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '의식 +2' };
       const cycle = (turn - 1) % 5;
@@ -420,6 +444,11 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '시로코의 환영',
     hpRange: [260, 275],
     isBoss: true,
+    onHalfHp(_state, self) {
+      applyStatus(self, 'strength', 4);
+      applyStatus(self, 'ritual', 2);
+      return '용의 본 모습이 드러난다! (힘 +4, 의식 +2)';
+    },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '용의 분노: 힘+2 의식+1' };
       const cycle = (turn - 1) % 5;
@@ -455,6 +484,16 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '공허의 심장',
     hpRange: [300, 320],
     isBoss: true,
+    onHalfHp(state, self) {
+      // Clear own debuffs and rage
+      for (const k of ['vulnerable', 'weak', 'frail', 'burn', 'freeze', 'poison'] as const) {
+        delete self.statuses[k];
+      }
+      applyStatus(self, 'strength', 5);
+      applyStatus(self, 'metallicize', 3);
+      applyStatus(state.player, 'vulnerable', 2);
+      return '공허가 깨어났다! 디버프 정화 + 힘 +5 / 금속화 +3 / 플레이어 취약 +2';
+    },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '힘+3, 가시+4, 금속화+3' };
       const cycle = (turn - 1) % 5;
@@ -494,6 +533,11 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '죽음의 사도 케이지',
     hpRange: [310, 325],
     isBoss: true,
+    onHalfHp(_state, self) {
+      applyStatus(self, 'strength', 5);
+      applyStatus(self, 'ritual', 2);
+      return '광기의 정점! (힘 +5, 의식 +2)';
+    },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '광기의 힘 +4' };
       const cycle = (turn - 1) % 5;
@@ -522,6 +566,12 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '이샤리스의 군림자',
     hpRange: [320, 340],
     isBoss: true,
+    onHalfHp(_state, self) {
+      applyStatus(self, 'metallicize', 5);
+      applyStatus(self, 'thorns', 5);
+      applyStatus(self, 'strength', 2);
+      return '진정한 군림자의 자세! (금속화 +5, 가시 +5, 힘 +2)';
+    },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '금속화 +5, 가시 +5' };
       const cycle = (turn - 1) % 5;
@@ -559,6 +609,17 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '차원의 지배자',
     hpRange: [440, 460],
     isBoss: true,
+    onHalfHp(state, self) {
+      for (const k of ['vulnerable', 'weak', 'frail', 'burn', 'freeze', 'poison'] as const) {
+        delete self.statuses[k];
+      }
+      applyStatus(self, 'strength', 6);
+      applyStatus(self, 'thorns', 8);
+      applyStatus(self, 'metallicize', 4);
+      applyStatus(state.player, 'vulnerable', 3);
+      applyStatus(state.player, 'weak', 3);
+      return '차원이 비명을 지른다! 모든 디버프 정화 + 광폭화';
+    },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '힘+5, 가시+8, 금속화+5' };
       const cycle = (turn - 1) % 6;

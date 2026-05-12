@@ -99,6 +99,8 @@ export interface EnemyDef {
   isBoss?: boolean;
   decideIntent: (state: CombatState, self: Enemy, turn: number) => Intent;
   act: (state: CombatState, self: Enemy) => void;
+  // Phase change triggered once when HP drops to ≤ 50%
+  onHalfHp?: (state: CombatState, self: Enemy) => string; // returns short flavor text
 }
 
 export interface Enemy extends Combatant {
@@ -106,6 +108,7 @@ export interface Enemy extends Combatant {
   defId: string;
   intent: Intent;
   turn: number;
+  phaseTriggered?: boolean;
 }
 
 export interface CombatState {
@@ -129,7 +132,7 @@ export interface MapNode {
   visited: boolean;
 }
 
-export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements';
+export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing';
 
 export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician';
 

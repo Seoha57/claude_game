@@ -148,7 +148,7 @@ function bgmTrackForScreen(s: Screen): BgmTrack | null {
   return null;
 }
 
-export function startNewRun(seed: number, ascension = 0, characterClass: CharacterClass = 'swordmaster'): void {
+export function startNewRun(seed: number, ascension = 0, characterClass: CharacterClass = 'swordmaster', options: { goToScreen?: Screen } = {}): void {
   const mods = getModifiers(ascension);
   const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65 };
   const baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
@@ -199,7 +199,7 @@ export function startNewRun(seed: number, ascension = 0, characterClass: Charact
   // Codex: starter deck + starting relic
   recordCards(deck.map((c) => c.defId));
   recordRelic(startingRelic);
-  setScreen('map');
+  setScreen(options.goToScreen ?? 'map');
 }
 
 function makeStarterDeck(): CardInstance[] {
