@@ -4,6 +4,7 @@ import { showChapterIntro } from './splash-overlay';
 import { playSfx } from '../audio';
 import { recordRelics } from '../codex';
 import { unlockNextAscension, getUnlockedMax } from '../ascension';
+import { ENEMY_DEFS } from '../content/enemies';
 import { BOSS_RELICS } from '../content/relics';
 import { makeRng, shuffle } from '../rng';
 
@@ -258,14 +259,55 @@ export function renderTrueWin(): HTMLElement {
 
 export function renderLose(): HTMLElement {
   const run = getRunOrNull();
+  if (!run) {
+    return el(
+      'div',
+      { class: 'end-screen' },
+      el('h1', { class: 'lose' }, '패배...'),
+      el('button', { onClick: () => endRun() }, '제목 화면으로'),
+    );
+  }
+
+  const curNode = run.currentNodeId ? run.map.find((n) => n.id === run.currentNodeId) : null;
+  const nodeKindLabel: Record<string, string> = {
+    combat: '일반 전투',
+    elite: '엘리트',
+    boss: '보스',
+    rest: '모닥불',
+    event: '이벤트',
+    shop: '상점',
+    reward: '보물',
+    start: '시작',
+  };
+
+  // Try to identify the enemy that killed them
+  const enemyIds = run.combatEnemyDefIds ?? [];
+  const enemyNames = enemyIds
+    .map((id) => ENEMY_DEFS[id]?.name)
+    .filter(Boolean) as string[];
+
+  // Death location
+  const locLabel = curNode
+    ? `챕터 ${run.chapter} · ${run.floor}층 (${nodeKindLabel[curNode.kind] ?? curNode.kind})`
+    : `챕터 ${run.chapter} · ${run.floor}층`;
+
   return el(
     'div',
     { class: 'end-screen' },
     el('h1', { class: 'lose' }, '패배...'),
+    el('div', { class: 'lose-loc' }, locLabel),
+    enemyNames.length > 0
+      ? el('div', { class: 'lose-killer' }, `${enemyNames.join(' · ')} 에게 쓰러졌다`)
+      : el('div'),
+    // Run summary
     el(
       'div',
-      { style: { color: 'var(--muted)' } },
-      run ? `${run.floor}층까지 도달` : '',
+      { class: 'lose-summary' },
+      el('div', { class: 'lose-stat' }, `💀 ${run.player.maxHp} max HP`),
+      el('div', { class: 'lose-stat' }, `🃏 ${run.player.deck.length}장`),
+      el('div', { class: 'lose-stat' }, `💰 ${run.player.gold}`),
+      el('div', { class: 'lose-stat' }, `💎 ${run.player.relics.length}유물`),
+      run.ascension > 0 ? el('div', { class: 'lose-stat' }, `A${run.ascension}`) : el('div'),
     ),
     el('button', { onClick: () => endRun() }, '제목 화면으로'),
   );

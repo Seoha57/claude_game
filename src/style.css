@@ -1676,6 +1676,31 @@ button:disabled {
 }
 .end-screen h1.win { color: var(--good); }
 .end-screen h1.lose { color: var(--bad); }
+.lose-loc {
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+.lose-killer {
+  color: var(--bad);
+  font-size: 15px;
+  font-style: italic;
+}
+.lose-summary {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.lose-stat {
+  padding: 4px 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
 
 /* ── Log ── */
 .combat-log {
