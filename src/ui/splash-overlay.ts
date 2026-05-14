@@ -1,10 +1,26 @@
 import { el } from './dom';
+import { makeRng } from '../rng';
+import { getRunOrNull } from '../state';
+import {
+  BOSS_ENCOUNTERS,
+  CH2_BOSS_ENCOUNTERS,
+  CH3_BOSS_ENCOUNTERS,
+  CH4_BOSS_ENCOUNTERS,
+  ENEMY_DEFS,
+} from '../content/enemies';
+import { ENEMY_ART } from './combat-ui';
+
+export interface NextBossInfo {
+  name: string;
+  emoji: string;
+}
 
 export interface SplashOptions {
   title: string;
   subtitle?: string;
   emoji?: string;
   flavor?: string;
+  nextBoss?: NextBossInfo;
   duration?: number; // ms, default 2200
   onDismiss?: () => void;
   variant?: 'chapter' | 'boss';
@@ -33,6 +49,18 @@ export function showSplash(opts: SplashOptions): void {
   }
   if (opts.flavor) {
     inner.appendChild(el('div', { class: 'splash-flavor' }, opts.flavor));
+  }
+  if (opts.nextBoss) {
+    const boss = opts.nextBoss;
+    inner.appendChild(
+      el(
+        'div',
+        { class: 'splash-next-boss' },
+        el('span', { class: 'splash-next-boss-label' }, '이번 챕터 보스: '),
+        el('span', { class: 'splash-next-boss-emoji' }, boss.emoji),
+        el('span', { class: 'splash-next-boss-name' }, boss.name),
+      ),
+    );
   }
   inner.appendChild(el('div', { class: 'splash-skip' }, '클릭 또는 키 입력으로 건너뛰기'));
   overlay.appendChild(inner);
@@ -76,15 +104,43 @@ const CHAPTER_INFO: Record<number, { title: string; subtitle: string; emoji: str
   4: { title: '차원의 문 너머', subtitle: '✦ Chapter 4 — 진엔딩 ✦', emoji: '🌀', flavor: '균열의 끝에 무엇이 기다릴까' },
 };
 
+// Compute which boss the player will face for the given chapter.
+// Boss selection is deterministic based on run seed + boss-node position.
+function getBossForChapter(seed: number, chapter: number): { id: string; name: string; emoji: string } | null {
+  let table: string[][];
+  let bossX: number, bossY: number;
+  if (chapter === 4) {
+    table = CH4_BOSS_ENCOUNTERS;
+    bossX = 1;
+    bossY = 2;
+  } else {
+    bossX = 0;
+    bossY = 7;
+    table =
+      chapter === 3 ? CH3_BOSS_ENCOUNTERS :
+      chapter === 2 ? CH2_BOSS_ENCOUNTERS :
+      BOSS_ENCOUNTERS;
+  }
+  const rng = makeRng(seed + bossY * 31 + bossX);
+  const idx = Math.floor(rng() * table.length);
+  const bossId = table[idx][0];
+  const def = ENEMY_DEFS[bossId];
+  if (!def) return null;
+  return { id: bossId, name: def.name, emoji: ENEMY_ART[bossId] ?? '👑' };
+}
+
 export function showChapterIntro(chapter: number, onDismiss?: () => void): void {
   const info = CHAPTER_INFO[chapter] ?? { title: `Chapter ${chapter}`, subtitle: '', emoji: '🗺' };
+  const run = getRunOrNull();
+  const bossPreview = run ? getBossForChapter(run.seed, chapter) : null;
   showSplash({
     variant: 'chapter',
     title: info.title,
     subtitle: info.subtitle,
     emoji: info.emoji,
     flavor: info.flavor,
-    duration: 2200,
+    nextBoss: bossPreview ? { name: bossPreview.name, emoji: bossPreview.emoji } : undefined,
+    duration: 2600, // slightly longer so player has time to read the boss preview
     onDismiss,
   });
 }
