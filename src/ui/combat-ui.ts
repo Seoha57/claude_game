@@ -5,7 +5,7 @@ import { getCombat, getRun, setCombat, setScreen, rerender } from '../state';
 import { getEffectiveDef } from '../content/cards';
 import { openDeckOverlay } from './deck-overlay';
 import { ENEMY_DEFS } from '../content/enemies';
-import { STATUS_INFO, applyStatus } from '../combat/statuses';
+import { STATUS_INFO, applyStatus, modifiedAttackDamage } from '../combat/statuses';
 import { buildIntentDisplay } from '../combat/intent';
 import { endPlayerTurn } from '../combat/combat';
 import { playCard } from '../combat/effects';
@@ -18,6 +18,57 @@ import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChai
 
 let selectedCardUid: string | null = null;
 let selectedPotionId: string | null = null;
+let hoveredCardUid: string | null = null;
+
+// Compute damage preview for a card against a specific enemy.
+// Returns total per-hit damage * times, accounting for player strength/weak
+// and enemy vulnerable. Block is not subtracted (player sees enemy block separately).
+function computeCardDamageVsEnemy(card: CardInstance, player: { statuses: any }, enemy: Enemy): number {
+  const def = getEffectiveDef(card);
+  let total = 0;
+  for (const eff of def.effects) {
+    if (eff.kind === 'damage') {
+      const per = modifiedAttackDamage(eff.amount, player as any, enemy);
+      total += per * (eff.times ?? 1);
+    } else if (eff.kind === 'damage_all') {
+      const per = modifiedAttackDamage(eff.amount, player as any, enemy);
+      total += per;
+    }
+  }
+  return total;
+}
+
+function onCardHover(uid: string | null): void {
+  hoveredCardUid = uid;
+  updateDamagePreviews();
+}
+
+function updateDamagePreviews(): void {
+  // Clear existing previews
+  document.querySelectorAll('.dmg-preview').forEach((el) => el.remove());
+  if (!hoveredCardUid) return;
+  const state = getCombatOrNull();
+  if (!state || state.phase !== 'player') return;
+  const card = state.player.hand.find((c) => c.uid === hoveredCardUid);
+  if (!card) return;
+  const def = getEffectiveDef(card);
+  // Only show damage preview for cards that deal damage to enemies
+  const showsOnAll = def.target === 'all_enemies' || def.target === 'random_enemy';
+  const showsOnEnemyTarget = def.target === 'enemy';
+  if (!showsOnAll && !showsOnEnemyTarget) return;
+
+  for (const e of state.enemies) {
+    if (e.hp <= 0) continue;
+    const dmg = computeCardDamageVsEnemy(card, state.player, e);
+    if (dmg <= 0) continue;
+    const enemyEl = document.querySelector(`[data-enemy-uid="${e.uid}"]`);
+    if (!enemyEl) continue;
+    const preview = document.createElement('div');
+    preview.className = 'dmg-preview';
+    preview.textContent = `↦ ${dmg}`;
+    enemyEl.appendChild(preview);
+  }
+}
 
 export const ENEMY_ART: Record<string, string> = {
   jaw_worm: '🪱',
@@ -76,6 +127,13 @@ export function renderCombat(): HTMLElement {
   }
   // Reset for next combat
   if (state.phase === 'player' && lastPhasePlayed !== null) lastPhasePlayed = null;
+
+  // Clear hover state if hovered card is no longer in hand (was played, discarded, etc.)
+  if (hoveredCardUid && !state.player.hand.some((c) => c.uid === hoveredCardUid)) {
+    hoveredCardUid = null;
+  }
+  // Re-apply damage previews after DOM mount
+  requestAnimationFrame(updateDamagePreviews);
 
   return el(
     'div',
@@ -307,10 +365,14 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
   const selected = selectedCardUid === c.uid;
   const hotkey = idx < 9 ? String(idx + 1) : '';
   const curse = isCurseLike(def.id);
+  const upgraded = !!c.upgraded;
   return el(
     'div',
     {
-      class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''} ${canPlay ? '' : 'disabled'} ${noEnergy ? 'no-energy' : ''} ${selected ? 'selected' : ''}`,
+      class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''} ${canPlay ? '' : 'disabled'} ${noEnergy ? 'no-energy' : ''} ${selected ? 'selected' : ''} ${upgraded ? 'upgraded' : ''}`,
+      'data-card-uid': c.uid,
+      onMouseEnter: () => onCardHover(c.uid),
+      onMouseLeave: () => onCardHover(null),
       onClick: (e: MouseEvent) => {
         if (!canPlay) return;
         if (def.target === 'enemy') {

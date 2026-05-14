@@ -755,6 +755,51 @@ button:disabled {
 .card.rarity-rare::before     { background: #d4aa44; }
 .card.rarity-starter::before  { background: #555; }
 
+/* Upgraded cards — gold border + star badge */
+.card.upgraded {
+  border-color: #d4a05b !important;
+  box-shadow: 0 0 10px rgba(212, 160, 91, 0.4);
+}
+.card.upgraded .card-name {
+  color: #ffd080;
+  text-shadow: 0 0 4px rgba(212, 160, 91, 0.5);
+}
+.card.upgraded::after {
+  content: '★';
+  position: absolute;
+  top: 4px;
+  right: 26px;
+  font-size: 14px;
+  color: #ffd080;
+  text-shadow: 0 0 6px rgba(212, 160, 91, 0.8);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Damage preview number above enemy when card is hovered */
+.dmg-preview {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid var(--bad);
+  color: #ff8888;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 30;
+  box-shadow: 0 0 12px rgba(255, 80, 80, 0.4);
+  animation: dmg-preview-in 0.18s ease-out;
+  white-space: nowrap;
+}
+@keyframes dmg-preview-in {
+  from { opacity: 0; transform: translate(-50%, 6px) scale(0.9); }
+  to   { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
 /* Card draw — newly drawn cards slide+fade in from below */
 .card-fresh {
   animation: card-draw-in 0.36s cubic-bezier(0.2, 1.1, 0.4, 1) backwards;
