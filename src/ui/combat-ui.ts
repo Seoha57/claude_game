@@ -315,6 +315,8 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
         if (!canPlay) return;
         if (def.target === 'enemy') {
           selectedCardUid = selected ? null : c.uid;
+          // Selecting an enemy-target card cancels any pending potion targeting
+          if (!selected) selectedPotionId = null;
           rerender();
         } else {
           selectedCardUid = null;
@@ -375,6 +377,8 @@ function renderPotionBar(state: CombatState): HTMLElement {
               rerender();
             } else {
               selectedPotionId = isSelected ? null : potionId;
+              // Selecting an enemy-target potion cancels any pending card targeting
+              if (!isSelected) selectedCardUid = null;
               rerender();
             }
           },
@@ -843,7 +847,9 @@ function selectOrPlayCard(card: CardInstance): void {
       playCardWithFx(state, card, alive[0]);
     } else {
       // Toggle selection / let user click target or press number again
-      selectedCardUid = selectedCardUid === card.uid ? null : card.uid;
+      const wasSelected = selectedCardUid === card.uid;
+      selectedCardUid = wasSelected ? null : card.uid;
+      if (!wasSelected) selectedPotionId = null; // newly selecting card cancels pending potion
       targetedEnemyIdx = 0;
       rerender();
     }
