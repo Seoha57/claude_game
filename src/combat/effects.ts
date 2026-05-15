@@ -138,6 +138,7 @@ export function applyEffect(
       const [c] = player.hand.splice(idx, 1);
       player.exhaust.push(c);
       log(`무작위 카드 소멸`);
+      triggerOnExhaust(state, log);
       return;
     }
     case 'discard_random': {
@@ -210,8 +211,12 @@ export function playCard(
   }
 
   // movement
-  if (def.exhaust) p.exhaust.push(card);
-  else p.discard.push(card);
+  if (def.exhaust) {
+    p.exhaust.push(card);
+    triggerOnExhaust(state, log);
+  } else {
+    p.discard.push(card);
+  }
 
   // Permanent scaling — bonusDamage persists across combats
   if (def.scaling) {
@@ -225,5 +230,30 @@ export function playCard(
         log(`${def.name}: 처치! 영구 데미지 +${def.scaling.amount}`);
       }
     }
+  }
+}
+
+// Fire on-exhaust passive effects (powers like 사슬 해제, 다이버전트, 적룡노화, 인형의 숲)
+function triggerOnExhaust(state: CombatState, log: (s: string) => void): void {
+  const p = state.player;
+  const str = getStatus(p.statuses, 'on_exhaust_str');
+  if (str > 0) {
+    applyStatus(p, 'strength', str);
+    log(`소멸의 힘 → 힘 +${str}`);
+  }
+  const draw = getStatus(p.statuses, 'on_exhaust_draw');
+  if (draw > 0) {
+    drawCards(state, draw);
+    log(`소멸 드로우 → ${draw}장 드로우`);
+  }
+  const block = getStatus(p.statuses, 'on_exhaust_block');
+  if (block > 0) {
+    p.block += block;
+    log(`소멸 방어 → 방어도 +${block}`);
+  }
+  const energy = getStatus(p.statuses, 'on_exhaust_energy');
+  if (energy > 0) {
+    p.energy += energy;
+    log(`소멸 에너지 → 에너지 +${energy}`);
   }
 }

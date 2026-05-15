@@ -14,7 +14,11 @@ export type StatusKey =
   | 'ritual'
   | 'metallicize'
   | 'burn'
-  | 'freeze';
+  | 'freeze'
+  | 'on_exhaust_str'
+  | 'on_exhaust_draw'
+  | 'on_exhaust_block'
+  | 'on_exhaust_energy';
 
 export type Effect =
   | { kind: 'damage'; amount: number; times?: number }

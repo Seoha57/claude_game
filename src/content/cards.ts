@@ -268,6 +268,16 @@ export const CARD_DEFS: Record<string, CardDef> = {
     exhaust: true,
     scaling: { kind: 'on_kill', amount: 3 },
   },
+  chain_release: {
+    id: 'chain_release',
+    name: '사슬 해제',
+    type: 'power',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'self',
+    description: '카드 소멸 시 힘 +1.',
+    effects: [{ kind: 'apply_self', status: 'on_exhaust_str', amount: 1 }],
+  },
 
   // ── Rare (1차 각성기) ──
   bludgeon: {
@@ -360,6 +370,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   rage:             { name: '리턴+',          description: '재생 +8.',                            effects: [{ kind: 'apply_self', status: 'regen', amount: 8 }] },
   metallicize_card: { name: '대검 마스터리+',  description: '턴 종료 시 방어도 +4.',              effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
   mugeukdo:         { name: '무극도+',         description: '13 데미지. 처치 시 영구 데미지 +5.',  effects: [{ kind: 'damage', amount: 13 }] },
+  chain_release:    { name: '사슬 해제+',      description: '카드 소멸 시 힘 +2.',                  effects: [{ kind: 'apply_self', status: 'on_exhaust_str', amount: 2 }] },
   bludgeon:         { name: '극 귀검술 : 폭풍식+',           description: '42 데미지. 유지.',                effects: [{ kind: 'damage', amount: 42 }] },
   demon_form:       { name: '파동의 눈+',                   description: '턴 시작 시 힘 +3. 선천.',         effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   feed:             { name: '익스트림 오버킬+',             description: 'HP -3. 24 데미지.',                effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },

@@ -262,6 +262,16 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage', amount: 6 }],
     scaling: { kind: 'on_play', amount: 2 },
   },
+  g_divergent: {
+    id: 'g_divergent',
+    name: '다이버전트',
+    type: 'power',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'self',
+    description: '카드 소멸 시 카드 1장 드로우.',
+    effects: [{ kind: 'apply_self', status: 'on_exhaust_draw', amount: 1 }],
+  },
 
   // ── Rare (1차 각성기) ──
   g_overheat: {
@@ -338,6 +348,7 @@ const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_reinforce:      { name: '슈타이어 대전차포+',               description: '힘 +3.',                               effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   g_sparrow:        { name: 'RX-78 랜드러너+',         description: '턴 종료 시 방어도 +4.',                effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
   g_gods_hail:      { name: '갓즈 헤일+',               description: '8 데미지. 사용할 때마다 영구 데미지 +3.', effects: [{ kind: 'damage', amount: 8 }] },
+  g_divergent:      { name: '다이버전트+',              description: '카드 소멸 시 카드 2장 드로우.',         effects: [{ kind: 'apply_self', status: 'on_exhaust_draw', amount: 2 }] },
   g_overheat:       { name: '부스트 : 서프레스+',       description: '42 데미지. 취약 +3. 유지.',            effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   g_mech_drop:      { name: 'Ez-8 카운트다운+',           description: '34 데미지.',                           effects: [{ kind: 'damage', amount: 34 }] },
   g_arms_dealer:    { name: '뽑아치기+',       description: 'HP -3. 30 데미지.',                    effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 30 }] },

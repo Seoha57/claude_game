@@ -89,6 +89,34 @@ export const STATUS_INFO: Record<StatusKey, StatusInfo> = {
     decay: true,
     buff: false,
   },
+  on_exhaust_str: {
+    key: 'on_exhaust_str',
+    name: '소멸의 힘',
+    description: '카드 소멸 시 힘 +N',
+    decay: false,
+    buff: true,
+  },
+  on_exhaust_draw: {
+    key: 'on_exhaust_draw',
+    name: '소멸 드로우',
+    description: '카드 소멸 시 N장 드로우',
+    decay: false,
+    buff: true,
+  },
+  on_exhaust_block: {
+    key: 'on_exhaust_block',
+    name: '소멸 방어',
+    description: '카드 소멸 시 방어도 +N',
+    decay: false,
+    buff: true,
+  },
+  on_exhaust_energy: {
+    key: 'on_exhaust_energy',
+    name: '소멸 에너지',
+    description: '카드 소멸 시 에너지 +N',
+    decay: false,
+    buff: true,
+  },
 };
 
 export function applyStatus(c: Combatant, key: StatusKey, amount: number): void {
