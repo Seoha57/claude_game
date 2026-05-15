@@ -238,6 +238,17 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     description: '턴 종료 시 방어도 +3.',
     effects: [{ kind: 'apply_self', status: 'metallicize', amount: 3 }],
   },
+  f_saro_hwanyeol: {
+    id: 'f_saro_hwanyeol',
+    name: '사로지환열',
+    type: 'attack',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'enemy',
+    description: '8 데미지. 사용할 때마다 영구 데미지 +2.',
+    effects: [{ kind: 'damage', amount: 8 }],
+    scaling: { kind: 'on_play', amount: 2 },
+  },
 
   // ── Rare (1차 각성기) ──
   f_golden_thunder: {
@@ -311,6 +322,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_hadouken:      { name: '수플렉스 썬더+',                   description: '힘 +3.',                                effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   f_mount:         { name: '일발화약성+',                   description: '재생 +8.',                              effects: [{ kind: 'apply_self', status: 'regen', amount: 8 }] },
   f_double_open:   { name: '이중개방+',                 description: '턴 종료 시 방어도 +4.',                 effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
+  f_saro_hwanyeol: { name: '사로지환열+',                description: '10 데미지. 사용할 때마다 영구 데미지 +3.', effects: [{ kind: 'damage', amount: 10 }] },
   f_golden_thunder: { name: '금뇌호 : 심판의 넨수+',   description: '42 데미지. 취약 +3.',                   effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   f_flame_kick:    { name: '화염의 각+',                description: '모든 적에게 28 데미지.',                effects: [{ kind: 'damage_all', amount: 28 }] },
   f_sky_fall:      { name: '천붕지괴+',                 description: '턴 시작 시 힘 +3. 선천.',               effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },

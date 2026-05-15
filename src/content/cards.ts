@@ -256,6 +256,18 @@ export const CARD_DEFS: Record<string, CardDef> = {
     description: '턴 종료 시 방어도 +3.',
     effects: [{ kind: 'apply_self', status: 'metallicize', amount: 3 }],
   },
+  mugeukdo: {
+    id: 'mugeukdo',
+    name: '무극도',
+    type: 'attack',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'enemy',
+    description: '10 데미지. 처치 시 영구 데미지 +3.',
+    effects: [{ kind: 'damage', amount: 10 }],
+    exhaust: true,
+    scaling: { kind: 'on_kill', amount: 3 },
+  },
 
   // ── Rare (1차 각성기) ──
   bludgeon: {
@@ -347,6 +359,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   inflame:          { name: '소검 마스터리+',          description: '힘 +3.',                              effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   rage:             { name: '리턴+',          description: '재생 +8.',                            effects: [{ kind: 'apply_self', status: 'regen', amount: 8 }] },
   metallicize_card: { name: '대검 마스터리+',  description: '턴 종료 시 방어도 +4.',              effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
+  mugeukdo:         { name: '무극도+',         description: '13 데미지. 처치 시 영구 데미지 +5.',  effects: [{ kind: 'damage', amount: 13 }] },
   bludgeon:         { name: '극 귀검술 : 폭풍식+',           description: '42 데미지. 유지.',                effects: [{ kind: 'damage', amount: 42 }] },
   demon_form:       { name: '파동의 눈+',                   description: '턴 시작 시 힘 +3. 선천.',         effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   feed:             { name: '익스트림 오버킬+',             description: 'HP -3. 24 데미지.',                effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
@@ -357,14 +370,37 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
 import type { CardInstance } from '../types';
 
 export function getEffectiveDef(card: CardInstance): CardDef {
-  if (card.defId.startsWith('g_')) return gunnerGetEffectiveDef(card);
-  if (card.defId.startsWith('f_')) return fighterGetEffectiveDef(card);
-  if (card.defId.startsWith('m_')) return magicianGetEffectiveDef(card);
-  const base = CARD_DEFS[card.defId];
-  if (!card.upgraded) return base;
-  const up = UPGRADE_MAP[card.defId];
-  if (!up) return base;
-  return { ...base, ...up };
+  let def: CardDef;
+  if (card.defId.startsWith('g_')) {
+    def = gunnerGetEffectiveDef(card);
+  } else if (card.defId.startsWith('f_')) {
+    def = fighterGetEffectiveDef(card);
+  } else if (card.defId.startsWith('m_')) {
+    def = magicianGetEffectiveDef(card);
+  } else {
+    const base = CARD_DEFS[card.defId];
+    if (!card.upgraded) {
+      def = base;
+    } else {
+      const up = UPGRADE_MAP[card.defId];
+      def = up ? { ...base, ...up } : base;
+    }
+  }
+  return applyScaling(card, def);
+}
+
+function applyScaling(card: CardInstance, def: CardDef): CardDef {
+  const bonus = card.bonusDamage ?? 0;
+  if (!def.scaling || bonus === 0) return def;
+  return {
+    ...def,
+    effects: def.effects.map((e) => {
+      if (e.kind === 'damage') return { ...e, amount: e.amount + bonus };
+      if (e.kind === 'damage_all') return { ...e, amount: e.amount + bonus };
+      return e;
+    }),
+    description: `${def.description} (현재 +${bonus})`,
+  };
 }
 
 export function canUpgrade(card: CardInstance): boolean {

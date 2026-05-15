@@ -232,6 +232,18 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     description: '턴 종료 시 방어도 +3.',
     effects: [{ kind: 'apply_self', status: 'metallicize', amount: 3 }],
   },
+  m_ouroboros: {
+    id: 'm_ouroboros',
+    name: '우로보로스',
+    type: 'attack',
+    rarity: 'uncommon',
+    cost: 2,
+    target: 'enemy',
+    description: '12 데미지. 처치 시 영구 데미지 +4. 소멸.',
+    effects: [{ kind: 'damage', amount: 12 }],
+    exhaust: true,
+    scaling: { kind: 'on_kill', amount: 4 },
+  },
 
   // ── Rare (1차 각성기) ──
   m_astral_storm: {
@@ -313,6 +325,7 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_rose_bind:      { name: '로즈 바인+',                  description: '방어도 +13.',                            effects: [{ kind: 'block', amount: 13 }] },
   m_mirror:         { name: '미러이미지+',                 description: '힘 +3.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   m_goblin_charge:  { name: '계약소환: 고블린 돌격대+',   description: '턴 종료 시 방어도 +4.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
+  m_ouroboros:      { name: '우로보로스+',                description: '15 데미지. 처치 시 영구 데미지 +6. 소멸.', effects: [{ kind: 'damage', amount: 15 }] },
   m_astral_storm:   { name: '애스트럴 스톰+',              description: '42 데미지.',                             effects: [{ kind: 'damage', amount: 42 }] },
   m_kasiyas:        { name: '정복자 카시야스+',            description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
   m_quasar:         { name: '퀘이사 익스플로전+',          description: '모든 적에게 28 데미지.',                 effects: [{ kind: 'damage_all', amount: 28 }] },

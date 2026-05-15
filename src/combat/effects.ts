@@ -202,6 +202,9 @@ export function playCard(
   const idx = p.hand.findIndex((c) => c.uid === card.uid);
   if (idx >= 0) p.hand.splice(idx, 1);
 
+  // Snapshot alive enemies before effects for on_kill scaling detection
+  const beforeAlive = state.enemies.filter((e) => e.hp > 0).length;
+
   for (const e of def.effects) {
     applyEffect(state, e, p, targetEnemy, log);
   }
@@ -209,4 +212,18 @@ export function playCard(
   // movement
   if (def.exhaust) p.exhaust.push(card);
   else p.discard.push(card);
+
+  // Permanent scaling — bonusDamage persists across combats
+  if (def.scaling) {
+    if (def.scaling.kind === 'on_play') {
+      card.bonusDamage = (card.bonusDamage ?? 0) + def.scaling.amount;
+      log(`${def.name}: 영구 데미지 +${def.scaling.amount}`);
+    } else if (def.scaling.kind === 'on_kill') {
+      const afterAlive = state.enemies.filter((e) => e.hp > 0).length;
+      if (afterAlive < beforeAlive) {
+        card.bonusDamage = (card.bonusDamage ?? 0) + def.scaling.amount;
+        log(`${def.name}: 처치! 영구 데미지 +${def.scaling.amount}`);
+      }
+    }
+  }
 }

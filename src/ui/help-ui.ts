@@ -20,6 +20,7 @@ export function renderHelp(): HTMLElement {
     '  • 소멸: 사용 후 영구 제거 (보라 디졸브)',
     '  • 선천: 항상 첫 핸드에 들어옴',
     '  • 유지: 턴 종료해도 핸드에 남음',
+    '  • 영구 +N: 사용/처치 시마다 데미지가 영구히 증가 (런 끝까지 누적)',
   ]));
 
   wrapper.appendChild(section('🎯 카드 타게팅 — 중요!', [

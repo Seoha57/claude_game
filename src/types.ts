@@ -44,12 +44,18 @@ export interface CardDef {
   ethereal?: boolean; // exhausts at end of turn if not played
   innate?: boolean;   // always in opening hand
   retain?: boolean;   // stays in hand at end of turn (not discarded)
+  // Permanent damage scaling — applied to the same CardInstance across combats
+  scaling?: {
+    kind: 'on_play' | 'on_kill';
+    amount: number; // bonus damage added per trigger
+  };
 }
 
 export interface CardInstance {
   uid: string;
   defId: string;
   upgraded?: boolean;
+  bonusDamage?: number; // accumulated permanent scaling damage
 }
 
 export type Statuses = Partial<Record<StatusKey, number>>;
