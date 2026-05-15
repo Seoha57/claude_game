@@ -173,8 +173,34 @@ function buildSmithCard(card: CardInstance): HTMLElement {
   const nameEl = el('div', { class: 'card-name' }, baseDef.name);
   const descEl = el('div', { class: 'card-desc' }, baseDef.description);
   const typeEl = el('div', { class: 'card-type' }, typeLabel(baseDef.type));
-  const previewBadge = el('div', { class: 'upgrade-preview-badge' }, isDouble ? '★★ 이중 강화 미리보기' : '✦ 강화 미리보기');
+  const previewBadge = el(
+    'div',
+    { class: 'upgrade-preview-badge' },
+    isDouble ? '★★ 이중 강화 (탭하여 확정)' : '✦ 강화 미리보기 (탭하여 확정)',
+  );
   previewBadge.style.display = 'none';
+
+  let previewing = false;
+  const showPreview = () => {
+    if (previewing) return;
+    previewing = true;
+    costEl.textContent = String(upgradedView.cost);
+    nameEl.textContent = upgradedView.name;
+    descEl.textContent = upgradedView.description;
+    typeEl.textContent = typeLabel(upgradedView.type);
+    cardEl.classList.add('upgrading');
+    previewBadge.style.display = '';
+  };
+  const hidePreview = () => {
+    if (!previewing) return;
+    previewing = false;
+    costEl.textContent = String(baseDef.cost);
+    nameEl.textContent = baseDef.name;
+    descEl.textContent = baseDef.description;
+    typeEl.textContent = typeLabel(baseDef.type);
+    cardEl.classList.remove('upgrading');
+    previewBadge.style.display = 'none';
+  };
 
   const cardEl = el(
     'div',
@@ -182,6 +208,16 @@ function buildSmithCard(card: CardInstance): HTMLElement {
       class: `card ${baseDef.type} rarity-${baseDef.rarity} smith-card ${isDouble ? 'plusplus-target' : ''}`,
       style: { cursor: 'pointer' },
       onClick: () => {
+        // 1st tap (touch) → preview. 2nd tap → confirm.
+        // On desktop, hover already triggered preview, so first click confirms.
+        if (!previewing) {
+          // Hide previews on any other smith cards so only one shows at a time.
+          document.querySelectorAll('.smith-card.upgrading').forEach((other) => {
+            if (other !== cardEl) (other as HTMLElement).dispatchEvent(new CustomEvent('smith:reset'));
+          });
+          showPreview();
+          return;
+        }
         card.upgraded = nextLevel;
         playSfx('upgrade');
         setScreen('map');
@@ -194,22 +230,9 @@ function buildSmithCard(card: CardInstance): HTMLElement {
     previewBadge,
   );
 
-  cardEl.addEventListener('mouseenter', () => {
-    costEl.textContent = String(upgradedView.cost);
-    nameEl.textContent = upgradedView.name;
-    descEl.textContent = upgradedView.description;
-    typeEl.textContent = typeLabel(upgradedView.type);
-    cardEl.classList.add('upgrading');
-    previewBadge.style.display = '';
-  });
-  cardEl.addEventListener('mouseleave', () => {
-    costEl.textContent = String(baseDef.cost);
-    nameEl.textContent = baseDef.name;
-    descEl.textContent = baseDef.description;
-    typeEl.textContent = typeLabel(baseDef.type);
-    cardEl.classList.remove('upgrading');
-    previewBadge.style.display = 'none';
-  });
+  cardEl.addEventListener('mouseenter', showPreview);
+  cardEl.addEventListener('mouseleave', hidePreview);
+  cardEl.addEventListener('smith:reset', hidePreview);
 
   return cardEl;
 }
