@@ -58,7 +58,7 @@ export interface CardDef {
 export interface CardInstance {
   uid: string;
   defId: string;
-  upgraded?: boolean;
+  upgraded?: number; // 0/undefined = base, 1 = +, 2 = ++ (이중 강화)
   bonusDamage?: number; // accumulated permanent scaling damage
 }
 

@@ -64,7 +64,7 @@ export const NEOW_BLESSINGS: NeowBlessing[] = [
     apply: (p, rng) => {
       const upgradable = p.deck.filter((c) => canUpgrade(c));
       const c = pickFrom(rng, upgradable);
-      if (c) c.upgraded = true;
+      if (c) c.upgraded = 1;
     },
   },
   {

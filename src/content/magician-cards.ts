@@ -348,12 +348,11 @@ export function magicianGetEffectiveDef(card: CardInstance): CardDef {
   const base = MAGICIAN_CARD_DEFS[card.defId];
   if (!card.upgraded) return base;
   const up = MAGICIAN_UPGRADE_MAP[card.defId];
-  if (!up) return base;
-  return { ...base, ...up };
+  return up ? { ...base, ...up } : base;
 }
 
 export function canUpgradeMagician(card: CardInstance): boolean {
-  return !card.upgraded && card.defId in MAGICIAN_UPGRADE_MAP;
+  return (card.upgraded ?? 0) < 2 && card.defId in MAGICIAN_UPGRADE_MAP;
 }
 
 const MAGICIAN_CARD_LIST = Object.values(MAGICIAN_CARD_DEFS);

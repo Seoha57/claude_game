@@ -776,6 +776,30 @@ button:disabled {
   z-index: 3;
 }
 
+/* ★★ 이중 강화 (++) — brighter gold with glow halo */
+.card.upgraded-plus {
+  border-color: #ffd64a !important;
+  box-shadow: 0 0 14px rgba(255, 214, 74, 0.7), 0 0 24px rgba(255, 200, 60, 0.35);
+  animation: plusplus-pulse 2.4s ease-in-out infinite;
+}
+.card.upgraded-plus .card-name {
+  color: #fff1a0;
+  text-shadow: 0 0 6px rgba(255, 214, 74, 0.9);
+}
+.card.upgraded-plus::after {
+  content: '★★';
+  color: #fff1a0;
+  text-shadow: 0 0 8px rgba(255, 214, 74, 1);
+  letter-spacing: -2px;
+}
+@keyframes plusplus-pulse {
+  0%, 100% { box-shadow: 0 0 14px rgba(255, 214, 74, 0.55), 0 0 24px rgba(255, 200, 60, 0.25); }
+  50%      { box-shadow: 0 0 20px rgba(255, 214, 74, 0.85), 0 0 32px rgba(255, 200, 60, 0.5); }
+}
+.smith-card.plusplus-target {
+  outline: 2px solid #ffd64a;
+}
+
 /* Damage preview number above enemy when card is hovered */
 .dmg-preview {
   position: absolute;

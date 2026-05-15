@@ -359,12 +359,11 @@ export function gunnerGetEffectiveDef(card: CardInstance): CardDef {
   const base = GUNNER_CARD_DEFS[card.defId];
   if (!card.upgraded) return base;
   const up = GUNNER_UPGRADE_MAP[card.defId];
-  if (!up) return base;
-  return { ...base, ...up };
+  return up ? { ...base, ...up } : base;
 }
 
 export function canUpgradeGunner(card: CardInstance): boolean {
-  return !card.upgraded && card.defId in GUNNER_UPGRADE_MAP;
+  return (card.upgraded ?? 0) < 2 && card.defId in GUNNER_UPGRADE_MAP;
 }
 
 const GUNNER_CARD_LIST = Object.values(GUNNER_CARD_DEFS);

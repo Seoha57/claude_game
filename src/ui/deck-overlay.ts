@@ -63,16 +63,19 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
     for (const card of sorted) {
       const def = getEffectiveDef(card);
       const curse = isCurseLike(def.id);
+      const lvl = card.upgraded ?? 0;
+      const upgradeLabel = lvl >= 2 ? '★★ 이중 강화' : lvl === 1 ? '★ 강화됨' : null;
+      const outline = lvl >= 2 ? '2px solid var(--gold, #f5c542)' : lvl === 1 ? '2px solid var(--good)' : 'none';
       grid.appendChild(
         el('div',
           {
-            class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''}`,
-            style: { cursor: 'default', outline: card.upgraded ? '2px solid var(--good)' : 'none' },
+            class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''} ${lvl >= 2 ? 'upgraded upgraded-plus' : lvl === 1 ? 'upgraded' : ''}`,
+            style: { cursor: 'default', outline },
           },
           el('div', { class: 'card-cost' }, String(def.cost)),
           el('div', { class: 'card-name' }, def.name),
           el('div', { class: 'card-desc' }, def.description),
-          el('div', { class: 'card-type' }, card.upgraded ? '★ 강화됨' : (curse ? '저주' : typeLabel(def.type))),
+          el('div', { class: 'card-type' }, upgradeLabel ?? (curse ? '저주' : typeLabel(def.type))),
         ),
       );
     }

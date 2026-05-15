@@ -125,10 +125,13 @@ export function renderEvent(): HTMLElement {
           break;
         }
         case 'upgrade_random': {
-          const upgradeable = run.player.deck.filter((c) => canUpgrade(c));
-          const toUpgrade = shuffle(rng, upgradeable.slice()).slice(0, effect.count);
+          // Prefer fresh (non-upgraded) cards; if none, upgrade + cards to ++.
+          const fresh = run.player.deck.filter((c) => canUpgrade(c) && !c.upgraded);
+          const plus = run.player.deck.filter((c) => canUpgrade(c) && c.upgraded === 1);
+          const pool = fresh.length > 0 ? fresh : plus;
+          const toUpgrade = shuffle(rng, pool.slice()).slice(0, effect.count);
           for (const card of toUpgrade) {
-            card.upgraded = true;
+            card.upgraded = (card.upgraded ?? 0) + 1;
           }
           if (toUpgrade.length > 0) playSfx('upgrade');
           break;

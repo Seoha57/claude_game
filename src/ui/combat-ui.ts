@@ -365,11 +365,13 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
   const selected = selectedCardUid === c.uid;
   const hotkey = idx < 9 ? String(idx + 1) : '';
   const curse = isCurseLike(def.id);
-  const upgraded = !!c.upgraded;
+  const upLevel = c.upgraded ?? 0;
+  const upgraded = upLevel >= 1;
+  const upgradedPlus = upLevel >= 2;
   return el(
     'div',
     {
-      class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''} ${canPlay ? '' : 'disabled'} ${noEnergy ? 'no-energy' : ''} ${selected ? 'selected' : ''} ${upgraded ? 'upgraded' : ''}`,
+      class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''} ${canPlay ? '' : 'disabled'} ${noEnergy ? 'no-energy' : ''} ${selected ? 'selected' : ''} ${upgraded ? 'upgraded' : ''} ${upgradedPlus ? 'upgraded-plus' : ''}`,
       'data-card-uid': c.uid,
       onMouseEnter: () => onCardHover(c.uid),
       onMouseLeave: () => onCardHover(null),

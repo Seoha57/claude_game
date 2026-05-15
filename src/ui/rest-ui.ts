@@ -76,7 +76,7 @@ function buildDuplicate(onBack: () => void): HTMLElement {
   for (const card of sortForUpgrade(dupable)) {
     cardRow.appendChild(renderCardChoice(card, () => {
       const copy = makeCard(card.defId);
-      if (card.upgraded) copy.upgraded = true;
+      if (card.upgraded) copy.upgraded = card.upgraded;
       run.player.deck.push(copy);
       playSfx('upgrade');
       setScreen('map');
@@ -165,22 +165,24 @@ function renderCardChoice(card: CardInstance, onClick: () => void): HTMLElement 
 
 function buildSmithCard(card: CardInstance): HTMLElement {
   const baseDef = getEffectiveDef(card);
-  const upgradedView = getEffectiveDef({ ...card, upgraded: true });
+  const nextLevel = (card.upgraded ?? 0) + 1;
+  const upgradedView = getEffectiveDef({ ...card, upgraded: nextLevel });
+  const isDouble = nextLevel === 2;
 
   const costEl = el('div', { class: 'card-cost' }, String(baseDef.cost));
   const nameEl = el('div', { class: 'card-name' }, baseDef.name);
   const descEl = el('div', { class: 'card-desc' }, baseDef.description);
   const typeEl = el('div', { class: 'card-type' }, typeLabel(baseDef.type));
-  const previewBadge = el('div', { class: 'upgrade-preview-badge' }, '✦ 강화 미리보기');
+  const previewBadge = el('div', { class: 'upgrade-preview-badge' }, isDouble ? '★★ 이중 강화 미리보기' : '✦ 강화 미리보기');
   previewBadge.style.display = 'none';
 
   const cardEl = el(
     'div',
     {
-      class: `card ${baseDef.type} rarity-${baseDef.rarity} smith-card`,
+      class: `card ${baseDef.type} rarity-${baseDef.rarity} smith-card ${isDouble ? 'plusplus-target' : ''}`,
       style: { cursor: 'pointer' },
       onClick: () => {
-        card.upgraded = true;
+        card.upgraded = nextLevel;
         playSfx('upgrade');
         setScreen('map');
       },

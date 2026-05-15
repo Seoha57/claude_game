@@ -344,12 +344,11 @@ export function fighterGetEffectiveDef(card: CardInstance): CardDef {
   const base = FIGHTER_CARD_DEFS[card.defId];
   if (!card.upgraded) return base;
   const up = FIGHTER_UPGRADE_MAP[card.defId];
-  if (!up) return base;
-  return { ...base, ...up };
+  return up ? { ...base, ...up } : base;
 }
 
 export function canUpgradeFighter(card: CardInstance): boolean {
-  return !card.upgraded && card.defId in FIGHTER_UPGRADE_MAP;
+  return (card.upgraded ?? 0) < 2 && card.defId in FIGHTER_UPGRADE_MAP;
 }
 
 const FIGHTER_CARD_LIST = Object.values(FIGHTER_CARD_DEFS);

@@ -15,7 +15,7 @@ let currentScreen: Screen = 'title';
 let renderFn: (() => void) | null = null;
 
 const SAVE_KEY = 'dungeoncard_save';
-const SAVE_VERSION = 1;
+const SAVE_VERSION = 2; // v2: card.upgraded is number (0/1/2)
 
 interface SaveData {
   version: number;
