@@ -2146,7 +2146,9 @@ button:disabled {
 
   /* Reward / shop / rest grids */
   .reward-cards { gap: 6px; flex-wrap: wrap; justify-content: center; }
-  .rest-card-row { max-height: 320px; gap: 6px; padding: 4px; }
+  /* On mobile, drop the inner max-height so the outer .rest-screen scrolls instead
+     — nested scroll regions are confusing on touch and look "clipped". */
+  .rest-card-row { max-height: none; overflow-y: visible; gap: 6px; padding: 4px; }
 
   /* Splash overlay */
   .splash-emoji { font-size: 56px; }
