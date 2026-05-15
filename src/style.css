@@ -741,6 +741,10 @@ button:disabled {
   transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
   position: relative;
   flex-shrink: 0;
+  /* Disable iOS blue tap highlight and accidental text-select on quick taps */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 .card.attack { border-color: #b06030; }
 .card.skill { border-color: #6090b0; }
@@ -944,9 +948,11 @@ button:disabled {
   box-shadow: 0 2px 6px rgba(0,0,0,0.5);
   z-index: 5;
 }
-.card:hover:not(.disabled) {
-  transform: translateY(-12px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover:not(.disabled) {
+    transform: translateY(-12px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  }
 }
 .card.disabled {
   opacity: 0.5;
