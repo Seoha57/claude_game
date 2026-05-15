@@ -219,6 +219,15 @@ function enterNode(n: MapNode): void {
         cs.player.energy += 1;
         drawCards(cs, 1);
       }
+      if (run.player.relics.includes('spiked_armor')) applyStatus(cs.player, 'thorns', 3);
+      if (run.player.relics.includes('sturdy_boots')) cs.player.block += 6;
+      if (run.player.relics.includes('kinetic_belt')) applyStatus(cs.player, 'dexterity', 2);
+      if (run.player.relics.includes('fury_banner')) applyStatus(cs.player, 'strength', 3);
+      if (run.player.relics.includes('phoenix_feather')) applyStatus(cs.player, 'regen', 5);
+      if (run.player.relics.includes('champion_belt')) {
+        applyStatus(cs.player, 'strength', 1);
+        applyStatus(cs.player, 'dexterity', 1);
+      }
 
       setCombat(cs);
       setScreen('combat');

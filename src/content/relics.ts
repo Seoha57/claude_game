@@ -82,6 +82,25 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     rarity: 'common',
   },
 
+  spiked_armor: {
+    id: 'spiked_armor',
+    name: '가시 갑옷',
+    description: '전투 시작 시 가시 +3.',
+    rarity: 'common',
+  },
+  sturdy_boots: {
+    id: 'sturdy_boots',
+    name: '견고한 장화',
+    description: '전투 시작 시 방어도 +6.',
+    rarity: 'common',
+  },
+  kinetic_belt: {
+    id: 'kinetic_belt',
+    name: '운동 벨트',
+    description: '전투 시작 시 민첩 +2.',
+    rarity: 'common',
+  },
+
   // ── Uncommon ──
   rich_seal: {
     id: 'rich_seal',
@@ -93,6 +112,30 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     id: 'herb_pouch',
     name: '약초 주머니',
     description: '전투 종료 시 추가로 5 회복.',
+    rarity: 'uncommon',
+  },
+  fury_banner: {
+    id: 'fury_banner',
+    name: '격노의 깃발',
+    description: '전투 시작 시 힘 +3.',
+    rarity: 'uncommon',
+  },
+  soul_lantern: {
+    id: 'soul_lantern',
+    name: '영혼의 등불',
+    description: '전투 종료 시 추가로 8 회복.',
+    rarity: 'uncommon',
+  },
+  phoenix_feather: {
+    id: 'phoenix_feather',
+    name: '불사조 깃털',
+    description: '전투 시작 시 재생 +5.',
+    rarity: 'uncommon',
+  },
+  storm_banner: {
+    id: 'storm_banner',
+    name: '폭풍의 깃발',
+    description: '매 턴 시작 시 방어도 +4.',
     rarity: 'uncommon',
   },
 
@@ -107,6 +150,24 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     id: 'demon_seal',
     name: '악마의 인장',
     description: '매 턴 시작 시 힘 +1.',
+    rarity: 'rare',
+  },
+  eternal_hourglass: {
+    id: 'eternal_hourglass',
+    name: '영원한 모래시계',
+    description: '매 턴 시작 시 카드 2장 추가로 드로우.',
+    rarity: 'rare',
+  },
+  storm_core: {
+    id: 'storm_core',
+    name: '폭풍의 핵',
+    description: '매 턴 시작 시 무작위 적에게 6 데미지.',
+    rarity: 'rare',
+  },
+  champion_belt: {
+    id: 'champion_belt',
+    name: '챔피언 벨트',
+    description: '전투 시작 시 힘 +1, 민첩 +1.',
     rarity: 'rare',
   },
 

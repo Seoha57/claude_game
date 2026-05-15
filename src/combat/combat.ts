@@ -105,6 +105,17 @@ export function beginPlayerTurn(state: CombatState): void {
         state.log.push(`마탑의 결정 → ${target.defId}에게 3 데미지`);
       }
     }
+    if (run.player.relics.includes('storm_core')) {
+      const alive = state.enemies.filter((e) => e.hp > 0);
+      if (alive.length > 0) {
+        const target = alive[Math.floor(state.rng() * alive.length)];
+        const absorbed = Math.min(target.block, 6);
+        target.block -= absorbed;
+        target.hp = Math.max(0, target.hp - (6 - absorbed));
+        state.log.push(`폭풍의 핵 → ${target.defId}에게 6 데미지`);
+      }
+    }
+    if (run.player.relics.includes('storm_banner')) p.block += 4;
   }
 
   // Start-of-turn statuses for player
@@ -112,6 +123,7 @@ export function beginPlayerTurn(state: CombatState): void {
 
   drawCards(state, PLAYER_DRAW);
   if (run?.player.relics.includes('hourglass')) drawCards(state, 1);
+  if (run?.player.relics.includes('eternal_hourglass')) drawCards(state, 2);
 }
 
 function applyStartOfTurnStatuses(c: any, state: CombatState, name: string): void {

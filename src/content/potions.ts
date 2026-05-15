@@ -12,6 +12,10 @@ export const POTION_DEFS: Record<string, PotionDef> = {
   energy_potion:   { id: 'energy_potion',   name: '에너지 물약',description: '에너지 +2',              target: 'self' },
   poison_potion:   { id: 'poison_potion',   name: '독 물약',    description: '적에게 중독 +8',         target: 'enemy' },
   fire_potion:     { id: 'fire_potion',     name: '화염 물약',  description: '적에게 20 데미지',        target: 'enemy' },
+  weak_potion:     { id: 'weak_potion',     name: '약화 물약',  description: '모든 적에게 약화 +3',     target: 'self' },
+  vulnerable_potion:{id: 'vulnerable_potion',name: '취약 물약',  description: '모든 적에게 취약 +3',     target: 'self' },
+  burn_potion:     { id: 'burn_potion',     name: '화상 물약',  description: '적에게 화상 +5',         target: 'enemy' },
+  freeze_potion:   { id: 'freeze_potion',   name: '빙결 물약',  description: '적에게 빙결 +1, 약화 +2', target: 'enemy' },
 };
 
 export const POTION_LIST = Object.values(POTION_DEFS);

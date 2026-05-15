@@ -472,6 +472,16 @@ function applyPotionSelf(state: CombatState, potionId: string): void {
     case 'energy_potion':
       state.player.energy = Math.min(state.player.energy + 2, state.player.maxEnergy + 2);
       break;
+    case 'weak_potion':
+      for (const e of state.enemies) {
+        if (e.hp > 0) applyStatus(e, 'weak', 3);
+      }
+      break;
+    case 'vulnerable_potion':
+      for (const e of state.enemies) {
+        if (e.hp > 0) applyStatus(e, 'vulnerable', 3);
+      }
+      break;
   }
 }
 
@@ -492,6 +502,13 @@ function applyPotionEnemy(state: CombatState, potionId: string, enemy: Enemy): v
       checkCombatEnd(state);
       break;
     }
+    case 'burn_potion':
+      applyStatus(enemy, 'burn', 5);
+      break;
+    case 'freeze_potion':
+      applyStatus(enemy, 'freeze', 1);
+      applyStatus(enemy, 'weak', 2);
+      break;
   }
 }
 
@@ -815,6 +832,9 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
     }
     if (run.player.relics.includes('herb_pouch')) {
       run.player.hp = Math.min(run.player.maxHp, run.player.hp + 5);
+    }
+    if (run.player.relics.includes('soul_lantern')) {
+      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
     }
     if (
       run.player.relics.includes('meat_on_the_bone') &&
