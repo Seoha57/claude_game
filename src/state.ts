@@ -150,12 +150,13 @@ function bgmTrackForScreen(s: Screen): BgmTrack | null {
 
 export function startNewRun(seed: number, ascension = 0, characterClass: CharacterClass = 'swordmaster', options: { goToScreen?: Screen } = {}): void {
   const mods = getModifiers(ascension);
-  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65 };
+  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82 };
   const baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
   const deck =
     characterClass === 'gunner' ? makeGunnerStarterDeck() :
     characterClass === 'fighter' ? makeFighterStarterDeck() :
     characterClass === 'magician' ? makeMagicianStarterDeck() :
+    characterClass === 'priest' ? makePriestStarterDeck() :
     makeStarterDeck();
   for (let i = 0; i < mods.cursesInDeck; i++) deck.push(makeCard('wound'));
   const relicMap: Record<CharacterClass, string> = {
@@ -163,6 +164,7 @@ export function startNewRun(seed: number, ascension = 0, characterClass: Charact
     gunner: 'bag_of_marbles',
     fighter: 'fighting_spirit',
     magician: 'mage_orb',
+    priest: 'holy_chalice',
   };
   const startingRelic = relicMap[characterClass];
 
@@ -231,6 +233,14 @@ function makeMagicianStarterDeck(): CardInstance[] {
   for (let i = 0; i < 5; i++) deck.push(makeCard('m_magic_missile'));
   for (let i = 0; i < 4; i++) deck.push(makeCard('m_aura_shield'));
   deck.push(makeCard('m_phase_shift'));
+  return deck;
+}
+
+function makePriestStarterDeck(): CardInstance[] {
+  const deck: CardInstance[] = [];
+  for (let i = 0; i < 5; i++) deck.push(makeCard('p_smash'));
+  for (let i = 0; i < 4; i++) deck.push(makeCard('p_holy_guard'));
+  deck.push(makeCard('p_lucky_strike'));
   return deck;
 }
 

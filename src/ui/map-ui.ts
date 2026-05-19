@@ -228,6 +228,7 @@ function enterNode(n: MapNode): void {
         applyStatus(cs.player, 'strength', 1);
         applyStatus(cs.player, 'dexterity', 1);
       }
+      if (run.player.relics.includes('holy_chalice')) applyStatus(cs.player, 'regen', 4);
 
       setCombat(cs);
       setScreen('combat');

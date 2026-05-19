@@ -40,6 +40,7 @@ function emptyStats(): AggregateStats {
       gunner: { ...EMPTY_CHAR },
       fighter: { ...EMPTY_CHAR },
       magician: { ...EMPTY_CHAR },
+      priest: { ...EMPTY_CHAR },
     },
   };
 }

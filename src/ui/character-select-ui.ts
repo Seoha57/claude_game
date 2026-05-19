@@ -54,6 +54,16 @@ const CHARACTERS: CharacterInfo[] = [
     starterCards: '매직 미사일×5 · 오라 실드×4 · 위상변화×1',
     emoji: '🔮',
   },
+  {
+    id: 'priest',
+    name: '프리스트',
+    subname: '(크루세이더·인파이터·퇴마사·어벤저)',
+    hp: 82,
+    startRelic: '성배',
+    description: '전투 시작 시 재생 +4. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.',
+    starterCards: '스매셔×5 · 홀리 가드×4 · 럭키 스트레이트×1',
+    emoji: '⛪',
+  },
 ];
 
 export function renderCharacterSelect(seed: number, ascension: number): HTMLElement {

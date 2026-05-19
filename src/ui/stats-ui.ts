@@ -5,10 +5,11 @@ import { getUnlockedMax } from '../ascension';
 import type { CharacterClass } from '../types';
 
 const CHAR_INFO: Record<CharacterClass, { name: string; emoji: string }> = {
-  swordmaster: { name: '귀검사', emoji: '⚔️' },
-  gunner:      { name: '거너',   emoji: '🔫' },
-  fighter:     { name: '격투가', emoji: '🥊' },
-  magician:    { name: '마법사', emoji: '🔮' },
+  swordmaster: { name: '귀검사',   emoji: '⚔️' },
+  gunner:      { name: '거너',     emoji: '🔫' },
+  fighter:     { name: '격투가',   emoji: '🥊' },
+  magician:    { name: '마법사',   emoji: '🔮' },
+  priest:      { name: '프리스트', emoji: '⛪' },
 };
 
 export function renderStats(): HTMLElement {

@@ -61,6 +61,12 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '매 턴 시작 시 무작위 적에게 3 데미지.',
     rarity: 'starter',
   },
+  holy_chalice: {
+    id: 'holy_chalice',
+    name: '성배',
+    description: '전투 시작 시 재생 +4.',
+    rarity: 'starter',
+  },
 
   // ── Common ──
   frozen_dart: {

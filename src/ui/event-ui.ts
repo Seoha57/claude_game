@@ -20,6 +20,9 @@ import {
   MAGICIAN_COMMON_CARDS,
   MAGICIAN_UNCOMMON_CARDS,
   MAGICIAN_RARE_CARDS,
+  PRIEST_COMMON_CARDS,
+  PRIEST_UNCOMMON_CARDS,
+  PRIEST_RARE_CARDS,
   canUpgrade,
 } from '../content/cards';
 
@@ -182,6 +185,9 @@ export function renderEvent(): HTMLElement {
     }
     if (cls === 'magician') {
       return rarity === 'common' ? MAGICIAN_COMMON_CARDS : rarity === 'uncommon' ? MAGICIAN_UNCOMMON_CARDS : MAGICIAN_RARE_CARDS;
+    }
+    if (cls === 'priest') {
+      return rarity === 'common' ? PRIEST_COMMON_CARDS : rarity === 'uncommon' ? PRIEST_UNCOMMON_CARDS : PRIEST_RARE_CARDS;
     }
     return rarity === 'common' ? COMMON_CARDS : rarity === 'uncommon' ? UNCOMMON_CARDS : RARE_CARDS;
   }
