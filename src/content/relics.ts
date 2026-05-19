@@ -64,7 +64,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   holy_chalice: {
     id: 'holy_chalice',
     name: '성배',
-    description: '전투 시작 시 재생 +4.',
+    description: '전투 시작 시 재생 +3.',
     rarity: 'starter',
   },
 
