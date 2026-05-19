@@ -623,23 +623,58 @@ function flushFx(): void {
   let playedDmg = false;
   let playedBlock = false;
   let playedPlayerDmg = false;
+  let maxDamageThisFlush = 0;
   for (const fx of pendingFx) {
     if (fx.kind === 'attack') {
       const enemyEl = document.querySelector(`[data-enemy-uid="${fx.enemyUid}"]`);
       if (enemyEl) {
         spawnAttackFx(enemyEl as HTMLElement, cc);
         spawnDamageNumber(enemyEl as HTMLElement, fx.damage);
+        triggerHitFlash(enemyEl as HTMLElement);
       }
       if (!playedDmg) { playSfx('damage_hit'); playedDmg = true; }
+      if (fx.damage > maxDamageThisFlush) maxDamageThisFlush = fx.damage;
     } else if (fx.kind === 'block') {
       spawnBlockFx(fx.amount);
       if (!playedBlock) { playSfx('block_gain'); playedBlock = true; }
     } else if (fx.kind === 'player_dmg') {
       spawnPlayerDamageNumber(fx.amount);
+      triggerPlayerHitFlash();
       if (!playedPlayerDmg) { playSfx('enemy_attack'); playedPlayerDmg = true; }
+      if (fx.amount > maxDamageThisFlush) maxDamageThisFlush = fx.amount;
     }
   }
+  // Screen shake scales with the biggest single hit
+  if (maxDamageThisFlush >= 25) triggerScreenShake('heavy');
+  else if (maxDamageThisFlush >= 15) triggerScreenShake('light');
   pendingFx = [];
+}
+
+function triggerHitFlash(enemyEl: HTMLElement): void {
+  enemyEl.classList.remove('hit-flash');
+  // Force reflow so re-adding the class restarts the animation
+  void enemyEl.offsetWidth;
+  enemyEl.classList.add('hit-flash');
+  setTimeout(() => enemyEl.classList.remove('hit-flash'), 360);
+}
+
+function triggerPlayerHitFlash(): void {
+  const root = document.querySelector('.combat-screen');
+  if (!root) return;
+  root.classList.remove('player-hit-flash');
+  void (root as HTMLElement).offsetWidth;
+  root.classList.add('player-hit-flash');
+  setTimeout(() => root.classList.remove('player-hit-flash'), 360);
+}
+
+function triggerScreenShake(intensity: 'light' | 'heavy'): void {
+  const root = document.querySelector('.combat-screen');
+  if (!root) return;
+  const cls = intensity === 'heavy' ? 'screen-shake-heavy' : 'screen-shake-light';
+  root.classList.remove(cls);
+  void (root as HTMLElement).offsetWidth;
+  root.classList.add(cls);
+  setTimeout(() => root.classList.remove(cls), intensity === 'heavy' ? 380 : 260);
 }
 
 function spawnDamageNumber(target: HTMLElement, amount: number): void {
