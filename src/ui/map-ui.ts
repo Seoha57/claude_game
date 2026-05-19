@@ -196,7 +196,7 @@ function enterNode(n: MapNode): void {
       table = ch === 4 ? CH4_ELITE_ENCOUNTERS : ch === 3 ? CH3_ELITE_ENCOUNTERS : ch === 2 ? CH2_ELITE_ENCOUNTERS : ELITE_ENCOUNTERS;
     else if (n.kind === 'boss')
       table = ch === 4 ? CH4_BOSS_ENCOUNTERS : ch === 3 ? CH3_BOSS_ENCOUNTERS : ch === 2 ? CH2_BOSS_ENCOUNTERS : BOSS_ENCOUNTERS;
-    else if (ch === 1 && n.y <= 2) table = EASY_ENCOUNTERS;
+    else if (ch === 1 && n.y <= 3) table = EASY_ENCOUNTERS;
     const enemyIds = pickEncounter(rng, table);
     // Remember for defeat screen ("X에게 쓰러졌다")
     run.combatEnemyDefIds = enemyIds.slice();

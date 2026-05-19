@@ -1,7 +1,7 @@
 import type { MapNode, NodeKind } from '../types';
 import { pick, shuffle } from '../rng';
 
-const FLOORS = 8; // includes start (floor 0) and boss (floor 7)
+const FLOORS = 13; // start (floor 0) + 11 mid floors + boss (floor 12) = 12 visited nodes
 const WIDTH = 4;
 
 export function generateMap(rng: () => number, chapter = 1): MapNode[] {
@@ -93,7 +93,7 @@ function pickKind(floor: number, rng: () => number, chapter: number, floors = FL
     return 'reward';
   }
   if (chapter === 1) {
-    if (floor <= 2) {
+    if (floor <= 3) {
       if (r < 0.6) return 'combat';
       if (r < 0.78) return 'reward';
       if (r < 0.90) return 'rest';
@@ -108,7 +108,7 @@ function pickKind(floor: number, rng: () => number, chapter: number, floors = FL
   }
   // Chapter 2
   if (chapter === 2) {
-    if (floor <= 2) {
+    if (floor <= 3) {
       if (r < 0.50) return 'combat';
       if (r < 0.68) return 'elite';
       if (r < 0.82) return 'rest';
