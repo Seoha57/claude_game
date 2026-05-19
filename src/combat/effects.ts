@@ -14,11 +14,14 @@ import { playSfx } from '../audio';
 // Apply raw damage to a combatant, accounting for block. Returns hp damage dealt (post-block).
 export function dealDamage(
   state: CombatState,
-  attacker: { statuses: any },
+  attacker: { statuses: any; hp?: number },
   target: { hp: number; block: number; statuses: any; maxHp: number },
   rawAmount: number,
   fromAttack: boolean,
 ): number {
+  // 죽은 공격자는 더 이상 데미지를 줄 수 없음 (가시로 막타 후 남은 다단 히트 차단)
+  if (attacker.hp !== undefined && attacker.hp <= 0) return 0;
+
   let dmg = rawAmount;
   if (fromAttack) {
     dmg = modifiedAttackDamage(rawAmount, attacker as any, target as any);
@@ -28,15 +31,15 @@ export function dealDamage(
   const hpDmg = dmg - absorbed;
   target.hp = Math.max(0, target.hp - hpDmg);
 
-  // thorns: only triggers on attacks
-  if (fromAttack && hpDmg > 0) {
+  // 가시: 공격을 받기만 하면 발동 (블록으로 전부 막혀도 반사됨, STS 동작)
+  if (fromAttack) {
     const thorns = getStatus((target as any).statuses, 'thorns');
     if (thorns > 0) {
-      // reflect to attacker (no further mods)
+      // 반사 데미지는 공격자의 블록을 먼저 깎고, 남으면 HP
       const a = attacker as any;
       const ab = Math.min(a.block ?? 0, thorns);
       if (a.block !== undefined) a.block -= ab;
-      a.hp = Math.max(0, a.hp - (thorns - ab));
+      if (a.hp !== undefined) a.hp = Math.max(0, a.hp - (thorns - ab));
     }
   }
 
