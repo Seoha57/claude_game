@@ -6,18 +6,13 @@ const WIDTH = 4;
 
 export function generateMap(rng: () => number, chapter = 1): MapNode[] {
   const _chapter = chapter;
-  // Chapter 4 — true ending route: short path with single rest then boss
-  if (chapter === 4) {
-    return [
-      { id: 'n_0_0', kind: 'start', x: 1, y: 0, next: ['n_1_1'], visited: true },
-      { id: 'n_1_1', kind: 'rest',  x: 1, y: 1, next: ['n_2_1'], visited: false },
-      { id: 'n_2_1', kind: 'boss',  x: 1, y: 2, next: [],        visited: false },
-    ];
-  }
+  // Chapter 4 — true ending route: shorter than other chapters (5 floors)
+  // but enough nodes to power up before the final boss.
+  const floors = chapter === 4 ? 5 : FLOORS;
   const nodes: MapNode[] = [];
   const grid: (string | null)[][] = [];
 
-  for (let y = 0; y < FLOORS; y++) {
+  for (let y = 0; y < floors; y++) {
     grid[y] = [];
     for (let x = 0; x < WIDTH; x++) grid[y][x] = null;
   }
@@ -27,12 +22,12 @@ export function generateMap(rng: () => number, chapter = 1): MapNode[] {
   nodes.push({ id: startId, kind: 'start', x: 0, y: 0, next: [], visited: true });
   grid[0][0] = startId;
 
-  // floors 1..6: 2-3 nodes per floor
-  for (let y = 1; y < FLOORS - 1; y++) {
+  // intermediate floors: 2-3 nodes per floor
+  for (let y = 1; y < floors - 1; y++) {
     const count = y === 1 ? 3 : 2 + Math.floor(rng() * 2); // 2 or 3
     const xs = shuffle(rng, [0, 1, 2, 3]).slice(0, count).sort((a, b) => a - b);
     for (const x of xs) {
-      const k = pickKind(y, rng, _chapter);
+      const k = pickKind(y, rng, _chapter, floors);
       const node: MapNode = {
         id: id(y, x),
         kind: k,
@@ -47,17 +42,17 @@ export function generateMap(rng: () => number, chapter = 1): MapNode[] {
   }
 
   // boss
-  const bossId = id(FLOORS - 1, 0);
-  nodes.push({ id: bossId, kind: 'boss', x: 0, y: FLOORS - 1, next: [], visited: false });
-  grid[FLOORS - 1][0] = bossId;
+  const bossId = id(floors - 1, 0);
+  nodes.push({ id: bossId, kind: 'boss', x: 0, y: floors - 1, next: [], visited: false });
+  grid[floors - 1][0] = bossId;
 
   // connect each floor to next floor — each node connects to 1-2 nearest nodes above
-  for (let y = 0; y < FLOORS - 1; y++) {
+  for (let y = 0; y < floors - 1; y++) {
     const cur = grid[y].filter(Boolean) as string[];
     const above = grid[y + 1].filter(Boolean) as string[];
     for (const cid of cur) {
       const cn = nodeById(nodes, cid);
-      if (y === FLOORS - 2) {
+      if (y === floors - 2) {
         cn.next = [bossId];
         continue;
       }
@@ -82,9 +77,21 @@ export function generateMap(rng: () => number, chapter = 1): MapNode[] {
   return nodes;
 }
 
-function pickKind(floor: number, rng: () => number, chapter: number): NodeKind {
-  if (floor === FLOORS - 2) return rng() < 0.7 ? 'rest' : 'combat';
+function pickKind(floor: number, rng: () => number, chapter: number, floors = FLOORS): NodeKind {
+  if (floor === floors - 2) return rng() < 0.7 ? 'rest' : 'combat';
   const r = rng();
+  // Chapter 4: ultra-condensed — mostly elites + reward to power up before boss.
+  if (chapter === 4) {
+    if (floor === 1) {
+      if (r < 0.55) return 'elite';
+      if (r < 0.80) return 'combat';
+      return 'reward';
+    }
+    // floor 2 (the floor before the rest before boss)
+    if (r < 0.65) return 'elite';
+    if (r < 0.85) return 'combat';
+    return 'reward';
+  }
   if (chapter === 1) {
     if (floor <= 2) {
       if (r < 0.6) return 'combat';

@@ -1055,6 +1055,217 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
       }
     },
   },
+
+  // ─────────────────────────────────────────────────────────
+  // Chapter 4 — 진엔딩 루트 전용
+  // ─────────────────────────────────────────────────────────
+  void_echo: {
+    id: 'void_echo',
+    name: '공허의 메아리',
+    hpRange: [70, 78],
+    decideIntent(_state, _self, turn) {
+      // 매 사이클 데미지·히트수 증가하는 가속형
+      const cycle = Math.floor(turn / 3);
+      const hits = 1 + cycle;
+      const dmg = 6 + cycle;
+      const i = turn % 3;
+      if (i === 2) return { kind: 'debuff', label: '약화+1 취약+1' };
+      return { kind: 'attack', damage: dmg, hits, label: `${dmg}×${hits}` };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'debuff') {
+        applyStatus(state.player, 'weak', 1);
+        applyStatus(state.player, 'vulnerable', 1);
+      } else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) {
+          dealDamage(state, self, state.player, it.damage, true);
+        }
+      }
+    },
+  },
+  dimensional_warden: {
+    id: 'dimensional_warden',
+    name: '차원의 파수꾼',
+    hpRange: [88, 96],
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '금속화 +5' };
+      const i = (turn - 1) % 4;
+      if (i === 0) return { kind: 'attack_block', damage: 18, block: 12, label: '18 / 방어 12' };
+      if (i === 1) return { kind: 'block', block: 18, label: '방어 18' };
+      if (i === 2) return { kind: 'attack', damage: 11, hits: 2, label: '11×2' };
+      return { kind: 'debuff', label: '쇠약+2 약화+1' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = (self.turn - 1) % 4;
+      if (it.kind === 'buff') {
+        applyStatus(self, 'metallicize', 5);
+      } else if (it.kind === 'block' && it.block) {
+        gainBlock(self, it.block);
+      } else if (it.kind === 'attack_block' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.block) gainBlock(self, it.block);
+      } else if (it.kind === 'debuff') {
+        applyStatus(state.player, 'frail', 2);
+        applyStatus(state.player, 'weak', 1);
+      } else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) {
+          dealDamage(state, self, state.player, it.damage, true);
+        }
+        if (i === 2) { /* no debuff */ }
+      }
+    },
+  },
+  whispering_madness: {
+    id: 'whispering_madness',
+    name: '광기의 속삭임',
+    hpRange: [62, 70],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 3;
+      if (i === 0) return { kind: 'debuff', label: '저주 1장 → 버림' };
+      if (i === 1) return { kind: 'attack', damage: 14, hits: 1, label: '14' };
+      return { kind: 'attack', damage: 8, hits: 1, label: '8 + 카드 1장 버림' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = self.turn % 3;
+      if (i === 0) {
+        // discard a random card from hand
+        if (state.player.hand.length > 0) {
+          const idx = Math.floor(state.rng() * state.player.hand.length);
+          const [c] = state.player.hand.splice(idx, 1);
+          state.player.discard.push(c);
+          state.log.push('광기의 속삭임: 카드 1장 강제 버림');
+        }
+      } else if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (i === 2 && state.player.hand.length > 0) {
+          const idx = Math.floor(state.rng() * state.player.hand.length);
+          const [c] = state.player.hand.splice(idx, 1);
+          state.player.discard.push(c);
+          state.log.push('광기의 속삭임: 카드 1장 강제 버림');
+        }
+      }
+    },
+  },
+  rift_titan: {
+    id: 'rift_titan',
+    name: '균열의 타이탄',
+    hpRange: [150, 165],
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '힘+3, 가시+4' };
+      const i = (turn - 1) % 4;
+      if (i === 0) return { kind: 'attack', damage: 24, hits: 1, label: '24' };
+      if (i === 1) return { kind: 'attack', damage: 10, hits: 2, label: '10×2' };
+      if (i === 2) return { kind: 'buff', label: '힘 +2' };
+      return { kind: 'attack_block', damage: 14, block: 12, label: '14 / 방어 12' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') {
+        if (self.turn === 0) {
+          applyStatus(self, 'strength', 3);
+          applyStatus(self, 'thorns', 4);
+        } else {
+          applyStatus(self, 'strength', 2);
+        }
+      } else if (it.kind === 'attack_block' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.block) gainBlock(self, it.block);
+      } else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) {
+          dealDamage(state, self, state.player, it.damage, true);
+        }
+      }
+    },
+  },
+
+  // Chapter 4 boss alternates (abyss_lord defined above)
+  time_sovereign: {
+    id: 'time_sovereign',
+    name: '시간의 군주',
+    hpRange: [420, 440],
+    isBoss: true,
+    onHalfHp(_state, self) {
+      applyStatus(self, 'strength', 6);
+      applyStatus(self, 'ritual', 2);
+      return '시간이 가속한다! (힘 +6, 의식 +2)';
+    },
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '의식 +4 (매 턴 힘 누적)' };
+      const cycle = (turn - 1) % 5;
+      if (cycle === 0) return { kind: 'attack', damage: 12, hits: 2, label: '12×2' };
+      if (cycle === 1) return { kind: 'attack', damage: 22, hits: 1, label: '22' };
+      if (cycle === 2) return { kind: 'debuff', label: '약화+2 취약+2 쇠약+2' };
+      if (cycle === 3) return { kind: 'attack', damage: 8, hits: 4, label: '8×4 (가속)' };
+      return { kind: 'attack_block', damage: 20, block: 15, label: '20 / 방어 15' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') {
+        applyStatus(self, 'ritual', 4);
+      } else if (it.kind === 'debuff') {
+        applyStatus(state.player, 'weak', 2);
+        applyStatus(state.player, 'vulnerable', 2);
+        applyStatus(state.player, 'frail', 2);
+      } else if (it.kind === 'attack_block' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.block) gainBlock(self, it.block);
+      } else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) {
+          dealDamage(state, self, state.player, it.damage, true);
+        }
+      }
+    },
+  },
+  void_avatar: {
+    id: 'void_avatar',
+    name: '공허의 화신',
+    hpRange: [430, 450],
+    isBoss: true,
+    onHalfHp(state, self) {
+      // Clear own debuffs and rage
+      for (const k of ['vulnerable', 'weak', 'frail', 'burn', 'freeze', 'poison'] as const) {
+        delete self.statuses[k];
+      }
+      applyStatus(self, 'strength', 5);
+      applyStatus(self, 'thorns', 10);
+      applyStatus(state.player, 'frail', 3);
+      return '공허가 응답한다! 모든 디버프 정화 + 가시+10, 플레이어 쇠약+3';
+    },
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '시작: 가시+8, 금속화+5' };
+      const cycle = (turn - 1) % 5;
+      if (cycle === 0) return { kind: 'attack', damage: 20, hits: 1, label: '20' };
+      if (cycle === 1) return { kind: 'buff', label: '가시+4, 금속화+2' };
+      if (cycle === 2) return { kind: 'attack', damage: 7, hits: 4, label: '7×4' };
+      if (cycle === 3) return { kind: 'debuff', label: '쇠약+3 약화+3' };
+      return { kind: 'attack_block', damage: 16, block: 18, label: '16 / 방어 18' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') {
+        if (self.turn === 0) {
+          applyStatus(self, 'thorns', 8);
+          applyStatus(self, 'metallicize', 5);
+        } else {
+          applyStatus(self, 'thorns', 4);
+          applyStatus(self, 'metallicize', 2);
+        }
+      } else if (it.kind === 'debuff') {
+        applyStatus(state.player, 'frail', 3);
+        applyStatus(state.player, 'weak', 3);
+      } else if (it.kind === 'attack_block' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.block) gainBlock(self, it.block);
+      } else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) {
+          dealDamage(state, self, state.player, it.damage, true);
+        }
+      }
+    },
+  },
 };
 
 // ── Encounter tables ──
@@ -1144,8 +1355,26 @@ export const CH3_ELITE_ENCOUNTERS: string[][] = [
 
 export const CH3_BOSS_ENCOUNTERS: string[][] = [['void_heart'], ['death_apostle'], ['isaris_overlord']];
 
-// Chapter 4 (true ending route)
-export const CH4_BOSS_ENCOUNTERS: string[][] = [['abyss_lord']];
+// Chapter 4 (true ending route) — 보스 직전 강화 기회
+export const CH4_NORMAL_ENCOUNTERS: string[][] = [
+  ['void_echo'],
+  ['dimensional_warden'],
+  ['whispering_madness'],
+  ['void_echo', 'whispering_madness'],
+  ['dimensional_warden', 'void_echo'],
+];
+
+export const CH4_ELITE_ENCOUNTERS: string[][] = [
+  ['rift_titan'],
+  ['dimensional_warden', 'whispering_madness'],
+  ['rift_titan', 'void_echo'],
+];
+
+export const CH4_BOSS_ENCOUNTERS: string[][] = [
+  ['abyss_lord'],
+  ['time_sovereign'],
+  ['void_avatar'],
+];
 
 export function pickEncounter(rng: () => number, table: string[][]): string[] {
   return table[Math.floor(rng() * table.length)];

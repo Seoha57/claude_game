@@ -14,6 +14,8 @@ import {
   CH3_NORMAL_ENCOUNTERS,
   CH3_ELITE_ENCOUNTERS,
   CH3_BOSS_ENCOUNTERS,
+  CH4_NORMAL_ENCOUNTERS,
+  CH4_ELITE_ENCOUNTERS,
   CH4_BOSS_ENCOUNTERS,
   pickEncounter,
 } from '../content/enemies';
@@ -186,11 +188,12 @@ function enterNode(n: MapNode): void {
     const rng = makeRng(run.seed + n.y * 31 + n.x);
     const ch = run.chapter;
     let table =
+      ch === 4 ? CH4_NORMAL_ENCOUNTERS :
       ch === 3 ? CH3_NORMAL_ENCOUNTERS :
       ch === 2 ? CH2_NORMAL_ENCOUNTERS :
       NORMAL_ENCOUNTERS;
     if (n.kind === 'elite')
-      table = ch === 3 ? CH3_ELITE_ENCOUNTERS : ch === 2 ? CH2_ELITE_ENCOUNTERS : ELITE_ENCOUNTERS;
+      table = ch === 4 ? CH4_ELITE_ENCOUNTERS : ch === 3 ? CH3_ELITE_ENCOUNTERS : ch === 2 ? CH2_ELITE_ENCOUNTERS : ELITE_ENCOUNTERS;
     else if (n.kind === 'boss')
       table = ch === 4 ? CH4_BOSS_ENCOUNTERS : ch === 3 ? CH3_BOSS_ENCOUNTERS : ch === 2 ? CH2_BOSS_ENCOUNTERS : BOSS_ENCOUNTERS;
     else if (ch === 1 && n.y <= 2) table = EASY_ENCOUNTERS;

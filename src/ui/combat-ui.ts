@@ -112,6 +112,13 @@ export const ENEMY_ART: Record<string, string> = {
   forest_spirit: '🌳',
   dimension_sorcerer: '🌌',
   titan_golem: '🗿',
+  // Chapter 4
+  void_echo: '🌀',
+  dimensional_warden: '🛡️',
+  whispering_madness: '👁️',
+  rift_titan: '⚡',
+  time_sovereign: '⌛',
+  void_avatar: '💠',
 };
 
 let lastPhasePlayed: string | null = null;
