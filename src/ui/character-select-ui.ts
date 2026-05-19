@@ -8,6 +8,8 @@ interface CharacterInfo {
   subname: string;
   hp: number;
   startRelic: string;
+  signatureRelic: string;     // 캐릭터별 시그니처 메커니즘 유물
+  signatureDesc: string;
   description: string;
   starterCards: string;
   emoji: string;
@@ -20,6 +22,8 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '(웨펀마스터 계열)',
     hp: 75,
     startRelic: '불타는 피',
+    signatureRelic: '귀혼',
+    signatureDesc: '5번째 공격마다 +6 데미지',
     description: '전투 승리 시 HP 6 회복. 강력한 근접 검술로 적을 압도한다.',
     starterCards: '귀참×5 · 발도×4 · 에쉔포크×1',
     emoji: '⚔️',
@@ -30,6 +34,8 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '(레인저·런처·메카닉·스핏파이어·어썰트)',
     hp: 70,
     startRelic: '구슬 주머니',
+    signatureRelic: '탄창',
+    signatureDesc: '3번째 공격마다 카드 1장 드로우',
     description: '전투 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.',
     starterCards: '라이징 샷×5 · 전술 재장전×4 · 헤드샷×1',
     emoji: '🔫',
@@ -40,6 +46,8 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '(스트리트파이터·넨마스터·그래플러·스트라이커)',
     hp: 80,
     startRelic: '투혼',
+    signatureRelic: '일심',
+    signatureDesc: '한 턴 카드 3장 사용 시 힘 +1 (턴당 1회)',
     description: '전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.',
     starterCards: '질풍각×5 · 철금강×4 · 무즈 어퍼×1',
     emoji: '🥊',
@@ -50,6 +58,8 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '(엘레멘탈마스터·소환사·배틀메이지·마도학자·인챈트리스)',
     hp: 65,
     startRelic: '마탑의 결정',
+    signatureRelic: '원소 공명',
+    signatureDesc: '스킬 카드 2장 연속 사용 시 1장 드로우',
     description: '매 턴 시작 시 무작위 적에게 3 데미지. 다양한 원소 마법으로 광역 전투에 강하다.',
     starterCards: '매직 미사일×5 · 오라 실드×4 · 위상변화×1',
     emoji: '🔮',
@@ -60,7 +70,9 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '(크루세이더·인파이터·퇴마사·어벤저)',
     hp: 82,
     startRelic: '성배',
-    description: '전투 시작 시 재생 +4. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.',
+    signatureRelic: '신성한 인장',
+    signatureDesc: '회복/재생 발동 시 방어도 +3',
+    description: '전투 시작 시 재생 +3. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.',
     starterCards: '스매셔×5 · 홀리 가드×4 · 럭키 스트레이트×1',
     emoji: '⛪',
   },
@@ -113,6 +125,22 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
         el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '12px' } }, ch.subname),
         el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px' } }, `❤ ${ch.hp}  |  유물: ${ch.startRelic}`),
         el('div', { style: { fontSize: '12px', color: 'var(--fg)', marginBottom: '10px', lineHeight: '1.5' } }, ch.description),
+        el(
+          'div',
+          {
+            style: {
+              fontSize: '11px',
+              color: 'var(--accent)',
+              marginBottom: '8px',
+              padding: '6px 8px',
+              background: 'rgba(212,160,91,0.10)',
+              border: '1px solid rgba(212,160,91,0.35)',
+              borderRadius: '6px',
+              lineHeight: '1.4',
+            },
+          },
+          `✦ ${ch.signatureRelic}: ${ch.signatureDesc}`,
+        ),
         el('div', { style: { fontSize: '11px', color: 'var(--muted)', borderTop: '1px solid var(--border)', paddingTop: '8px' } }, `시작 덱: ${ch.starterCards}`),
       );
       cardRow.appendChild(card);

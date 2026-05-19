@@ -8,6 +8,7 @@ import type {
 import { modifiedAttackDamage, modifiedBlockGain, applyStatus, getStatus, STATUS_INFO } from './statuses';
 import { getEffectiveDef } from '../content/cards';
 import { ENEMY_DEFS } from '../content/enemies';
+import { getRunOrNull } from '../state';
 
 // Apply raw damage to a combatant, accounting for block. Returns hp damage dealt (post-block).
 export function dealDamage(
@@ -72,17 +73,21 @@ export function applyEffect(
       if (!tgt) return;
       for (let i = 0; i < times; i++) {
         if (tgt.hp <= 0) break;
-        const hpDmg = dealDamage(state, source, tgt, effect.amount, true);
+        const modified = modifyAttackAmount(state, effect.amount);
+        const hpDmg = dealDamage(state, source, tgt, modified, true);
         log(`${nameOf(source, state)} → ${nameOf(tgt, state)}: ${hpDmg} 데미지`);
         state.flags.firstAttackThisTurn = false;
+        onAttackAfter(state, log);
       }
       return;
     }
     case 'damage_all': {
       for (const e of state.enemies) {
         if (e.hp <= 0) continue;
-        const hpDmg = dealDamage(state, source, e, effect.amount, true);
+        const modified = modifyAttackAmount(state, effect.amount);
+        const hpDmg = dealDamage(state, source, e, modified, true);
         log(`전체 → ${nameOf(e, state)}: ${hpDmg} 데미지`);
+        onAttackAfter(state, log);
       }
       state.flags.firstAttackThisTurn = false;
       return;
@@ -125,6 +130,7 @@ export function applyEffect(
     case 'heal': {
       player.hp = Math.min(player.maxHp, player.hp + effect.amount);
       log(`회복 +${effect.amount}`);
+      onHealTrigger(state, log);
       return;
     }
     case 'lose_hp': {
@@ -206,6 +212,25 @@ export function playCard(
   // Snapshot alive enemies before effects for on_kill scaling detection
   const beforeAlive = state.enemies.filter((e) => e.hp > 0).length;
 
+  // ── Signature: 원소 공명 (마법사) — 스킬 카드 연속 사용 ──
+  const run = getRunOrNull();
+  if (run?.player.relics.includes('elemental_resonance')
+      && def.type === 'skill' && state.flags.lastPlayedType === 'skill') {
+    drawCards(state, 1);
+    log(`원소 공명 → 카드 +1`);
+  }
+  state.flags.lastPlayedType = def.type;
+
+  // Track cards played this turn for 일심
+  state.flags.cardsPlayedThisTurn = (state.flags.cardsPlayedThisTurn ?? 0) + 1;
+  if (run?.player.relics.includes('one_mind_belt')
+      && (state.flags.cardsPlayedThisTurn ?? 0) >= 3
+      && !state.flags.fighterProcThisTurn) {
+    applyStatus(p, 'strength', 1);
+    state.flags.fighterProcThisTurn = true;
+    log(`일심 → 힘 +1`);
+  }
+
   for (const e of def.effects) {
     applyEffect(state, e, p, targetEnemy, log);
   }
@@ -257,3 +282,51 @@ function triggerOnExhaust(state: CombatState, log: (s: string) => void): void {
     log(`소멸 에너지 → 에너지 +${energy}`);
   }
 }
+
+// ── Signature relic hooks ─────────────────────────────────────────
+// 데미지 카드가 적에 적용되기 직전 호출. 보너스/배수를 모두 처리한 최종 데미지를 리턴.
+// 카운터(귀혼/탄창/pen_nib)는 이 시점에 증가시킨다.
+export function modifyAttackAmount(state: CombatState, base: number): number {
+  const run = getRunOrNull();
+  if (!run) return base;
+  state.flags.attackCount = (state.flags.attackCount ?? 0) + 1;
+  const ac = state.flags.attackCount;
+  let amount = base;
+  // 귀혼: 5번째 공격마다 +6
+  if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
+    amount += 6;
+  }
+  // 펜촉: 10번째 공격마다 2배 (귀혼 보너스도 같이 2배가 됨)
+  if (run.player.relics.includes('pen_nib') && ac % 10 === 0) {
+    amount *= 2;
+  }
+  return amount;
+}
+
+// 데미지 적용 후 호출 — 드로우 등 후속 트리거
+export function onAttackAfter(state: CombatState, log: (s: string) => void): void {
+  const run = getRunOrNull();
+  if (!run) return;
+  const ac = state.flags.attackCount ?? 0;
+  if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
+    log('귀혼 발동!');
+  }
+  if (run.player.relics.includes('gunner_magazine') && ac % 3 === 0) {
+    drawCards(state, 1);
+    log('탄창 → 카드 +1');
+  }
+  if (run.player.relics.includes('pen_nib') && ac % 10 === 0) {
+    log('펜촉 → 데미지 2배!');
+  }
+}
+
+// 회복(heal) 또는 재생(regen) 발동 시 호출 (프리스트 신성한 인장)
+export function onHealTrigger(state: CombatState, log: (s: string) => void): void {
+  const run = getRunOrNull();
+  if (!run) return;
+  if (run.player.relics.includes('holy_seal')) {
+    state.player.block += 3;
+    log('신성한 인장 → 방어도 +3');
+  }
+}
+

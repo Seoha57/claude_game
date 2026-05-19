@@ -166,7 +166,16 @@ export function startNewRun(seed: number, ascension = 0, characterClass: Charact
     magician: 'mage_orb',
     priest: 'holy_chalice',
   };
+  // 시그니처 유물 — 캐릭터 정체성을 강화하는 두 번째 시작 유물
+  const signatureMap: Record<CharacterClass, string> = {
+    swordmaster: 'gwihon_charm',
+    gunner: 'gunner_magazine',
+    fighter: 'one_mind_belt',
+    magician: 'elemental_resonance',
+    priest: 'holy_seal',
+  };
   const startingRelic = relicMap[characterClass];
+  const signatureRelic = signatureMap[characterClass];
 
   const player: Player = {
     hp: baseHp,
@@ -181,7 +190,7 @@ export function startNewRun(seed: number, ascension = 0, characterClass: Charact
     hand: [],
     discard: [],
     exhaust: [],
-    relics: [startingRelic],
+    relics: [startingRelic, signatureRelic],
     potions: [],
     keys: [],
   };
@@ -198,9 +207,10 @@ export function startNewRun(seed: number, ascension = 0, characterClass: Charact
   };
   combatState = null;
   recordRunStart(characterClass);
-  // Codex: starter deck + starting relic
+  // Codex: starter deck + starting relics
   recordCards(deck.map((c) => c.defId));
   recordRelic(startingRelic);
+  recordRelic(signatureRelic);
   setScreen(options.goToScreen ?? 'map');
 }
 

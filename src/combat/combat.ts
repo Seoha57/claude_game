@@ -72,6 +72,9 @@ export function beginPlayerTurn(state: CombatState): void {
   p.block = 0;
   p.energy = p.maxEnergy;
   state.flags.firstAttackThisTurn = true;
+  // Reset per-turn signature counters
+  state.flags.cardsPlayedThisTurn = 0;
+  state.flags.fighterProcThisTurn = false;
 
   // Innate cards — on turn 1 only, pull all innates from draw pile to hand
   // up to hand cap (10). Then normal draw fills the rest.
@@ -200,6 +203,14 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
     if (c.maxHp !== undefined) {
       c.hp = Math.min(c.maxHp, c.hp + regen);
       state.log.push(`${name} 재생 ${regen} 회복`);
+      // 프리스트 신성한 인장: 재생이 발동할 때마다 방어도 +3
+      if (c === state.player) {
+        const run = getRunOrNull();
+        if (run?.player.relics.includes('holy_seal')) {
+          c.block += 3;
+          state.log.push('신성한 인장 → 방어도 +3');
+        }
+      }
     }
     applyStatus(c, 'regen', -1);
   }

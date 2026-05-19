@@ -68,6 +68,38 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     rarity: 'starter',
   },
 
+  // ── 시그니처 (캐릭터별 두 번째 시작 유물) ──
+  gwihon_charm: {
+    id: 'gwihon_charm',
+    name: '귀혼',
+    description: '5번째 공격마다 +6 데미지.',
+    rarity: 'starter',
+  },
+  gunner_magazine: {
+    id: 'gunner_magazine',
+    name: '탄창',
+    description: '3번째 공격마다 카드 1장 드로우.',
+    rarity: 'starter',
+  },
+  one_mind_belt: {
+    id: 'one_mind_belt',
+    name: '일심',
+    description: '한 턴에 카드 3장 이상 사용 시 힘 +1 (턴당 1회).',
+    rarity: 'starter',
+  },
+  elemental_resonance: {
+    id: 'elemental_resonance',
+    name: '원소 공명',
+    description: '스킬 카드를 2장 연속 사용 시 카드 1장 드로우.',
+    rarity: 'starter',
+  },
+  holy_seal: {
+    id: 'holy_seal',
+    name: '신성한 인장',
+    description: '회복/재생이 발동할 때 방어도 +3.',
+    rarity: 'starter',
+  },
+
   // ── Common ──
   frozen_dart: {
     id: 'frozen_dart',
