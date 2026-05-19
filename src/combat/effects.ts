@@ -9,6 +9,7 @@ import { modifiedAttackDamage, modifiedBlockGain, applyStatus, getStatus, STATUS
 import { getEffectiveDef } from '../content/cards';
 import { ENEMY_DEFS } from '../content/enemies';
 import { getRunOrNull } from '../state';
+import { playSfx } from '../audio';
 
 // Apply raw damage to a combatant, accounting for block. Returns hp damage dealt (post-block).
 export function dealDamage(
@@ -48,6 +49,7 @@ export function dealDamage(
         t.phaseTriggered = true;
         const flavor = def.onHalfHp(state, target as Enemy);
         state.log.push(`⚡ ${def.name}: ${flavor}`);
+        playSfx('boss_phase');
       }
     }
   }
@@ -110,6 +112,7 @@ export function applyEffect(
     case 'apply_self': {
       applyStatus(source as any, effect.status, effect.amount);
       log(`${nameOf(source, state)} ${statusName(effect.status)} +${effect.amount}`);
+      playStatusSfx(effect.status, true);
       return;
     }
     case 'apply_enemy': {
@@ -117,6 +120,7 @@ export function applyEffect(
       if (!tgt) return;
       applyStatus(tgt, effect.status, effect.amount);
       log(`${nameOf(tgt, state)} ${statusName(effect.status)} +${effect.amount}`);
+      playStatusSfx(effect.status, false);
       return;
     }
     case 'apply_all': {
@@ -125,6 +129,7 @@ export function applyEffect(
         applyStatus(e, effect.status, effect.amount);
       }
       log(`모든 적에게 ${statusName(effect.status)} +${effect.amount}`);
+      playStatusSfx(effect.status, false);
       return;
     }
     case 'heal': {
@@ -170,6 +175,17 @@ function nameOf(c: Player | Enemy, _state: CombatState): string {
 
 function statusName(key: string): string {
   return (STATUS_INFO as any)[key]?.name ?? key;
+}
+
+// 상태이상 적용 시 알맞은 SFX 재생.
+// onSelf=true: 플레이어가 본인에게 (버프), false: 적에게 (디버프)
+function playStatusSfx(statusKey: string, onSelf: boolean): void {
+  if (statusKey === 'burn') return playSfx('burn_apply');
+  if (statusKey === 'freeze') return playSfx('freeze_apply');
+  if (statusKey === 'poison') return playSfx('poison_apply');
+  // 본인 적용은 보통 버프, 적 적용은 디버프
+  if (onSelf) playSfx('buff_apply');
+  else playSfx('debuff_apply');
 }
 
 export function drawCards(state: CombatState, n: number): void {

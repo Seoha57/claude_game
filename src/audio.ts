@@ -153,7 +153,13 @@ export type SfxName =
   | 'relic'
   | 'potion'
   | 'upgrade'
-  | 'gold';
+  | 'gold'
+  | 'boss_phase'      // 보스 절반 HP 트리거 시 극적 사운드
+  | 'burn_apply'      // 화상 부여
+  | 'freeze_apply'    // 빙결 부여
+  | 'poison_apply'    // 중독 부여
+  | 'buff_apply'      // 일반 버프 (힘/민첩/재생 등)
+  | 'debuff_apply';   // 일반 디버프 (취약/약화/쇠약)
 
 export function playSfx(name: SfxName): void {
   if (muted) return;
@@ -208,6 +214,35 @@ export function playSfx(name: SfxName): void {
       break;
     case 'gold':
       playArpeggio([1200, 1500], 0.05, 'sine', 0.2);
+      break;
+    case 'boss_phase':
+      // 깊은 베이스 + 디센딩 아르페지오 — 보스 절반 HP 도달 시 극적 트리거
+      playTone({ freq: 90,  freqEnd: 50,  duration: 0.8,  type: 'sawtooth', gain: 0.4 });
+      playTone({ freq: 220, freqEnd: 110, duration: 0.6,  type: 'square',   gain: 0.18 });
+      playArpeggio([880, 740, 587, 440], 0.13, 'sawtooth', 0.22);
+      break;
+    case 'burn_apply':
+      // 치직 — 화염 크랙
+      playNoise({ duration: 0.35, filterFreq: 3200, q: 1.2, gain: 0.22 });
+      playTone({ freq: 700, freqEnd: 360, duration: 0.25, type: 'triangle', gain: 0.12 });
+      break;
+    case 'freeze_apply':
+      // 챙 — 유리/얼음 같은 고음 차임
+      playArpeggio([1600, 2100, 2400], 0.06, 'sine', 0.22);
+      playNoise({ duration: 0.12, filterFreq: 6000, q: 4, gain: 0.1 });
+      break;
+    case 'poison_apply':
+      // 부글 — 낮은 버블링
+      playNoise({ duration: 0.22, filterFreq: 600, q: 2, gain: 0.18 });
+      playTone({ freq: 320, freqEnd: 240, duration: 0.18, type: 'sine', gain: 0.14 });
+      break;
+    case 'buff_apply':
+      // 짧은 상승 차임
+      playTone({ freq: 800, freqEnd: 1300, duration: 0.16, type: 'triangle', gain: 0.18 });
+      break;
+    case 'debuff_apply':
+      // 짧은 하강 톤
+      playTone({ freq: 500, freqEnd: 280, duration: 0.16, type: 'sawtooth', gain: 0.18 });
       break;
   }
 }
