@@ -5,11 +5,13 @@
 //     returns 409 with current data so client can merge and retry.
 // Response: { version, updatedAt }
 
-import { authenticate, Env, errorResponse, jsonResponse, UserRecord } from '../../_lib/sync';
+import { authenticate, checkKv, Env, errorResponse, jsonResponse, UserRecord } from '../../_lib/sync';
 
 const USER_TTL_SECONDS = 60 * 60 * 24 * 365 * 2;
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
+  const kvCheck = checkKv(ctx.env);
+  if (kvCheck) return kvCheck;
   const auth = await authenticate(ctx.request, ctx.env);
   if ('error' in auth) return auth.error;
 

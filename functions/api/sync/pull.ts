@@ -2,9 +2,11 @@
 // Authorization: Bearer <userId>:<secret>
 // Response: { data, version } — data is null if user has no record yet
 
-import { authenticate, Env, jsonResponse, UserRecord } from '../../_lib/sync';
+import { authenticate, checkKv, Env, jsonResponse, UserRecord } from '../../_lib/sync';
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
+  const kvCheck = checkKv(ctx.env);
+  if (kvCheck) return kvCheck;
   const auth = await authenticate(ctx.request, ctx.env);
   if ('error' in auth) return auth.error;
   const userRaw = await ctx.env.SYNC_KV.get(`user:${auth.userId}`);

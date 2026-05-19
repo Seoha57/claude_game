@@ -28,6 +28,20 @@ export function errorResponse(message: string, status = 400): Response {
   return jsonResponse({ error: message }, status);
 }
 
+// Verify the KV binding exists. Helpful error if dashboard setup wasn't done.
+export function checkKv(env: Env): Response | null {
+  if (!env || !env.SYNC_KV) {
+    return jsonResponse(
+      {
+        error: 'SYNC_KV binding not configured',
+        hint: 'Cloudflare Dashboard → Pages 프로젝트 → Settings → Bindings에서 SYNC_KV (정확한 이름) KV namespace를 추가하세요. SYNC_SETUP.md 참고.',
+      },
+      503,
+    );
+  }
+  return null;
+}
+
 // Random ID generator (UUID-ish, hex)
 export function randomId(byteLength = 16): string {
   const bytes = new Uint8Array(byteLength);

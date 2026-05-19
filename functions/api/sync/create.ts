@@ -5,13 +5,15 @@
 //
 // Response: { userId, secret, code, expiresAt }
 
-import { Env, errorResponse, generatePairingCode, jsonResponse, randomId } from '../../_lib/sync';
+import { checkKv, Env, errorResponse, generatePairingCode, jsonResponse, randomId } from '../../_lib/sync';
 
 const CODE_TTL_SECONDS = 60 * 60; // 1 hour
 const USER_TTL_SECONDS = 60 * 60 * 24 * 365 * 2; // 2 years
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const { request, env } = ctx;
+  const kvCheck = checkKv(env);
+  if (kvCheck) return kvCheck;
   let body: { data?: unknown } = {};
   try {
     if (request.headers.get('content-length') !== '0') {

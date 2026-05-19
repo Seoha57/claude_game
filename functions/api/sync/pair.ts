@@ -3,10 +3,12 @@
 // Looks up the pairing code and returns the credentials + current data.
 // Response: { userId, secret, data, version }
 
-import { Env, errorResponse, jsonResponse, UserRecord } from '../../_lib/sync';
+import { checkKv, Env, errorResponse, jsonResponse, UserRecord } from '../../_lib/sync';
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const { request, env } = ctx;
+  const kvCheck = checkKv(env);
+  if (kvCheck) return kvCheck;
   let body: { code?: string };
   try {
     body = (await request.json()) as { code?: string };

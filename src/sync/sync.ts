@@ -240,8 +240,21 @@ async function api<T = any>(
   const res = await fetch(path, { ...init, headers });
   if (!res.ok) {
     let bodyText = '';
+    let parsed: any = null;
     try { bodyText = await res.text(); } catch { /* ignore */ }
-    throw new Error(`${res.status}: ${bodyText || res.statusText}`);
+    try { parsed = JSON.parse(bodyText); } catch { /* not json */ }
+    // Surface server-provided hint if present
+    if (parsed?.hint) {
+      throw new Error(`${parsed.error || res.status}: ${parsed.hint}`);
+    }
+    if (parsed?.error) {
+      throw new Error(`${res.status} ${parsed.error}`);
+    }
+    // Cloudflare often returns HTML for 5xx — show short version
+    const snippet = bodyText.length > 200
+      ? `서버 오류 (${res.status}). KV 바인딩 설정을 확인해보세요. SYNC_SETUP.md 참고.`
+      : bodyText || res.statusText;
+    throw new Error(`${res.status}: ${snippet}`);
   }
   return (await res.json()) as T;
 }
