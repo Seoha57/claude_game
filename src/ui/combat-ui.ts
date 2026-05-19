@@ -186,10 +186,12 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
 
   const art = el('div', { class: 'enemy-art' }, ENEMY_ART[e.defId] ?? '👤');
 
-  const hpFill = el('div', { class: 'fill', style: { width: `${(e.hp / e.maxHp) * 100}%` } });
+  const enemyHpPct = e.hp / e.maxHp;
+  const hpFill = el('div', { class: 'fill', style: { width: `${enemyHpPct * 100}%` } });
+  const enemyLowHp = e.hp > 0 && enemyHpPct <= 0.3;
   const hpBar = el(
     'div',
-    { class: 'hp-bar' },
+    { class: `hp-bar ${enemyLowHp ? 'low-hp' : ''}` },
     hpFill,
     el('div', { class: 'text' }, `${e.hp}/${e.maxHp}${e.block > 0 ? ` 🛡${e.block}` : ''}`),
   );
@@ -207,13 +209,14 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
   const totalIncoming = Math.floor(perTickDmg) * (intent.hits ?? 1);
   const perfectGuard = isAttack && totalIncoming > 0 && state.player.block >= totalIncoming;
 
+  const dangerHit = isAttack && !perfectGuard && totalIncoming >= 20;
   const intentEl = el(
     'div',
     {
       class: `intent ${intent.kind === 'block' ? 'block' : ''} ${
         intent.kind === 'buff' ? 'buff' : ''
-      } ${intent.kind === 'debuff' ? 'debuff' : ''} ${perfectGuard ? 'perfect-guard' : ''}`,
-      'data-tooltip': perfectGuard ? '🛡 안전: 방어도로 모두 막힘' : '',
+      } ${intent.kind === 'debuff' ? 'debuff' : ''} ${perfectGuard ? 'perfect-guard' : ''} ${dangerHit ? 'danger-hit' : ''}`,
+      'data-tooltip': perfectGuard ? '🛡 안전: 방어도로 모두 막힘' : dangerHit ? '⚠️ 큰 한방 — 대비하세요' : '',
     },
     isAttack
       ? el(
@@ -282,13 +285,15 @@ function renderMid(state: CombatState): HTMLElement {
   const p = state.player;
   const energy = el('div', { class: 'energy-orb' }, `${p.energy}/${p.maxEnergy}`);
 
+  const hpPct = p.hp / p.maxHp;
   const hpFill = el('div', {
     class: 'fill',
-    style: { width: `${(p.hp / p.maxHp) * 100}%` },
+    style: { width: `${hpPct * 100}%` },
   });
+  const lowHp = p.hp > 0 && hpPct <= 0.3;
   const hpBar = el(
     'div',
-    { class: 'hp-bar', style: { width: '180px' } },
+    { class: `hp-bar ${lowHp ? 'low-hp' : ''}`, style: { width: '180px' } },
     hpFill,
     el('div', { class: 'text' }, `${p.hp}/${p.maxHp}`),
   );
@@ -322,11 +327,31 @@ function renderMid(state: CombatState): HTMLElement {
     }, `전체 덱`),
   );
 
+  // 낭비 경고: 사용 가능한 카드가 있는데 턴 끝내려 하면 한 번 흔들어 알림
+  const hasPlayable = state.player.hand.some((c) => {
+    const def = getEffectiveDef(c);
+    return state.player.energy >= def.cost && !isCurseLike(def.id);
+  });
   const endTurn = el(
     'button',
     {
-      class: 'end-turn-btn',
-      onClick: () => {
+      class: `end-turn-btn ${hasPlayable && state.player.energy > 0 ? 'warn' : ''}`,
+      onClick: (ev: MouseEvent) => {
+        const btn = ev.currentTarget as HTMLElement;
+        // First click on a wasteful turn: shake + arm; second click within 2s: proceed
+        if (hasPlayable && state.player.energy > 0 && !btn.dataset.armed) {
+          btn.classList.remove('shake');
+          void btn.offsetWidth;
+          btn.classList.add('shake');
+          btn.dataset.armed = '1';
+          btn.title = '에너지가 남았어요. 한 번 더 누르면 턴이 끝납니다.';
+          setTimeout(() => {
+            btn.classList.remove('shake');
+            delete btn.dataset.armed;
+            btn.title = '';
+          }, 2000);
+          return;
+        }
         selectedCardUid = null;
         playSfx('turn_end');
         const before = snapshotFx(state);

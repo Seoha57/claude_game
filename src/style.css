@@ -786,6 +786,54 @@ button:disabled {
   background: var(--accent-2);
   font-size: 16px;
   padding: 12px 24px;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+/* 에너지가 남고 쓸 카드가 있을 때 — 살짝 강조 */
+.end-turn-btn.warn {
+  border-color: #c97a3a;
+  box-shadow: 0 0 0 1px rgba(201, 122, 58, 0.4) inset;
+}
+/* 첫 클릭 시 흔들리는 경고 애니메이션 */
+.end-turn-btn.shake {
+  animation: end-turn-shake 0.5s cubic-bezier(.36, .07, .19, .97);
+  background: #c97a3a;
+  color: #2a1810;
+}
+@keyframes end-turn-shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-4px); }
+  20% { transform: translateX(4px); }
+  35% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  65% { transform: translateX(-2px); }
+  80% { transform: translateX(1px); }
+}
+
+/* 저HP 펄스 — HP 30% 이하일 때 */
+.hp-bar.low-hp {
+  animation: low-hp-pulse 1.4s ease-in-out infinite;
+}
+.hp-bar.low-hp .fill {
+  background: #ff4040;
+  box-shadow: 0 0 6px #ff4040 inset;
+}
+@keyframes low-hp-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 60, 60, 0.0); }
+  50%      { box-shadow: 0 0 12px rgba(255, 60, 60, 0.7); }
+}
+
+/* 위험한 의도 (20+ 데미지) — 빨갛게 펄스 */
+.intent.danger-hit {
+  border-color: #ff4040;
+  animation: danger-intent-pulse 1.1s ease-in-out infinite;
+}
+.intent.danger-hit .intent-dmg {
+  color: #ff6060 !important;
+  text-shadow: 0 0 4px rgba(255, 60, 60, 0.8);
+}
+@keyframes danger-intent-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 60, 60, 0); transform: scale(1); }
+  50%      { box-shadow: 0 0 10px rgba(255, 60, 60, 0.6); transform: scale(1.04); }
 }
 
 .combat-bottom {
