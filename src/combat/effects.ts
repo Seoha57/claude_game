@@ -164,6 +164,40 @@ export function applyEffect(
     }
     case 'block_all_enemies_attack_lose':
       return;
+    case 'conditional': {
+      if (evalCondition(state, effect.condition)) {
+        for (const inner of effect.then) {
+          applyEffect(state, inner, source, targetEnemy, log);
+        }
+      }
+      return;
+    }
+    case 'damage_per_attack': {
+      const count = state.flags.attackCount ?? 0;
+      const amount = effect.amount * count;
+      if (amount <= 0) return;
+      applyEffect(state, { kind: 'damage', amount }, source, targetEnemy, log);
+      return;
+    }
+    case 'damage_per_card_this_turn': {
+      const count = state.flags.cardsPlayedThisTurn ?? 0;
+      const amount = effect.amount * count;
+      if (amount <= 0) return;
+      applyEffect(state, { kind: 'damage', amount }, source, targetEnemy, log);
+      return;
+    }
+  }
+}
+
+function evalCondition(state: CombatState, cond: import('../types').EffectCondition): boolean {
+  switch (cond.kind) {
+    case 'nth_or_more':
+      return (state.flags.cardsPlayedThisTurn ?? 0) >= cond.n;
+    case 'first_this_turn':
+      return (state.flags.cardsPlayedThisTurn ?? 0) === 1;
+    case 'after_type':
+      // playCard ensures lastPlayedType holds the PREVIOUS card's type while effects run.
+      return state.flags.lastPlayedType === cond.type;
   }
 }
 
@@ -235,7 +269,6 @@ export function playCard(
     drawCards(state, 1);
     log(`원소 공명 → 카드 +1`);
   }
-  state.flags.lastPlayedType = def.type;
 
   // Track cards played this turn for 일심
   state.flags.cardsPlayedThisTurn = (state.flags.cardsPlayedThisTurn ?? 0) + 1;
@@ -247,9 +280,13 @@ export function playCard(
     log(`일심 → 힘 +1`);
   }
 
+  // 효과를 적용하기 전에 lastPlayedType는 "직전 카드 타입" (이 카드 적용 전 상태) 유지.
+  // 콤보 조건 (after_type)이 정확히 평가되도록 함.
   for (const e of def.effects) {
     applyEffect(state, e, p, targetEnemy, log);
   }
+  // 효과 적용 끝난 후에야 lastPlayedType을 이 카드 타입으로 갱신
+  state.flags.lastPlayedType = def.type;
 
   // movement
   if (def.exhaust) {

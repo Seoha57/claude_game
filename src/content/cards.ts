@@ -339,6 +339,44 @@ export const CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_all', amount: 4 }],
     exhaust: true,
   },
+
+  // ── 검귀 콤보 시너지 ─────────────────────────────────────
+  chain_slash: {
+    id: 'chain_slash',
+    name: '연계 베기',
+    type: 'attack',
+    rarity: 'common',
+    cost: 1,
+    target: 'enemy',
+    description: '5 데미지. 이번 턴 2번째 이후 카드면 +7 데미지.',
+    effects: [
+      { kind: 'damage', amount: 5 },
+      { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 7 }] },
+    ],
+  },
+  lingering_image: {
+    id: 'lingering_image',
+    name: '잔영',
+    type: 'attack',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'enemy',
+    description: '9 데미지. 직전이 공격이면 +6 데미지.',
+    effects: [
+      { kind: 'damage', amount: 9 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 6 }] },
+    ],
+  },
+  thousand_cuts: {
+    id: 'thousand_cuts',
+    name: '천상참',
+    type: 'attack',
+    rarity: 'rare',
+    cost: 2,
+    target: 'enemy',
+    description: '데미지 = 2 × 이번 전투 누적 공격 수.',
+    effects: [{ kind: 'damage_per_attack', amount: 2 }],
+  },
 };
 
 // Merge all character cards into CARD_DEFS so getEffectiveDef works universally
@@ -380,6 +418,13 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   feed:             { name: '익스트림 오버킬+',             description: 'HP -3. 24 데미지.',                effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
   immolate:         { name: '제 7의 귀신 : 광폭의 블라수+', description: '모든 적에게 28 데미지.',           effects: [{ kind: 'damage_all', amount: 28 }] },
   reaper:           { name: '귀천살+',                      description: '모든 적에게 6 데미지.',            effects: [{ kind: 'damage_all', amount: 6 }] },
+  // 콤보 시너지
+  chain_slash:      { name: '연계 베기+',     description: '7 데미지. 이번 턴 2번째 이후 카드면 +9 데미지.',
+                      effects: [{ kind: 'damage', amount: 7 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 9 }] }] },
+  lingering_image:  { name: '잔영+',          description: '12 데미지. 직전이 공격이면 +9 데미지.',
+                      effects: [{ kind: 'damage', amount: 12 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 9 }] }] },
+  thousand_cuts:    { name: '천상참+',        description: '데미지 = 3 × 이번 전투 누적 공격 수.',
+                      effects: [{ kind: 'damage_per_attack', amount: 3 }] },
 };
 
 import type { CardInstance } from '../types';

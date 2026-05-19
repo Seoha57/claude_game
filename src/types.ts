@@ -20,6 +20,11 @@ export type StatusKey =
   | 'on_exhaust_block'
   | 'on_exhaust_energy';
 
+export type EffectCondition =
+  | { kind: 'nth_or_more'; n: number }           // 이번 턴 N번째 이상의 카드일 때 (cardsPlayedThisTurn >= n)
+  | { kind: 'first_this_turn' }                  // 이번 턴 첫 카드 (cardsPlayedThisTurn === 1)
+  | { kind: 'after_type'; type: CardType };      // 직전 카드 타입이 일치 (lastPlayedType === type, this card 제외)
+
 export type Effect =
   | { kind: 'damage'; amount: number; times?: number }
   | { kind: 'damage_all'; amount: number }
@@ -33,7 +38,12 @@ export type Effect =
   | { kind: 'heal'; amount: number }
   | { kind: 'lose_hp'; amount: number }
   | { kind: 'exhaust_random_hand' }
-  | { kind: 'discard_random'; amount: number };
+  | { kind: 'discard_random'; amount: number }
+  // ── 콤보 시너지 ───────────────────────────────────────────────
+  | { kind: 'conditional'; condition: EffectCondition; then: Effect[] }
+  // 누적형 데미지: amount × 카운터
+  | { kind: 'damage_per_attack'; amount: number }          // 이번 전투 누적 공격 수
+  | { kind: 'damage_per_card_this_turn'; amount: number };  // 이번 턴 사용 카드 수
 
 export interface CardDef {
   id: string;

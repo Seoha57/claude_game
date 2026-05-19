@@ -313,6 +313,45 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_all', amount: 4 }],
     exhaust: true,
   },
+
+  // ── 마법사 콤보 시너지 ─────────────────────────────────────
+  m_amplify: {
+    id: 'm_amplify',
+    name: '마력 증폭',
+    type: 'attack',
+    rarity: 'common',
+    cost: 1,
+    target: 'enemy',
+    description: '6 데미지. 직전이 스킬이면 +7 데미지.',
+    effects: [
+      { kind: 'damage', amount: 6 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 7 }] },
+    ],
+  },
+  m_chain_lightning: {
+    id: 'm_chain_lightning',
+    name: '연쇄 번개',
+    type: 'attack',
+    rarity: 'uncommon',
+    cost: 2,
+    target: 'enemy',
+    description: '4 데미지 3회. 이번 턴 2번째 이후 카드면 +1회 추가.',
+    effects: [
+      { kind: 'damage', amount: 4, times: 3 },
+      { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 4 }] },
+    ],
+  },
+  m_arcane_burst: {
+    id: 'm_arcane_burst',
+    name: '비전 폭주',
+    type: 'attack',
+    rarity: 'rare',
+    cost: 1,
+    target: 'enemy',
+    description: '데미지 = 4 × 이번 턴 사용한 카드 수. 소멸.',
+    effects: [{ kind: 'damage_per_card_this_turn', amount: 4 }],
+    exhaust: true,
+  },
 };
 
 const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -339,6 +378,13 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_doll_forest:    { name: '인형의 숲+',                 description: '카드 소멸 시 에너지 +1, 카드 1장 드로우.', effects: [{ kind: 'apply_self', status: 'on_exhaust_energy', amount: 1 }, { kind: 'apply_self', status: 'on_exhaust_draw', amount: 1 }] },
   m_astral_storm:   { name: '애스트럴 스톰+',              description: '42 데미지.',                             effects: [{ kind: 'damage', amount: 42 }] },
   m_kasiyas:        { name: '정복자 카시야스+',            description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
+  // 콤보 시너지
+  m_amplify:        { name: '마력 증폭+',  description: '9 데미지. 직전이 스킬이면 +10 데미지.',
+                       effects: [{ kind: 'damage', amount: 9 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 10 }] }] },
+  m_chain_lightning:{ name: '연쇄 번개+',  description: '5 데미지 3회. 이번 턴 2번째 이후 카드면 +2회 추가.',
+                       effects: [{ kind: 'damage', amount: 5, times: 3 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 5, times: 2 }] }] },
+  m_arcane_burst:   { name: '비전 폭주+',  description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.',
+                       effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
   m_quasar:         { name: '퀘이사 익스플로전+',          description: '모든 적에게 28 데미지.',                 effects: [{ kind: 'damage_all', amount: 28 }] },
   m_fusion:         { name: '퓨전 크래프트+',              description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   m_marionette:     { name: '마리오네트+',                 description: '모든 적에게 6 데미지.',                  effects: [{ kind: 'damage_all', amount: 6 }] },

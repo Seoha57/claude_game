@@ -323,6 +323,44 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_all', amount: 18 }],
     exhaust: true,
   },
+
+  // ── 거너 콤보 시너지 ─────────────────────────────────────
+  g_rapid_fire: {
+    id: 'g_rapid_fire',
+    name: '연사',
+    type: 'attack',
+    rarity: 'common',
+    cost: 1,
+    target: 'enemy',
+    description: '3 데미지 2회. 이번 턴 3번째 이후 카드면 +6 데미지 추가.',
+    effects: [
+      { kind: 'damage', amount: 3, times: 2 },
+      { kind: 'conditional', condition: { kind: 'nth_or_more', n: 3 }, then: [{ kind: 'damage', amount: 6 }] },
+    ],
+  },
+  g_carpet_bomb: {
+    id: 'g_carpet_bomb',
+    name: '융단폭격',
+    type: 'attack',
+    rarity: 'uncommon',
+    cost: 2,
+    target: 'all_enemies',
+    description: '모든 적에게 7 데미지. 이번 턴 2번째 이후 카드면 +5 데미지.',
+    effects: [
+      { kind: 'damage_all', amount: 7 },
+      { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage_all', amount: 5 }] },
+    ],
+  },
+  g_overdrive: {
+    id: 'g_overdrive',
+    name: '오버드라이브',
+    type: 'attack',
+    rarity: 'rare',
+    cost: 2,
+    target: 'enemy',
+    description: '데미지 = 3 × 이번 전투 누적 공격 수.',
+    effects: [{ kind: 'damage_per_attack', amount: 3 }],
+  },
 };
 
 const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -353,6 +391,13 @@ const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_mech_drop:      { name: 'Ez-8 카운트다운+',           description: '34 데미지.',                           effects: [{ kind: 'damage', amount: 34 }] },
   g_arms_dealer:    { name: '뽑아치기+',       description: 'HP -3. 30 데미지.',                    effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 30 }] },
   g_airstrike:      { name: '은탄+',   description: '모든 적에게 24 데미지.',               effects: [{ kind: 'damage_all', amount: 24 }] },
+  // 콤보 시너지
+  g_rapid_fire:     { name: '연사+',   description: '4 데미지 2회. 이번 턴 3번째 이후 카드면 +8 데미지 추가.',
+                      effects: [{ kind: 'damage', amount: 4, times: 2 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 3 }, then: [{ kind: 'damage', amount: 8 }] }] },
+  g_carpet_bomb:    { name: '융단폭격+', description: '모든 적에게 10 데미지. 이번 턴 2번째 이후 카드면 +7 데미지.',
+                      effects: [{ kind: 'damage_all', amount: 10 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage_all', amount: 7 }] }] },
+  g_overdrive:      { name: '오버드라이브+', description: '데미지 = 4 × 이번 전투 누적 공격 수.',
+                      effects: [{ kind: 'damage_per_attack', amount: 4 }] },
 };
 
 export function gunnerGetEffectiveDef(card: CardInstance): CardDef {

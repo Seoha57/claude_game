@@ -309,6 +309,47 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
       { kind: 'apply_self', status: 'dexterity', amount: 2 },
     ],
   },
+
+  // ── 프리스트 콤보 시너지 ─────────────────────────────────────
+  p_blessed_blade: {
+    id: 'p_blessed_blade',
+    name: '축복의 칼날',
+    type: 'attack',
+    rarity: 'common',
+    cost: 1,
+    target: 'enemy',
+    description: '8 데미지. 직전이 스킬이면 +6 데미지.',
+    effects: [
+      { kind: 'damage', amount: 8 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 6 }] },
+    ],
+  },
+  p_meditation: {
+    id: 'p_meditation',
+    name: '묵상',
+    type: 'skill',
+    rarity: 'uncommon',
+    cost: 0,
+    target: 'self',
+    description: '이번 턴 첫 카드면 에너지 +1, 1장 드로우. 소멸.',
+    effects: [
+      { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [
+        { kind: 'energy', amount: 1 },
+        { kind: 'draw', amount: 1 },
+      ]},
+    ],
+    exhaust: true,
+  },
+  p_holy_avalanche: {
+    id: 'p_holy_avalanche',
+    name: '성스러운 사태',
+    type: 'attack',
+    rarity: 'rare',
+    cost: 2,
+    target: 'enemy',
+    description: '데미지 = 3 × 이번 전투 누적 공격 수.',
+    effects: [{ kind: 'damage_per_attack', amount: 3 }],
+  },
 };
 
 // ── Upgrade map ──
@@ -338,6 +379,13 @@ export const PRIEST_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   p_holy_judgment:     { name: '신성의 심판+',     description: '18 회복. 재생 +6.',                     effects: [{ kind: 'heal', amount: 18 }, { kind: 'apply_self', status: 'regen', amount: 6 }] },
   p_immortal:          { name: '이모탈+',          description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   p_true_avenger:      { name: '진 어벤저+',       description: 'HP -6. 힘 +3. 민첩 +2.',                 effects: [{ kind: 'lose_hp', amount: 6 }, { kind: 'apply_self', status: 'strength', amount: 3 }, { kind: 'apply_self', status: 'dexterity', amount: 2 }] },
+  // 콤보 시너지
+  p_blessed_blade:     { name: '축복의 칼날+',     description: '11 데미지. 직전이 스킬이면 +9 데미지.',
+                          effects: [{ kind: 'damage', amount: 11 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 9 }] }] },
+  p_meditation:        { name: '묵상+',            description: '이번 턴 첫 카드면 에너지 +1, 2장 드로우. 소멸.',
+                          effects: [{ kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'energy', amount: 1 }, { kind: 'draw', amount: 2 }] }] },
+  p_holy_avalanche:    { name: '성스러운 사태+',   description: '데미지 = 4 × 이번 전투 누적 공격 수.',
+                          effects: [{ kind: 'damage_per_attack', amount: 4 }] },
 };
 
 export function priestGetEffectiveDef(card: CardInstance): CardDef {
