@@ -1,3 +1,5 @@
+import { markDirty } from './sync/sync';
+
 const STORAGE_KEY = 'dungeoncard_ascension';
 
 export interface AscensionModifiers {
@@ -57,5 +59,6 @@ export function unlockNextAscension(): void {
     } catch {
       // ignore storage errors
     }
+    markDirty();
   }
 }

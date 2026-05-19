@@ -123,6 +123,12 @@ export function renderTitle(): HTMLElement {
         onClick: () => setScreen('stats'),
       }, '📊 통계'),
     );
+    utilRow.appendChild(
+      el('button', {
+        style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
+        onClick: () => setScreen('sync'),
+      }, '☁️ 동기화'),
+    );
     wrapper.appendChild(utilRow);
 
     // Audio settings row

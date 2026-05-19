@@ -1,4 +1,5 @@
 import type { CharacterClass } from './types';
+import { markDirty } from './sync/sync';
 
 const STORAGE_KEY = 'dungeoncard_achievements';
 const STORAGE_VERSION = 1;
@@ -73,6 +74,7 @@ function load(): AchData {
 
 function persist(data: AchData): void {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* ignore */ }
+  markDirty();
 }
 
 export function isUnlocked(id: string): boolean {

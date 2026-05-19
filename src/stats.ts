@@ -1,4 +1,5 @@
 import type { CharacterClass } from './types';
+import { markDirty } from './sync/sync';
 
 const STORAGE_KEY = 'dungeoncard_stats';
 const STATS_VERSION = 1;
@@ -74,6 +75,7 @@ function saveStats(s: AggregateStats): void {
   } catch {
     /* ignore */
   }
+  markDirty();
 }
 
 export function recordRunStart(cls: CharacterClass): void {

@@ -8,6 +8,7 @@ import { checkWin, checkTrueWin } from './achievements';
 import { recordCards, recordRelic } from './codex';
 import { playBgm, stopBgm } from './audio';
 import type { BgmTrack } from './audio';
+import { markDirty } from './sync/sync';
 
 let runState: RunState | null = null;
 let combatState: CombatState | null = null;
@@ -30,6 +31,7 @@ export function saveRun(): void {
   } catch (e) {
     console.warn('save failed', e);
   }
+  markDirty();
 }
 
 export function loadRun(): boolean {
@@ -63,6 +65,7 @@ export function hasSave(): boolean {
 
 export function clearSave(): void {
   try { localStorage.removeItem(SAVE_KEY); } catch { /* ignore */ }
+  markDirty();
 }
 
 export function setRenderer(fn: () => void): void {

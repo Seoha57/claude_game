@@ -1,6 +1,7 @@
 // Persistent "discovered cards / relics" codex.
 
 import { checkCodexCards, checkCodexRelics } from './achievements';
+import { markDirty } from './sync/sync';
 
 const STORAGE_KEY = 'dungeoncard_codex';
 const CODEX_VERSION = 1;
@@ -33,6 +34,7 @@ function load(): CodexData {
 
 function persist(data: CodexData): void {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* ignore */ }
+  markDirty();
 }
 
 export function recordCard(id: string): void {

@@ -1,5 +1,7 @@
 // Lightweight Web Audio synth-based SFX + procedural BGM engine.
 
+import { markDirty } from './sync/sync';
+
 const STORAGE_KEY = 'dungeoncard_audio';
 
 interface AudioPrefs {
@@ -27,6 +29,7 @@ function loadPrefs(): AudioPrefs {
 
 function savePrefs(): void {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ muted, volume, bgmMuted, bgmVolume })); } catch { /* ignore */ }
+  markDirty();
 }
 
 let ctx: AudioContext | null = null;
