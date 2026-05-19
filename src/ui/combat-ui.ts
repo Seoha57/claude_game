@@ -104,6 +104,14 @@ export const ENEMY_ART: Record<string, string> = {
   dark_knight: '⚔️',
   corrupted_beast: '🦂',
   dragonling: '🐉',
+  flame_wisp: '🔥',
+  charging_boar: '🐗',
+  curse_priest: '🩸',
+  mech_scout: '🤖',
+  exorcist_hunter: '✝️',
+  forest_spirit: '🌳',
+  dimension_sorcerer: '🌌',
+  titan_golem: '🗿',
 };
 
 let lastPhasePlayed: string | null = null;

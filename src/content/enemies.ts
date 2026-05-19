@@ -851,6 +851,210 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
       }
     },
   },
+
+  // ─────────────────────────────────────────────────────────
+  // 추가 적 (다양한 메커니즘)
+  // ─────────────────────────────────────────────────────────
+
+  // Chapter 1
+  flame_wisp: {
+    id: 'flame_wisp',
+    name: '불꽃령',
+    hpRange: [28, 32],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 3;
+      if (i === 0) return { kind: 'attack', damage: 5, hits: 1, label: '5 + 화상 +3' };
+      if (i === 1) return attack(8, 1);
+      return { kind: 'attack', damage: 6, hits: 1, label: '6 + 화상 +2' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        const i = self.turn % 3;
+        if (i === 0) applyStatus(state.player, 'burn', 3);
+        else if (i === 2) applyStatus(state.player, 'burn', 2);
+      }
+    },
+  },
+  charging_boar: {
+    id: 'charging_boar',
+    name: '돌격 멧돼지',
+    hpRange: [42, 48],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 3;
+      if (i === 0) return { kind: 'buff', label: '예열: 힘 +3 (충전)' };
+      if (i === 1) return attack(18, 1);
+      return attack(6, 1);
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = self.turn % 3;
+      if (it.kind === 'buff') {
+        applyStatus(self, 'strength', 3);
+      } else if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        // After the big charge, lose the buildup
+        if (i === 1) applyStatus(self, 'strength', -3);
+      }
+    },
+  },
+
+  // Chapter 2
+  curse_priest: {
+    id: 'curse_priest',
+    name: '저주 사제',
+    hpRange: [46, 52],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 4;
+      if (i === 0) return { kind: 'debuff', label: '약화 +2' };
+      if (i === 1) return { kind: 'debuff', label: '취약 +2' };
+      return attack(9, 1);
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = self.turn % 4;
+      if (it.kind === 'debuff') {
+        if (i === 0) applyStatus(state.player, 'weak', 2);
+        else applyStatus(state.player, 'vulnerable', 2);
+      } else if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+      }
+    },
+  },
+  mech_scout: {
+    id: 'mech_scout',
+    name: '기갑 정찰병',
+    hpRange: [50, 58],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 4;
+      if (i === 0) return { kind: 'attack_block', damage: 0, block: 8, label: '방어 8 + 가시 +2' };
+      if (i === 1) return attack(11, 1);
+      if (i === 2) return { kind: 'block', block: 10, label: '방어 10' };
+      return { kind: 'attack', damage: 7, hits: 1, label: '7 + 약화' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = self.turn % 4;
+      if (i === 0) {
+        gainBlock(self, 8);
+        applyStatus(self, 'thorns', 2);
+      } else if (it.kind === 'block' && it.block) {
+        gainBlock(self, it.block);
+      } else if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (i === 3) applyStatus(state.player, 'weak', 1);
+      }
+    },
+  },
+
+  // Chapter 3
+  exorcist_hunter: {
+    id: 'exorcist_hunter',
+    name: '퇴마사 헌터',
+    hpRange: [68, 76],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 3;
+      if (i === 0) return attack(14, 1);
+      if (i === 1) return { kind: 'buff', label: '정화 + 8 데미지' };
+      return attack(17, 1);
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = self.turn % 3;
+      if (i === 1) {
+        // Cleanse own debuffs (anti-DoT counter)
+        for (const k of ['vulnerable', 'weak', 'frail', 'burn', 'freeze', 'poison'] as const) {
+          delete self.statuses[k];
+        }
+        dealDamage(state, self, state.player, 8, true);
+      } else if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+      }
+    },
+  },
+
+  // Elites
+  forest_spirit: {
+    id: 'forest_spirit',
+    name: '숲의 정령',
+    hpRange: [88, 96],
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '재생 +5' };
+      const i = (turn - 1) % 4;
+      if (i === 0) return attack(9, 1);
+      if (i === 1) return attack(6, 2);
+      if (i === 2) return { kind: 'attack', damage: 12, hits: 1, label: '12 + 약화 +1' };
+      return { kind: 'buff', label: '재생 +3' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') {
+        applyStatus(self, 'regen', self.turn === 0 ? 5 : 3);
+      } else if (it.damage) {
+        const hits = it.hits ?? 1;
+        for (let h = 0; h < hits; h++) dealDamage(state, self, state.player, it.damage, true);
+        if (((self.turn - 1) % 4) === 2) applyStatus(state.player, 'weak', 1);
+      }
+    },
+  },
+  dimension_sorcerer: {
+    id: 'dimension_sorcerer',
+    name: '차원 술사',
+    hpRange: [72, 80],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 4;
+      if (i === 0) return { kind: 'attack', damage: 5, hits: 1, label: '5 + 카드 1장 버림' };
+      if (i === 1) return attack(14, 1);
+      if (i === 2) return { kind: 'attack', damage: 7, hits: 1, label: '7 + 카드 1장 버림' };
+      return attack(20, 1);
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = self.turn % 4;
+      if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (i === 0 || i === 2) {
+          // Discard a random card from player's hand
+          if (state.player.hand.length > 0) {
+            const idx = Math.floor(state.rng() * state.player.hand.length);
+            const [c] = state.player.hand.splice(idx, 1);
+            state.player.discard.push(c);
+            state.log.push('차원 술사: 카드 1장 강제 버림');
+          }
+        }
+      }
+    },
+  },
+  titan_golem: {
+    id: 'titan_golem',
+    name: '거대 골렘',
+    hpRange: [180, 200],
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '금속화 +4, 가시 +3' };
+      const i = (turn - 1) % 4;
+      if (i === 0) return { kind: 'block', block: 18, label: '방어 18' };
+      if (i === 1) return attack(22, 1);
+      if (i === 2) return { kind: 'attack_block', damage: 12, block: 12, label: '12 / 방어 12' };
+      return { kind: 'attack', damage: 14, hits: 1, label: '14 + 약화 +1' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = (self.turn - 1) % 4;
+      if (it.kind === 'buff') {
+        applyStatus(self, 'metallicize', 4);
+        applyStatus(self, 'thorns', 3);
+      } else if (it.kind === 'block' && it.block) {
+        gainBlock(self, it.block);
+      } else if (it.kind === 'attack_block' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.block) gainBlock(self, it.block);
+      } else if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (i === 3) applyStatus(state.player, 'weak', 1);
+      }
+    },
+  },
 };
 
 // ── Encounter tables ──
@@ -860,6 +1064,8 @@ export const EASY_ENCOUNTERS: string[][] = [
   ['fungi_beast', 'fungi_beast'],
   ['wandering_swordsman'],
   ['goblin_berserker'],
+  ['flame_wisp'],
+  ['flame_wisp', 'flame_wisp'],
 ];
 
 export const NORMAL_ENCOUNTERS: string[][] = [
@@ -870,12 +1076,16 @@ export const NORMAL_ENCOUNTERS: string[][] = [
   ['goblin_berserker', 'fungi_beast'],
   ['wandering_swordsman', 'cultist'],
   ['goblin_berserker', 'wandering_swordsman'],
+  ['charging_boar'],
+  ['flame_wisp', 'cultist'],
+  ['charging_boar', 'flame_wisp'],
 ];
 
 export const ELITE_ENCOUNTERS: string[][] = [
   ['gremlin_nob'],
   ['sentinel', 'sentinel'],
   ['frenzy_gremlin'],
+  ['forest_spirit'],
 ];
 
 export const BOSS_ENCOUNTERS: string[][] = [['hexaghost'], ['mad_butcher'], ['obsidian_golem']];
@@ -891,6 +1101,10 @@ export const CH2_NORMAL_ENCOUNTERS: string[][] = [
   ['black_butcher'],
   ['arcane_scholar', 'shield_gremlin'],
   ['black_butcher', 'arcane_scholar'],
+  ['curse_priest'],
+  ['mech_scout'],
+  ['curse_priest', 'shield_gremlin'],
+  ['mech_scout', 'arcane_scholar'],
 ];
 
 export const CH2_ELITE_ENCOUNTERS: string[][] = [
@@ -899,6 +1113,7 @@ export const CH2_ELITE_ENCOUNTERS: string[][] = [
   ['taskmaster', 'shield_gremlin'],
   ['heavy_armored'],
   ['heavy_armored', 'arcane_scholar'],
+  ['dimension_sorcerer'],
 ];
 
 export const CH2_BOSS_ENCOUNTERS: string[][] = [['the_collector'], ['karnak_runemaster'], ['sirocco_phantom']];
@@ -915,6 +1130,8 @@ export const CH3_NORMAL_ENCOUNTERS: string[][] = [
   ['dark_knight', 'corrupted_beast'],
   ['dark_knight', 'dark_slime'],
   ['corrupted_beast', 'looter'],
+  ['exorcist_hunter'],
+  ['exorcist_hunter', 'corrupted_beast'],
 ];
 
 export const CH3_ELITE_ENCOUNTERS: string[][] = [
@@ -922,6 +1139,7 @@ export const CH3_ELITE_ENCOUNTERS: string[][] = [
   ['book_of_stabbing', 'taskmaster'],
   ['dragonling'],
   ['dragonling', 'corrupted_beast'],
+  ['titan_golem'],
 ];
 
 export const CH3_BOSS_ENCOUNTERS: string[][] = [['void_heart'], ['death_apostle'], ['isaris_overlord']];
