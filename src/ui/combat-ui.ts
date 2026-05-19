@@ -5,7 +5,7 @@ import { getCombat, getRun, setCombat, setScreen, rerender } from '../state';
 import { getEffectiveDef } from '../content/cards';
 import { openDeckOverlay } from './deck-overlay';
 import { ENEMY_DEFS } from '../content/enemies';
-import { STATUS_INFO, applyStatus, modifiedAttackDamage } from '../combat/statuses';
+import { STATUS_INFO, applyStatus, modifiedAttackDamage, getStatusValueLabel, getStatusTooltip } from '../combat/statuses';
 import { buildIntentDisplay } from '../combat/intent';
 import { endPlayerTurn } from '../combat/combat';
 import { playCard } from '../combat/effects';
@@ -256,14 +256,15 @@ function renderStatuses(s: Record<string, number | undefined>): HTMLElement {
     if (!v) continue;
     const info = STATUS_INFO[k as keyof typeof STATUS_INFO];
     if (!info) continue;
+    const key = k as keyof typeof STATUS_INFO;
     row.appendChild(
       el(
         'div',
         {
           class: `status ${info.buff ? 'buff' : 'debuff'}`,
-          'data-tooltip': `${info.name}: ${info.description}`,
+          'data-tooltip': getStatusTooltip(key, v),
         },
-        `${info.name} ${v}`,
+        `${info.name} ${getStatusValueLabel(key, v)}`,
       ),
     );
   }

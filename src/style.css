@@ -399,16 +399,21 @@ button:disabled {
   padding: 6px 10px;
   font-size: 11px;
   color: var(--fg);
-  white-space: pre;
+  white-space: pre-wrap;
   width: max-content;
-  max-width: 180px;
+  max-width: 220px;
+  line-height: 1.4;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.12s;
   z-index: 200;
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
-.status[data-tooltip]:hover::after { opacity: 1; }
+.status[data-tooltip]:hover::after,
+.status[data-tooltip]:active::after,
+.status[data-tooltip]:focus::after {
+  opacity: 1;
+}
 
 /* Relic bar in combat */
 .relic-bar {
