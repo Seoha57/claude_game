@@ -2,6 +2,10 @@ import { el } from './dom';
 import { setScreen, hasSave, loadRun, clearSave } from '../state';
 import { getUnlockedMax } from '../ascension';
 import { getMuted, setMuted, getVolume, setVolume, playSfx, getBgmMuted, setBgmMuted, getBgmVolume, setBgmVolume } from '../audio';
+import { unlockProgress } from '../unlocks';
+import { CARD_DEFS } from '../content/cards';
+import { RELIC_LIST } from '../content/relics';
+import { isCurseLike } from './deck-overlay';
 
 let pendingSeed = 0;
 let pendingAscension = 0;
@@ -24,6 +28,32 @@ export function renderTitle(): HTMLElement {
   const append = () => {
     wrapper.appendChild(el('h1', {}, '던전앤카드'));
     wrapper.appendChild(el('div', { class: 'subtitle' }, '덱빌더 로그라이트'));
+
+    // 언락 진행도 표시 (전체 컨텐츠 X% 해제)
+    const allCards = Object.values(CARD_DEFS).filter((c) => !isCurseLike(c.id));
+    const prog = unlockProgress(allCards, RELIC_LIST);
+    const totalUnlocked = prog.cards.unlocked + prog.relics.unlocked;
+    const totalAll = prog.cards.total + prog.relics.total;
+    const pct = totalAll > 0 ? Math.floor((totalUnlocked / totalAll) * 100) : 100;
+    if (pct < 100) {
+      wrapper.appendChild(
+        el(
+          'div',
+          {
+            style: {
+              color: 'var(--muted)',
+              fontSize: '11px',
+              marginBottom: '8px',
+              padding: '4px 10px',
+              border: '1px solid var(--border)',
+              borderRadius: '6px',
+              background: 'rgba(0,0,0,0.2)',
+            },
+          },
+          `🔓 컨텐츠 ${pct}% 해제 · 카드 ${prog.cards.unlocked}/${prog.cards.total} · 유물 ${prog.relics.unlocked}/${prog.relics.total}`,
+        ),
+      );
+    }
 
     if (unlockedMax > 0) {
       const ascLabel = el(

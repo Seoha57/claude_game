@@ -1,6 +1,14 @@
 import { el } from './dom';
 import { getRun, makeCard, setScreen } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS } from '../content/cards';
+import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
+import type { CardDef } from '../types';
+
+function filterUnlocked(pool: CardDef[], ignoreLocks: boolean): CardDef[] {
+  if (ignoreLocks) return pool;
+  const out = pool.filter((c) => isCardUnlocked(c));
+  return out.length > 0 ? out : pool; // 모두 잠겨있을 때 fallback
+}
 import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
 import { nodeById } from '../map/map';
 import { makeRng, pick, shuffle } from '../rng';
@@ -26,21 +34,32 @@ function ensureReward(): RewardChoiceUI {
   const rng = makeRng(run.seed * 7 + (run.floor + 1) * 91);
 
   const cc = run.characterClass;
-  const commonPool   = cc === 'gunner'  ? GUNNER_COMMON_CARDS
-                     : cc === 'fighter' ? FIGHTER_COMMON_CARDS
-                     : cc === 'magician'? MAGICIAN_COMMON_CARDS
-                     : cc === 'priest' ? PRIEST_COMMON_CARDS
-                     : COMMON_CARDS;
-  const uncommonPool = cc === 'gunner'  ? GUNNER_UNCOMMON_CARDS
-                     : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS
-                     : cc === 'magician'? MAGICIAN_UNCOMMON_CARDS
-                     : cc === 'priest' ? PRIEST_UNCOMMON_CARDS
-                     : UNCOMMON_CARDS;
-  const rarePool     = cc === 'gunner'  ? GUNNER_RARE_CARDS
-                     : cc === 'fighter' ? FIGHTER_RARE_CARDS
-                     : cc === 'magician'? MAGICIAN_RARE_CARDS
-                     : cc === 'priest' ? PRIEST_RARE_CARDS
-                     : RARE_CARDS;
+  // 데일리 챌린지는 잠금 무시 — 모두 같은 풀
+  const ignoreLocks = !!run.dailyConfig;
+  const commonPool   = filterUnlocked(
+    cc === 'gunner'  ? GUNNER_COMMON_CARDS
+    : cc === 'fighter' ? FIGHTER_COMMON_CARDS
+    : cc === 'magician'? MAGICIAN_COMMON_CARDS
+    : cc === 'priest' ? PRIEST_COMMON_CARDS
+    : COMMON_CARDS,
+    ignoreLocks,
+  );
+  const uncommonPool = filterUnlocked(
+    cc === 'gunner'  ? GUNNER_UNCOMMON_CARDS
+    : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS
+    : cc === 'magician'? MAGICIAN_UNCOMMON_CARDS
+    : cc === 'priest' ? PRIEST_UNCOMMON_CARDS
+    : UNCOMMON_CARDS,
+    ignoreLocks,
+  );
+  const rarePool     = filterUnlocked(
+    cc === 'gunner'  ? GUNNER_RARE_CARDS
+    : cc === 'fighter' ? FIGHTER_RARE_CARDS
+    : cc === 'magician'? MAGICIAN_RARE_CARDS
+    : cc === 'priest' ? PRIEST_RARE_CARDS
+    : RARE_CARDS,
+    ignoreLocks,
+  );
 
   // pool: 60% common, 35% uncommon, 5% rare on regular; elite shifts toward rare
   const choices: string[] = [];
@@ -68,7 +87,9 @@ function ensureReward(): RewardChoiceUI {
   }
 
   const gold = isElite ? 25 + Math.floor(rng() * 10) : 10 + Math.floor(rng() * 10);
-  const relicId = isElite ? pick(rng, PICKABLE_RELICS).id : null;
+  const unlockedRelics = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
+  const relicPool = unlockedRelics.length > 0 ? unlockedRelics : PICKABLE_RELICS;
+  const relicId = isElite ? pick(rng, relicPool).id : null;
 
   cachedReward = { cardChoices: choices, gold, relicId, picked: false };
   // Codex: shown card choices + relic option

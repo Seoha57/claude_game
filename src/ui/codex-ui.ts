@@ -5,6 +5,7 @@ import { RELIC_DEFS } from '../content/relics';
 import { getSeenCards, getSeenRelics, resetCodex } from '../codex';
 import { isCurseLike } from './deck-overlay';
 import type { CardDef, RelicDef } from '../types';
+import { isCardUnlocked, isRelicUnlocked, cardUnlockReq, relicUnlockReq, reqLabel } from '../unlocks';
 
 type Tab = 'cards' | 'relics';
 type CardFilter = 'all' | 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest';
@@ -97,9 +98,10 @@ export function renderCodex(): HTMLElement {
 
     const seen = getSeenCards();
     const seenInFilter = filtered.filter((c) => seen.has(c.id)).length;
+    const unlockedInFilter = filtered.filter((c) => isCardUnlocked(c)).length;
 
     wrapper.appendChild(el('div', { class: 'codex-stats' },
-      `발견 ${seenInFilter} / ${filtered.length}`));
+      `발견 ${seenInFilter} / ${filtered.length}  ·  🔓 ${unlockedInFilter} / ${filtered.length}`));
 
     // Sort: by type (attack/skill/power), then rarity, then cost
     const rarityOrder: Record<string, number> = { starter: 0, common: 1, uncommon: 2, rare: 3 };
@@ -123,9 +125,10 @@ export function renderCodex(): HTMLElement {
     const allRelics = Object.values(RELIC_DEFS);
     const seen = getSeenRelics();
     const seenCount = allRelics.filter((r) => seen.has(r.id)).length;
+    const unlockedCount = allRelics.filter((r) => isRelicUnlocked(r)).length;
 
     wrapper.appendChild(el('div', { class: 'codex-stats' },
-      `발견 ${seenCount} / ${allRelics.length}`));
+      `발견 ${seenCount} / ${allRelics.length}  ·  🔓 ${unlockedCount} / ${allRelics.length}`));
 
     const rarityOrder: Record<string, number> = { starter: 0, common: 1, uncommon: 2, rare: 3, boss: 4 };
     const sorted = [...allRelics].sort((a, b) => {
@@ -146,36 +149,41 @@ export function renderCodex(): HTMLElement {
 }
 
 function renderCardSlot(def: CardDef, isSeen: boolean): HTMLElement {
-  const cls = `card ${def.type} rarity-${def.rarity} codex-card-slot ${isSeen ? '' : 'unseen'}`;
+  const unlocked = isCardUnlocked(def);
+  const lockText = unlocked ? '' : reqLabel(cardUnlockReq(def));
+  const cls = `card ${def.type} rarity-${def.rarity} codex-card-slot ${isSeen ? '' : 'unseen'} ${unlocked ? '' : 'locked'}`;
   if (!isSeen) {
     return el('div', { class: cls, style: { cursor: 'default' } },
       el('div', { class: 'card-cost' }, '?'),
       el('div', { class: 'card-name' }, '???'),
-      el('div', { class: 'card-desc' }, '미발견'),
-      el('div', { class: 'card-type' }, '???'),
+      el('div', { class: 'card-desc' }, unlocked ? '미발견' : lockText),
+      el('div', { class: 'card-type' }, unlocked ? '???' : '🔒'),
     );
   }
   return el('div', { class: cls, style: { cursor: 'default' } },
     el('div', { class: 'card-cost' }, String(def.cost)),
     el('div', { class: 'card-name' }, def.name),
-    el('div', { class: 'card-desc' }, def.description),
-    el('div', { class: 'card-type' }, typeLabel(def.type)),
+    el('div', { class: 'card-desc' }, unlocked ? def.description : lockText),
+    el('div', { class: 'card-type' }, unlocked ? typeLabel(def.type) : '🔒'),
   );
 }
 
 function renderRelicSlot(def: RelicDef, isSeen: boolean): HTMLElement {
   const rarityColor = RARITY_COLOR[def.rarity] ?? '#888';
+  const unlocked = isRelicUnlocked(def);
+  const lockText = unlocked ? '' : reqLabel(relicUnlockReq(def));
+  const cls = `codex-relic-slot ${isSeen ? '' : 'unseen'} ${unlocked ? '' : 'locked'}`;
   if (!isSeen) {
-    return el('div', { class: 'codex-relic-slot unseen' },
-      el('div', { class: 'codex-relic-name' }, '???'),
-      el('div', { class: 'codex-relic-desc' }, '미발견'),
+    return el('div', { class: cls },
+      el('div', { class: 'codex-relic-name' }, unlocked ? '???' : '🔒'),
+      el('div', { class: 'codex-relic-desc' }, unlocked ? '미발견' : lockText),
       el('div', { class: 'codex-relic-rarity', style: { color: rarityColor } },
         RARITY_LABEL[def.rarity] ?? def.rarity),
     );
   }
-  return el('div', { class: 'codex-relic-slot' },
-    el('div', { class: 'codex-relic-name' }, def.name),
-    el('div', { class: 'codex-relic-desc' }, def.description),
+  return el('div', { class: cls },
+    el('div', { class: 'codex-relic-name' }, unlocked ? def.name : '🔒 ???'),
+    el('div', { class: 'codex-relic-desc' }, unlocked ? def.description : lockText),
     el('div', { class: 'codex-relic-rarity', style: { color: rarityColor } },
       RARITY_LABEL[def.rarity] ?? def.rarity),
   );

@@ -3,6 +3,7 @@ import { getRun, setScreen, makeCard } from '../state';
 import { EVENT_DEFS } from '../content/events';
 import type { EventEffect, EventChoice } from '../content/events';
 import { POTION_LIST } from '../content/potions';
+import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
 import { makeRng, pick, shuffle } from '../rng';
 import { PICKABLE_RELICS } from '../content/relics';
 import { playSfx } from '../audio';
@@ -140,7 +141,10 @@ export function renderEvent(): HTMLElement {
           break;
         }
         case 'add_random_relic': {
-          const unowned = PICKABLE_RELICS.filter((r) => !run.player.relics.includes(r.id));
+          const ignoreLocks = !!run.dailyConfig;
+          const allowed = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
+          const source = allowed.length > 0 ? allowed : PICKABLE_RELICS;
+          const unowned = source.filter((r) => !run.player.relics.includes(r.id));
           if (unowned.length > 0) {
             const chosen = pick(rng, unowned);
             run.player.relics.push(chosen.id);
@@ -177,19 +181,22 @@ export function renderEvent(): HTMLElement {
 
   function poolFor(rarity: 'common' | 'uncommon' | 'rare'): { id: string }[] {
     const cls = run.characterClass;
+    const ignoreLocks = !!run.dailyConfig;
+    let pool: any[];
     if (cls === 'gunner') {
-      return rarity === 'common' ? GUNNER_COMMON_CARDS : rarity === 'uncommon' ? GUNNER_UNCOMMON_CARDS : GUNNER_RARE_CARDS;
+      pool = rarity === 'common' ? GUNNER_COMMON_CARDS : rarity === 'uncommon' ? GUNNER_UNCOMMON_CARDS : GUNNER_RARE_CARDS;
+    } else if (cls === 'fighter') {
+      pool = rarity === 'common' ? FIGHTER_COMMON_CARDS : rarity === 'uncommon' ? FIGHTER_UNCOMMON_CARDS : FIGHTER_RARE_CARDS;
+    } else if (cls === 'magician') {
+      pool = rarity === 'common' ? MAGICIAN_COMMON_CARDS : rarity === 'uncommon' ? MAGICIAN_UNCOMMON_CARDS : MAGICIAN_RARE_CARDS;
+    } else if (cls === 'priest') {
+      pool = rarity === 'common' ? PRIEST_COMMON_CARDS : rarity === 'uncommon' ? PRIEST_UNCOMMON_CARDS : PRIEST_RARE_CARDS;
+    } else {
+      pool = rarity === 'common' ? COMMON_CARDS : rarity === 'uncommon' ? UNCOMMON_CARDS : RARE_CARDS;
     }
-    if (cls === 'fighter') {
-      return rarity === 'common' ? FIGHTER_COMMON_CARDS : rarity === 'uncommon' ? FIGHTER_UNCOMMON_CARDS : FIGHTER_RARE_CARDS;
-    }
-    if (cls === 'magician') {
-      return rarity === 'common' ? MAGICIAN_COMMON_CARDS : rarity === 'uncommon' ? MAGICIAN_UNCOMMON_CARDS : MAGICIAN_RARE_CARDS;
-    }
-    if (cls === 'priest') {
-      return rarity === 'common' ? PRIEST_COMMON_CARDS : rarity === 'uncommon' ? PRIEST_UNCOMMON_CARDS : PRIEST_RARE_CARDS;
-    }
-    return rarity === 'common' ? COMMON_CARDS : rarity === 'uncommon' ? UNCOMMON_CARDS : RARE_CARDS;
+    if (ignoreLocks) return pool;
+    const filtered = pool.filter((c) => isCardUnlocked(c));
+    return filtered.length > 0 ? filtered : pool;
   }
 
   appendContent();

@@ -6,6 +6,7 @@ import { makeRng, shuffle } from '../rng';
 import { getModifiers } from '../ascension';
 import { playSfx } from '../audio';
 import { recordCard, recordRelic } from '../codex';
+import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
 
 const BASE_CARD_PRICE: Record<string, number> = { common: 50, uncommon: 75, rare: 125 };
 const BASE_RELIC_PRICE = 150;
@@ -32,6 +33,12 @@ function buildShop(): ShopItem[] {
 
   const items: ShopItem[] = [];
   const cc = run.characterClass;
+  const ignoreLocks = !!run.dailyConfig;
+  const unlockFilter = <T extends { id: string; rarity?: any }>(pool: T[]) => {
+    if (ignoreLocks) return pool;
+    const out = pool.filter((c) => isCardUnlocked(c as any));
+    return out.length > 0 ? out : pool;
+  };
 
   // 3 cards: 1 common, 1 uncommon, 1 rare (floor-weighted)
   const pools =
@@ -41,7 +48,7 @@ function buildShop(): ShopItem[] {
     cc === 'priest'   ? [PRIEST_COMMON_CARDS,   PRIEST_UNCOMMON_CARDS,   PRIEST_RARE_CARDS] :
                         [COMMON_CARDS,          UNCOMMON_CARDS,          RARE_CARDS];
   const picked = new Set<string>();
-  for (const pool of pools) {
+  for (const pool of pools.map(unlockFilter)) {
     const candidates = shuffle(rng, pool.slice());
     const card = candidates.find((c) => !picked.has(c.id));
     if (card) {
@@ -52,7 +59,9 @@ function buildShop(): ShopItem[] {
   }
 
   // 1 relic
-  const relicCandidates = shuffle(rng, PICKABLE_RELICS.slice());
+  const relicSource = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
+  const relicPool = relicSource.length > 0 ? relicSource : PICKABLE_RELICS;
+  const relicCandidates = shuffle(rng, relicPool.slice());
   const relic = relicCandidates.find((r) => !run.player.relics.includes(r.id));
   if (relic) {
     items.push({ kind: 'relic', id: relic.id, price: scaledPrice(BASE_RELIC_PRICE, mult), sold: false });

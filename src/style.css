@@ -1322,6 +1322,25 @@ button:disabled {
 .codex-card-slot.unseen .card-name {
   color: #555;
 }
+.codex-card-slot.locked,
+.codex-relic-slot.locked {
+  filter: brightness(0.55) saturate(0.4);
+  position: relative;
+}
+.codex-card-slot.locked::before,
+.codex-relic-slot.locked::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, transparent 0 8px, rgba(40,40,60,0.18) 8px 16px);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.codex-card-slot.locked .card-desc,
+.codex-relic-slot.locked .codex-relic-desc {
+  color: var(--accent);
+  font-size: 11px;
+}
 
 .codex-relic-grid {
   display: grid;

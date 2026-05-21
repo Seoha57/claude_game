@@ -11,6 +11,8 @@ import type { BgmTrack } from './audio';
 import { markDirty } from './sync/sync';
 import type { DailyConstraint, DailyOutcome } from './daily';
 import { setDailyResult } from './daily';
+import { newUnlocksAfterWin } from './unlocks';
+import { loadStats } from './stats';
 
 let runState: RunState | null = null;
 let combatState: CombatState | null = null;
@@ -111,13 +113,18 @@ export function setScreen(s: Screen): void {
   // Stats — record run outcomes once on entry to terminal screens
   if (runState) {
     if (s === 'win') {
+      // Snapshot wins BEFORE recording so unlock toast can compare
+      const prev = snapshotWins();
       recordWin(runState.characterClass, runState.ascension);
       checkWin(runState.characterClass, runState.ascension);
       maybeRecordDaily(runState, 'won');
+      maybeShowUnlockToast(prev);
     } else if (s === 'true_win') {
+      const prev = snapshotWins();
       recordTrueWin(runState.characterClass, runState.ascension);
       checkTrueWin(runState.characterClass, runState.ascension);
       maybeRecordDaily(runState, 'true_won');
+      maybeShowUnlockToast(prev);
     } else if (s === 'lose') {
       recordLoss(runState.characterClass);
       maybeRecordDaily(runState, 'lost');
@@ -128,6 +135,33 @@ export function setScreen(s: Screen): void {
   // BGM track based on screen
   updateBgmForScreen(s);
   rerender();
+}
+
+function snapshotWins(): { wins: number; trueWins: number } {
+  const s = loadStats();
+  return { wins: s.totalWins + s.totalTrueWins, trueWins: s.totalTrueWins };
+}
+
+function maybeShowUnlockToast(prev: { wins: number; trueWins: number }): void {
+  // Lazy import to avoid cycles
+  void Promise.resolve().then(async () => {
+    try {
+      const { CARD_DEFS } = await import('./content/cards');
+      const { RELIC_LIST } = await import('./content/relics');
+      const { isCurseLike } = await import('./ui/deck-overlay');
+      const allCards = Object.values(CARD_DEFS).filter((c) => !isCurseLike(c.id));
+      const news = newUnlocksAfterWin(prev, allCards, RELIC_LIST);
+      if (news.cardCount === 0 && news.relicCount === 0) return;
+      const { showAchievementToast } = await import('./ui/achievement-toast');
+      showAchievementToast({
+        id: 'unlock_toast',
+        emoji: '🔓',
+        title: '새로운 컨텐츠 해제!',
+        description: `${news.tierLabel ? news.tierLabel + ' — ' : ''}카드 ${news.cardCount}장 · 유물 ${news.relicCount}개`,
+        category: 'progression',
+      });
+    } catch { /* ignore */ }
+  });
 }
 
 function maybeRecordDaily(run: RunState, outcome: DailyOutcome): void {
