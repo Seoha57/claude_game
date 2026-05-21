@@ -352,6 +352,57 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_per_card_this_turn', amount: 4 }],
     exhaust: true,
   },
+
+  // ── 풀 확장 (마법사) ──────────────────────────────────────
+  m_frost_bolt: {
+    id: 'm_frost_bolt',
+    name: '냉기 화살',
+    type: 'attack', rarity: 'common', cost: 1, target: 'enemy',
+    description: '6 데미지. 빙결 +1.',
+    effects: [
+      { kind: 'damage', amount: 6 },
+      { kind: 'apply_enemy', status: 'freeze', amount: 1 },
+    ],
+  },
+  m_mana_charge: {
+    id: 'm_mana_charge',
+    name: '마나 충전',
+    type: 'skill', rarity: 'uncommon', cost: 0, target: 'self',
+    description: '에너지 +1. 1장 드로우. 소멸.',
+    effects: [
+      { kind: 'energy', amount: 1 },
+      { kind: 'draw', amount: 1 },
+    ],
+    exhaust: true,
+  },
+  m_fire_burst: {
+    id: 'm_fire_burst',
+    name: '불꽃 폭발',
+    type: 'attack', rarity: 'uncommon', cost: 2, target: 'all_enemies',
+    description: '모든 적에게 9 데미지. 화상 +3.',
+    effects: [
+      { kind: 'damage_all', amount: 9 },
+      { kind: 'apply_all', status: 'burn', amount: 3 },
+    ],
+  },
+  m_energy_circuit: {
+    id: 'm_energy_circuit',
+    name: '에너지 회로',
+    type: 'power', rarity: 'uncommon', cost: 1, target: 'self',
+    description: '턴 종료 시 방어도 +4.',
+    effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }],
+  },
+  m_time_warp: {
+    id: 'm_time_warp',
+    name: '타임 워프',
+    type: 'skill', rarity: 'rare', cost: 3, target: 'self',
+    description: '카드 3장 드로우. 에너지 +2. 소멸.',
+    effects: [
+      { kind: 'draw', amount: 3 },
+      { kind: 'energy', amount: 2 },
+    ],
+    exhaust: true,
+  },
 };
 
 const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -388,6 +439,12 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_quasar:         { name: '퀘이사 익스플로전+',          description: '모든 적에게 28 데미지.',                 effects: [{ kind: 'damage_all', amount: 28 }] },
   m_fusion:         { name: '퓨전 크래프트+',              description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   m_marionette:     { name: '마리오네트+',                 description: '모든 적에게 6 데미지.',                  effects: [{ kind: 'damage_all', amount: 6 }] },
+  // 풀 확장
+  m_frost_bolt:     { name: '냉기 화살+',   description: '8 데미지. 빙결 +2.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
+  m_mana_charge:    { name: '마나 충전+',   description: '에너지 +2. 2장 드로우. 소멸.',           effects: [{ kind: 'energy', amount: 2 }, { kind: 'draw', amount: 2 }] },
+  m_fire_burst:     { name: '불꽃 폭발+',   description: '모든 적에게 12 데미지. 화상 +4.',         effects: [{ kind: 'damage_all', amount: 12 }, { kind: 'apply_all', status: 'burn', amount: 4 }] },
+  m_energy_circuit: { name: '에너지 회로+', description: '턴 종료 시 방어도 +6.',                   effects: [{ kind: 'apply_self', status: 'metallicize', amount: 6 }] },
+  m_time_warp:      { name: '타임 워프+',   description: '카드 5장 드로우. 에너지 +3. 소멸.',       effects: [{ kind: 'draw', amount: 5 }, { kind: 'energy', amount: 3 }] },
 };
 
 export function magicianGetEffectiveDef(card: CardInstance): CardDef {

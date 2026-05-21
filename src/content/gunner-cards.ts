@@ -361,6 +361,60 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     description: '데미지 = 3 × 이번 전투 누적 공격 수.',
     effects: [{ kind: 'damage_per_attack', amount: 3 }],
   },
+
+  // ── 풀 확장 (거너) ────────────────────────────────────────
+  g_smoke_grenade: {
+    id: 'g_smoke_grenade',
+    name: '연막탄',
+    type: 'skill', rarity: 'common', cost: 1, target: 'self',
+    description: '방어도 +6. 모든 적 약화 +1.',
+    effects: [
+      { kind: 'block', amount: 6 },
+      { kind: 'apply_all', status: 'weak', amount: 1 },
+    ],
+  },
+  g_sniper: {
+    id: 'g_sniper',
+    name: '저격수',
+    type: 'attack', rarity: 'uncommon', cost: 2, target: 'enemy',
+    description: '18 데미지. 약화 +2.',
+    effects: [
+      { kind: 'damage', amount: 18 },
+      { kind: 'apply_enemy', status: 'weak', amount: 2 },
+    ],
+  },
+  g_grenade_launcher: {
+    id: 'g_grenade_launcher',
+    name: '유탄발사기',
+    type: 'attack', rarity: 'uncommon', cost: 2, target: 'all_enemies',
+    description: '모든 적에게 12 데미지. 약화 +1. 소멸.',
+    effects: [
+      { kind: 'damage_all', amount: 12 },
+      { kind: 'apply_all', status: 'weak', amount: 1 },
+    ],
+    exhaust: true,
+  },
+  g_kevlar: {
+    id: 'g_kevlar',
+    name: '방탄조끼',
+    type: 'skill', rarity: 'uncommon', cost: 1, target: 'self',
+    description: '방어도 +8. 가시 +3.',
+    effects: [
+      { kind: 'block', amount: 8 },
+      { kind: 'apply_self', status: 'thorns', amount: 3 },
+    ],
+  },
+  g_helios: {
+    id: 'g_helios',
+    name: '헬리오스',
+    type: 'attack', rarity: 'rare', cost: 3, target: 'enemy',
+    description: '35 데미지. 모든 적 약화 +2. 소멸.',
+    effects: [
+      { kind: 'damage', amount: 35 },
+      { kind: 'apply_all', status: 'weak', amount: 2 },
+    ],
+    exhaust: true,
+  },
 };
 
 const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -398,6 +452,12 @@ const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                       effects: [{ kind: 'damage_all', amount: 10 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage_all', amount: 7 }] }] },
   g_overdrive:      { name: '오버드라이브+', description: '데미지 = 4 × 이번 전투 누적 공격 수.',
                       effects: [{ kind: 'damage_per_attack', amount: 4 }] },
+  // 풀 확장
+  g_smoke_grenade:  { name: '연막탄+',        description: '방어도 +9. 모든 적 약화 +2.',          effects: [{ kind: 'block', amount: 9 }, { kind: 'apply_all', status: 'weak', amount: 2 }] },
+  g_sniper:         { name: '저격수+',        description: '24 데미지. 약화 +2.',                 effects: [{ kind: 'damage', amount: 24 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
+  g_grenade_launcher:{name: '유탄발사기+',    description: '모든 적에게 16 데미지. 약화 +2. 소멸.',effects: [{ kind: 'damage_all', amount: 16 }, { kind: 'apply_all', status: 'weak', amount: 2 }] },
+  g_kevlar:         { name: '방탄조끼+',      description: '방어도 +12. 가시 +5.',                effects: [{ kind: 'block', amount: 12 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
+  g_helios:         { name: '헬리오스+',      description: '45 데미지. 모든 적 약화 +3. 소멸.',   effects: [{ kind: 'damage', amount: 45 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
 };
 
 export function gunnerGetEffectiveDef(card: CardInstance): CardDef {

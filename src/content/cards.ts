@@ -377,6 +377,49 @@ export const CARD_DEFS: Record<string, CardDef> = {
     description: '데미지 = 2 × 이번 전투 누적 공격 수.',
     effects: [{ kind: 'damage_per_attack', amount: 2 }],
   },
+
+  // ── 풀 확장 (검귀) ────────────────────────────────────────
+  twin_slash: {
+    id: 'twin_slash',
+    name: '이중 베기',
+    type: 'attack', rarity: 'common', cost: 1, target: 'enemy',
+    description: '4 데미지 2회.',
+    effects: [{ kind: 'damage', amount: 4, times: 2 }],
+  },
+  sword_phantom: {
+    id: 'sword_phantom',
+    name: '검의 환영',
+    type: 'attack', rarity: 'uncommon', cost: 1, target: 'enemy',
+    description: '7 데미지. 직전이 공격이면 +5 데미지.',
+    effects: [
+      { kind: 'damage', amount: 7 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 5 }] },
+    ],
+  },
+  infinite_cut: {
+    id: 'infinite_cut',
+    name: '무한참',
+    type: 'attack', rarity: 'uncommon', cost: 2, target: 'enemy',
+    description: '5 데미지 3회.',
+    effects: [{ kind: 'damage', amount: 5, times: 3 }],
+  },
+  awakening: {
+    id: 'awakening',
+    name: '각성',
+    type: 'skill', rarity: 'uncommon', cost: 1, target: 'self',
+    description: '힘 +3. 소멸.',
+    effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }],
+    exhaust: true,
+  },
+  demon_one_slash: {
+    id: 'demon_one_slash',
+    name: '귀살일도',
+    type: 'attack', rarity: 'rare', cost: 2, target: 'enemy',
+    description: '28 데미지. 처치 시 영구 데미지 +4. 소멸.',
+    effects: [{ kind: 'damage', amount: 28 }],
+    exhaust: true,
+    scaling: { kind: 'on_kill', amount: 4 },
+  },
 };
 
 // Merge all character cards into CARD_DEFS so getEffectiveDef works universally
@@ -425,6 +468,14 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                       effects: [{ kind: 'damage', amount: 12 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 9 }] }] },
   thousand_cuts:    { name: '천상참+',        description: '데미지 = 3 × 이번 전투 누적 공격 수.',
                       effects: [{ kind: 'damage_per_attack', amount: 3 }] },
+  // 풀 확장
+  twin_slash:       { name: '이중 베기+',     description: '5 데미지 2회.',                       effects: [{ kind: 'damage', amount: 5, times: 2 }] },
+  sword_phantom:    { name: '검의 환영+',     description: '9 데미지. 직전이 공격이면 +7 데미지.',
+                      effects: [{ kind: 'damage', amount: 9 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 7 }] }] },
+  infinite_cut:     { name: '무한참+',        description: '6 데미지 3회.',                       effects: [{ kind: 'damage', amount: 6, times: 3 }] },
+  awakening:        { name: '각성+',          description: '힘 +5. 소멸.',                        effects: [{ kind: 'apply_self', status: 'strength', amount: 5 }] },
+  demon_one_slash:  { name: '귀살일도+',      description: '36 데미지. 처치 시 영구 데미지 +5. 소멸.',
+                      effects: [{ kind: 'damage', amount: 36 }] },
 };
 
 import type { CardInstance } from '../types';

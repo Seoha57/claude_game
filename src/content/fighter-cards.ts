@@ -347,6 +347,53 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     description: '데미지 = 3 × 이번 전투 누적 공격 수.',
     effects: [{ kind: 'damage_per_attack', amount: 3 }],
   },
+
+  // ── 풀 확장 (격투가) ──────────────────────────────────────
+  f_jab: {
+    id: 'f_jab',
+    name: '잽',
+    type: 'attack', rarity: 'common', cost: 0, target: 'enemy',
+    description: '4 데미지.',
+    effects: [{ kind: 'damage', amount: 4 }],
+  },
+  f_combination: {
+    id: 'f_combination',
+    name: '콤비네이션',
+    type: 'attack', rarity: 'uncommon', cost: 1, target: 'enemy',
+    description: '5 데미지 2회. 직전이 공격이면 +5 데미지.',
+    effects: [
+      { kind: 'damage', amount: 5, times: 2 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 5 }] },
+    ],
+  },
+  f_counter: {
+    id: 'f_counter',
+    name: '카운터',
+    type: 'attack', rarity: 'uncommon', cost: 1, target: 'enemy',
+    description: '8 데미지. 가시 +3.',
+    effects: [
+      { kind: 'damage', amount: 8 },
+      { kind: 'apply_self', status: 'thorns', amount: 3 },
+    ],
+  },
+  f_rage_burst: {
+    id: 'f_rage_burst',
+    name: '분노 폭발',
+    type: 'attack', rarity: 'uncommon', cost: 1, target: 'all_enemies',
+    description: 'HP -4. 모든 적에게 10 데미지.',
+    effects: [
+      { kind: 'lose_hp', amount: 4 },
+      { kind: 'damage_all', amount: 10 },
+    ],
+  },
+  f_shadow_kick: {
+    id: 'f_shadow_kick',
+    name: '무영각',
+    type: 'attack', rarity: 'rare', cost: 2, target: 'enemy',
+    description: '18 데미지 2회. 소멸.',
+    effects: [{ kind: 'damage', amount: 18, times: 2 }],
+    exhaust: true,
+  },
 };
 
 const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -383,6 +430,13 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                        effects: [{ kind: 'damage', amount: 10 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 9 }] }] },
   f_dragon_fury:    { name: '용의 분노+', description: '데미지 = 4 × 이번 전투 누적 공격 수.',
                        effects: [{ kind: 'damage_per_attack', amount: 4 }] },
+  // 풀 확장
+  f_jab:            { name: '잽+',         description: '6 데미지.',                              effects: [{ kind: 'damage', amount: 6 }] },
+  f_combination:    { name: '콤비네이션+',  description: '7 데미지 2회. 직전이 공격이면 +7 데미지.',
+                       effects: [{ kind: 'damage', amount: 7, times: 2 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 7 }] }] },
+  f_counter:        { name: '카운터+',      description: '11 데미지. 가시 +5.',                    effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
+  f_rage_burst:     { name: '분노 폭발+',   description: 'HP -3. 모든 적에게 14 데미지.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_all', amount: 14 }] },
+  f_shadow_kick:    { name: '무영각+',      description: '22 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 22, times: 2 }] },
 };
 
 export function fighterGetEffectiveDef(card: CardInstance): CardDef {

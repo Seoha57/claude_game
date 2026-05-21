@@ -350,6 +350,56 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
     description: '데미지 = 3 × 이번 전투 누적 공격 수.',
     effects: [{ kind: 'damage_per_attack', amount: 3 }],
   },
+
+  // ── 풀 확장 (프리스트) ────────────────────────────────────
+  p_holy_shield: {
+    id: 'p_holy_shield',
+    name: '신성한 방패',
+    type: 'skill', rarity: 'common', cost: 1, target: 'self',
+    description: '방어도 +8. 가시 +2.',
+    effects: [
+      { kind: 'block', amount: 8 },
+      { kind: 'apply_self', status: 'thorns', amount: 2 },
+    ],
+  },
+  p_faith_strike: {
+    id: 'p_faith_strike',
+    name: '신앙의 일격',
+    type: 'attack', rarity: 'uncommon', cost: 1, target: 'enemy',
+    description: '11 데미지. 직전이 스킬이면 +5 데미지.',
+    effects: [
+      { kind: 'damage', amount: 11 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 5 }] },
+    ],
+  },
+  p_requiem: {
+    id: 'p_requiem',
+    name: '위령제',
+    type: 'attack', rarity: 'uncommon', cost: 2, target: 'all_enemies',
+    description: '모든 적에게 8 데미지. 약화 +2.',
+    effects: [
+      { kind: 'damage_all', amount: 8 },
+      { kind: 'apply_all', status: 'weak', amount: 2 },
+    ],
+  },
+  p_radiance: {
+    id: 'p_radiance',
+    name: '광휘',
+    type: 'skill', rarity: 'uncommon', cost: 1, target: 'self',
+    description: '모든 적에게 빙결 +1. 1장 드로우.',
+    effects: [
+      { kind: 'apply_all', status: 'freeze', amount: 1 },
+      { kind: 'draw', amount: 1 },
+    ],
+  },
+  p_wrath_of_god: {
+    id: 'p_wrath_of_god',
+    name: '신의 진노',
+    type: 'attack', rarity: 'rare', cost: 3, target: 'all_enemies',
+    description: '모든 적에게 24 데미지. 소멸.',
+    effects: [{ kind: 'damage_all', amount: 24 }],
+    exhaust: true,
+  },
 };
 
 // ── Upgrade map ──
@@ -386,6 +436,13 @@ export const PRIEST_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                           effects: [{ kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'energy', amount: 1 }, { kind: 'draw', amount: 2 }] }] },
   p_holy_avalanche:    { name: '성스러운 사태+',   description: '데미지 = 4 × 이번 전투 누적 공격 수.',
                           effects: [{ kind: 'damage_per_attack', amount: 4 }] },
+  // 풀 확장
+  p_holy_shield:       { name: '신성한 방패+',   description: '방어도 +11. 가시 +3.',                    effects: [{ kind: 'block', amount: 11 }, { kind: 'apply_self', status: 'thorns', amount: 3 }] },
+  p_faith_strike:      { name: '신앙의 일격+',   description: '15 데미지. 직전이 스킬이면 +6 데미지.',
+                          effects: [{ kind: 'damage', amount: 15 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 6 }] }] },
+  p_requiem:           { name: '위령제+',        description: '모든 적에게 11 데미지. 약화 +3.',         effects: [{ kind: 'damage_all', amount: 11 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
+  p_radiance:          { name: '광휘+',          description: '모든 적에게 빙결 +2. 2장 드로우.',         effects: [{ kind: 'apply_all', status: 'freeze', amount: 2 }, { kind: 'draw', amount: 2 }] },
+  p_wrath_of_god:      { name: '신의 진노+',     description: '모든 적에게 32 데미지. 소멸.',            effects: [{ kind: 'damage_all', amount: 32 }] },
 };
 
 export function priestGetEffectiveDef(card: CardInstance): CardDef {
