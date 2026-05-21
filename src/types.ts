@@ -159,7 +159,7 @@ export interface MapNode {
   visited: boolean;
 }
 
-export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync';
+export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync' | 'daily';
 
 export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest';
 
@@ -181,6 +181,16 @@ export interface RunState {
   combatEnemyDefIds?: string[];
   reward?: RewardChoice;
   pendingNextScreen?: Screen;
+  // 데일리 챌린지 진행 중일 때 부여 (제약 ID + 날짜 + 적용된 modifier)
+  dailyConfig?: {
+    date: string;
+    constraintId: string;
+    bonusMaxEnergy?: number;
+    handDrawDelta?: number;
+    disableUpgrade?: boolean;
+    disableRemove?: boolean;
+    enemyHpMult?: number;
+  };
 }
 
 export interface RelicDef {

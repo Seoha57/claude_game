@@ -48,7 +48,9 @@ export function spawnEnemy(defId: string, rng: () => number): Enemy {
   const run = getRunOrNull();
   const mods = getModifiers(run?.ascension ?? 0);
   const baseHp = randInt(rng, def.hpRange[0], def.hpRange[1]);
-  const hp = Math.round(baseHp * mods.enemyHpMult);
+  // 데일리 제약: 적 HP 배율
+  const dailyMult = run?.dailyConfig?.enemyHpMult ?? 1;
+  const hp = Math.round(baseHp * mods.enemyHpMult * dailyMult);
   const enemy: Enemy = {
     uid: uid(),
     defId,
@@ -124,7 +126,9 @@ export function beginPlayerTurn(state: CombatState): void {
   // Start-of-turn statuses for player
   applyStartOfTurnStatuses(p, state, '플레이어');
 
-  drawCards(state, PLAYER_DRAW);
+  // 데일리 제약: 손패 ±N
+  const drawCount = Math.max(1, PLAYER_DRAW + (run?.dailyConfig?.handDrawDelta ?? 0));
+  drawCards(state, drawCount);
   if (run?.player.relics.includes('hourglass')) drawCards(state, 1);
   if (run?.player.relics.includes('eternal_hourglass')) drawCards(state, 2);
 }

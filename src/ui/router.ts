@@ -15,6 +15,7 @@ import { renderCodex } from './codex-ui';
 import { renderAchievements } from './achievements-ui';
 import { renderNeowBlessing } from './neow-ui';
 import { renderSync } from './sync-ui';
+import { renderDaily } from './daily-ui';
 
 export function render(): void {
   const root = document.getElementById('app');
@@ -82,6 +83,9 @@ export function render(): void {
       break;
     case 'sync':
       view = renderSync();
+      break;
+    case 'daily':
+      view = renderDaily();
       break;
   }
   root.appendChild(view);

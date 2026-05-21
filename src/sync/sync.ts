@@ -22,6 +22,7 @@ const SYNC_KEYS = [
   'dungeoncard_ascension',
   'dungeoncard_achievements',
   'dungeoncard_save',
+  'dungeoncard_daily',
 ];
 
 export interface SyncCredentials {
@@ -138,12 +139,28 @@ function mergeKey(key: string, local: unknown, remote: unknown): unknown {
       return Math.max(Number(local) || 0, Number(remote) || 0);
     case 'dungeoncard_save':
       return mergeSave(local, remote);
+    case 'dungeoncard_daily':
+      return mergeDaily(local, remote);
     case 'dungeoncard_audio':
     default:
       // Last-write-wins for prefs — both are recent snapshots, pick remote if
       // it appears newer (we don't track per-key timestamps; this is fine).
       return remote;
   }
+}
+
+// Daily results: union per date, prefer newer per-date timestamp
+function mergeDaily(local: any, remote: any): any {
+  if (!local) return remote;
+  if (!remote) return local;
+  const out: any = { version: local.version ?? remote.version ?? 1, results: { ...(local.results ?? {}) } };
+  for (const date of Object.keys(remote.results ?? {})) {
+    const lr = out.results[date];
+    const rr = remote.results[date];
+    if (!lr) out.results[date] = rr;
+    else if ((rr.timestamp ?? 0) > (lr.timestamp ?? 0)) out.results[date] = rr;
+  }
+  return out;
 }
 
 // Codex: { version, cards: string[], relics: string[] } — union arrays

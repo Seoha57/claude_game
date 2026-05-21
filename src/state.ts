@@ -9,6 +9,8 @@ import { recordCards, recordRelic } from './codex';
 import { playBgm, stopBgm } from './audio';
 import type { BgmTrack } from './audio';
 import { markDirty } from './sync/sync';
+import type { DailyConstraint, DailyOutcome } from './daily';
+import { setDailyResult } from './daily';
 
 let runState: RunState | null = null;
 let combatState: CombatState | null = null;
@@ -111,11 +113,14 @@ export function setScreen(s: Screen): void {
     if (s === 'win') {
       recordWin(runState.characterClass, runState.ascension);
       checkWin(runState.characterClass, runState.ascension);
+      maybeRecordDaily(runState, 'won');
     } else if (s === 'true_win') {
       recordTrueWin(runState.characterClass, runState.ascension);
       checkTrueWin(runState.characterClass, runState.ascension);
+      maybeRecordDaily(runState, 'true_won');
     } else if (s === 'lose') {
       recordLoss(runState.characterClass);
+      maybeRecordDaily(runState, 'lost');
     }
   }
   // Clear save on terminal screens.
@@ -123,6 +128,19 @@ export function setScreen(s: Screen): void {
   // BGM track based on screen
   updateBgmForScreen(s);
   rerender();
+}
+
+function maybeRecordDaily(run: RunState, outcome: DailyOutcome): void {
+  if (!run.dailyConfig) return;
+  setDailyResult({
+    date: run.dailyConfig.date,
+    characterClass: run.characterClass,
+    constraintId: run.dailyConfig.constraintId,
+    outcome,
+    chapter: run.chapter,
+    floor: run.floor,
+    timestamp: Date.now(),
+  });
 }
 
 function updateBgmForScreen(s: Screen): void {
@@ -151,10 +169,19 @@ function bgmTrackForScreen(s: Screen): BgmTrack | null {
   return null;
 }
 
-export function startNewRun(seed: number, ascension = 0, characterClass: CharacterClass = 'swordmaster', options: { goToScreen?: Screen } = {}): void {
+export function startNewRun(
+  seed: number,
+  ascension = 0,
+  characterClass: CharacterClass = 'swordmaster',
+  options: { goToScreen?: Screen; daily?: { date: string; constraint: DailyConstraint } } = {},
+): void {
   const mods = getModifiers(ascension);
   const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82 };
-  const baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
+  let baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
+  // 데일리 제약: HP 배율
+  if (options.daily?.constraint.hpMult !== undefined) {
+    baseHp = Math.max(1, Math.floor(baseHp * options.daily.constraint.hpMult));
+  }
   const deck =
     characterClass === 'gunner' ? makeGunnerStarterDeck() :
     characterClass === 'fighter' ? makeFighterStarterDeck() :
@@ -162,6 +189,10 @@ export function startNewRun(seed: number, ascension = 0, characterClass: Charact
     characterClass === 'priest' ? makePriestStarterDeck() :
     makeStarterDeck();
   for (let i = 0; i < mods.cursesInDeck; i++) deck.push(makeCard('wound'));
+  // 데일리 제약: 시작 저주
+  if (options.daily?.constraint.startCurses) {
+    for (let i = 0; i < options.daily.constraint.startCurses; i++) deck.push(makeCard('wound'));
+  }
   const relicMap: Record<CharacterClass, string> = {
     swordmaster: 'burning_blood',
     gunner: 'bag_of_marbles',
@@ -180,12 +211,15 @@ export function startNewRun(seed: number, ascension = 0, characterClass: Charact
   const startingRelic = relicMap[characterClass];
   const signatureRelic = signatureMap[characterClass];
 
+  // 데일리: 최대 에너지 조정
+  const baseMaxEnergy = 3 + (options.daily?.constraint.bonusMaxEnergy ?? 0);
+
   const player: Player = {
     hp: baseHp,
     maxHp: baseHp,
     block: 0,
     energy: 0,
-    maxEnergy: 3,
+    maxEnergy: Math.max(1, baseMaxEnergy),
     gold: 0,
     statuses: {},
     deck,
@@ -207,6 +241,17 @@ export function startNewRun(seed: number, ascension = 0, characterClass: Charact
     chapter: 1,
     ascension,
     characterClass,
+    ...(options.daily && {
+      dailyConfig: {
+        date: options.daily.date,
+        constraintId: options.daily.constraint.id,
+        bonusMaxEnergy: options.daily.constraint.bonusMaxEnergy,
+        handDrawDelta: options.daily.constraint.handDrawDelta,
+        disableUpgrade: options.daily.constraint.disableUpgrade,
+        disableRemove: options.daily.constraint.disableRemove,
+        enemyHpMult: options.daily.constraint.enemyHpMult,
+      },
+    }),
   };
   combatState = null;
   recordRunStart(characterClass);

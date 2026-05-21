@@ -38,6 +38,8 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
   const run = getRun();
   const mods = getModifiers(run.ascension);
   const healAmount = Math.floor(run.player.maxHp * mods.restHealMult);
+  const noUpgrade = !!run.dailyConfig?.disableUpgrade;
+  const noRemove = !!run.dailyConfig?.disableRemove;
 
   return el(
     'div',
@@ -54,11 +56,15 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
         },
       }, `휴식 (HP +${healAmount})`),
       el('button', {
-        onClick: () => goTo('smith'),
-      }, `대장간 (카드 강화 · 덱 ${run.player.deck.length}장)`),
+        ...(noUpgrade ? { disabled: 'true', title: '데일리 제약: 강화 봉인' } : {}),
+        style: noUpgrade ? { opacity: '0.45', cursor: 'not-allowed' } : {},
+        onClick: () => { if (!noUpgrade) goTo('smith'); },
+      }, noUpgrade ? '🔒 대장간 (강화 봉인)' : `대장간 (카드 강화 · 덱 ${run.player.deck.length}장)`),
       el('button', {
-        onClick: () => goTo('purge'),
-      }, `정화 (카드 제거 · 덱 ${run.player.deck.length}장)`),
+        ...(noRemove ? { disabled: 'true', title: '데일리 제약: 정화 봉인' } : {}),
+        style: noRemove ? { opacity: '0.45', cursor: 'not-allowed' } : {},
+        onClick: () => { if (!noRemove) goTo('purge'); },
+      }, noRemove ? '🔒 정화 (정화 봉인)' : `정화 (카드 제거 · 덱 ${run.player.deck.length}장)`),
       el('button', {
         onClick: () => goTo('dup'),
       }, `복제 (카드 복제 · 덱 ${run.player.deck.length}장)`),
