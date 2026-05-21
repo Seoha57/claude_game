@@ -11,18 +11,20 @@ import { loadStats } from './stats';
 
 export type UnlockReq = 'always' | 'any_win' | 'wins_3' | 'true_win';
 
-// 희귀도 기본 잠금 단계
+// 희귀도 기본 잠금 단계 — 진엔딩이 어려워서 락이 영원히 안 풀리는 일을 피하려고 완화.
+// 보스 유물은 챕터 클리어로 자동 획득되니까 항상 노출.
 function defaultReqForCardRarity(r: CardRarity): UnlockReq {
   if (r === 'starter' || r === 'common') return 'always';
-  if (r === 'uncommon') return 'any_win';
-  return 'wins_3'; // rare
+  if (r === 'uncommon') return 'always';
+  return 'any_win'; // rare — 첫 챕터 3 클리어로 해제
 }
 
 function defaultReqForRelicRarity(r: RelicDef['rarity']): UnlockReq {
   if (r === 'starter' || r === 'common') return 'always';
-  if (r === 'uncommon') return 'any_win';
-  if (r === 'rare') return 'wins_3';
-  return 'true_win'; // boss
+  if (r === 'uncommon') return 'always';
+  if (r === 'rare') return 'any_win';
+  // boss relic은 챕터 클리어로 자동 획득되니까 코덱스 락은 무의미.
+  return 'always';
 }
 
 // 특정 아이템 override — 희귀도 기본에서 벗어나야 할 때만 추가
