@@ -1095,6 +1095,9 @@ function isTypingInInput(): boolean {
 function handleKeydown(e: KeyboardEvent): void {
   if (isTypingInInput()) return;
   if (getScreen() !== 'combat') return;
+  // 덱/카드 목록 오버레이나 스플래시가 떠 있으면 핫키 무시
+  // (오버레이 뒤의 손패가 실수로 플레이되는 것 방지)
+  if (document.querySelector('.card-list-overlay, .splash-overlay')) return;
   const state = getCombatOrNull();
   if (!state || state.phase !== 'player') return;
 

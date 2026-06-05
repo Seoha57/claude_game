@@ -192,20 +192,25 @@ function mergeCodex(local: any, remote: any): any {
   };
 }
 
-// Achievements: Record<id, boolean> — OR per id
+// Achievements: { version, unlocked: string[], perCharClear: {}, perCharTrue: {} }
+// unlocked는 합집합, perChar*는 캐릭별 OR.
 function mergeAchievements(local: any, remote: any): any {
-  const out: Record<string, any> = { ...local };
-  for (const k of Object.keys(remote ?? {})) {
-    const lv = local?.[k];
-    const rv = remote?.[k];
-    if (typeof lv === 'boolean' || typeof rv === 'boolean') {
-      out[k] = !!lv || !!rv;
-    } else {
-      // Some achievements may store metadata objects — prefer truthy/object over null
-      out[k] = lv ?? rv;
-    }
-  }
-  return out;
+  if (!local) return remote;
+  if (!remote) return local;
+  const unlocked = new Set<string>();
+  for (const id of local.unlocked ?? []) unlocked.add(id);
+  for (const id of remote.unlocked ?? []) unlocked.add(id);
+  const orMerge = (a: any = {}, b: any = {}) => {
+    const out: Record<string, boolean> = { ...a };
+    for (const k of Object.keys(b)) out[k] = !!out[k] || !!b[k];
+    return out;
+  };
+  return {
+    version: Math.max(local.version ?? 0, remote.version ?? 0) || 1,
+    unlocked: [...unlocked],
+    perCharClear: orMerge(local.perCharClear, remote.perCharClear),
+    perCharTrue: orMerge(local.perCharTrue, remote.perCharTrue),
+  };
 }
 
 // Stats: { totalRuns, totalWins, totalTrueWins, totalLosses, perCharacter: {...} }
@@ -243,17 +248,20 @@ function mergeStats(local: any, remote: any): any {
   return out;
 }
 
-// Save: prefer the run with the higher floor; tie → keep local.
-// (User can resolve via UI if both have meaningful saves.)
+// Save: prefer the more-progressed run. 챕터를 먼저 비교하고(더 깊은 챕터
+// 우선), 같은 챕터면 floor로 비교. 동률이면 local 유지.
 function mergeSave(local: any, remote: any): any {
   if (!local) return remote;
   if (!remote) return local;
-  const lf = local?.runState?.floor ?? 0;
-  const rf = remote?.runState?.floor ?? 0;
   // If versions differ, may be incompatible; prefer the newer SAVE_VERSION
   const lv = local?.version ?? 0;
   const rv = remote?.version ?? 0;
   if (lv !== rv) return lv > rv ? local : remote;
+  const lc = local?.runState?.chapter ?? 1;
+  const rc = remote?.runState?.chapter ?? 1;
+  if (lc !== rc) return rc > lc ? remote : local;
+  const lf = local?.runState?.floor ?? 0;
+  const rf = remote?.runState?.floor ?? 0;
   return rf > lf ? remote : local;
 }
 
