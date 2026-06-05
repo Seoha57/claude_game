@@ -126,6 +126,11 @@ let lastPhasePlayed: string | null = null;
 
 export function renderCombat(): HTMLElement {
   const state = getCombat();
+  // 턴 시작 직접 데미지(마탑의 결정/폭풍의 핵)나 도트로 마지막 적이
+  // 플레이어 행동 없이 죽었을 수 있으니 렌더 전에 승리 판정을 한 번 더 한다.
+  if (state.phase === 'player' && state.enemies.every((e) => e.hp <= 0)) {
+    state.phase = 'won';
+  }
   // Achievement spot checks (idempotent)
   checkCombatAchievements(state);
   if (state.phase === 'won') {

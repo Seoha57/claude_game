@@ -1,6 +1,6 @@
 import type { CombatState, Enemy, Player } from '../types';
 import { ENEMY_DEFS } from '../content/enemies';
-import { drawCards, shuffle } from './effects';
+import { drawCards, shuffle, maybeTriggerPhase } from './effects';
 import { applyStatus, getStatus } from './statuses';
 import { makeRng, randInt, uid } from '../rng';
 import { getModifiers } from '../ascension';
@@ -139,6 +139,8 @@ function applyStartOfTurnStatuses(c: any, state: CombatState, name: string): voi
     c.hp = Math.max(0, c.hp - poison);
     applyStatus(c, 'poison', -1);
     state.log.push(`${name} 중독 ${poison} 데미지`);
+    // 도트로 보스가 절반 HP를 넘겼을 수 있으니 페이즈 전환 체크
+    if (c !== state.player) maybeTriggerPhase(state, c);
   }
 }
 
@@ -187,6 +189,8 @@ export function endPlayerTurn(state: CombatState): void {
         return;
       }
     }
+    // 적이 자기 공격 중 가시 등으로 죽었으면 턴종료 상태처리(재생 부활 등) 스킵
+    if (e.hp <= 0) continue;
     endOfTurnStatuses(e, state, enemyName);
     e.turn += 1;
     e.intent = ENEMY_DEFS[e.defId].decideIntent(state, e, e.turn);
@@ -203,7 +207,8 @@ export function endPlayerTurn(state: CombatState): void {
 
 function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
   const regen = getStatus(c.statuses, 'regen');
-  if (regen > 0) {
+  // 죽은 대상은 재생으로 부활하지 않는다
+  if (regen > 0 && c.hp > 0) {
     if (c.maxHp !== undefined) {
       c.hp = Math.min(c.maxHp, c.hp + regen);
       state.log.push(`${name} 재생 ${regen} 회복`);
@@ -238,6 +243,8 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
     if (wasAlive && c.hp <= 0 && c !== state.player) {
       checkBurnKill();
     }
+    // 도트로 보스가 절반 HP를 넘겼을 수 있으니 페이즈 전환 체크
+    if (c !== state.player) maybeTriggerPhase(state, c);
   }
   // decay debuffs/buffs that decay
   for (const k of ['vulnerable', 'weak', 'frail'] as const) {

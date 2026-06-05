@@ -44,19 +44,24 @@ export function dealDamage(
   }
 
   // Phase transition: if target is an enemy and just crossed half HP, fire onHalfHp
-  const t = target as Partial<Enemy>;
-  if (t.defId !== undefined && t.hp !== undefined && t.hp > 0 && !t.phaseTriggered) {
-    if (t.hp <= target.maxHp / 2) {
-      const def = ENEMY_DEFS[t.defId];
-      if (def?.onHalfHp) {
-        t.phaseTriggered = true;
-        const flavor = def.onHalfHp(state, target as Enemy);
-        state.log.push(`⚡ ${def.name}: ${flavor}`);
-        playSfx('boss_phase');
-      }
+  maybeTriggerPhase(state, target as Partial<Enemy>);
+  return hpDmg;
+}
+
+// 적이 HP 절반 이하로 떨어지면 onHalfHp 페이즈 전환을 한 번 발동.
+// 직접 데미지(도트/유물)에서도 호출되도록 export.
+export function maybeTriggerPhase(state: CombatState, t: Partial<Enemy>): void {
+  if (t.defId === undefined || t.hp === undefined || t.maxHp === undefined) return;
+  if (t.hp <= 0 || t.phaseTriggered) return;
+  if (t.hp <= t.maxHp / 2) {
+    const def = ENEMY_DEFS[t.defId];
+    if (def?.onHalfHp) {
+      t.phaseTriggered = true;
+      const flavor = def.onHalfHp(state, t as Enemy);
+      state.log.push(`⚡ ${def.name}: ${flavor}`);
+      playSfx('boss_phase');
     }
   }
-  return hpDmg;
 }
 
 export function gainBlock(c: { block: number; statuses: any }, base: number): void {
