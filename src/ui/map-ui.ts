@@ -27,6 +27,7 @@ import { RELIC_DEFS } from '../content/relics';
 import { ENEMY_DEFS } from '../content/enemies';
 import { ENEMY_ART } from './combat-ui';
 import { showBossIntro } from './splash-overlay';
+import { bossIntroFlavor } from '../content/lore';
 
 const NODE_ICON: Record<NodeKind, string> = {
   start: '🏁',
@@ -248,7 +249,7 @@ function enterNode(n: MapNode): void {
             name: bossDef.name,
             emoji: ENEMY_ART[bossId] ?? '👑',
             hp: avgHp,
-            flavor: ch === 4 ? '차원의 끝, 진정한 적이 길을 막아선다...' : '강력한 적이 길을 막아선다...',
+            flavor: bossIntroFlavor(bossId, ch),
           },
           startBattle,
         );

@@ -5,6 +5,7 @@ import { getCombat, getRun, setCombat, setScreen, rerender } from '../state';
 import { getEffectiveDef } from '../content/cards';
 import { openDeckOverlay } from './deck-overlay';
 import { ENEMY_DEFS } from '../content/enemies';
+import { bossDefeatFlavor } from '../content/lore';
 import { STATUS_INFO, applyStatus, modifiedAttackDamage, getStatusValueLabel, getStatusTooltip } from '../combat/statuses';
 import { buildIntentDisplay } from '../combat/intent';
 import { endPlayerTurn } from '../combat/combat';
@@ -936,13 +937,28 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
     (_state as any)._victoryAppliedRelics = true;
   }
 
+  // 보스 처치 대사
+  const defeatFlavor = isBossNode ? bossDefeatFlavor(run.combatEnemyDefIds?.[0] ?? '') : null;
+
   return el(
     'div',
     { class: 'combat-screen' },
     el(
       'div',
       { class: 'combat-top', style: { flexDirection: 'column', gap: '16px' } },
-      el('h2', { style: { color: 'var(--good)', margin: 0 } }, '승리!'),
+      el('h2', { style: { color: 'var(--good)', margin: 0 } }, isBossNode ? '👑 보스 처치!' : '승리!'),
+      ...(defeatFlavor
+        ? [el('div', {
+            style: {
+              color: 'var(--accent)',
+              fontStyle: 'italic',
+              maxWidth: '420px',
+              textAlign: 'center',
+              lineHeight: '1.6',
+              fontSize: '14px',
+            },
+          }, defeatFlavor)]
+        : []),
       el(
         'div',
         { style: { color: 'var(--muted)' } },

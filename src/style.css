@@ -1173,6 +1173,18 @@ button:disabled {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+/* 카드 플레이버 텍스트 — 덱 상세 보기에서만 표시 */
+.card-flavor {
+  font-size: 9.5px;
+  line-height: 1.35;
+  color: var(--muted);
+  font-style: italic;
+  text-align: center;
+  border-top: 1px dashed rgba(255,255,255,0.12);
+  padding-top: 4px;
+  margin-top: 2px;
+  opacity: 0.85;
+}
 
 .pile-counts {
   display: flex;

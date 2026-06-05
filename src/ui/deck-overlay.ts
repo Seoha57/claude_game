@@ -1,5 +1,6 @@
 import { el } from './dom';
 import { getEffectiveDef } from '../content/cards';
+import { cardFlavor } from '../content/lore';
 import type { CardInstance } from '../types';
 
 export interface CardListOptions {
@@ -66,6 +67,7 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
       const lvl = card.upgraded ?? 0;
       const upgradeLabel = lvl >= 2 ? '★★ 이중 강화' : lvl === 1 ? '★ 강화됨' : null;
       const outline = lvl >= 2 ? '2px solid var(--gold, #f5c542)' : lvl === 1 ? '2px solid var(--good)' : 'none';
+      const flavor = cardFlavor(card.defId);
       grid.appendChild(
         el('div',
           {
@@ -75,6 +77,7 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
           el('div', { class: 'card-cost' }, String(def.cost)),
           el('div', { class: 'card-name' }, def.name),
           el('div', { class: 'card-desc' }, def.description),
+          ...(flavor ? [el('div', { class: 'card-flavor' }, flavor)] : []),
           el('div', { class: 'card-type' }, upgradeLabel ?? (curse ? '저주' : typeLabel(def.type))),
         ),
       );

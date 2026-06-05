@@ -9,6 +9,7 @@ import {
   ENEMY_DEFS,
 } from '../content/enemies';
 import { ENEMY_ART } from './combat-ui';
+import { CHAPTER_LORE } from '../content/lore';
 
 export interface NextBossInfo {
   name: string;
@@ -98,10 +99,10 @@ export function dismissSplash(): void {
 
 // ── Chapter info presets ──
 const CHAPTER_INFO: Record<number, { title: string; subtitle: string; emoji: string; flavor?: string }> = {
-  1: { title: '잿빛 사원', subtitle: 'Chapter 1', emoji: '🏛️', flavor: '광기와 혼돈이 깃든 던전' },
-  2: { title: '기계 혁명의 폐허', subtitle: 'Chapter 2', emoji: '⚙️', flavor: '추적자들이 도사리는 영역' },
-  3: { title: '이샤리스의 심연', subtitle: 'Chapter 3', emoji: '🌌', flavor: '공허의 끝, 마지막 시련' },
-  4: { title: '차원의 문 너머', subtitle: '✦ Chapter 4 — 진엔딩 ✦', emoji: '🌀', flavor: '균열의 끝에 무엇이 기다릴까' },
+  1: { title: '잿빛 사원', subtitle: 'Chapter 1', emoji: '🏛️', flavor: CHAPTER_LORE[1] },
+  2: { title: '기계 혁명의 폐허', subtitle: 'Chapter 2', emoji: '⚙️', flavor: CHAPTER_LORE[2] },
+  3: { title: '이샤리스의 심연', subtitle: 'Chapter 3', emoji: '🌌', flavor: CHAPTER_LORE[3] },
+  4: { title: '차원의 문 너머', subtitle: '✦ Chapter 4 — 진엔딩 ✦', emoji: '🌀', flavor: CHAPTER_LORE[4] },
 };
 
 // Compute which boss the player will face for the given chapter.
