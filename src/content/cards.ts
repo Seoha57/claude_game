@@ -342,7 +342,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
     exhaust: true,
   },
 
-  // ── 검귀 콤보 시너지 ─────────────────────────────────────
+  // ── 귀검사 콤보 시너지 ─────────────────────────────────────
   chain_slash: {
     id: 'chain_slash',
     name: '연계 베기',
@@ -380,7 +380,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_per_attack', amount: 2 }],
   },
 
-  // ── 풀 확장 (검귀) ────────────────────────────────────────
+  // ── 풀 확장 (귀검사) ────────────────────────────────────────
   twin_slash: {
     id: 'twin_slash',
     name: '이중 베기',

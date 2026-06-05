@@ -58,7 +58,7 @@ export function bossDefeatFlavor(bossId: string): string | null {
 
 // 카드 플레이버 — 덱 상세 보기에서 효과 아래 한 줄 표시.
 export const CARD_FLAVOR: Record<string, string> = {
-  // ── 검귀 ──
+  // ── 귀검사 ──
   strike: '"베어라. 그게 전부다."',
   defend: '막지 못하면 벨 수도 없다.',
   bash: '에쉔 포크의 끝이 살을 파고든다.',
