@@ -106,6 +106,10 @@ function playTone(opts: { freq: number; duration: number; type?: Wave; gain?: nu
   g.connect(masterGain);
   osc.start(now);
   osc.stop(now + opts.duration + 0.05);
+  osc.onended = () => {
+    try { osc.disconnect(); } catch { /* ignore */ }
+    try { g.disconnect(); } catch { /* ignore */ }
+  };
 }
 
 function playNoise(opts: { duration: number; filterFreq: number; q?: number; gain?: number }): void {
@@ -129,6 +133,11 @@ function playNoise(opts: { duration: number; filterFreq: number; q?: number; gai
   src.connect(filter); filter.connect(g); g.connect(masterGain);
   src.start(now);
   src.stop(now + opts.duration + 0.02);
+  src.onended = () => {
+    try { src.disconnect(); } catch { /* ignore */ }
+    try { filter.disconnect(); } catch { /* ignore */ }
+    try { g.disconnect(); } catch { /* ignore */ }
+  };
 }
 
 function playArpeggio(freqs: number[], stepDur: number, type: Wave = 'triangle', gain = 0.25): void {
@@ -383,6 +392,11 @@ function actuallyStartBgm(name: BgmTrack): void {
     osc.connect(g); g.connect(bgmGain);
     osc.start(nt);
     osc.stop(nt + 0.45);
+    // 음이 끝나면 노드를 명시적으로 분리해 누적(누수)을 막는다
+    osc.onended = () => {
+      try { osc.disconnect(); } catch { /* ignore */ }
+      try { g.disconnect(); } catch { /* ignore */ }
+    };
   }, stepMs);
 }
 
