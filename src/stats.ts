@@ -42,6 +42,7 @@ function emptyStats(): AggregateStats {
       fighter: { ...EMPTY_CHAR },
       magician: { ...EMPTY_CHAR },
       priest: { ...EMPTY_CHAR },
+      thief: { ...EMPTY_CHAR },
     },
   };
 }

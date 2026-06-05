@@ -8,7 +8,7 @@ import type { CardDef, RelicDef } from '../types';
 import { isCardUnlocked, isRelicUnlocked, cardUnlockReq, relicUnlockReq, reqLabel } from '../unlocks';
 
 type Tab = 'cards' | 'relics';
-type CardFilter = 'all' | 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest';
+type CardFilter = 'all' | 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief';
 
 const RARITY_LABEL: Record<string, string> = {
   starter: '시작', common: '커먼', uncommon: '언커먼', rare: '레어', boss: '보스',
@@ -76,6 +76,7 @@ export function renderCodex(): HTMLElement {
       { key: 'fighter', label: '격투가' },
       { key: 'magician', label: '마법사' },
       { key: 'priest', label: '프리스트' },
+      { key: 'thief', label: '도적' },
     ];
     for (const f of filters) {
       filterRow.appendChild(el('button', {
@@ -92,8 +93,9 @@ export function renderCodex(): HTMLElement {
       if (cardFilter === 'fighter') return c.id.startsWith('f_');
       if (cardFilter === 'magician') return c.id.startsWith('m_');
       if (cardFilter === 'priest') return c.id.startsWith('p_');
+      if (cardFilter === 'thief') return c.id.startsWith('t_');
       // swordmaster: cards with no character prefix
-      return !c.id.startsWith('g_') && !c.id.startsWith('f_') && !c.id.startsWith('m_') && !c.id.startsWith('p_');
+      return !c.id.startsWith('g_') && !c.id.startsWith('f_') && !c.id.startsWith('m_') && !c.id.startsWith('p_') && !c.id.startsWith('t_');
     });
 
     const seen = getSeenCards();

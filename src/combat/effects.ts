@@ -78,6 +78,11 @@ export function applyEffect(
       if (!tgt) return;
       for (let i = 0; i < times; i++) {
         if (tgt.hp <= 0) break;
+        // 시그니처(독니): 매 턴 첫 공격 시 적에게 중독 부여
+        if (state.flags.firstAttackThisTurn && getRunOrNull()?.player.relics.includes('venom_fang')) {
+          applyStatus(tgt, 'poison', 2);
+          log('독니 → 중독 +2');
+        }
         const modified = modifyAttackAmount(state, effect.amount);
         const hpDmg = dealDamage(state, source, tgt, modified, true);
         log(`${nameOf(source, state)} → ${nameOf(tgt, state)}: ${hpDmg} 데미지`);

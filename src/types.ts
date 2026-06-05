@@ -161,7 +161,7 @@ export interface MapNode {
 
 export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync' | 'daily' | 'history';
 
-export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest';
+export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief';
 
 export interface RewardChoice {
   cards: string[]; // card def ids

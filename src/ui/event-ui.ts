@@ -24,6 +24,9 @@ import {
   PRIEST_COMMON_CARDS,
   PRIEST_UNCOMMON_CARDS,
   PRIEST_RARE_CARDS,
+  THIEF_COMMON_CARDS,
+  THIEF_UNCOMMON_CARDS,
+  THIEF_RARE_CARDS,
   canUpgrade,
 } from '../content/cards';
 
@@ -191,6 +194,8 @@ export function renderEvent(): HTMLElement {
       pool = rarity === 'common' ? MAGICIAN_COMMON_CARDS : rarity === 'uncommon' ? MAGICIAN_UNCOMMON_CARDS : MAGICIAN_RARE_CARDS;
     } else if (cls === 'priest') {
       pool = rarity === 'common' ? PRIEST_COMMON_CARDS : rarity === 'uncommon' ? PRIEST_UNCOMMON_CARDS : PRIEST_RARE_CARDS;
+    } else if (cls === 'thief') {
+      pool = rarity === 'common' ? THIEF_COMMON_CARDS : rarity === 'uncommon' ? THIEF_UNCOMMON_CARDS : THIEF_RARE_CARDS;
     } else {
       pool = rarity === 'common' ? COMMON_CARDS : rarity === 'uncommon' ? UNCOMMON_CARDS : RARE_CARDS;
     }

@@ -76,6 +76,18 @@ const CHARACTERS: CharacterInfo[] = [
     starterCards: '스매셔×5 · 홀리 가드×4 · 럭키 스트레이트×1',
     emoji: '⛪',
   },
+  {
+    id: 'thief',
+    name: '도적',
+    subname: '(로그·사령술사·쿠노이치·섀도우 댄서)',
+    hp: 68,
+    startRelic: '매끈한 돌',
+    signatureRelic: '독니',
+    signatureDesc: '매 턴 첫 공격이 적에게 중독 +2',
+    description: '전투 시작 시 민첩 +1. 중독과 다단히트, 그림자를 다루는 날렵한 암살자.',
+    starterCards: '슬라이서×5 · 본 실드×4 · 다크 소울×1',
+    emoji: '🗡️',
+  },
 ];
 
 export function renderCharacterSelect(seed: number, ascension: number): HTMLElement {

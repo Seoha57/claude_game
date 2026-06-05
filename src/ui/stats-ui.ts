@@ -10,6 +10,7 @@ const CHAR_INFO: Record<CharacterClass, { name: string; emoji: string }> = {
   fighter:     { name: '격투가',   emoji: '🥊' },
   magician:    { name: '마법사',   emoji: '🔮' },
   priest:      { name: '프리스트', emoji: '⛪' },
+  thief:       { name: '도적',     emoji: '🗡️' },
 };
 
 export function renderStats(): HTMLElement {

@@ -1,6 +1,6 @@
 import { el } from './dom';
 import { getRun, makeCard, setScreen } from '../state';
-import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS } from '../content/cards';
+import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS } from '../content/cards';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
 import type { CardDef } from '../types';
 
@@ -41,6 +41,7 @@ function ensureReward(): RewardChoiceUI {
     : cc === 'fighter' ? FIGHTER_COMMON_CARDS
     : cc === 'magician'? MAGICIAN_COMMON_CARDS
     : cc === 'priest' ? PRIEST_COMMON_CARDS
+    : cc === 'thief' ? THIEF_COMMON_CARDS
     : COMMON_CARDS,
     ignoreLocks,
   );
@@ -49,6 +50,7 @@ function ensureReward(): RewardChoiceUI {
     : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS
     : cc === 'magician'? MAGICIAN_UNCOMMON_CARDS
     : cc === 'priest' ? PRIEST_UNCOMMON_CARDS
+    : cc === 'thief' ? THIEF_UNCOMMON_CARDS
     : UNCOMMON_CARDS,
     ignoreLocks,
   );
@@ -57,6 +59,7 @@ function ensureReward(): RewardChoiceUI {
     : cc === 'fighter' ? FIGHTER_RARE_CARDS
     : cc === 'magician'? MAGICIAN_RARE_CARDS
     : cc === 'priest' ? PRIEST_RARE_CARDS
+    : cc === 'thief' ? THIEF_RARE_CARDS
     : RARE_CARDS,
     ignoreLocks,
   );

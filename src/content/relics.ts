@@ -99,6 +99,12 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '회복/재생이 발동할 때 방어도 +3.',
     rarity: 'starter',
   },
+  venom_fang: {
+    id: 'venom_fang',
+    name: '독니',
+    description: '매 턴 첫 공격이 적에게 중독 +2.',
+    rarity: 'starter',
+  },
 
   // ── Common ──
   frozen_dart: {
