@@ -21,6 +21,18 @@ let selectedCardUid: string | null = null;
 let selectedPotionId: string | null = null;
 let hoveredCardUid: string | null = null;
 
+// 새 전투 시작 시 전투 UI 모듈 상태를 초기화한다.
+// (전역 변수들이 이전 전투의 잔여 상태를 들고 가는 것을 방지)
+export function resetCombatUiState(): void {
+  selectedCardUid = null;
+  selectedPotionId = null;
+  hoveredCardUid = null;
+  previousHandUids = new Set<string>();
+  targetedEnemyIdx = 0;
+  lastPhasePlayed = null;
+  pendingFx = [];
+}
+
 // Compute damage preview for a card against a specific enemy.
 // Returns total per-hit damage * times, accounting for player strength/weak
 // and enemy vulnerable. Block is not subtracted (player sees enemy block separately).

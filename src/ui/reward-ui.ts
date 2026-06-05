@@ -23,12 +23,15 @@ interface RewardChoiceUI {
 }
 
 let cachedReward: RewardChoiceUI | null = null;
-let lastNodeId: string | null = null;
+let lastRewardKey: string | null = null;
 
 function ensureReward(): RewardChoiceUI {
   const run = getRun();
-  if (cachedReward && lastNodeId === run.currentNodeId) return cachedReward;
-  lastNodeId = run.currentNodeId;
+  // 노드 ID(n_5_0)는 런/챕터 간 반복되므로 seed+chapter+floor를 합쳐
+  // 고유 캐시 키를 만든다. (이전: 노드 ID만 → 새 런에서 stale 보상 노출)
+  const key = `${run.seed}_${run.chapter}_${run.currentNodeId}`;
+  if (cachedReward && lastRewardKey === key) return cachedReward;
+  lastRewardKey = key;
   const cur = run.currentNodeId ? nodeById(run.map, run.currentNodeId) : null;
   const isElite = cur?.kind === 'elite';
   const rng = makeRng(run.seed * 7 + (run.floor + 1) * 91);
@@ -192,7 +195,7 @@ export function renderReward(): HTMLElement {
 
 function close(): void {
   cachedReward = null;
-  lastNodeId = null;
+  lastRewardKey = null;
   setScreen('map');
 }
 

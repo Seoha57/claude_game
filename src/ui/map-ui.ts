@@ -25,7 +25,7 @@ import type { MapNode, NodeKind } from '../types';
 import { makeRng } from '../rng';
 import { RELIC_DEFS } from '../content/relics';
 import { ENEMY_DEFS } from '../content/enemies';
-import { ENEMY_ART } from './combat-ui';
+import { ENEMY_ART, resetCombatUiState } from './combat-ui';
 import { showBossIntro } from './splash-overlay';
 import { bossIntroFlavor } from '../content/lore';
 
@@ -203,6 +203,7 @@ function enterNode(n: MapNode): void {
     run.combatEnemyDefIds = enemyIds.slice();
 
     const startBattle = () => {
+      resetCombatUiState();
       const cs = startCombat(run.player, enemyIds, run.seed + n.y * 17 + n.x * 7);
 
       if (run.player.relics.includes('vajra')) applyStatus(cs.player, 'strength', 1);

@@ -24,7 +24,7 @@ interface ShopItem {
 }
 
 let shopItems: ShopItem[] | null = null;
-let lastNodeId: string | null = null;
+let lastShopKey: string | null = null;
 
 function buildShop(): ShopItem[] {
   const run = getRun();
@@ -81,9 +81,11 @@ let removalState: RemovalState = 'none';
 export function renderShop(): HTMLElement {
   const run = getRun();
 
-  if (!shopItems || lastNodeId !== run.currentNodeId) {
+  // 노드 ID는 런/챕터 간 반복되므로 seed+chapter 포함한 고유 키 사용
+  const shopKey = `${run.seed}_${run.chapter}_${run.currentNodeId}`;
+  if (!shopItems || lastShopKey !== shopKey) {
     shopItems = buildShop();
-    lastNodeId = run.currentNodeId;
+    lastShopKey = shopKey;
     removalState = 'none';
   }
 

@@ -30,12 +30,20 @@ import {
   canUpgrade,
 } from '../content/cards';
 
+// 이벤트 해결 상태를 모듈 레벨에 보존. 선택 도중 외부 render()
+// (예: 백그라운드 sync) 가 발생해도 선택지가 다시 떠서 효과가
+// 중복 적용되는 것을 방지한다. 노드별로 고유 키 사용.
+let resolvedEventKey: string | null = null;
+let resolvedEventText: string | null = null;
+
 export function renderEvent(): HTMLElement {
   const run = getRun();
   const rng = makeRng(run.seed * 53 + run.floor * 17);
   const eventDef = pick(rng, EVENT_DEFS);
 
-  let resultText: string | null = null;
+  const eventKey = `${run.seed}_${run.chapter}_${run.currentNodeId}`;
+  // 이미 해결된 이벤트면 결과 화면부터 시작
+  let resultText: string | null = resolvedEventKey === eventKey ? resolvedEventText : null;
 
   const wrapper = el('div', { class: `event-screen mood-${eventDef.mood ?? 'mystic'}` });
   const rebuild = () => {
@@ -85,8 +93,12 @@ export function renderEvent(): HTMLElement {
         disabled: disabled ? true : undefined,
         onClick: () => {
           if (disabled) return;
+          // 이미 해결된 이벤트면 재적용 방지
+          if (resolvedEventKey === eventKey) return;
           applyEffects(choice.effects);
           resultText = choice.result;
+          resolvedEventKey = eventKey;
+          resolvedEventText = choice.result;
           rebuild();
         },
       },
