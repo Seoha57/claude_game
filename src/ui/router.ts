@@ -16,6 +16,7 @@ import { renderAchievements } from './achievements-ui';
 import { renderNeowBlessing } from './neow-ui';
 import { renderSync } from './sync-ui';
 import { renderDaily } from './daily-ui';
+import { renderHistory } from './history-ui';
 
 export function render(): void {
   const root = document.getElementById('app');
@@ -86,6 +87,9 @@ export function render(): void {
       break;
     case 'daily':
       view = renderDaily();
+      break;
+    case 'history':
+      view = renderHistory();
       break;
   }
   root.appendChild(view);

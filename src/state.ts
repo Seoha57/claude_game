@@ -13,6 +13,9 @@ import type { DailyConstraint, DailyOutcome } from './daily';
 import { setDailyResult } from './daily';
 import { newUnlocksAfterWin } from './unlocks';
 import { loadStats } from './stats';
+import { recordRunHistory } from './run-history';
+import type { RunOutcome } from './run-history';
+import { ENEMY_DEFS } from './content/enemies';
 
 let runState: RunState | null = null;
 let combatState: CombatState | null = null;
@@ -119,15 +122,18 @@ export function setScreen(s: Screen): void {
       checkWin(runState.characterClass, runState.ascension);
       maybeRecordDaily(runState, 'won');
       maybeShowUnlockToast(prev);
+      recordHistory(runState, 'won');
     } else if (s === 'true_win') {
       const prev = snapshotWins();
       recordTrueWin(runState.characterClass, runState.ascension);
       checkTrueWin(runState.characterClass, runState.ascension);
       maybeRecordDaily(runState, 'true_won');
       maybeShowUnlockToast(prev);
+      recordHistory(runState, 'true_won');
     } else if (s === 'lose') {
       recordLoss(runState.characterClass);
       maybeRecordDaily(runState, 'lost');
+      recordHistory(runState, 'lost');
     }
   }
   // Clear save on terminal screens.
@@ -161,6 +167,27 @@ function maybeShowUnlockToast(prev: { wins: number; trueWins: number }): void {
         category: 'progression',
       });
     } catch { /* ignore */ }
+  });
+}
+
+function recordHistory(run: RunState, outcome: RunOutcome): void {
+  let killerName: string | undefined;
+  if (outcome === 'lost') {
+    const ids = run.combatEnemyDefIds ?? [];
+    const names = ids.map((id) => ENEMY_DEFS[id]?.name).filter(Boolean) as string[];
+    if (names.length > 0) killerName = names.join(' · ');
+  }
+  recordRunHistory({
+    timestamp: Date.now(),
+    characterClass: run.characterClass,
+    outcome,
+    chapter: run.chapter,
+    floor: run.floor,
+    ascension: run.ascension,
+    deckSize: run.player.deck.length,
+    gold: run.player.gold,
+    killerName,
+    daily: !!run.dailyConfig,
   });
 }
 

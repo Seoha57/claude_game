@@ -23,6 +23,7 @@ const SYNC_KEYS = [
   'dungeoncard_achievements',
   'dungeoncard_save',
   'dungeoncard_daily',
+  'dungeoncard_history',
 ];
 
 export interface SyncCredentials {
@@ -141,12 +142,25 @@ function mergeKey(key: string, local: unknown, remote: unknown): unknown {
       return mergeSave(local, remote);
     case 'dungeoncard_daily':
       return mergeDaily(local, remote);
+    case 'dungeoncard_history':
+      return mergeHistory(local, remote);
     case 'dungeoncard_audio':
     default:
       // Last-write-wins for prefs — both are recent snapshots, pick remote if
       // it appears newer (we don't track per-key timestamps; this is fine).
       return remote;
   }
+}
+
+// Run history: union by entry id, sort by timestamp desc, cap at 30
+function mergeHistory(local: any, remote: any): any {
+  if (!local) return remote;
+  if (!remote) return local;
+  const byId = new Map<string, any>();
+  for (const e of local.entries ?? []) byId.set(e.id, e);
+  for (const e of remote.entries ?? []) if (!byId.has(e.id)) byId.set(e.id, e);
+  const merged = [...byId.values()].sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0)).slice(0, 30);
+  return { version: local.version ?? remote.version ?? 1, entries: merged };
 }
 
 // Daily results: union per date, prefer newer per-date timestamp

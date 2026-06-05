@@ -156,6 +156,12 @@ export function renderTitle(): HTMLElement {
     utilRow.appendChild(
       el('button', {
         style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
+        onClick: () => setScreen('history'),
+      }, '📜 기록'),
+    );
+    utilRow.appendChild(
+      el('button', {
+        style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
         onClick: () => setScreen('sync'),
       }, '☁️ 동기화'),
     );
