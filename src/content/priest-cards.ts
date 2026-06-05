@@ -400,6 +400,28 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_all', amount: 24 }],
     exhaust: true,
   },
+
+  // ── 풀 균형 (프리스트 common +2) ──────────────────────────
+  p_prayer: {
+    id: 'p_prayer',
+    name: '기도',
+    type: 'skill', rarity: 'common', cost: 1, target: 'self',
+    description: '8 회복. 1장 드로우.',
+    effects: [
+      { kind: 'heal', amount: 8 },
+      { kind: 'draw', amount: 1 },
+    ],
+  },
+  p_smite: {
+    id: 'p_smite',
+    name: '응징',
+    type: 'attack', rarity: 'common', cost: 1, target: 'enemy',
+    description: '7 데미지. 취약 +1.',
+    effects: [
+      { kind: 'damage', amount: 7 },
+      { kind: 'apply_enemy', status: 'vulnerable', amount: 1 },
+    ],
+  },
 };
 
 // ── Upgrade map ──
@@ -443,6 +465,8 @@ export const PRIEST_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   p_requiem:           { name: '위령제+',        description: '모든 적에게 11 데미지. 약화 +3.',         effects: [{ kind: 'damage_all', amount: 11 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
   p_radiance:          { name: '광휘+',          description: '모든 적에게 빙결 +2. 2장 드로우.',         effects: [{ kind: 'apply_all', status: 'freeze', amount: 2 }, { kind: 'draw', amount: 2 }] },
   p_wrath_of_god:      { name: '신의 진노+',     description: '모든 적에게 32 데미지. 소멸.',            effects: [{ kind: 'damage_all', amount: 32 }] },
+  p_prayer:            { name: '기도+',          description: '12 회복. 1장 드로우.',                    effects: [{ kind: 'heal', amount: 12 }, { kind: 'draw', amount: 1 }] },
+  p_smite:             { name: '응징+',          description: '10 데미지. 취약 +2.',                     effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }] },
 };
 
 export function priestGetEffectiveDef(card: CardInstance): CardDef {

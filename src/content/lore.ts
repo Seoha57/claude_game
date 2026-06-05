@@ -147,6 +147,7 @@ export const CARD_FLAVOR: Record<string, string> = {
   f_counter: '받아치는 자가 이긴다.',
   f_rage_burst: '분노를 터뜨려 길을 연다.',
   f_shadow_kick: '그림자가 먼저 도착한다.',
+  f_ten_count: '카운트가 쌓일수록 마지막 일격은 무거워진다.',
 
   // ── 마법사 ──
   m_magic_missile: '가장 단순한 마법. 가장 확실한 마법.',
@@ -170,6 +171,7 @@ export const CARD_FLAVOR: Record<string, string> = {
   m_fire_burst: '불씨가 폭발로 번진다.',
   m_energy_circuit: '마력 회로가 끊임없이 돈다.',
   m_time_warp: '시간을 비틀어 한 박자 앞서간다.',
+  m_arcane_orb: '응축된 마력 구체가 빈틈을 노린다.',
 
   // ── 프리스트 ──
   p_smash: '신앙은 주먹으로도 전한다.',
@@ -205,6 +207,8 @@ export const CARD_FLAVOR: Record<string, string> = {
   p_requiem: '진혼의 노래가 적을 잠재운다.',
   p_radiance: '광휘가 적을 얼어붙게 한다.',
   p_wrath_of_god: '"신의 진노를 보아라."',
+  p_prayer: '한 줄기 기도가 상처를 어루만진다.',
+  p_smite: '죄인에게 내리는 응징.',
 
   // ── 저주 ──
   wound: '잊을 수 없는 상처. 손에 쥘 때마다 욱신거린다.',

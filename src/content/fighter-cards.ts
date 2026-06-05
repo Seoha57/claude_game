@@ -394,6 +394,14 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage', amount: 18, times: 2 }],
     exhaust: true,
   },
+  f_ten_count: {
+    id: 'f_ten_count',
+    name: '텐 카운트',
+    type: 'attack', rarity: 'rare', cost: 2, target: 'enemy',
+    description: '데미지 = 4 × 이번 턴 사용한 카드 수. 소멸.',
+    effects: [{ kind: 'damage_per_card_this_turn', amount: 4 }],
+    exhaust: true,
+  },
 };
 
 const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -437,6 +445,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_counter:        { name: '카운터+',      description: '11 데미지. 가시 +5.',                    effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
   f_rage_burst:     { name: '분노 폭발+',   description: 'HP -3. 모든 적에게 14 데미지.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_all', amount: 14 }] },
   f_shadow_kick:    { name: '무영각+',      description: '22 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 22, times: 2 }] },
+  f_ten_count:      { name: '텐 카운트+',   description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.', effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
 };
 
 export function fighterGetEffectiveDef(card: CardInstance): CardDef {

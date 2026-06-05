@@ -403,6 +403,16 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     ],
     exhaust: true,
   },
+  m_arcane_orb: {
+    id: 'm_arcane_orb',
+    name: '비전 구체',
+    type: 'attack', rarity: 'uncommon', cost: 1, target: 'enemy',
+    description: '9 데미지. 직전이 스킬이면 +6 데미지.',
+    effects: [
+      { kind: 'damage', amount: 9 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 6 }] },
+    ],
+  },
 };
 
 const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -445,6 +455,8 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_fire_burst:     { name: '불꽃 폭발+',   description: '모든 적에게 12 데미지. 화상 +4.',         effects: [{ kind: 'damage_all', amount: 12 }, { kind: 'apply_all', status: 'burn', amount: 4 }] },
   m_energy_circuit: { name: '에너지 회로+', description: '턴 종료 시 방어도 +6.',                   effects: [{ kind: 'apply_self', status: 'metallicize', amount: 6 }] },
   m_time_warp:      { name: '타임 워프+',   description: '카드 5장 드로우. 에너지 +3. 소멸.',       effects: [{ kind: 'draw', amount: 5 }, { kind: 'energy', amount: 3 }] },
+  m_arcane_orb:     { name: '비전 구체+',   description: '12 데미지. 직전이 스킬이면 +8 데미지.',
+                      effects: [{ kind: 'damage', amount: 12 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 8 }] }] },
 };
 
 export function magicianGetEffectiveDef(card: CardInstance): CardDef {
