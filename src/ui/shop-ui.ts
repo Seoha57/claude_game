@@ -123,7 +123,7 @@ function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>,
   // Removal service
   const removalItem = shopItems!.find((i) => i.kind === 'removal')!;
   const canAfford = run.player.gold >= removalItem.price;
-  const hasDeck = run.player.deck.length > 0;
+  const hasDeck = run.player.deck.length > 1; // 마지막 카드는 제거 불가 (빈 덱 방지)
   wrapper.appendChild(
     el(
       'div',

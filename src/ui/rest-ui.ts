@@ -107,21 +107,27 @@ function buildDuplicate(onBack: () => void): HTMLElement {
 
 function buildPurge(onBack: () => void): HTMLElement {
   const run = getRun();
+  // 덱이 1장 이하면 제거 불가 (빈 덱 진입 방지)
+  const canRemove = run.player.deck.length > 1;
 
   const cardRow = el('div', { class: 'rest-card-row' });
-  for (const card of sortForRemoval(run.player.deck)) {
-    cardRow.appendChild(renderCardChoice(card, () => {
-      const idx = run.player.deck.findIndex((c) => c.uid === card.uid);
-      if (idx >= 0) run.player.deck.splice(idx, 1);
-      setScreen('map');
-    }));
+  if (canRemove) {
+    for (const card of sortForRemoval(run.player.deck)) {
+      cardRow.appendChild(renderCardChoice(card, () => {
+        if (run.player.deck.length <= 1) return;
+        const idx = run.player.deck.findIndex((c) => c.uid === card.uid);
+        if (idx >= 0) run.player.deck.splice(idx, 1);
+        setScreen('map');
+      }));
+    }
   }
 
   return el(
     'div',
     { style: { display: 'contents' } },
     el('h2', { style: { color: 'var(--accent)' } }, '🔥 정화'),
-    el('div', { style: { color: 'var(--muted)', marginBottom: '16px' } }, '제거할 카드 1장을 선택하세요'),
+    el('div', { style: { color: 'var(--muted)', marginBottom: '16px' } },
+      canRemove ? '제거할 카드 1장을 선택하세요' : '덱이 너무 작아 제거할 수 없습니다.'),
     cardRow,
     el('button', { style: { marginTop: '16px' }, onClick: onBack }, '← 뒤로'),
   );
