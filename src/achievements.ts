@@ -16,14 +16,16 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   // ── Progression ──
   { id: 'first_win',    title: '첫 영웅',   description: '일반 엔딩(챕터 3 클리어)을 한 번 달성.',     emoji: '🏆', category: 'progression' },
   { id: 'true_win',     title: '진정한 영웅', description: '진엔딩(차원의 지배자 처치)을 달성.',        emoji: '✨', category: 'progression' },
-  { id: 'all_classes_win',  title: '만능 모험가',  description: '4 캐릭터 모두로 일반 엔딩 달성.',     emoji: '🎭', category: 'progression' },
-  { id: 'all_classes_true', title: '경지에 오르다', description: '4 캐릭터 모두로 진엔딩 달성.',         emoji: '👑', category: 'progression' },
+  { id: 'all_classes_win',  title: '만능 모험가',  description: '6 캐릭터 모두로 일반 엔딩 달성.',     emoji: '🎭', category: 'progression' },
+  { id: 'all_classes_true', title: '경지에 오르다', description: '6 캐릭터 모두로 진엔딩 달성.',         emoji: '👑', category: 'progression' },
 
   // ── Character ──
-  { id: 'sword_clear', title: '귀검사 클리어', description: '귀검사로 일반 엔딩 달성.',  emoji: '⚔️', category: 'character' },
-  { id: 'gun_clear',   title: '거너 클리어',   description: '거너로 일반 엔딩 달성.',    emoji: '🔫', category: 'character' },
-  { id: 'fight_clear', title: '격투가 클리어', description: '격투가로 일반 엔딩 달성.',  emoji: '🥊', category: 'character' },
-  { id: 'mage_clear',  title: '마법사 클리어', description: '마법사로 일반 엔딩 달성.',  emoji: '🔮', category: 'character' },
+  { id: 'sword_clear',  title: '귀검사 클리어',  description: '귀검사로 일반 엔딩 달성.',  emoji: '⚔️', category: 'character' },
+  { id: 'gun_clear',    title: '거너 클리어',    description: '거너로 일반 엔딩 달성.',    emoji: '🔫', category: 'character' },
+  { id: 'fight_clear',  title: '격투가 클리어',  description: '격투가로 일반 엔딩 달성.',  emoji: '🥊', category: 'character' },
+  { id: 'mage_clear',   title: '마법사 클리어',  description: '마법사로 일반 엔딩 달성.',  emoji: '🔮', category: 'character' },
+  { id: 'priest_clear', title: '프리스트 클리어', description: '프리스트로 일반 엔딩 달성.', emoji: '⛪', category: 'character' },
+  { id: 'thief_clear',  title: '도적 클리어',    description: '도적으로 일반 엔딩 달성.',  emoji: '🗡️', category: 'character' },
 
   // ── Difficulty ──
   { id: 'asc5',  title: '등반자',  description: '등반 A5 이상에서 일반 엔딩 달성.',  emoji: '⛰', category: 'difficulty' },
@@ -36,12 +38,16 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'mighty',     title: '강해지다',  description: '힘 +8 이상 보유.',            emoji: '💪', category: 'combat' },
   { id: 'pyromaniac', title: '불의 마스터', description: '화상으로 적을 처치.',         emoji: '🔥', category: 'combat' },
   { id: 'cryomancer', title: '얼음의 지배자', description: '빙결로 적 행동을 4턴 연속 봉인.', emoji: '❄', category: 'combat' },
+  { id: 'venomous',   title: '맹독술사',  description: '한 적에게 중독 20 이상 누적.', emoji: '☠️', category: 'combat' },
+  { id: 'big_hit',    title: '필살의 일격', description: '단일 카드로 60 이상 데미지.', emoji: '🌟', category: 'combat' },
 
   // ── Collection ──
-  { id: 'cards_30', title: '카드 수집가', description: '30종 카드 발견.', emoji: '📖', category: 'collection' },
-  { id: 'cards_60', title: '카드 박사',   description: '60종 카드 발견.', emoji: '📚', category: 'collection' },
-  { id: 'relics_5', title: '유물 탐험가', description: '5종 유물 발견.',  emoji: '💎', category: 'collection' },
-  { id: 'relics_15', title: '유물 수집가', description: '15종 유물 발견.', emoji: '👑', category: 'collection' },
+  { id: 'cards_30',  title: '카드 수집가', description: '30종 카드 발견.',  emoji: '📖', category: 'collection' },
+  { id: 'cards_60',  title: '카드 박사',   description: '60종 카드 발견.',  emoji: '📚', category: 'collection' },
+  { id: 'cards_120', title: '카드 마스터', description: '120종 카드 발견.', emoji: '🃏', category: 'collection' },
+  { id: 'relics_5',  title: '유물 탐험가', description: '5종 유물 발견.',   emoji: '💎', category: 'collection' },
+  { id: 'relics_15', title: '유물 수집가', description: '15종 유물 발견.',  emoji: '👑', category: 'collection' },
+  { id: 'relics_30', title: '유물의 군주', description: '30종 유물 발견.',  emoji: '🏛️', category: 'collection' },
 ];
 
 interface AchData {
@@ -110,8 +116,7 @@ export function checkWin(cls: CharacterClass, ascension: number): void {
   const d = load();
   d.perCharClear[cls] = true;
   persist(d);
-  const all = (['swordmaster', 'gunner', 'fighter', 'magician'] as CharacterClass[]).every((c) => d.perCharClear[c]);
-  if (all) unlockId('all_classes_win');
+  if (ALL_CLASSES.every((c) => d.perCharClear[c])) unlockId('all_classes_win');
 }
 
 export function checkTrueWin(cls: CharacterClass, ascension: number): void {
@@ -121,19 +126,28 @@ export function checkTrueWin(cls: CharacterClass, ascension: number): void {
   const d = load();
   d.perCharTrue[cls] = true;
   persist(d);
-  const all = (['swordmaster', 'gunner', 'fighter', 'magician'] as CharacterClass[]).every((c) => d.perCharTrue[c]);
-  if (all) unlockId('all_classes_true');
+  if (ALL_CLASSES.every((c) => d.perCharTrue[c])) unlockId('all_classes_true');
 }
 
+const ALL_CLASSES: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief'];
+
 function charClearId(cls: CharacterClass): string {
-  return cls === 'swordmaster' ? 'sword_clear'
-    : cls === 'gunner' ? 'gun_clear'
-    : cls === 'fighter' ? 'fight_clear'
-    : 'mage_clear';
+  switch (cls) {
+    case 'swordmaster': return 'sword_clear';
+    case 'gunner': return 'gun_clear';
+    case 'fighter': return 'fight_clear';
+    case 'magician': return 'mage_clear';
+    case 'priest': return 'priest_clear';
+    case 'thief': return 'thief_clear';
+  }
 }
 
 export function checkDamage(amount: number): void {
   if (amount >= 30) unlockId('one_shot');
+  if (amount >= 60) unlockId('big_hit');
+}
+export function checkPoison(amount: number): void {
+  if (amount >= 20) unlockId('venomous');
 }
 export function checkBlock(amount: number): void {
   if (amount >= 50) unlockId('iron_wall');
@@ -154,10 +168,12 @@ export function checkFreezeChain(consecutive: number): void {
 export function checkCodexCards(count: number): void {
   if (count >= 30) unlockId('cards_30');
   if (count >= 60) unlockId('cards_60');
+  if (count >= 120) unlockId('cards_120');
 }
 export function checkCodexRelics(count: number): void {
   if (count >= 5) unlockId('relics_5');
   if (count >= 15) unlockId('relics_15');
+  if (count >= 30) unlockId('relics_30');
 }
 
 export function resetAchievements(): void {

@@ -15,7 +15,7 @@ import { POTION_DEFS, POTION_LIST } from '../content/potions';
 import { isCurseLike } from './deck-overlay';
 import { playSfx } from '../audio';
 import { makeRng, pick } from '../rng';
-import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain } from '../achievements';
+import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison } from '../achievements';
 
 let selectedCardUid: string | null = null;
 let selectedPotionId: string | null = null;
@@ -622,6 +622,8 @@ function checkCombatAchievements(state: CombatState): void {
   for (const e of state.enemies) {
     const fz = e.statuses.freeze ?? 0;
     if (fz >= 4) checkFreezeChain(fz);
+    const poison = e.statuses.poison ?? 0;
+    if (poison >= 20) checkPoison(poison);
   }
 }
 
