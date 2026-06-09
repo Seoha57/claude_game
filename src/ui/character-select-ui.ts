@@ -35,7 +35,7 @@ const CHARACTERS: CharacterInfo[] = [
     hp: 70,
     startRelic: '구슬 주머니',
     signatureRelic: '탄창',
-    signatureDesc: '3번째 공격마다 카드 1장 드로우',
+    signatureDesc: '3번째 공격마다 +5 데미지, 카드 1장 드로우',
     description: '전투 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.',
     starterCards: '라이징 샷×5 · 전술 재장전×4 · 헤드샷×1',
     emoji: '🔫',

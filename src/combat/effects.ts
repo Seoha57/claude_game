@@ -380,7 +380,11 @@ export function modifyAttackAmount(state: CombatState, base: number): number {
   if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
     amount += 6;
   }
-  // 펜촉: 10번째 공격마다 2배 (귀혼 보너스도 같이 2배가 됨)
+  // 탄창(거너): 3번째 공격마다 +5 데미지 (속사 보상)
+  if (run.player.relics.includes('gunner_magazine') && ac % 3 === 0) {
+    amount += 5;
+  }
+  // 펜촉: 10번째 공격마다 2배 (귀혼/탄창 보너스도 같이 2배가 됨)
   if (run.player.relics.includes('pen_nib') && ac % 10 === 0) {
     amount *= 2;
   }
