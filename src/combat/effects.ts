@@ -131,15 +131,14 @@ export function applyEffect(
     case 'apply_enemy': {
       const tgt = targetEnemy ?? state.enemies.find((e) => e.hp > 0) ?? null;
       if (!tgt) return;
-      applyStatus(tgt, effect.status, effect.amount);
-      log(`${nameOf(tgt, state)} ${statusName(effect.status)} +${effect.amount}`);
+      applyEnemyStatus(tgt, effect.status, effect.amount, log);
       playStatusSfx(effect.status, false);
       return;
     }
     case 'apply_all': {
       for (const e of state.enemies) {
         if (e.hp <= 0) continue;
-        applyStatus(e, effect.status, effect.amount);
+        applyEnemyStatus(e, effect.status, effect.amount, log);
       }
       log(`모든 적에게 ${statusName(effect.status)} +${effect.amount}`);
       playStatusSfx(effect.status, false);
@@ -222,6 +221,25 @@ function nameOf(c: Player | Enemy, _state: CombatState): string {
 
 function statusName(key: string): string {
   return (STATUS_INFO as any)[key]?.name ?? key;
+}
+
+// 적에게 상태이상 적용. 보스는 빙결 저항 — 빙결이 최대 1을 넘지 않도록 캡하여
+// 무한 행동 봉인을 막는다. (일반 적/엘리트엔 제한 없음)
+function applyEnemyStatus(e: Enemy, status: any, amount: number, log: (s: string) => void): void {
+  const def = ENEMY_DEFS[e.defId];
+  if (status === 'freeze' && def?.isBoss && amount > 0) {
+    const cur = getStatus(e.statuses, 'freeze');
+    const allowed = Math.max(0, 1 - cur); // 보스는 빙결 1까지만
+    if (allowed <= 0) {
+      log(`${ENEMY_DEFS[e.defId]?.name ?? e.defId} 빙결 저항 — 더 얼지 않음`);
+      return;
+    }
+    applyStatus(e, 'freeze', allowed);
+    log(`${ENEMY_DEFS[e.defId]?.name ?? e.defId} 빙결 +${allowed} (보스 저항)`);
+    return;
+  }
+  applyStatus(e, status, amount);
+  log(`${ENEMY_DEFS[e.defId]?.name ?? e.defId} ${statusName(status)} +${amount}`);
 }
 
 // 상태이상 적용 시 알맞은 SFX 재생.
