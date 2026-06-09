@@ -76,7 +76,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '그렘린 두목',
     hpRange: [82, 86],
     decideIntent(_state, _self, turn) {
-      if (turn === 0) return { kind: 'buff', label: '격노: 적이 스킬 쓰면 힘+2 (단순화)' };
+      if (turn === 0) return { kind: 'buff', label: '격노: 힘 +2' };
       const i = (turn - 1) % 3;
       if (i === 2) return { kind: 'debuff', label: '약화 +2' };
       return attack(14, 1);

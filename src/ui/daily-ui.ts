@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { setScreen, startNewRun, hasSave, loadRun, getRunOrNull } from '../state';
+import { setScreen, startNewRun, hasSave, loadRun } from '../state';
 import {
   getDailySetup,
   getDailyResult,
@@ -233,7 +233,5 @@ export function renderDaily(): HTMLElement {
     ),
   );
 
-  // Mark unused warning silencers
-  void getRunOrNull;
   return wrapper;
 }
