@@ -60,6 +60,12 @@ export function renderMap(): HTMLElement {
       { class: 'info' },
       el('span', {}, `챕터 ${run.chapter}`),
       el('span', {}, `층: ${run.floor}`),
+      run.dailyConfig
+        ? el('span', { style: { color: 'var(--accent)' }, title: '오늘의 도전' }, '🌅 데일리')
+        : el('span', {
+            style: { color: run.ascension > 0 ? 'var(--bad)' : 'var(--muted)' },
+            title: run.ascension > 0 ? `등반 난이도 A${run.ascension}` : '기본 난이도',
+          }, run.ascension > 0 ? `⛰ A${run.ascension}` : '기본'),
       el('span', {}, `❤ ${run.player.hp}/${run.player.maxHp}`),
       el('span', {}, `💰 ${run.player.gold}`),
       el('span', {
