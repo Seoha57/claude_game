@@ -34,21 +34,43 @@ export function resetCombatUiState(): void {
 }
 
 // Compute damage preview for a card against a specific enemy.
-// Returns total per-hit damage * times, accounting for player strength/weak
-// and enemy vulnerable. Block is not subtracted (player sees enemy block separately).
-function computeCardDamageVsEnemy(card: CardInstance, player: { statuses: any }, enemy: Enemy): number {
+// 플레이어 힘/약화 + 적 취약을 반영. 콤보 조건이 현재 충족되면 보너스 데미지도,
+// 스케일링 카드는 현재 카운터 기준 데미지도 포함. 방어도는 빼지 않음.
+function computeCardDamageVsEnemy(card: CardInstance, state: CombatState, enemy: Enemy): number {
   const def = getEffectiveDef(card);
+  const player = state.player;
   let total = 0;
+  const addDamage = (amount: number, times = 1) => {
+    total += modifiedAttackDamage(amount, player as any, enemy) * times;
+  };
   for (const eff of def.effects) {
     if (eff.kind === 'damage') {
-      const per = modifiedAttackDamage(eff.amount, player as any, enemy);
-      total += per * (eff.times ?? 1);
+      addDamage(eff.amount, eff.times ?? 1);
     } else if (eff.kind === 'damage_all') {
-      const per = modifiedAttackDamage(eff.amount, player as any, enemy);
-      total += per;
+      addDamage(eff.amount);
+    } else if (eff.kind === 'damage_per_attack') {
+      addDamage(eff.amount * (state.flags.attackCount ?? 0));
+    } else if (eff.kind === 'damage_per_card_this_turn') {
+      // 이 카드 자신도 카운트되므로 +1
+      addDamage(eff.amount * ((state.flags.cardsPlayedThisTurn ?? 0) + 1));
+    } else if (eff.kind === 'conditional' && previewConditionMet(state, eff.condition)) {
+      for (const sub of eff.then) {
+        if (sub.kind === 'damage') addDamage(sub.amount, sub.times ?? 1);
+        else if (sub.kind === 'damage_all') addDamage(sub.amount);
+      }
     }
   }
   return total;
+}
+
+// 미리보기용 콤보 조건 평가 — 이 카드를 내면 cardsPlayedThisTurn이 +1 되므로
+// 그 시점 기준으로 판단 (effects.ts의 실제 평가와 동일하게 맞춤).
+function previewConditionMet(state: CombatState, cond: any): boolean {
+  const playedAfter = (state.flags.cardsPlayedThisTurn ?? 0) + 1;
+  if (cond.kind === 'nth_or_more') return playedAfter >= cond.n;
+  if (cond.kind === 'first_this_turn') return playedAfter === 1;
+  if (cond.kind === 'after_type') return state.flags.lastPlayedType === cond.type;
+  return false;
 }
 
 function onCardHover(uid: string | null): void {
@@ -72,7 +94,7 @@ function updateDamagePreviews(): void {
 
   for (const e of state.enemies) {
     if (e.hp <= 0) continue;
-    const dmg = computeCardDamageVsEnemy(card, state.player, e);
+    const dmg = computeCardDamageVsEnemy(card, state, e);
     if (dmg <= 0) continue;
     const enemyEl = document.querySelector(`[data-enemy-uid="${e.uid}"]`);
     if (!enemyEl) continue;
@@ -219,12 +241,11 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
   const isAttack = intent.kind === 'attack' || intent.kind === 'attack_block' || intent.kind === 'attack_buff';
 
   // Perfect guard: total damage from this intent ≤ player's current block
+  // 실제 데미지 함수(modifiedAttackDamage)를 그대로 써서 반올림까지 일치시킨다.
   const perTickDmg = intent.damage !== undefined
-    ? Math.max(0, (intent.damage + (e.statuses.strength ?? 0))
-        * (e.statuses.weak ? 0.75 : 1)
-        * (state.player.statuses.vulnerable ? 1.5 : 1))
+    ? modifiedAttackDamage(intent.damage, e as any, state.player as any)
     : 0;
-  const totalIncoming = Math.floor(perTickDmg) * (intent.hits ?? 1);
+  const totalIncoming = perTickDmg * (intent.hits ?? 1);
   const perfectGuard = isAttack && totalIncoming > 0 && state.player.block >= totalIncoming;
 
   const dangerHit = isAttack && !perfectGuard && totalIncoming >= 20;
