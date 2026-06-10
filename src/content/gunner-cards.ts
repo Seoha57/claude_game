@@ -99,7 +99,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     type: 'attack',
     rarity: 'common',
     cost: 1,
-    target: 'random_enemy',
+    target: 'enemy',
     description: '4 데미지를 세 번.',
     effects: [{ kind: 'damage', amount: 4, times: 3 }],
   },
