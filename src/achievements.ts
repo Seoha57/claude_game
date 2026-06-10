@@ -170,7 +170,37 @@ export function reconcileAchievements(): void {
   if (ALL_CLASSES.some((c) => d.perCharTrue[c]) && !d.unlocked.includes('true_win')) {
     d.unlocked.push('true_win'); changed = true;
   }
+
+  // 난이도 도전과제 소급 (stats의 캐릭별 최고 등반 기준)
+  const bestAsc = Math.max(-1, ...ALL_CLASSES.map((c) => stats.perCharacter[c]?.bestAscension ?? -1));
+  if (bestAsc >= 5 && !d.unlocked.includes('asc5')) { d.unlocked.push('asc5'); changed = true; }
+  if (bestAsc >= 10 && !d.unlocked.includes('asc10')) { d.unlocked.push('asc10'); changed = true; }
+
+  // 컬렉션 도전과제 소급 (코덱 발견 수 기준)
+  // codex.ts가 achievements를 import하므로 순환 회피 위해 localStorage 직접 읽음.
+  const codex = readCodexCounts();
+  if (codex.cards >= 30 && !d.unlocked.includes('cards_30')) { d.unlocked.push('cards_30'); changed = true; }
+  if (codex.cards >= 60 && !d.unlocked.includes('cards_60')) { d.unlocked.push('cards_60'); changed = true; }
+  if (codex.cards >= 120 && !d.unlocked.includes('cards_120')) { d.unlocked.push('cards_120'); changed = true; }
+  if (codex.relics >= 5 && !d.unlocked.includes('relics_5')) { d.unlocked.push('relics_5'); changed = true; }
+  if (codex.relics >= 15 && !d.unlocked.includes('relics_15')) { d.unlocked.push('relics_15'); changed = true; }
+  if (codex.relics >= 30 && !d.unlocked.includes('relics_30')) { d.unlocked.push('relics_30'); changed = true; }
+
   if (changed) persist(d);
+}
+
+function readCodexCounts(): { cards: number; relics: number } {
+  try {
+    const raw = localStorage.getItem('dungeoncard_codex');
+    if (!raw) return { cards: 0, relics: 0 };
+    const data = JSON.parse(raw);
+    return {
+      cards: Array.isArray(data.cards) ? data.cards.length : 0,
+      relics: Array.isArray(data.relics) ? data.relics.length : 0,
+    };
+  } catch {
+    return { cards: 0, relics: 0 };
+  }
 }
 
 function charClearId(cls: CharacterClass): string {
