@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { getRun, setScreen, setCombat } from '../state';
+import { getRun, setScreen, setCombat, getScreen } from '../state';
 import { openDeckOverlay } from './deck-overlay';
 import { nodeById } from '../map/map';
 import { startCombat } from '../combat/combat';
@@ -181,7 +181,16 @@ function nodeLabel(n: MapNode): string {
   }
 }
 
+let enteringNode = false;
+
 function enterNode(n: MapNode): void {
+  // 더블클릭/분리된 DOM 재발동 방어: 노드 진입 처리 중이거나
+  // 이미 맵을 떠났으면 무시 (전투 재생성/중복 진입 차단)
+  if (enteringNode || getScreen() !== 'map') return;
+  enteringNode = true;
+  // 다음 틱에 해제 — 같은 클릭 버스트만 막고 정상 흐름은 통과
+  setTimeout(() => { enteringNode = false; }, 0);
+
   const run = getRun();
   if (run.currentNodeId) {
     const cur = nodeById(run.map, run.currentNodeId);

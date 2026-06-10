@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { endRun, getRun, getRunOrNull, setScreen, startNextChapter, makeCard } from '../state';
+import { endRun, getRun, getRunOrNull, setScreen, startNextChapter, makeCard, getScreen } from '../state';
 import { showChapterIntro } from './splash-overlay';
 import { playSfx } from '../audio';
 import { recordRelics } from '../codex';
@@ -106,6 +106,9 @@ export function renderChapterClear(): HTMLElement {
         {
           disabled: !canConfirm ? true : undefined,
           onClick: () => {
+            // 더블클릭 방어: 이미 챕터 클리어 화면을 떠났으면 무시
+            // (유물 중복 획득 + 챕터 이중 증가 방지)
+            if (getScreen() !== 'chapter_clear') return;
             // Finalize tentative pick (if any) before moving on
             if (!alreadyConfirmed && tentativeId) {
               run.player.relics.push(tentativeId);
@@ -202,6 +205,8 @@ export function renderTrueEndingChoice(): HTMLElement {
         {
           style: { background: 'var(--accent-2)', color: 'white', fontSize: '15px' },
           onClick: () => {
+            // 더블클릭 방어: 이미 이 화면을 떠났으면 무시 (챕터 이중 증가 방지)
+            if (getScreen() !== 'true_ending_choice') return;
             // Heal 30% before entering chapter 4
             const heal = Math.ceil(run.player.maxHp * 0.30);
             run.player.hp = Math.min(run.player.maxHp, run.player.hp + heal);
