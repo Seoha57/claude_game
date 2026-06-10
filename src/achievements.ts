@@ -1,5 +1,6 @@
 import type { CharacterClass } from './types';
 import { markDirty } from './sync/sync';
+import { loadStats } from './stats';
 
 const STORAGE_KEY = 'dungeoncard_achievements';
 const STORAGE_VERSION = 1;
@@ -130,6 +131,47 @@ export function checkTrueWin(cls: CharacterClass, ascension: number): void {
 }
 
 const ALL_CLASSES: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief'];
+
+// 이미 기록된 perCharClear/perCharTrue를 보고 도전과제를 소급 평가한다.
+// 과거 버그(charClearId가 마법사/프리스트/도적을 모두 mage_clear로 반환,
+// all_classes가 4캐릭만 체크)로 누락된 도전과제를 게임 시작 시 보정.
+export function reconcileAchievements(): void {
+  const d = load();
+  const stats = loadStats();
+  let changed = false;
+
+  // stats의 per-캐릭터 승수를 perCharClear/perCharTrue로 역보정 (더 견고)
+  for (const c of ALL_CLASSES) {
+    const cs = stats.perCharacter[c];
+    if (cs?.wins > 0 && !d.perCharClear[c]) { d.perCharClear[c] = true; changed = true; }
+    if (cs?.trueWins > 0 && !d.perCharTrue[c]) { d.perCharTrue[c] = true; changed = true; }
+  }
+
+  // 캐릭터별 클리어 도전과제 소급
+  for (const c of ALL_CLASSES) {
+    if (d.perCharClear[c] && !d.unlocked.includes(charClearId(c))) {
+      d.unlocked.push(charClearId(c));
+      changed = true;
+    }
+  }
+  // all_classes 소급 (토스트 없이 조용히)
+  if (ALL_CLASSES.every((c) => d.perCharClear[c]) && !d.unlocked.includes('all_classes_win')) {
+    d.unlocked.push('all_classes_win');
+    changed = true;
+  }
+  if (ALL_CLASSES.every((c) => d.perCharTrue[c]) && !d.unlocked.includes('all_classes_true')) {
+    d.unlocked.push('all_classes_true');
+    changed = true;
+  }
+  // 최소 1캐릭 클리어 기록이 있으면 first_win/true_win도 보정
+  if (ALL_CLASSES.some((c) => d.perCharClear[c]) && !d.unlocked.includes('first_win')) {
+    d.unlocked.push('first_win'); changed = true;
+  }
+  if (ALL_CLASSES.some((c) => d.perCharTrue[c]) && !d.unlocked.includes('true_win')) {
+    d.unlocked.push('true_win'); changed = true;
+  }
+  if (changed) persist(d);
+}
 
 function charClearId(cls: CharacterClass): string {
   switch (cls) {
