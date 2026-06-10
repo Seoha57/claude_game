@@ -436,6 +436,12 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
       onMouseLeave: () => onCardHover(null),
       onClick: (e: MouseEvent) => {
         if (!canPlay) return;
+        // 더블클릭/분리된 DOM 재발동 방어: 이 카드가 아직 손패에 있고
+        // 현재 에너지로 낼 수 있을 때만 진행
+        const live = getCombatOrNull();
+        if (!live || live.phase !== 'player') return;
+        if (!live.player.hand.some((h) => h.uid === c.uid)) return;
+        if (live.player.energy < def.cost) return;
         if (def.target === 'enemy') {
           selectedCardUid = selected ? null : c.uid;
           // Selecting an enemy-target card cancels any pending potion targeting
@@ -591,8 +597,11 @@ function getSelectedCard(state: CombatState): CardInstance | null {
 
 function playSelectedCard(target: Enemy): void {
   const state = getCombat();
+  if (state.phase !== 'player') return;
   const card = getSelectedCard(state);
   if (!card) return;
+  // 카드가 아직 손패에 있는지 확인 (더블클릭/stale 방어)
+  if (!state.player.hand.some((h) => h.uid === card.uid)) { selectedCardUid = null; return; }
   const def = getEffectiveDef(card);
   if (state.player.energy < def.cost) return;
   // Animate the selected card flying out before rerender wipes it
@@ -1010,9 +1019,12 @@ function aliveEnemies(state: CombatState): Enemy[] {
 }
 
 function playCardWithFx(state: CombatState, card: CardInstance, target: Enemy | null): void {
+  if (state.phase !== 'player') return;
+  // 카드가 아직 손패에 있을 때만 진행 (핫키 연타/stale 방어)
+  if (!state.player.hand.some((h) => h.uid === card.uid)) return;
   const def = getEffectiveDef(card);
-  playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
   if (state.player.energy < def.cost) return;
+  playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
   // Animate via hotkey: find the card element in current hand DOM
   const handCards = document.querySelectorAll('.combat-bottom .card');
   const idxInHand = state.player.hand.findIndex((c) => c.uid === card.uid);

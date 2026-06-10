@@ -288,7 +288,11 @@ export function playCard(
   const p = state.player;
   // remove from hand first
   const idx = p.hand.findIndex((c) => c.uid === card.uid);
-  if (idx >= 0) p.hand.splice(idx, 1);
+  // 카드가 손패에 없으면(이미 사용됨) 효과를 적용하지 않는다.
+  // 빠른 더블클릭으로 분리된 옛 DOM 엘리먼트가 핸들러를 재발동해도
+  // 효과/에너지가 중복 적용되는 것을 막는다.
+  if (idx < 0) return;
+  p.hand.splice(idx, 1);
 
   // Snapshot alive enemies before effects for on_kill scaling detection
   const beforeAlive = state.enemies.filter((e) => e.hp > 0).length;
