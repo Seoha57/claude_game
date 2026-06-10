@@ -162,7 +162,8 @@ function renderCardItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild:
         class: `card ${def.type} rarity-${def.rarity} ${item.sold || !canAfford ? 'disabled' : ''}`,
         style: { cursor: item.sold || !canAfford ? 'default' : 'pointer' },
         onClick: () => {
-          if (item.sold || !canAfford) return;
+          // 클릭 시점의 라이브 골드/판매 상태로 재확인 (더블클릭/stale 방어)
+          if (item.sold || run.player.gold < item.price) return;
           run.player.gold -= item.price;
           run.player.deck.push(makeCard(def.id));
           item.sold = true;
@@ -214,7 +215,7 @@ function renderRelicItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild
           {
             disabled: !canAfford ? true : undefined,
             onClick: () => {
-              if (!canAfford || item.sold) return;
+              if (item.sold || run.player.gold < item.price) return;
               run.player.gold -= item.price;
               run.player.relics.push(def.id);
               playSfx('relic');
@@ -245,11 +246,15 @@ function appendRemovalPicker(wrapper: HTMLElement, run: ReturnType<typeof getRun
           class: `card ${def.type} rarity-${def.rarity}`,
           style: { cursor: 'pointer' },
           onClick: () => {
-            const removalPrice = shopItems!.find((i) => i.kind === 'removal')!.price;
-            run.player.gold -= removalPrice;
+            const removal = shopItems!.find((i) => i.kind === 'removal')!;
+            // 더블클릭/stale 방어: 이미 사용했거나, 픽 모드가 아니거나,
+            // 카드가 덱에 없으면(이미 제거됨) 무시
+            if (removal.sold || removalState !== 'picking') return;
             const idx = run.player.deck.findIndex((c) => c.uid === card.uid);
-            if (idx >= 0) run.player.deck.splice(idx, 1);
-            shopItems!.find((i) => i.kind === 'removal')!.sold = true;
+            if (idx < 0) return;
+            run.player.gold -= removal.price;
+            run.player.deck.splice(idx, 1);
+            removal.sold = true;
             removalState = 'none';
             rebuild();
           },
