@@ -1,7 +1,17 @@
 import { el } from './dom';
 import { setScreen } from '../state';
-import { ACHIEVEMENTS, getUnlockedSet, resetAchievements } from '../achievements';
+import { ACHIEVEMENTS, getUnlockedSet, resetAchievements, reconcileAchievements, getCharClearStatus } from '../achievements';
 import type { AchievementDef } from '../achievements';
+import type { CharacterClass } from '../types';
+
+const CHAR_LABEL: Record<CharacterClass, string> = {
+  swordmaster: '⚔️귀검사',
+  gunner: '🔫거너',
+  fighter: '🥊격투가',
+  magician: '🔮마법사',
+  priest: '⛪프리스트',
+  thief: '🗡️도적',
+};
 
 const CATEGORY_LABEL: Record<AchievementDef['category'], string> = {
   progression: '🌟 진행',
@@ -12,9 +22,13 @@ const CATEGORY_LABEL: Record<AchievementDef['category'], string> = {
 };
 
 export function renderAchievements(): HTMLElement {
+  // 화면 진입 시 기록 기반으로 도전과제 소급 보정 (누락분 자동 채움)
+  reconcileAchievements();
+
   const wrapper = el('div', { class: 'achievements-screen' });
 
   const rebuild = () => {
+    reconcileAchievements();
     wrapper.innerHTML = '';
     appendContent();
   };
@@ -42,6 +56,34 @@ export function renderAchievements(): HTMLElement {
       wrapper.appendChild(
         el('h3', { class: 'ach-category' }, CATEGORY_LABEL[cat]),
       );
+      // 캐릭터 카테고리 위에 캐릭별 클리어/진엔딩 현황 칩
+      if (cat === 'character') {
+        const status = getCharClearStatus();
+        const clearCount = (Object.values(status.clear) as boolean[]).filter(Boolean).length;
+        const trueCount = (Object.values(status.trueClear) as boolean[]).filter(Boolean).length;
+        wrapper.appendChild(
+          el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } },
+            `클리어 ${clearCount}/6 · 진엔딩 ${trueCount}/6`),
+        );
+        const chips = el('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' } });
+        for (const c of Object.keys(CHAR_LABEL) as (keyof typeof CHAR_LABEL)[]) {
+          const cleared = status.clear[c];
+          const trueCleared = status.trueClear[c];
+          chips.appendChild(
+            el('div', {
+              style: {
+                padding: '3px 8px', borderRadius: '6px', fontSize: '12px',
+                border: `1px solid ${cleared ? 'var(--good)' : 'var(--border)'}`,
+                background: cleared ? 'rgba(80,180,80,0.12)' : 'transparent',
+                color: cleared ? 'var(--fg)' : 'var(--muted)',
+                opacity: cleared ? '1' : '0.55',
+              },
+              title: trueCleared ? '진엔딩 클리어' : cleared ? '일반 클리어' : '미클리어',
+            }, `${CHAR_LABEL[c]} ${trueCleared ? '🏆' : cleared ? '✓' : '—'}`),
+          );
+        }
+        wrapper.appendChild(chips);
+      }
       const grid = el('div', { class: 'ach-grid' });
       for (const a of items) {
         grid.appendChild(renderAchievementCard(a, unlocked.has(a.id)));

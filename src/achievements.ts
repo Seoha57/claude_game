@@ -92,6 +92,23 @@ export function getUnlockedSet(): Set<string> {
   return new Set(load().unlocked);
 }
 
+// 캐릭터별 클리어/진엔딩 현황 (도전과제 화면 표시용). stats도 교차 참조.
+export function getCharClearStatus(): {
+  clear: Record<CharacterClass, boolean>;
+  trueClear: Record<CharacterClass, boolean>;
+} {
+  const d = load();
+  const stats = loadStats();
+  const clear = {} as Record<CharacterClass, boolean>;
+  const trueClear = {} as Record<CharacterClass, boolean>;
+  for (const c of ALL_CLASSES) {
+    const cs = stats.perCharacter[c];
+    clear[c] = !!d.perCharClear[c] || (cs?.wins ?? 0) > 0 || (cs?.trueWins ?? 0) > 0;
+    trueClear[c] = !!d.perCharTrue[c] || (cs?.trueWins ?? 0) > 0;
+  }
+  return { clear, trueClear };
+}
+
 let notifyHandler: ((def: AchievementDef) => void) | null = null;
 export function setAchievementNotifier(fn: (def: AchievementDef) => void): void {
   notifyHandler = fn;
