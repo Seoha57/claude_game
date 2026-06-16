@@ -13,6 +13,7 @@ const BASE_CARD_PRICE: Record<string, number> = { common: 40, uncommon: 60, rare
 const BASE_RELIC_PRICE = 150;
 const BASE_REMOVAL_PRICE = 75;
 const BASE_POTION_PRICE = 55;
+const POTION_SELL_PRICE = 25; // 구매가의 절반 이하
 
 function scaledPrice(base: number, mult: number): number {
   return Math.round(base * mult);
@@ -152,6 +153,37 @@ function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>,
       ),
     ),
   );
+
+  // 포션 되팔기 — 보유 포션을 절반 이하 가격에 판매
+  if (run.player.potions.length > 0) {
+    const sellRow = el('div', { style: { marginBottom: '20px', width: '90%', maxWidth: '480px' } });
+    sellRow.appendChild(
+      el('div', { style: { color: 'var(--muted)', fontSize: '13px', marginBottom: '6px', textAlign: 'center' } },
+        `💰 물약 되팔기 (개당 ${POTION_SELL_PRICE}골드)`),
+    );
+    const potRow = el('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' } });
+    run.player.potions.forEach((pid) => {
+      const pdef = POTION_DEFS[pid];
+      if (!pdef) return;
+      potRow.appendChild(
+        el('button', {
+          style: { fontSize: '12px', padding: '6px 10px' },
+          title: pdef.description,
+          onClick: () => {
+            // id 기준으로 해당 종류 1개 제거 (더블클릭 시에도 같은 종류만 안전 제거)
+            const i = run.player.potions.indexOf(pid);
+            if (i < 0) return;
+            run.player.potions.splice(i, 1);
+            run.player.gold += POTION_SELL_PRICE;
+            playSfx('gold');
+            rebuild();
+          },
+        }, `${pdef.name} → +${POTION_SELL_PRICE}`),
+      );
+    });
+    sellRow.appendChild(potRow);
+    wrapper.appendChild(sellRow);
+  }
 
   wrapper.appendChild(
     el('button', { onClick: () => { shopItems = null; setScreen('map'); } }, '상점 나가기'),
