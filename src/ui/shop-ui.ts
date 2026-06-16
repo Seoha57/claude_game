@@ -2,22 +2,24 @@ import { el } from './dom';
 import { getRun, makeCard, setScreen } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS } from '../content/cards';
 import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
+import { POTION_LIST, POTION_DEFS } from '../content/potions';
 import { makeRng, shuffle } from '../rng';
 import { getModifiers } from '../ascension';
 import { playSfx } from '../audio';
 import { recordCard, recordRelic } from '../codex';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
 
-const BASE_CARD_PRICE: Record<string, number> = { common: 50, uncommon: 75, rare: 125 };
+const BASE_CARD_PRICE: Record<string, number> = { common: 40, uncommon: 60, rare: 110 };
 const BASE_RELIC_PRICE = 150;
 const BASE_REMOVAL_PRICE = 75;
+const BASE_POTION_PRICE = 55;
 
 function scaledPrice(base: number, mult: number): number {
   return Math.round(base * mult);
 }
 
 interface ShopItem {
-  kind: 'card' | 'relic' | 'removal';
+  kind: 'card' | 'relic' | 'removal' | 'potion';
   id?: string;
   price: number;
   sold: boolean;
@@ -59,14 +61,19 @@ function buildShop(): ShopItem[] {
     }
   }
 
-  // 1 relic
+  // 2 relics (서로 다른 유물 — 선택지 확대)
   const relicSource = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
-  const relicPool = relicSource.length > 0 ? relicSource : PICKABLE_RELICS;
+  const relicPool = (relicSource.length > 0 ? relicSource : PICKABLE_RELICS).filter((r) => !run.player.relics.includes(r.id));
   const relicCandidates = shuffle(rng, relicPool.slice());
-  const relic = relicCandidates.find((r) => !run.player.relics.includes(r.id));
-  if (relic) {
+  for (const relic of relicCandidates.slice(0, 2)) {
     items.push({ kind: 'relic', id: relic.id, price: scaledPrice(BASE_RELIC_PRICE, mult), sold: false });
     recordRelic(relic.id);
+  }
+
+  // 2 potions (포션은 다른 데서 안정적으로 못 얻으니 상점만의 가치)
+  const potionCandidates = shuffle(rng, POTION_LIST.slice());
+  for (const pot of potionCandidates.slice(0, 2)) {
+    items.push({ kind: 'potion', id: pot.id, price: scaledPrice(BASE_POTION_PRICE, mult), sold: false });
   }
 
   // card removal service
@@ -116,6 +123,8 @@ function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>,
       itemRow.appendChild(renderCardItem(item, run, rebuild));
     } else if (item.kind === 'relic' && item.id) {
       itemRow.appendChild(renderRelicItem(item, run, rebuild));
+    } else if (item.kind === 'potion' && item.id) {
+      itemRow.appendChild(renderPotionItem(item, run, rebuild));
     }
   }
   wrapper.appendChild(itemRow);
@@ -225,6 +234,52 @@ function renderRelicItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild
           },
           `💰 ${item.price}`,
         ),
+  );
+}
+
+function renderPotionItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild: () => void): HTMLElement {
+  const def = POTION_DEFS[item.id!];
+  const canAfford = run.player.gold >= item.price;
+  const potionsFull = run.player.potions.length >= 3;
+  const blocked = item.sold || potionsFull;
+
+  return el(
+    'div',
+    {
+      style: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '16px',
+        border: `1px solid ${blocked ? 'var(--border)' : 'var(--accent)'}`,
+        borderRadius: '8px',
+        minWidth: '160px',
+        opacity: blocked ? '0.5' : '1',
+      },
+    },
+    el('div', { style: { fontSize: '13px', color: 'var(--muted)' } }, '🧪 물약'),
+    el('div', { style: { fontWeight: 'bold' } }, def.name),
+    el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, def.description),
+    item.sold
+      ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '판매 완료')
+      : potionsFull
+        ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '물약 가득 (최대 3)')
+        : el(
+            'button',
+            {
+              disabled: !canAfford ? true : undefined,
+              onClick: () => {
+                if (item.sold || run.player.potions.length >= 3 || run.player.gold < item.price) return;
+                run.player.gold -= item.price;
+                run.player.potions.push(def.id);
+                playSfx('potion');
+                item.sold = true;
+                rebuild();
+              },
+            },
+            `💰 ${item.price}`,
+          ),
   );
 }
 
