@@ -71,7 +71,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   // ── 시그니처 (캐릭터별 두 번째 시작 유물) ──
   gwihon_charm: {
     id: 'gwihon_charm',
-    name: '귀혼',
+    name: '검혼',
     description: '5번째 공격마다 +6 데미지.',
     rarity: 'starter',
   },

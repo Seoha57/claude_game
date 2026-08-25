@@ -21,11 +21,11 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'all_classes_true', title: '경지에 오르다', description: '6 캐릭터 모두로 진엔딩 달성.',         emoji: '👑', category: 'progression' },
 
   // ── Character ──
-  { id: 'sword_clear',  title: '귀검사 클리어',  description: '귀검사로 일반 엔딩 달성.',  emoji: '⚔️', category: 'character' },
-  { id: 'gun_clear',    title: '거너 클리어',    description: '거너로 일반 엔딩 달성.',    emoji: '🔫', category: 'character' },
+  { id: 'sword_clear',  title: '검사 클리어',    description: '검사로 일반 엔딩 달성.',    emoji: '⚔️', category: 'character' },
+  { id: 'gun_clear',    title: '사수 클리어',    description: '사수로 일반 엔딩 달성.',    emoji: '🔫', category: 'character' },
   { id: 'fight_clear',  title: '격투가 클리어',  description: '격투가로 일반 엔딩 달성.',  emoji: '🥊', category: 'character' },
   { id: 'mage_clear',   title: '마법사 클리어',  description: '마법사로 일반 엔딩 달성.',  emoji: '🔮', category: 'character' },
-  { id: 'priest_clear', title: '프리스트 클리어', description: '프리스트로 일반 엔딩 달성.', emoji: '⛪', category: 'character' },
+  { id: 'priest_clear', title: '성직자 클리어',  description: '성직자로 일반 엔딩 달성.',  emoji: '⛪', category: 'character' },
   { id: 'thief_clear',  title: '도적 클리어',    description: '도적으로 일반 엔딩 달성.',  emoji: '🗡️', category: 'character' },
 
   // ── Difficulty ──
@@ -150,7 +150,7 @@ export function checkTrueWin(cls: CharacterClass, ascension: number): void {
 const ALL_CLASSES: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief'];
 
 // 이미 기록된 perCharClear/perCharTrue를 보고 도전과제를 소급 평가한다.
-// 과거 버그(charClearId가 마법사/프리스트/도적을 모두 mage_clear로 반환,
+// 과거 버그(charClearId가 마법사/성직자/도적을 모두 mage_clear로 반환,
 // all_classes가 4캐릭만 체크)로 누락된 도전과제를 게임 시작 시 보정.
 export function reconcileAchievements(): void {
   const d = load();

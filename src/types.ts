@@ -141,7 +141,7 @@ export interface CombatState {
   flags: {
     firstAttackThisTurn?: boolean;
     // Signature relic counters (per combat unless noted)
-    attackCount?: number;             // total hits this combat (pen_nib, 귀혼, 탄창)
+    attackCount?: number;             // total hits this combat (pen_nib, 검혼, 탄창)
     cardsPlayedThisTurn?: number;     // resets each turn (일심)
     lastPlayedType?: CardType;        // persists in combat (원소 공명)
     fighterProcThisTurn?: boolean;    // 일심 procced once this turn

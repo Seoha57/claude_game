@@ -297,7 +297,7 @@ export function playCard(
   // Snapshot alive enemies before effects for on_kill scaling detection
   const beforeAlive = state.enemies.filter((e) => e.hp > 0).length;
 
-  // ── Signature: 원소 공명 (마법사) — 스킬 카드 연속 사용 ──
+  // ── 원소 공명 (마법사) — 스킬 카드 연속 사용 ──
   const run = getRunOrNull();
   if (run?.player.relics.includes('elemental_resonance')
       && def.type === 'skill' && state.flags.lastPlayedType === 'skill') {
@@ -346,7 +346,7 @@ export function playCard(
   }
 }
 
-// Fire on-exhaust passive effects (powers like 사슬 해제, 다이버전트, 적룡노화, 인형의 숲)
+// Fire on-exhaust passive effects (powers like 속박 해방, 확산탄, 용의 분노, 인형의 숲)
 function triggerOnExhaust(state: CombatState, log: (s: string) => void): void {
   const p = state.player;
   const str = getStatus(p.statuses, 'on_exhaust_str');
@@ -373,22 +373,22 @@ function triggerOnExhaust(state: CombatState, log: (s: string) => void): void {
 
 // ── Signature relic hooks ─────────────────────────────────────────
 // 데미지 카드가 적에 적용되기 직전 호출. 보너스/배수를 모두 처리한 최종 데미지를 리턴.
-// 카운터(귀혼/탄창/pen_nib)는 이 시점에 증가시킨다.
+// 카운터(검혼/탄창/pen_nib)는 이 시점에 증가시킨다.
 export function modifyAttackAmount(state: CombatState, base: number): number {
   const run = getRunOrNull();
   if (!run) return base;
   state.flags.attackCount = (state.flags.attackCount ?? 0) + 1;
   const ac = state.flags.attackCount;
   let amount = base;
-  // 귀혼: 5번째 공격마다 +6
+  // 검혼: 5번째 공격마다 +6
   if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
     amount += 6;
   }
-  // 탄창(거너): 3번째 공격마다 +5 데미지 (속사 보상)
+  // 탄창(사수): 3번째 공격마다 +5 데미지
   if (run.player.relics.includes('gunner_magazine') && ac % 3 === 0) {
     amount += 5;
   }
-  // 펜촉: 10번째 공격마다 2배 (귀혼/탄창 보너스도 같이 2배가 됨)
+  // 펜촉: 10번째 공격마다 2배 (검혼/탄창 보너스도 같이 2배가 됨)
   if (run.player.relics.includes('pen_nib') && ac % 10 === 0) {
     amount *= 2;
   }
@@ -401,7 +401,7 @@ export function onAttackAfter(state: CombatState, log: (s: string) => void): voi
   if (!run) return;
   const ac = state.flags.attackCount ?? 0;
   if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
-    log('귀혼 발동!');
+    log('검혼 발동!');
   }
   if (run.player.relics.includes('gunner_magazine') && ac % 3 === 0) {
     drawCards(state, 1);
@@ -412,7 +412,7 @@ export function onAttackAfter(state: CombatState, log: (s: string) => void): voi
   }
 }
 
-// 회복(heal) 또는 재생(regen) 발동 시 호출 (프리스트 신성한 인장)
+// 회복(heal) 또는 재생(regen) 발동 시 호출 (성직자 신성한 인장)
 export function onHealTrigger(state: CombatState, log: (s: string) => void): void {
   const run = getRunOrNull();
   if (!run) return;

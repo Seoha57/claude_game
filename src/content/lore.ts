@@ -1,13 +1,12 @@
 // ─────────────────────────────────────────────────────────────────
 // 스토리 / 플레이버 텍스트
-// 던전앤파이터 세계관 기반의 분위기 텍스트.
 // ─────────────────────────────────────────────────────────────────
 
 // 챕터 도입 내레이션 (스플래시 flavor 확장용)
 export const CHAPTER_LORE: Record<number, string> = {
   1: '잿빛 안개가 사원을 뒤덮었다. 광기에 물든 것들이 어둠 속에서 꿈틀거린다. 첫 발을 내딛어라.',
   2: '기계 문명의 잔해가 끝없이 펼쳐진다. 추적자들의 붉은 눈이 폐허 사이에서 번뜩인다.',
-  3: '이샤리스의 심연. 공허가 살아 숨 쉬는 이곳에서, 약한 자는 흔적도 없이 사라진다.',
+  3: '심연의 균열. 공허가 살아 숨 쉬는 이곳에서, 약한 자는 흔적도 없이 사라진다.',
   4: '세 개의 열쇠가 균열을 열었다. 차원의 끝, 모든 것의 근원이 그대를 기다린다.',
 };
 
@@ -19,11 +18,11 @@ export const BOSS_INTRO_FLAVOR: Record<string, string> = {
   obsidian_golem: '흑요암 거인이 깨어난다. 대지가 진동한다.',
   // Chapter 2
   the_collector: '"네 영혼도 내 수집품이 되겠군." 수집가가 손짓한다.',
-  karnak_runemaster: '룬이 허공에 떠오른다. "고대의 지식 앞에 무릎 꿇어라."',
-  sirocco_phantom: '모래폭풍 속에서 용의 환영이 일렁인다.',
+  karnak_runemaster: '룬이 허공에 떠오른다. "고대의 힘 앞에 무릎 꿇어라."',
+  sirocco_phantom: '모래폭풍 속에서 태고의 환영이 일렁인다.',
   // Chapter 3
   void_heart: '공허의 심장이 고동친다. 존재 자체가 일그러진다.',
-  death_apostle: '"죽음은 곧 해방이다." 케이지가 미소 짓는다.',
+  death_apostle: '"죽음은 곧 해방이다." 사도가 미소 짓는다.',
   isaris_overlord: '군림자가 옥좌에서 일어선다. 그 위압에 공기마저 무거워진다.',
   // Chapter 4
   abyss_lord: '차원의 지배자. 모든 균열의 근원. "여기까지 온 것을 후회하게 해주마."',
@@ -37,11 +36,11 @@ export const BOSS_DEFEAT_FLAVOR: Record<string, string> = {
   mad_butcher: '도살자가 자신의 칼날 위로 쓰러진다.',
   obsidian_golem: '거인이 무너져 흑요암 조각으로 부서진다.',
   the_collector: '수집품들이 빛이 되어 흩어진다. 갇혔던 영혼들이 해방되었다.',
-  karnak_runemaster: '룬이 산산이 부서지고, 고대의 비밀은 침묵 속에 묻힌다.',
-  sirocco_phantom: '모래폭풍이 잦아들고, 용의 환영이 사라진다.',
+  karnak_runemaster: '룬이 산산이 부서지고, 고대의 힘은 침묵 속에 묻힌다.',
+  sirocco_phantom: '모래폭풍이 잦아들고, 태고의 환영이 사라진다.',
   void_heart: '공허의 심장이 멈춘다. 일그러진 공간이 제자리를 찾는다.',
-  death_apostle: '"드디어... 해방이군." 케이지가 안도하며 스러진다.',
-  isaris_overlord: '군림자의 옥좌가 무너진다. 이샤리스가 자유를 되찾았다.',
+  death_apostle: '"드디어... 해방이군." 사도가 안도하며 스러진다.',
+  isaris_overlord: '군림자의 옥좌가 무너진다. 심연이 자유를 되찾았다.',
   abyss_lord: '차원의 지배자가 소멸한다. 모든 균열이 닫히기 시작한다.',
   time_sovereign: '뒤틀린 시간이 바로잡힌다. 정해진 끝은 없었다.',
   void_avatar: '공허가 흩어진다. 너의 존재가 그것을 이겨냈다.',
@@ -58,10 +57,10 @@ export function bossDefeatFlavor(bossId: string): string | null {
 
 // 카드 플레이버 — 덱 상세 보기에서 효과 아래 한 줄 표시.
 export const CARD_FLAVOR: Record<string, string> = {
-  // ── 귀검사 ──
+  // ── 검사 ──
   strike: '"베어라. 그게 전부다."',
   defend: '막지 못하면 벨 수도 없다.',
-  bash: '에쉔 포크의 끝이 살을 파고든다.',
+  bash: '창끝이 살을 파고든다.',
   cleave: '한 호흡에 셋을 가른다.',
   iron_wave: '나아가며 베고, 베며 막는다.',
   pommel_strike: '피가 끓어오를수록 칼은 가벼워진다.',
@@ -92,7 +91,7 @@ export const CARD_FLAVOR: Record<string, string> = {
   awakening: '잠들었던 힘이 깨어난다.',
   demon_one_slash: '한 칼에 귀신마저 갈라낸다.',
 
-  // ── 거너 ──
+  // ── 사수 ──
   g_rising_shot: '한 발. 그거면 충분하다.',
   g_reload: '재장전마저 공격이 된다.',
   g_headshot: '먼지 한 톨까지 조준한다.',
@@ -160,7 +159,7 @@ export const CARD_FLAVOR: Record<string, string> = {
   m_petal: '꽃잎처럼 흩날리는 칼날.',
   m_doll_forest: '인형들이 숲을 이룬다.',
   m_fusion: '원소가 하나로 융합한다.',
-  m_kasiyas: '정복자의 이름으로 명한다.',
+  m_kasiyas: '대정령의 이름으로 명한다.',
   m_marionette: '실 끝에서 춤추게 하라.',
   m_quasar: '별의 폭발을 손에 담는다.',
   m_chain_lightning: '번개가 적에서 적으로 옮겨간다.',
@@ -173,7 +172,7 @@ export const CARD_FLAVOR: Record<string, string> = {
   m_time_warp: '시간을 비틀어 한 박자 앞서간다.',
   m_arcane_orb: '응축된 마력 구체가 빈틈을 노린다.',
 
-  // ── 프리스트 ──
+  // ── 성직자 ──
   p_smash: '신앙은 주먹으로도 전한다.',
   p_holy_guard: '신성한 가호가 방패가 된다.',
   p_lucky_strike: '행운도 실력의 일부다.',
@@ -239,7 +238,7 @@ export const CARD_FLAVOR: Record<string, string> = {
   t_combo_strike: '연계가 쌓일수록 칼은 날카로워진다.',
   t_grave_curse: '무덤에서 피어오르는 독기.',
   t_misty_step: '안개 속으로 사라진다.',
-  t_balakar: '발라크르여, 내 몸에 강림하라.',
+  t_balakar: '망령이여, 내 몸에 강림하라.',
   t_yasakani: '곡옥이 회전하며 모두를 벤다.',
   t_death_shadow: '절명의 그림자는 피할 수 없다.',
   t_silvermoon: '은빛 달 아래, 칼은 멈추지 않는다.',

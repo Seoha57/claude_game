@@ -5,11 +5,11 @@ import type { AchievementDef } from '../achievements';
 import type { CharacterClass } from '../types';
 
 const CHAR_LABEL: Record<CharacterClass, string> = {
-  swordmaster: '⚔️귀검사',
-  gunner: '🔫거너',
+  swordmaster: '⚔️검사',
+  gunner: '🔫사수',
   fighter: '🥊격투가',
   magician: '🔮마법사',
-  priest: '⛪프리스트',
+  priest: '⛪성직자',
   thief: '🗡️도적',
 };
 

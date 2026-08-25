@@ -101,7 +101,7 @@ export function dismissSplash(): void {
 const CHAPTER_INFO: Record<number, { title: string; subtitle: string; emoji: string; flavor?: string }> = {
   1: { title: '잿빛 사원', subtitle: 'Chapter 1', emoji: '🏛️', flavor: CHAPTER_LORE[1] },
   2: { title: '기계 혁명의 폐허', subtitle: 'Chapter 2', emoji: '⚙️', flavor: CHAPTER_LORE[2] },
-  3: { title: '이샤리스의 심연', subtitle: 'Chapter 3', emoji: '🌌', flavor: CHAPTER_LORE[3] },
+  3: { title: '심연의 균열', subtitle: 'Chapter 3', emoji: '🌌', flavor: CHAPTER_LORE[3] },
   4: { title: '차원의 문 너머', subtitle: '✦ Chapter 4 — 진엔딩 ✦', emoji: '🌀', flavor: CHAPTER_LORE[4] },
 };
 

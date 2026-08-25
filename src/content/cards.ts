@@ -26,7 +26,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   // ── Starter ──
   strike: {
     id: 'strike',
-    name: '귀참',
+    name: '검격',
     type: 'attack',
     rarity: 'starter',
     cost: 1,
@@ -48,7 +48,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   // ── Common attacks ──
   bash: {
     id: 'bash',
-    name: '에쉔 포크',
+    name: '찌르기',
     type: 'attack',
     rarity: 'common',
     cost: 2,
@@ -61,7 +61,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   cleave: {
     id: 'cleave',
-    name: '공중 연속 베기',
+    name: '회전 참격',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -71,7 +71,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   twin_strike: {
     id: 'twin_strike',
-    name: '어퍼 슬래쉬',
+    name: '올려치기',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -81,7 +81,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   pommel_strike: {
     id: 'pommel_strike',
-    name: '블러드러스트',
+    name: '혈풍',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -94,7 +94,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   thunderclap: {
     id: 'thunderclap',
-    name: '열파참',
+    name: '화염참',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -107,7 +107,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   heavy_blade: {
     id: 'heavy_blade',
-    name: '단공참',
+    name: '강타',
     type: 'attack',
     rarity: 'common',
     cost: 2,
@@ -119,7 +119,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   // ── Common skills ──
   iron_wave: {
     id: 'iron_wave',
-    name: '고어 크로스',
+    name: '십자 베기',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -132,7 +132,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   shrug_it_off: {
     id: 'shrug_it_off',
-    name: '달빛 베기',
+    name: '월광 방어',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -145,7 +145,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   flex: {
     id: 'flex',
-    name: '둔기 마스터리',
+    name: '전의 고양',
     type: 'skill',
     rarity: 'common',
     cost: 0,
@@ -155,7 +155,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   true_grit: {
     id: 'true_grit',
-    name: '리프트',
+    name: '갈라치기',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -168,7 +168,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   warcry: {
     id: 'warcry',
-    name: '초상비',
+    name: '잔영술',
     type: 'skill',
     rarity: 'common',
     cost: 0,
@@ -184,7 +184,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   // ── Uncommon ──
   dropkick: {
     id: 'dropkick',
-    name: '쓰러스트',
+    name: '돌진',
     type: 'attack',
     rarity: 'uncommon',
     cost: 1,
@@ -194,7 +194,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   uppercut: {
     id: 'uppercut',
-    name: '파동검 지열',
+    name: '지진격',
     type: 'attack',
     rarity: 'uncommon',
     cost: 2,
@@ -208,7 +208,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   bloodletting: {
     id: 'bloodletting',
-    name: '웨이브',
+    name: '기세',
     type: 'skill',
     rarity: 'uncommon',
     cost: 0,
@@ -221,7 +221,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   ghostly_armor: {
     id: 'ghostly_armor',
-    name: '도 마스터리',
+    name: '검무',
     type: 'skill',
     rarity: 'uncommon',
     cost: 1,
@@ -232,7 +232,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   inflame: {
     id: 'inflame',
-    name: '소검 마스터리',
+    name: '검의 정수',
     type: 'power',
     rarity: 'uncommon',
     cost: 1,
@@ -242,7 +242,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   rage: {
     id: 'rage',
-    name: '리턴',
+    name: '재생의 숨결',
     type: 'skill',
     rarity: 'uncommon',
     cost: 0,
@@ -252,7 +252,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   metallicize_card: {
     id: 'metallicize_card',
-    name: '대검 마스터리',
+    name: '철벽의 검',
     type: 'power',
     rarity: 'uncommon',
     cost: 1,
@@ -262,7 +262,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   mugeukdo: {
     id: 'mugeukdo',
-    name: '무극도',
+    name: '극참',
     type: 'attack',
     rarity: 'uncommon',
     cost: 1,
@@ -274,7 +274,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   chain_release: {
     id: 'chain_release',
-    name: '사슬 해제',
+    name: '속박 해방',
     type: 'power',
     rarity: 'uncommon',
     cost: 1,
@@ -286,7 +286,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   // ── Rare (1차 각성기) ──
   bludgeon: {
     id: 'bludgeon',
-    name: '극 귀검술 : 폭풍식',
+    name: '폭풍의 검',
     type: 'attack',
     rarity: 'rare',
     cost: 3,
@@ -297,7 +297,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   demon_form: {
     id: 'demon_form',
-    name: '파동의 눈',
+    name: '전투의 눈',
     type: 'power',
     rarity: 'rare',
     cost: 3,
@@ -308,7 +308,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   feed: {
     id: 'feed',
-    name: '익스트림 오버킬',
+    name: '과잉 학살',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -322,7 +322,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   immolate: {
     id: 'immolate',
-    name: '제 7의 귀신 : 광폭의 블라수',
+    name: '지옥의 화염',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -332,7 +332,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   reaper: {
     id: 'reaper',
-    name: '귀천살',
+    name: '사신의 낫',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -342,7 +342,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
     exhaust: true,
   },
 
-  // ── 귀검사 콤보 시너지 ─────────────────────────────────────
+  // ── 검사 콤보 시너지 ─────────────────────────────────────
   chain_slash: {
     id: 'chain_slash',
     name: '연계 베기',
@@ -371,7 +371,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   thousand_cuts: {
     id: 'thousand_cuts',
-    name: '천상참',
+    name: '천 번의 칼날',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -380,7 +380,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_per_attack', amount: 2 }],
   },
 
-  // ── 풀 확장 (귀검사) ────────────────────────────────────────
+  // ── 풀 확장 (검사) ────────────────────────────────────────
   twin_slash: {
     id: 'twin_slash',
     name: '이중 베기',
@@ -415,7 +415,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   demon_one_slash: {
     id: 'demon_one_slash',
-    name: '귀살일도',
+    name: '멸귀일섬',
     type: 'attack', rarity: 'rare', cost: 2, target: 'enemy',
     description: '28 데미지. 처치 시 영구 데미지 +4. 소멸.',
     effects: [{ kind: 'damage', amount: 28 }],
@@ -436,39 +436,39 @@ export const RARE_CARDS     = CARD_LIST.filter((c) => c.rarity === 'rare');
 
 // Upgrade overrides — only fields that change
 const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
-  strike:           { name: '귀참+',          description: '9 데미지.',                          effects: [{ kind: 'damage', amount: 9 }] },
+  strike:           { name: '검격+',          description: '9 데미지.',                          effects: [{ kind: 'damage', amount: 9 }] },
   defend:           { name: '가드+',          description: '방어도 +8.',                         effects: [{ kind: 'block', amount: 8 }] },
-  bash:             { name: '에쉔 포크+',      description: '10 데미지. 취약 +3.',                effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
-  cleave:           { name: '공중 연속 베기+',  description: '모든 적에게 11 데미지.',              effects: [{ kind: 'damage_all', amount: 11 }] },
-  twin_strike:      { name: '어퍼 슬래쉬+',   description: '7 데미지를 두 번.',                   effects: [{ kind: 'damage', amount: 7, times: 2 }] },
-  pommel_strike:    { name: '블러드러스트+', description: '10 데미지. 2장 드로우.',              effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 2 }] },
-  thunderclap:      { name: '열파참+',        description: '모든 적에게 7 데미지. 화상 +3.',     effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'burn', amount: 3 }] },
-  heavy_blade:      { name: '단공참+',   description: '18 데미지.',                          effects: [{ kind: 'damage', amount: 18 }] },
-  iron_wave:        { name: '고어 크로스+',  description: '7 데미지. 방어도 +7.',               effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
-  shrug_it_off:     { name: '달빛 베기+',        description: '방어도 +11. 1장 드로우.',            effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
-  flex:             { name: '둔기 마스터리+',  description: '힘 +4.',                              effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
-  true_grit:        { name: '리프트+',          description: '방어도 +9. 무작위 카드 1장 소멸.',   effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
-  warcry:           { name: '초상비+',          description: '2장 드로우. 무작위 카드 1장 소멸.', effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
-  dropkick:         { name: '쓰러스트+',     description: '8 데미지.',                           effects: [{ kind: 'damage', amount: 8 }] },
-  uppercut:         { name: '파동검 지열+',description: '15 데미지. 취약 +2. 약화 +2.',        effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
-  bloodletting:     { name: '웨이브+',        description: 'HP -2. 에너지 +3.',                  effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
-  ghostly_armor:    { name: '도 마스터리+',     description: '방어도 +13.',                         effects: [{ kind: 'block', amount: 13 }] },
-  inflame:          { name: '소검 마스터리+',          description: '힘 +3.',                              effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
-  rage:             { name: '리턴+',          description: '재생 +8.',                            effects: [{ kind: 'apply_self', status: 'regen', amount: 8 }] },
-  metallicize_card: { name: '대검 마스터리+',  description: '턴 종료 시 방어도 +4.',              effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
-  mugeukdo:         { name: '무극도+',         description: '13 데미지. 처치 시 영구 데미지 +5.',  effects: [{ kind: 'damage', amount: 13 }] },
-  chain_release:    { name: '사슬 해제+',      description: '카드 소멸 시 힘 +2.',                  effects: [{ kind: 'apply_self', status: 'on_exhaust_str', amount: 2 }] },
-  bludgeon:         { name: '극 귀검술 : 폭풍식+',           description: '42 데미지. 유지.',                effects: [{ kind: 'damage', amount: 42 }] },
-  demon_form:       { name: '파동의 눈+',                   description: '턴 시작 시 힘 +3. 선천.',         effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
-  feed:             { name: '익스트림 오버킬+',             description: 'HP -3. 24 데미지.',                effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
-  immolate:         { name: '제 7의 귀신 : 광폭의 블라수+', description: '모든 적에게 28 데미지.',           effects: [{ kind: 'damage_all', amount: 28 }] },
-  reaper:           { name: '귀천살+',                      description: '모든 적에게 6 데미지.',            effects: [{ kind: 'damage_all', amount: 6 }] },
+  bash:             { name: '찌르기+',      description: '10 데미지. 취약 +3.',                effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
+  cleave:           { name: '회전 참격+',  description: '모든 적에게 11 데미지.',              effects: [{ kind: 'damage_all', amount: 11 }] },
+  twin_strike:      { name: '올려치기+',   description: '7 데미지를 두 번.',                   effects: [{ kind: 'damage', amount: 7, times: 2 }] },
+  pommel_strike:    { name: '혈풍+', description: '10 데미지. 2장 드로우.',              effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 2 }] },
+  thunderclap:      { name: '화염참+',        description: '모든 적에게 7 데미지. 화상 +3.',     effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'burn', amount: 3 }] },
+  heavy_blade:      { name: '강타+',   description: '18 데미지.',                          effects: [{ kind: 'damage', amount: 18 }] },
+  iron_wave:        { name: '십자 베기+',  description: '7 데미지. 방어도 +7.',               effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
+  shrug_it_off:     { name: '월광 방어+',        description: '방어도 +11. 1장 드로우.',            effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
+  flex:             { name: '전의 고양+',  description: '힘 +4.',                              effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
+  true_grit:        { name: '갈라치기+',          description: '방어도 +9. 무작위 카드 1장 소멸.',   effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
+  warcry:           { name: '잔영술+',          description: '2장 드로우. 무작위 카드 1장 소멸.', effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
+  dropkick:         { name: '돌진+',     description: '8 데미지.',                           effects: [{ kind: 'damage', amount: 8 }] },
+  uppercut:         { name: '지진격+',description: '15 데미지. 취약 +2. 약화 +2.',        effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
+  bloodletting:     { name: '기세+',        description: 'HP -2. 에너지 +3.',                  effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
+  ghostly_armor:    { name: '검무+',     description: '방어도 +13.',                         effects: [{ kind: 'block', amount: 13 }] },
+  inflame:          { name: '검의 정수+',          description: '힘 +3.',                              effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
+  rage:             { name: '재생의 숨결+',          description: '재생 +8.',                            effects: [{ kind: 'apply_self', status: 'regen', amount: 8 }] },
+  metallicize_card: { name: '철벽의 검+',  description: '턴 종료 시 방어도 +4.',              effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
+  mugeukdo:         { name: '극참+',         description: '13 데미지. 처치 시 영구 데미지 +5.',  effects: [{ kind: 'damage', amount: 13 }] },
+  chain_release:    { name: '속박 해방+',      description: '카드 소멸 시 힘 +2.',                  effects: [{ kind: 'apply_self', status: 'on_exhaust_str', amount: 2 }] },
+  bludgeon:         { name: '폭풍의 검+',           description: '42 데미지. 유지.',                effects: [{ kind: 'damage', amount: 42 }] },
+  demon_form:       { name: '전투의 눈+',                   description: '턴 시작 시 힘 +3. 선천.',         effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
+  feed:             { name: '과잉 학살+',             description: 'HP -3. 24 데미지.',                effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
+  immolate:         { name: '지옥의 화염+', description: '모든 적에게 28 데미지.',           effects: [{ kind: 'damage_all', amount: 28 }] },
+  reaper:           { name: '사신의 낫+',                      description: '모든 적에게 6 데미지.',            effects: [{ kind: 'damage_all', amount: 6 }] },
   // 콤보 시너지
   chain_slash:      { name: '연계 베기+',     description: '7 데미지. 이번 턴 2번째 이후 카드면 +9 데미지.',
                       effects: [{ kind: 'damage', amount: 7 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 9 }] }] },
   lingering_image:  { name: '잔영+',          description: '12 데미지. 직전이 공격이면 +9 데미지.',
                       effects: [{ kind: 'damage', amount: 12 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 9 }] }] },
-  thousand_cuts:    { name: '천상참+',        description: '데미지 = 3 × 이번 전투 누적 공격 수.',
+  thousand_cuts:    { name: '천 번의 칼날+',        description: '데미지 = 3 × 이번 전투 누적 공격 수.',
                       effects: [{ kind: 'damage_per_attack', amount: 3 }] },
   // 풀 확장
   twin_slash:       { name: '이중 베기+',     description: '5 데미지 2회.',                       effects: [{ kind: 'damage', amount: 5, times: 2 }] },
@@ -476,7 +476,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                       effects: [{ kind: 'damage', amount: 9 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 7 }] }] },
   infinite_cut:     { name: '무한참+',        description: '6 데미지 3회.',                       effects: [{ kind: 'damage', amount: 6, times: 3 }] },
   awakening:        { name: '각성+',          description: '힘 +5. 소멸.',                        effects: [{ kind: 'apply_self', status: 'strength', amount: 5 }] },
-  demon_one_slash:  { name: '귀살일도+',      description: '36 데미지. 처치 시 영구 데미지 +5. 소멸.',
+  demon_one_slash:  { name: '멸귀일섬+',      description: '36 데미지. 처치 시 영구 데미지 +5. 소멸.',
                       effects: [{ kind: 'damage', amount: 36 }] },
 };
 

@@ -4,7 +4,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   // ── Starter ──
   m_magic_missile: {
     id: 'm_magic_missile',
-    name: '매직 미사일',
+    name: '마력 화살',
     type: 'attack',
     rarity: 'starter',
     cost: 1,
@@ -14,7 +14,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_aura_shield: {
     id: 'm_aura_shield',
-    name: '오라 실드',
+    name: '마력 방벽',
     type: 'skill',
     rarity: 'starter',
     cost: 1,
@@ -26,7 +26,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   // ── Common (starter special + actives) ──
   m_phase_shift: {
     id: 'm_phase_shift',
-    name: '위상변화',
+    name: '차원 전환',
     type: 'attack',
     rarity: 'common',
     cost: 2,
@@ -39,7 +39,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_skystrike: {
     id: 'm_skystrike',
-    name: '천격',
+    name: '번개 일격',
     type: 'attack',
     rarity: 'common',
     cost: 2,
@@ -49,7 +49,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_dragon_tooth: {
     id: 'm_dragon_tooth',
-    name: '용아',
+    name: '용의 이빨',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -59,7 +59,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_lantern: {
     id: 'm_lantern',
-    name: '랜턴 파이어',
+    name: '화염 등불',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -72,7 +72,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_air_lantern: {
     id: 'm_air_lantern',
-    name: '공중 랜턴 파이어',
+    name: '공중 화염',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -82,7 +82,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_petal: {
     id: 'm_petal',
-    name: '낙화장',
+    name: '꽃잎 폭발',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -97,7 +97,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   // ── Common skills ──
   m_pluto: {
     id: 'm_pluto',
-    name: '플루토',
+    name: '명왕성의 힘',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -110,7 +110,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_frost: {
     id: 'm_frost',
-    name: '프로스트 헤드',
+    name: '서리 머리',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -124,7 +124,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_disenchant: {
     id: 'm_disenchant',
-    name: '디스인챈트',
+    name: '마력 해제',
     type: 'skill',
     rarity: 'common',
     cost: 0,
@@ -147,7 +147,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_summon_horus: {
     id: 'm_summon_horus',
-    name: '계약소환 : 기갑 호도르',
+    name: '소환 : 기갑 골렘',
     type: 'skill',
     rarity: 'common',
     cost: 0,
@@ -163,7 +163,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   // ── Uncommon ──
   m_blossom: {
     id: 'm_blossom',
-    name: '플로레 비비기',
+    name: '가시 회전',
     type: 'attack',
     rarity: 'uncommon',
     cost: 2,
@@ -177,7 +177,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_whip: {
     id: 'm_whip',
-    name: '채찍질',
+    name: '채찍 일격',
     type: 'attack',
     rarity: 'uncommon',
     cost: 1,
@@ -190,7 +190,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_showtime: {
     id: 'm_showtime',
-    name: '쇼타임',
+    name: '무대 위로',
     type: 'skill',
     rarity: 'uncommon',
     cost: 0,
@@ -203,7 +203,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_rose_bind: {
     id: 'm_rose_bind',
-    name: '로즈 바인',
+    name: '장미 덩굴',
     type: 'skill',
     rarity: 'uncommon',
     cost: 1,
@@ -214,7 +214,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_mirror: {
     id: 'm_mirror',
-    name: '미러이미지',
+    name: '분신술',
     type: 'power',
     rarity: 'uncommon',
     cost: 1,
@@ -224,7 +224,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_goblin_charge: {
     id: 'm_goblin_charge',
-    name: '계약소환: 고블린 돌격대',
+    name: '소환: 돌격 정령',
     type: 'power',
     rarity: 'uncommon',
     cost: 1,
@@ -234,7 +234,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_ouroboros: {
     id: 'm_ouroboros',
-    name: '우로보로스',
+    name: '자기 재생',
     type: 'attack',
     rarity: 'uncommon',
     cost: 2,
@@ -258,7 +258,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   // ── Rare (1차 각성기) ──
   m_astral_storm: {
     id: 'm_astral_storm',
-    name: '애스트럴 스톰',
+    name: '별빛 폭풍',
     type: 'attack',
     rarity: 'rare',
     cost: 3,
@@ -268,7 +268,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_kasiyas: {
     id: 'm_kasiyas',
-    name: '정복자 카시야스',
+    name: '소환: 대정령',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -283,7 +283,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_quasar: {
     id: 'm_quasar',
-    name: '퀘이사 익스플로전',
+    name: '성간 폭발',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -293,7 +293,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_fusion: {
     id: 'm_fusion',
-    name: '퓨전 크래프트',
+    name: '원소 융합',
     type: 'power',
     rarity: 'rare',
     cost: 3,
@@ -304,7 +304,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_marionette: {
     id: 'm_marionette',
-    name: '마리오네트',
+    name: '인형 조종',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -416,29 +416,29 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
 };
 
 const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
-  m_magic_missile:  { name: '매직 미사일+',                description: '9 데미지.',                              effects: [{ kind: 'damage', amount: 9 }] },
-  m_aura_shield:    { name: '오라 실드+',                  description: '방어도 +8.',                             effects: [{ kind: 'block', amount: 8 }] },
-  m_phase_shift:    { name: '위상변화+',                   description: '10 데미지. 취약 +3.',                    effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
-  m_skystrike:      { name: '천격+',                       description: '18 데미지.',                             effects: [{ kind: 'damage', amount: 18 }] },
-  m_dragon_tooth:   { name: '용아+',                       description: '7 데미지를 두 번.',                      effects: [{ kind: 'damage', amount: 7, times: 2 }] },
-  m_lantern:        { name: '랜턴 파이어+',                description: '8 데미지. 화상 +5.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'burn', amount: 5 }] },
-  m_air_lantern:    { name: '공중 랜턴 파이어+',           description: '모든 적에게 11 데미지.',                 effects: [{ kind: 'damage_all', amount: 11 }] },
-  m_petal:          { name: '낙화장+',                     description: '모든 적에게 7 데미지. 취약 +1.',         effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
-  m_pluto:          { name: '플루토+',                     description: '7 데미지. 방어도 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
-  m_frost:          { name: '프로스트 헤드+',              description: '7 데미지. 빙결 +2. 소멸.',               effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
-  m_disenchant:     { name: '디스인챈트+',                 description: '힘 +4.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
+  m_magic_missile:  { name: '마력 화살+',                description: '9 데미지.',                              effects: [{ kind: 'damage', amount: 9 }] },
+  m_aura_shield:    { name: '마력 방벽+',                  description: '방어도 +8.',                             effects: [{ kind: 'block', amount: 8 }] },
+  m_phase_shift:    { name: '차원 전환+',                   description: '10 데미지. 취약 +3.',                    effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
+  m_skystrike:      { name: '번개 일격+',                       description: '18 데미지.',                             effects: [{ kind: 'damage', amount: 18 }] },
+  m_dragon_tooth:   { name: '용의 이빨+',                       description: '7 데미지를 두 번.',                      effects: [{ kind: 'damage', amount: 7, times: 2 }] },
+  m_lantern:        { name: '화염 등불+',                description: '8 데미지. 화상 +5.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'burn', amount: 5 }] },
+  m_air_lantern:    { name: '공중 화염+',           description: '모든 적에게 11 데미지.',                 effects: [{ kind: 'damage_all', amount: 11 }] },
+  m_petal:          { name: '꽃잎 폭발+',                     description: '모든 적에게 7 데미지. 취약 +1.',         effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
+  m_pluto:          { name: '명왕성의 힘+',                     description: '7 데미지. 방어도 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
+  m_frost:          { name: '서리 머리+',              description: '7 데미지. 빙결 +2. 소멸.',               effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
+  m_disenchant:     { name: '마력 해제+',                 description: '힘 +4.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
   m_no_entry:       { name: '접근 금지!+',                 description: '방어도 +9. 무작위 카드 1장 소멸.',       effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
-  m_summon_horus:   { name: '계약소환 : 기갑 호도르+',     description: '2장 드로우. 무작위 카드 1장 소멸.',      effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
-  m_blossom:        { name: '플로레 비비기+',              description: '15 데미지. 취약 +2. 약화 +2.',           effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
-  m_whip:           { name: '채찍질+',                     description: '7 데미지. 중독 +7.',                     effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
-  m_showtime:       { name: '쇼타임+',                     description: 'HP -2. 에너지 +3.',                      effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
-  m_rose_bind:      { name: '로즈 바인+',                  description: '방어도 +13.',                            effects: [{ kind: 'block', amount: 13 }] },
-  m_mirror:         { name: '미러이미지+',                 description: '힘 +3.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
-  m_goblin_charge:  { name: '계약소환: 고블린 돌격대+',   description: '턴 종료 시 방어도 +4.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
-  m_ouroboros:      { name: '우로보로스+',                description: '15 데미지. 처치 시 영구 데미지 +6. 소멸.', effects: [{ kind: 'damage', amount: 15 }] },
+  m_summon_horus:   { name: '소환 : 기갑 골렘+',     description: '2장 드로우. 무작위 카드 1장 소멸.',      effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
+  m_blossom:        { name: '가시 회전+',              description: '15 데미지. 취약 +2. 약화 +2.',           effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
+  m_whip:           { name: '채찍 일격+',                     description: '7 데미지. 중독 +7.',                     effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
+  m_showtime:       { name: '무대 위로+',                     description: 'HP -2. 에너지 +3.',                      effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
+  m_rose_bind:      { name: '장미 덩굴+',                  description: '방어도 +13.',                            effects: [{ kind: 'block', amount: 13 }] },
+  m_mirror:         { name: '분신술+',                 description: '힘 +3.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
+  m_goblin_charge:  { name: '소환: 돌격 정령+',   description: '턴 종료 시 방어도 +4.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
+  m_ouroboros:      { name: '자기 재생+',                description: '15 데미지. 처치 시 영구 데미지 +6. 소멸.', effects: [{ kind: 'damage', amount: 15 }] },
   m_doll_forest:    { name: '인형의 숲+',                 description: '카드 소멸 시 에너지 +1, 카드 1장 드로우.', effects: [{ kind: 'apply_self', status: 'on_exhaust_energy', amount: 1 }, { kind: 'apply_self', status: 'on_exhaust_draw', amount: 1 }] },
-  m_astral_storm:   { name: '애스트럴 스톰+',              description: '42 데미지.',                             effects: [{ kind: 'damage', amount: 42 }] },
-  m_kasiyas:        { name: '정복자 카시야스+',            description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
+  m_astral_storm:   { name: '별빛 폭풍+',              description: '42 데미지.',                             effects: [{ kind: 'damage', amount: 42 }] },
+  m_kasiyas:        { name: '소환: 대정령+',            description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
   // 콤보 시너지
   m_amplify:        { name: '마력 증폭+',  description: '9 데미지. 직전이 스킬이면 +10 데미지.',
                        effects: [{ kind: 'damage', amount: 9 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 10 }] }] },
@@ -446,9 +446,9 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                        effects: [{ kind: 'damage', amount: 5, times: 3 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 5, times: 2 }] }] },
   m_arcane_burst:   { name: '비전 폭주+',  description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.',
                        effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
-  m_quasar:         { name: '퀘이사 익스플로전+',          description: '모든 적에게 28 데미지.',                 effects: [{ kind: 'damage_all', amount: 28 }] },
-  m_fusion:         { name: '퓨전 크래프트+',              description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
-  m_marionette:     { name: '마리오네트+',                 description: '모든 적에게 6 데미지.',                  effects: [{ kind: 'damage_all', amount: 6 }] },
+  m_quasar:         { name: '성간 폭발+',          description: '모든 적에게 28 데미지.',                 effects: [{ kind: 'damage_all', amount: 28 }] },
+  m_fusion:         { name: '원소 융합+',              description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
+  m_marionette:     { name: '인형 조종+',                 description: '모든 적에게 6 데미지.',                  effects: [{ kind: 'damage_all', amount: 6 }] },
   // 풀 확장
   m_frost_bolt:     { name: '냉기 화살+',   description: '8 데미지. 빙결 +2.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
   m_mana_charge:    { name: '마나 충전+',   description: '에너지 +2. 2장 드로우. 소멸.',           effects: [{ kind: 'energy', amount: 2 }, { kind: 'draw', amount: 2 }] },

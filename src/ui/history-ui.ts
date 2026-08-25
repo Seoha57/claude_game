@@ -5,11 +5,11 @@ import type { RunHistoryEntry } from '../run-history';
 import type { CharacterClass } from '../types';
 
 const CHAR_INFO: Record<CharacterClass, { name: string; emoji: string }> = {
-  swordmaster: { name: '귀검사',   emoji: '⚔️' },
-  gunner:      { name: '거너',     emoji: '🔫' },
+  swordmaster: { name: '검사',     emoji: '⚔️' },
+  gunner:      { name: '사수',     emoji: '🔫' },
   fighter:     { name: '격투가',   emoji: '🥊' },
   magician:    { name: '마법사',   emoji: '🔮' },
-  priest:      { name: '프리스트', emoji: '⛪' },
+  priest:      { name: '성직자',   emoji: '⛪' },
   thief:       { name: '도적',     emoji: '🗡️' },
 };
 

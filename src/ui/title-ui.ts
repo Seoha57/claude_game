@@ -26,7 +26,7 @@ export function renderTitle(): HTMLElement {
   };
 
   const append = () => {
-    wrapper.appendChild(el('h1', {}, '던전앤카드'));
+    wrapper.appendChild(el('h1', {}, '덱 오브 던전'));
     wrapper.appendChild(el('div', { class: 'subtitle' }, '덱빌더 로그라이트'));
 
     // 언락 진행도 표시 (전체 컨텐츠 X% 해제)

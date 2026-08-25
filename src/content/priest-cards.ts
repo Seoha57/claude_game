@@ -1,12 +1,12 @@
 import type { CardDef, CardInstance } from '../types';
 
-// 던파 프리스트(남) 4계열 — 크루세이더 / 인파이터 / 퇴마사 / 어벤저
+// 성직자 카드 정의
 // 시그니처: 회복·재생, 콤보 타격, HP 코스트 강타, 디버프 정화
 export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   // ── Starter ──
   p_smash: {
     id: 'p_smash',
-    name: '스매셔',
+    name: '강타',
     type: 'attack',
     rarity: 'starter',
     cost: 1,
@@ -16,7 +16,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_holy_guard: {
     id: 'p_holy_guard',
-    name: '홀리 가드',
+    name: '신성 방어',
     type: 'skill',
     rarity: 'starter',
     cost: 1,
@@ -28,7 +28,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   // ── Common ──
   p_lucky_strike: {
     id: 'p_lucky_strike',
-    name: '럭키 스트레이트',
+    name: '행운의 일격',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -38,7 +38,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_slow_heal: {
     id: 'p_slow_heal',
-    name: '슬로우 힐',
+    name: '서서히 치유',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -48,7 +48,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_cure: {
     id: 'p_cure',
-    name: '큐어',
+    name: '치유',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -74,7 +74,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_falling_phoenix: {
     id: 'p_falling_phoenix',
-    name: '낙봉추',
+    name: '봉황 추락',
     type: 'attack',
     rarity: 'common',
     cost: 2,
@@ -84,7 +84,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_gong_cham: {
     id: 'p_gong_cham',
-    name: '공참타',
+    name: '허공 가르기',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -94,7 +94,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_holy_chant: {
     id: 'p_holy_chant',
-    name: '성가',
+    name: '축복의 노래',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -107,7 +107,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_rage_grip: {
     id: 'p_rage_grip',
-    name: '분노의 움켜쥠',
+    name: '분노의 손아귀',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -120,7 +120,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_second_upper: {
     id: 'p_second_upper',
-    name: '세컨드 어퍼',
+    name: '이중 올려치기',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -135,7 +135,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   // ── Uncommon ──
   p_dragon_punch: {
     id: 'p_dragon_punch',
-    name: '창룡격',
+    name: '용격',
     type: 'attack',
     rarity: 'uncommon',
     cost: 2,
@@ -171,7 +171,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_doom_guardian: {
     id: 'p_doom_guardian',
-    name: '둠스가디언',
+    name: '파멸의 수호자',
     type: 'skill',
     rarity: 'uncommon',
     cost: 1,
@@ -195,7 +195,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_holy_charge: {
     id: 'p_holy_charge',
-    name: '홀리 차지',
+    name: '신성 충전',
     type: 'skill',
     rarity: 'uncommon',
     cost: 0,
@@ -209,7 +209,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_holy_sanctuary: {
     id: 'p_holy_sanctuary',
-    name: '홀리 생츄어리',
+    name: '신성 결계',
     type: 'skill',
     rarity: 'uncommon',
     cost: 2,
@@ -222,7 +222,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_grand_cross: {
     id: 'p_grand_cross',
-    name: '그랜드 크로스',
+    name: '대십자',
     type: 'attack',
     rarity: 'uncommon',
     cost: 2,
@@ -247,7 +247,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   // ── Rare ──
   p_apocalypse: {
     id: 'p_apocalypse',
-    name: '아포칼립스',
+    name: '종말의 심판',
     type: 'attack',
     rarity: 'rare',
     cost: 3,
@@ -259,7 +259,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_divine_punishment: {
     id: 'p_divine_punishment',
-    name: '디바인 퍼니쉬먼트',
+    name: '신벌',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -286,7 +286,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_immortal: {
     id: 'p_immortal',
-    name: '이모탈',
+    name: '불사',
     type: 'power',
     rarity: 'rare',
     cost: 2,
@@ -297,7 +297,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
   },
   p_true_avenger: {
     id: 'p_true_avenger',
-    name: '진 어벤저',
+    name: '궁극의 복수자',
     type: 'power',
     rarity: 'rare',
     cost: 1,
@@ -310,7 +310,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
     ],
   },
 
-  // ── 프리스트 콤보 시너지 ─────────────────────────────────────
+  // ── 성직자 콤보 시너지 ─────────────────────────────────────
   p_blessed_blade: {
     id: 'p_blessed_blade',
     name: '축복의 칼날',
@@ -351,7 +351,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_per_attack', amount: 3 }],
   },
 
-  // ── 풀 확장 (프리스트) ────────────────────────────────────
+  // ── 풀 확장 (성직자) ────────────────────────────────────
   p_holy_shield: {
     id: 'p_holy_shield',
     name: '신성한 방패',
@@ -401,7 +401,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
     exhaust: true,
   },
 
-  // ── 풀 균형 (프리스트 common +2) ──────────────────────────
+  // ── 풀 균형 (성직자 common +2) ──────────────────────────
   p_prayer: {
     id: 'p_prayer',
     name: '기도',
@@ -426,31 +426,31 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
 
 // ── Upgrade map ──
 export const PRIEST_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
-  p_smash:             { name: '스매셔+',          description: '9 데미지.',                              effects: [{ kind: 'damage', amount: 9 }] },
-  p_holy_guard:        { name: '홀리 가드+',       description: '방어도 +8.',                             effects: [{ kind: 'block', amount: 8 }] },
-  p_lucky_strike:      { name: '럭키 스트레이트+', description: '11 데미지. 1장 드로우.',                 effects: [{ kind: 'damage', amount: 11 }, { kind: 'draw', amount: 1 }] },
-  p_slow_heal:         { name: '슬로우 힐+',       description: '재생 +4.',                               effects: [{ kind: 'apply_self', status: 'regen', amount: 4 }] },
-  p_cure:              { name: '큐어+',            description: '방어도 +8. 12 회복.',                    effects: [{ kind: 'block', amount: 8 }, { kind: 'heal', amount: 12 }] },
+  p_smash:             { name: '강타+',          description: '9 데미지.',                              effects: [{ kind: 'damage', amount: 9 }] },
+  p_holy_guard:        { name: '신성 방어+',       description: '방어도 +8.',                             effects: [{ kind: 'block', amount: 8 }] },
+  p_lucky_strike:      { name: '행운의 일격+', description: '11 데미지. 1장 드로우.',                 effects: [{ kind: 'damage', amount: 11 }, { kind: 'draw', amount: 1 }] },
+  p_slow_heal:         { name: '서서히 치유+',       description: '재생 +4.',                               effects: [{ kind: 'apply_self', status: 'regen', amount: 4 }] },
+  p_cure:              { name: '치유+',            description: '방어도 +8. 12 회복.',                    effects: [{ kind: 'block', amount: 8 }, { kind: 'heal', amount: 12 }] },
   p_pure_blade:        { name: '순백의 칼날+',     description: '12 데미지. 취약 +2.',                    effects: [{ kind: 'damage', amount: 12 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }] },
-  p_falling_phoenix:   { name: '낙봉추+',          description: '19 데미지.',                             effects: [{ kind: 'damage', amount: 19 }] },
-  p_gong_cham:         { name: '공참타+',          description: '8 데미지 2회.',                          effects: [{ kind: 'damage', amount: 8, times: 2 }] },
-  p_holy_chant:        { name: '성가+',            description: '힘 +2. 1장 드로우.',                     effects: [{ kind: 'apply_self', status: 'strength', amount: 2 }, { kind: 'draw', amount: 1 }] },
-  p_rage_grip:         { name: '분노의 움켜쥠+',   description: 'HP -3. 19 데미지.',                      effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 19 }] },
-  p_second_upper:      { name: '세컨드 어퍼+',     description: '10 데미지. 약화 +2.',                    effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
-  p_dragon_punch:      { name: '창룡격+',          description: '7 데미지 3회.',                          effects: [{ kind: 'damage', amount: 7, times: 3 }] },
+  p_falling_phoenix:   { name: '봉황 추락+',          description: '19 데미지.',                             effects: [{ kind: 'damage', amount: 19 }] },
+  p_gong_cham:         { name: '허공 가르기+',          description: '8 데미지 2회.',                          effects: [{ kind: 'damage', amount: 8, times: 2 }] },
+  p_holy_chant:        { name: '축복의 노래+',            description: '힘 +2. 1장 드로우.',                     effects: [{ kind: 'apply_self', status: 'strength', amount: 2 }, { kind: 'draw', amount: 1 }] },
+  p_rage_grip:         { name: '분노의 손아귀+',   description: 'HP -3. 19 데미지.',                      effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 19 }] },
+  p_second_upper:      { name: '이중 올려치기+',     description: '10 데미지. 약화 +2.',                    effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
+  p_dragon_punch:      { name: '용격+',          description: '7 데미지 3회.',                          effects: [{ kind: 'damage', amount: 7, times: 3 }] },
   p_holy_water:        { name: '성수+',            description: '16 회복. 방어도 +10.',                   effects: [{ kind: 'heal', amount: 16 }, { kind: 'block', amount: 10 }] },
   p_punishment:        { name: '징벌+',            description: '24 데미지. 약화 +3.',                    effects: [{ kind: 'damage', amount: 24 }, { kind: 'apply_enemy', status: 'weak', amount: 3 }] },
-  p_doom_guardian:     { name: '둠스가디언+',      description: '방어도 +16. 가시 +5.',                   effects: [{ kind: 'block', amount: 16 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
+  p_doom_guardian:     { name: '파멸의 수호자+',      description: '방어도 +16. 가시 +5.',                   effects: [{ kind: 'block', amount: 16 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
   p_victory_spear:     { name: '승리의 창+',       description: '30 데미지. 사용할 때마다 영구 데미지 +3.', effects: [{ kind: 'damage', amount: 30 }] },
-  p_holy_charge:       { name: '홀리 차지+',       description: '에너지 +1. 2장 드로우.',                 effects: [{ kind: 'energy', amount: 1 }, { kind: 'draw', amount: 2 }] },
-  p_holy_sanctuary:    { name: '홀리 생츄어리+',   description: '모든 적에게 약화 +3. 재생 +5.',          effects: [{ kind: 'apply_all', status: 'weak', amount: 3 }, { kind: 'apply_self', status: 'regen', amount: 5 }] },
-  p_grand_cross:       { name: '그랜드 크로스+',   description: '모든 적에게 15 데미지.',                 effects: [{ kind: 'damage_all', amount: 15 }] },
+  p_holy_charge:       { name: '신성 충전+',       description: '에너지 +1. 2장 드로우.',                 effects: [{ kind: 'energy', amount: 1 }, { kind: 'draw', amount: 2 }] },
+  p_holy_sanctuary:    { name: '신성 결계+',   description: '모든 적에게 약화 +3. 재생 +5.',          effects: [{ kind: 'apply_all', status: 'weak', amount: 3 }, { kind: 'apply_self', status: 'regen', amount: 5 }] },
+  p_grand_cross:       { name: '대십자+',   description: '모든 적에게 15 데미지.',                 effects: [{ kind: 'damage_all', amount: 15 }] },
   p_painful_joy:       { name: '고통의 희열+',     description: 'HP -4. 힘 +4.',                          effects: [{ kind: 'lose_hp', amount: 4 }, { kind: 'apply_self', status: 'strength', amount: 4 }] },
-  p_apocalypse:        { name: '아포칼립스+',      description: '40 데미지. 처치 시 영구 데미지 +5.',     effects: [{ kind: 'damage', amount: 40 }] },
-  p_divine_punishment: { name: '디바인 퍼니쉬먼트+', description: '모든 적에게 18 데미지. 화상 +4.',     effects: [{ kind: 'damage_all', amount: 18 }, { kind: 'apply_all', status: 'burn', amount: 4 }] },
+  p_apocalypse:        { name: '종말의 심판+',      description: '40 데미지. 처치 시 영구 데미지 +5.',     effects: [{ kind: 'damage', amount: 40 }] },
+  p_divine_punishment: { name: '신벌+', description: '모든 적에게 18 데미지. 화상 +4.',     effects: [{ kind: 'damage_all', amount: 18 }, { kind: 'apply_all', status: 'burn', amount: 4 }] },
   p_holy_judgment:     { name: '신성의 심판+',     description: '18 회복. 재생 +6.',                     effects: [{ kind: 'heal', amount: 18 }, { kind: 'apply_self', status: 'regen', amount: 6 }] },
-  p_immortal:          { name: '이모탈+',          description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
-  p_true_avenger:      { name: '진 어벤저+',       description: 'HP -6. 힘 +3. 민첩 +2.',                 effects: [{ kind: 'lose_hp', amount: 6 }, { kind: 'apply_self', status: 'strength', amount: 3 }, { kind: 'apply_self', status: 'dexterity', amount: 2 }] },
+  p_immortal:          { name: '불사+',          description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
+  p_true_avenger:      { name: '궁극의 복수자+',       description: 'HP -6. 힘 +3. 민첩 +2.',                 effects: [{ kind: 'lose_hp', amount: 6 }, { kind: 'apply_self', status: 'strength', amount: 3 }, { kind: 'apply_self', status: 'dexterity', amount: 2 }] },
   // 콤보 시너지
   p_blessed_blade:     { name: '축복의 칼날+',     description: '11 데미지. 직전이 스킬이면 +9 데미지.',
                           effects: [{ kind: 'damage', amount: 11 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 9 }] }] },

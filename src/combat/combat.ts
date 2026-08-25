@@ -212,7 +212,7 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
     if (c.maxHp !== undefined) {
       c.hp = Math.min(c.maxHp, c.hp + regen);
       state.log.push(`${name} 재생 ${regen} 회복`);
-      // 프리스트 신성한 인장: 재생이 발동할 때마다 방어도 +3
+      // 성직자 신성한 인장: 재생이 발동할 때마다 방어도 +3
       if (c === state.player) {
         const run = getRunOrNull();
         if (run?.player.relics.includes('holy_seal')) {

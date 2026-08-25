@@ -9,13 +9,14 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         cleanupOutdatedCaches: true,
-        // SPA fallback — every route returns index.html (the game is a single page)
         navigateFallback: '/index.html',
+        skipWaiting: true,
+        clientsClaim: true,
       },
       manifest: {
-        name: '던전앤카드',
-        short_name: 'DnC',
-        description: 'DFO 테마 덱빌더 로그라이트',
+        name: '덱 오브 던전',
+        short_name: 'DoD',
+        description: '덱빌더 로그라이트',
         theme_color: '#1a1416',
         background_color: '#1a1416',
         display: 'standalone',

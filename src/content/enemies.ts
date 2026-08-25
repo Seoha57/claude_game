@@ -407,13 +407,13 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   // ── Chapter 2 alternate bosses ──
   karnak_runemaster: {
     id: 'karnak_runemaster',
-    name: '카르낙 룬마스터',
+    name: '고대 룬술사',
     hpRange: [255, 268],
     isBoss: true,
     onHalfHp(state, self) {
       applyStatus(self, 'strength', 4);
       applyStatus(state.player, 'vulnerable', 2);
-      return '룬이 폭주한다! (힘 +4, 플레이어 취약 +2)';
+      return '고대 룬이 폭주한다! (힘 +4, 플레이어 취약 +2)';
     },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '의식 +2' };
@@ -441,16 +441,16 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   },
   sirocco_phantom: {
     id: 'sirocco_phantom',
-    name: '시로코의 환영',
+    name: '태고의 환영',
     hpRange: [260, 275],
     isBoss: true,
     onHalfHp(_state, self) {
       applyStatus(self, 'strength', 4);
       applyStatus(self, 'ritual', 2);
-      return '용의 본 모습이 드러난다! (힘 +4, 의식 +2)';
+      return '태고의 본 모습이 드러난다! (힘 +4, 의식 +2)';
     },
     decideIntent(_state, _self, turn) {
-      if (turn === 0) return { kind: 'buff', label: '용의 분노: 힘+2 의식+1' };
+      if (turn === 0) return { kind: 'buff', label: '태고의 분노: 힘+2 의식+1' };
       const cycle = (turn - 1) % 5;
       if (cycle === 0) return { kind: 'attack', damage: 14, hits: 1, label: '14' };
       if (cycle === 1) return { kind: 'buff', label: '힘 +2' };
@@ -530,7 +530,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   // ── Chapter 3 alternate bosses ──
   death_apostle: {
     id: 'death_apostle',
-    name: '죽음의 사도 케이지',
+    name: '죽음의 사도',
     hpRange: [310, 325],
     isBoss: true,
     onHalfHp(_state, self) {
@@ -563,14 +563,14 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   },
   isaris_overlord: {
     id: 'isaris_overlord',
-    name: '이샤리스의 군림자',
+    name: '심연의 군림자',
     hpRange: [320, 340],
     isBoss: true,
     onHalfHp(_state, self) {
       applyStatus(self, 'metallicize', 5);
       applyStatus(self, 'thorns', 5);
       applyStatus(self, 'strength', 2);
-      return '진정한 군림자의 자세! (금속화 +5, 가시 +5, 힘 +2)';
+      return '심연의 군림! (금속화 +5, 가시 +5, 힘 +2)';
     },
     decideIntent(_state, _self, turn) {
       if (turn === 0) return { kind: 'buff', label: '금속화 +5, 가시 +5' };
@@ -724,7 +724,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   // ─────────────────────────────────────────────────────────
   arcane_scholar: {
     id: 'arcane_scholar',
-    name: '마도 학자',
+    name: '어둠 학자',
     hpRange: [42, 48],
     decideIntent(_state, _self, turn) {
       const i = turn % 4;
@@ -951,7 +951,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   // Chapter 3
   exorcist_hunter: {
     id: 'exorcist_hunter',
-    name: '퇴마사 헌터',
+    name: '퇴마 사냥꾼',
     hpRange: [68, 76],
     decideIntent(_state, _self, turn) {
       const i = turn % 3;

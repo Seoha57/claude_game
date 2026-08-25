@@ -71,11 +71,11 @@ export function renderCodex(): HTMLElement {
     const filterRow = el('div', { class: 'codex-filter-row' });
     const filters: { key: CardFilter; label: string }[] = [
       { key: 'all', label: '전체' },
-      { key: 'swordmaster', label: '귀검사' },
-      { key: 'gunner', label: '거너' },
+      { key: 'swordmaster', label: '검사' },
+      { key: 'gunner', label: '사수' },
       { key: 'fighter', label: '격투가' },
       { key: 'magician', label: '마법사' },
-      { key: 'priest', label: '프리스트' },
+      { key: 'priest', label: '성직자' },
       { key: 'thief', label: '도적' },
     ];
     for (const f of filters) {
