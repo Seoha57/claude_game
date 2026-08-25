@@ -177,11 +177,20 @@ export function endPlayerTurn(state: CombatState): void {
     const enemyName = ENEMY_DEFS[e.defId]?.name ?? e.defId;
     applyStartOfTurnStatuses(e, state, enemyName);
     if (e.hp <= 0) continue;
+    // 보스 빙결 면역 쿨다운 감소
+    if ((e.freezeImmuneTurns ?? 0) > 0) {
+      e.freezeImmuneTurns! -= 1;
+    }
     // Freeze — skip enemy action, consume one stack
     const frozen = getStatus(e.statuses, 'freeze');
     if (frozen > 0) {
       state.log.push(`${enemyName} 빙결 — 행동 불가`);
       applyStatus(e, 'freeze', -1);
+      // 빙결이 완전히 풀리면 보스에게 2턴 면역 부여
+      if (getStatus(e.statuses, 'freeze') <= 0 && ENEMY_DEFS[e.defId]?.isBoss) {
+        e.freezeImmuneTurns = 2;
+        state.log.push(`${enemyName} 빙결 저항 — 2턴간 면역`);
+      }
     } else {
       ENEMY_DEFS[e.defId].act(state, e);
       if (state.player.hp <= 0) {

@@ -223,19 +223,23 @@ function statusName(key: string): string {
   return (STATUS_INFO as any)[key]?.name ?? key;
 }
 
-// 적에게 상태이상 적용. 보스는 빙결 저항 — 빙결이 최대 1을 넘지 않도록 캡하여
-// 무한 행동 봉인을 막는다. (일반 적/엘리트엔 제한 없음)
+// 적에게 상태이상 적용. 보스는 빙결 저항:
+// 1) 최대 1턴만 빙결  2) 해제 후 2턴간 면역
 function applyEnemyStatus(e: Enemy, status: any, amount: number, log: (s: string) => void): void {
   const def = ENEMY_DEFS[e.defId];
   if (status === 'freeze' && def?.isBoss && amount > 0) {
+    if ((e.freezeImmuneTurns ?? 0) > 0) {
+      log(`${def.name} 빙결 면역 — ${e.freezeImmuneTurns}턴 남음`);
+      return;
+    }
     const cur = getStatus(e.statuses, 'freeze');
-    const allowed = Math.max(0, 1 - cur); // 보스는 빙결 1까지만
+    const allowed = Math.max(0, 1 - cur);
     if (allowed <= 0) {
-      log(`${ENEMY_DEFS[e.defId]?.name ?? e.defId} 빙결 저항 — 더 얼지 않음`);
+      log(`${def.name} 빙결 저항 — 더 얼지 않음`);
       return;
     }
     applyStatus(e, 'freeze', allowed);
-    log(`${ENEMY_DEFS[e.defId]?.name ?? e.defId} 빙결 +${allowed} (보스 저항)`);
+    log(`${def.name} 빙결 +${allowed} (보스 저항)`);
     return;
   }
   applyStatus(e, status, amount);

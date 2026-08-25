@@ -129,6 +129,7 @@ export interface Enemy extends Combatant {
   intent: Intent;
   turn: number;
   phaseTriggered?: boolean;
+  freezeImmuneTurns?: number;
 }
 
 export interface CombatState {
