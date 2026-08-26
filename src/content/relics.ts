@@ -215,6 +215,64 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     rarity: 'rare',
   },
 
+  // ── Elite relics (shared) ──
+  war_drum: {
+    id: 'war_drum',
+    name: '전쟁의 북',
+    description: '전투 시작 시 모든 적에게 약화 +1, 취약 +1.',
+    rarity: 'elite',
+  },
+  trophy_necklace: {
+    id: 'trophy_necklace',
+    name: '전리품 목걸이',
+    description: '전투 승리 시 HP 8 회복, 골드 +12.',
+    rarity: 'elite',
+  },
+
+  // ── Elite relics (class-specific) ──
+  master_scabbard: {
+    id: 'master_scabbard',
+    name: '명검의 칼집',
+    description: '전투 시작 시 힘 +2, 카드 1장 드로우.',
+    rarity: 'elite',
+    forClass: 'swordmaster',
+  },
+  incendiary_round: {
+    id: 'incendiary_round',
+    name: '소이탄',
+    description: '전투 시작 시 모든 적에게 화상 +3.',
+    rarity: 'elite',
+    forClass: 'gunner',
+  },
+  iron_gauntlet: {
+    id: 'iron_gauntlet',
+    name: '철권 장갑',
+    description: '전투 시작 시 가시 +4, 방어도 +8.',
+    rarity: 'elite',
+    forClass: 'fighter',
+  },
+  arcane_focus: {
+    id: 'arcane_focus',
+    name: '비전 집중',
+    description: '전투 시작 시 모든 적에게 취약 +2, 카드 1장 드로우.',
+    rarity: 'elite',
+    forClass: 'magician',
+  },
+  blessed_water: {
+    id: 'blessed_water',
+    name: '축복의 성수',
+    description: '전투 시작 시 재생 +4, 금속화 +3.',
+    rarity: 'elite',
+    forClass: 'priest',
+  },
+  lethal_poison: {
+    id: 'lethal_poison',
+    name: '치명적 독',
+    description: '전투 시작 시 모든 적에게 중독 +5.',
+    rarity: 'elite',
+    forClass: 'thief',
+  },
+
   // ── Boss relics ──
   energy_core: {
     id: 'energy_core',
@@ -255,5 +313,6 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
 };
 
 export const RELIC_LIST = Object.values(RELIC_DEFS);
-export const PICKABLE_RELICS = RELIC_LIST.filter((r) => r.rarity !== 'starter' && r.rarity !== 'boss');
+export const PICKABLE_RELICS = RELIC_LIST.filter((r) => r.rarity !== 'starter' && r.rarity !== 'boss' && r.rarity !== 'elite');
+export const ELITE_RELICS = RELIC_LIST.filter((r) => r.rarity === 'elite');
 export const BOSS_RELICS = RELIC_LIST.filter((r) => r.rarity === 'boss');

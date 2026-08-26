@@ -9,7 +9,7 @@ function filterUnlocked(pool: CardDef[], ignoreLocks: boolean): CardDef[] {
   const out = pool.filter((c) => isCardUnlocked(c));
   return out.length > 0 ? out : pool; // 모두 잠겨있을 때 fallback
 }
-import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
+import { PICKABLE_RELICS, ELITE_RELICS, RELIC_DEFS } from '../content/relics';
 import { nodeById } from '../map/map';
 import { makeRng, pick, shuffle } from '../rng';
 import { playSfx } from '../audio';
@@ -93,9 +93,19 @@ function ensureReward(): RewardChoiceUI {
   }
 
   const gold = isElite ? 25 + Math.floor(rng() * 10) : 10 + Math.floor(rng() * 10);
-  const unlockedRelics = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
-  const relicPool = unlockedRelics.length > 0 ? unlockedRelics : PICKABLE_RELICS;
-  const relicId = isElite ? pick(rng, relicPool).id : null;
+  let relicId: string | null = null;
+  if (isElite) {
+    const classRelics = ELITE_RELICS.filter((r) => !r.forClass || r.forClass === run.characterClass);
+    const unowned = classRelics.filter((r) => !run.player.relics.includes(r.id));
+    if (unowned.length > 0) {
+      relicId = pick(rng, unowned).id;
+    } else {
+      const unlockedRelics = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
+      const pool = unlockedRelics.length > 0 ? unlockedRelics : PICKABLE_RELICS;
+      const fallback = pool.filter((r) => !run.player.relics.includes(r.id));
+      if (fallback.length > 0) relicId = pick(rng, fallback).id;
+    }
+  }
 
   cachedReward = { cardChoices: choices, gold, relicId, picked: false };
   // Codex: shown card choices + relic option

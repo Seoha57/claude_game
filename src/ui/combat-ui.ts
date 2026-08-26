@@ -973,6 +973,10 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
     if (run.player.relics.includes('rich_seal')) {
       run.player.gold += 8;
     }
+    if (run.player.relics.includes('trophy_necklace')) {
+      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
+      run.player.gold += 12;
+    }
     // Potion drop
     if (run.player.potions.length < 3) {
       const isElite = cur?.kind === 'elite';

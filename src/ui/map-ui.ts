@@ -249,6 +249,29 @@ function enterNode(n: MapNode): void {
         applyStatus(cs.player, 'dexterity', 1);
       }
       if (run.player.relics.includes('holy_chalice')) applyStatus(cs.player, 'regen', 3);
+      // Elite relics
+      if (run.player.relics.includes('war_drum')) {
+        for (const e of cs.enemies) { applyStatus(e, 'weak', 1); applyStatus(e, 'vulnerable', 1); }
+      }
+      if (run.player.relics.includes('master_scabbard')) {
+        applyStatus(cs.player, 'strength', 2); drawCards(cs, 1);
+      }
+      if (run.player.relics.includes('incendiary_round')) {
+        for (const e of cs.enemies) applyStatus(e, 'burn', 3);
+      }
+      if (run.player.relics.includes('iron_gauntlet')) {
+        applyStatus(cs.player, 'thorns', 4); cs.player.block += 8;
+      }
+      if (run.player.relics.includes('arcane_focus')) {
+        for (const e of cs.enemies) applyStatus(e, 'vulnerable', 2);
+        drawCards(cs, 1);
+      }
+      if (run.player.relics.includes('blessed_water')) {
+        applyStatus(cs.player, 'regen', 4); applyStatus(cs.player, 'metallicize', 3);
+      }
+      if (run.player.relics.includes('lethal_poison')) {
+        for (const e of cs.enemies) applyStatus(e, 'poison', 5);
+      }
 
       setCombat(cs);
       setScreen('combat');

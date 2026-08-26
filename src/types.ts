@@ -198,5 +198,6 @@ export interface RelicDef {
   id: string;
   name: string;
   description: string;
-  rarity: 'starter' | 'common' | 'uncommon' | 'rare' | 'boss';
+  rarity: 'starter' | 'common' | 'uncommon' | 'rare' | 'elite' | 'boss';
+  forClass?: CharacterClass;
 }
