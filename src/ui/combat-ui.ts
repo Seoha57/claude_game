@@ -1,6 +1,6 @@
 import { el } from './dom';
 import { getRunOrNull, getScreen, getCombatOrNull } from '../state';
-import { RELIC_DEFS } from '../content/relics';
+import { RELIC_DEFS, getActiveSynergies } from '../content/relics';
 import { getCombat, getRun, setCombat, setScreen, rerender } from '../state';
 import { getEffectiveDef } from '../content/cards';
 import { openDeckOverlay } from './deck-overlay';
@@ -491,18 +491,32 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
 }
 
 function renderRelicBar(relics: string[]): HTMLElement {
+  const wrapper = el('div', { class: 'relic-bar-wrapper' });
   const bar = el('div', { class: 'relic-bar' });
+  const activeSynergies = getActiveSynergies(relics);
   for (const id of relics) {
     const def = RELIC_DEFS[id];
     if (!def) continue;
+    const synFor = activeSynergies.filter((s) => s.relics.includes(id));
+    const synText = synFor.map((s) => `⚡ ${s.name}: ${s.description}`).join('\n');
+    const tooltip = synText ? `${def.name}\n${def.description}\n${synText}` : `${def.name}\n${def.description}`;
+    const hasSynergy = synFor.length > 0;
     bar.appendChild(
       el('div', {
-        class: 'relic-chip',
-        'data-tooltip': `${def.name}\n${def.description}`,
+        class: `relic-chip${hasSynergy ? ' synergy-active' : ''}`,
+        'data-tooltip': tooltip,
       }, def.name),
     );
   }
-  return bar;
+  wrapper.appendChild(bar);
+  if (activeSynergies.length > 0) {
+    const synRow = el('div', { class: 'synergy-row' });
+    for (const s of activeSynergies) {
+      synRow.appendChild(el('span', { class: 'synergy-tag' }, `⚡ ${s.name}`));
+    }
+    wrapper.appendChild(synRow);
+  }
+  return wrapper;
 }
 
 function renderPotionBar(state: CombatState): HTMLElement {
@@ -976,6 +990,12 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
     if (run.player.relics.includes('trophy_necklace')) {
       run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
       run.player.gold += 12;
+    }
+    for (const syn of getActiveSynergies(run.player.relics)) {
+      if (syn.timing !== 'combat_end') continue;
+      if (syn.id === 'undying') {
+        run.player.hp = Math.min(run.player.maxHp, run.player.hp + 10);
+      }
     }
     // Potion drop
     if (run.player.potions.length < 3) {

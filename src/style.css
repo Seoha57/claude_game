@@ -519,6 +519,25 @@ button:disabled {
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 .relic-chip[data-tooltip]:hover::after { opacity: 1; }
+.relic-chip.synergy-active {
+  border-color: #ffd700;
+  color: #ffd700;
+  box-shadow: 0 0 4px rgba(255, 215, 0, 0.3);
+}
+.synergy-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.synergy-tag {
+  font-size: 10px;
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
 
 .combat-mid {
   display: flex;

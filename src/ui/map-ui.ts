@@ -23,7 +23,7 @@ import { applyStatus } from '../combat/statuses';
 import { drawCards } from '../combat/effects';
 import type { MapNode, NodeKind } from '../types';
 import { makeRng } from '../rng';
-import { RELIC_DEFS } from '../content/relics';
+import { RELIC_DEFS, getActiveSynergies } from '../content/relics';
 import { ENEMY_DEFS } from '../content/enemies';
 import { ENEMY_ART, resetCombatUiState } from './combat-ui';
 import { showBossIntro } from './splash-overlay';
@@ -271,6 +271,28 @@ function enterNode(n: MapNode): void {
       }
       if (run.player.relics.includes('lethal_poison')) {
         for (const e of cs.enemies) applyStatus(e, 'poison', 5);
+      }
+      // Synergy sets
+      for (const syn of getActiveSynergies(run.player.relics)) {
+        if (syn.timing !== 'combat_start') continue;
+        cs.log.push(`⚡ 시너지: ${syn.name}`);
+        switch (syn.id) {
+          case 'eye_of_storm':
+            for (const e of cs.enemies) applyStatus(e, 'vulnerable', 1);
+            break;
+          case 'time_beyond':
+            cs.player.energy += 1;
+            break;
+          case 'exploit_weakness':
+            for (const e of cs.enemies) applyStatus(e, 'frail', 1);
+            break;
+          case 'warlord':
+            applyStatus(cs.player, 'strength', 2);
+            break;
+          case 'guardians_oath':
+            applyStatus(cs.player, 'metallicize', 4);
+            break;
+        }
       }
 
       setCombat(cs);

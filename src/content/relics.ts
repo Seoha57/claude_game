@@ -312,6 +312,64 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   },
 };
 
+// ── 시너지 세트 ──
+export interface SynergySet {
+  id: string;
+  name: string;
+  relics: [string, string];
+  description: string;
+  timing: 'combat_start' | 'combat_end';
+}
+
+export const SYNERGY_SETS: SynergySet[] = [
+  {
+    id: 'eye_of_storm',
+    name: '폭풍의 눈',
+    relics: ['storm_banner', 'storm_core'],
+    description: '전투 시작 시 모든 적에게 취약 +1.',
+    timing: 'combat_start',
+  },
+  {
+    id: 'time_beyond',
+    name: '시간 초월',
+    relics: ['hourglass', 'eternal_hourglass'],
+    description: '전투 시작 시 에너지 +1.',
+    timing: 'combat_start',
+  },
+  {
+    id: 'undying',
+    name: '불굴의 생명력',
+    relics: ['burning_blood', 'meat_on_the_bone'],
+    description: '전투 종료 시 HP 10 추가 회복.',
+    timing: 'combat_end',
+  },
+  {
+    id: 'exploit_weakness',
+    name: '약점 간파',
+    relics: ['bag_of_marbles', 'frozen_dart'],
+    description: '전투 시작 시 모든 적에게 쇠약 +1.',
+    timing: 'combat_start',
+  },
+  {
+    id: 'warlord',
+    name: '전쟁의 군주',
+    relics: ['vajra', 'fury_banner'],
+    description: '전투 시작 시 힘 +2 추가.',
+    timing: 'combat_start',
+  },
+  {
+    id: 'guardians_oath',
+    name: '수호자의 맹세',
+    relics: ['anchor', 'dragon_scale'],
+    description: '전투 시작 시 금속화 +4.',
+    timing: 'combat_start',
+  },
+];
+
+export function getActiveSynergies(relicIds: string[]): SynergySet[] {
+  return SYNERGY_SETS.filter((s) => s.relics.every((r) => relicIds.includes(r)));
+}
+
 export const RELIC_LIST = Object.values(RELIC_DEFS);
 export const PICKABLE_RELICS = RELIC_LIST.filter((r) => r.rarity !== 'starter' && r.rarity !== 'boss' && r.rarity !== 'elite');
 export const ELITE_RELICS = RELIC_LIST.filter((r) => r.rarity === 'elite');

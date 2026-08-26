@@ -1,7 +1,7 @@
 import { el } from './dom';
 import { setScreen } from '../state';
 import { CARD_DEFS } from '../content/cards';
-import { RELIC_DEFS } from '../content/relics';
+import { RELIC_DEFS, SYNERGY_SETS } from '../content/relics';
 import { getSeenCards, getSeenRelics, resetCodex } from '../codex';
 import { isCurseLike } from './deck-overlay';
 import type { CardDef, RelicDef } from '../types';
@@ -11,10 +11,10 @@ type Tab = 'cards' | 'relics';
 type CardFilter = 'all' | 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief';
 
 const RARITY_LABEL: Record<string, string> = {
-  starter: '시작', common: '커먼', uncommon: '언커먼', rare: '레어', boss: '보스',
+  starter: '시작', common: '커먼', uncommon: '언커먼', rare: '레어', elite: '엘리트', boss: '보스',
 };
 const RARITY_COLOR: Record<string, string> = {
-  starter: '#888', common: '#888', uncommon: '#5599dd', rare: '#d4aa44', boss: '#ff8030',
+  starter: '#888', common: '#888', uncommon: '#5599dd', rare: '#d4aa44', elite: '#ff55aa', boss: '#ff8030',
 };
 
 export function renderCodex(): HTMLElement {
@@ -183,9 +183,18 @@ function renderRelicSlot(def: RelicDef, isSeen: boolean): HTMLElement {
         RARITY_LABEL[def.rarity] ?? def.rarity),
     );
   }
+  const synInfo = SYNERGY_SETS.filter((s) => s.relics.includes(def.id))
+    .map((s) => {
+      const partner = s.relics.find((r) => r !== def.id)!;
+      const partnerDef = RELIC_DEFS[partner];
+      return `⚡ ${partnerDef?.name ?? partner} → ${s.name}`;
+    }).join('\n');
+  const desc = unlocked
+    ? (synInfo ? `${def.description}\n${synInfo}` : def.description)
+    : lockText;
   return el('div', { class: cls },
     el('div', { class: 'codex-relic-name' }, unlocked ? def.name : '🔒 ???'),
-    el('div', { class: 'codex-relic-desc' }, unlocked ? def.description : lockText),
+    el('div', { class: 'codex-relic-desc', style: { whiteSpace: 'pre-line' } }, desc),
     el('div', { class: 'codex-relic-rarity', style: { color: rarityColor } },
       RARITY_LABEL[def.rarity] ?? def.rarity),
   );
