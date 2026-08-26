@@ -4,6 +4,7 @@ export type EventEffect =
   | { kind: 'gold'; amount: number }
   | { kind: 'lose_gold'; amount: number }
   | { kind: 'add_curse'; count: number }
+  | { kind: 'add_blessing'; count: number }
   | { kind: 'upgrade_random'; count: number }
   | { kind: 'add_random_relic' }
   | { kind: 'add_card'; rarity: 'common' | 'uncommon' | 'rare' }
@@ -272,6 +273,30 @@ export const EVENT_DEFS: EventDef[] = [
       { label: '뽑아든다', result: '검의 힘을 얻었지만 어두운 흔적이 덱에 새겨졌다.', effects: [{ kind: 'add_card', rarity: 'rare' }, { kind: 'add_curse', count: 1 }] },
       { label: '천으로 감싸 가져간다 (HP -3)', result: '저주를 막으며 검의 힘만 흡수했다.', effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'add_card', rarity: 'uncommon' }] },
       { label: '그대로 둔다', result: '현명한 판단이었다.', effects: [] },
+    ],
+  },
+  {
+    id: 'holy_spring',
+    title: '축복받은 샘',
+    emoji: '⛲',
+    mood: 'warm',
+    description: '빛나는 샘이 신성한 기운을 뿜어내고 있다. 그 안에 무언가 빛나는 것이 보인다.',
+    choices: [
+      { label: '기도를 올린다 (HP -5)', result: '샘의 축복이 덱에 깃들었다.', effects: [{ kind: 'lose_hp', amount: 5 }, { kind: 'add_blessing', count: 2 }] },
+      { label: '물을 마신다', result: '몸에 활력이 돈다.', effects: [{ kind: 'heal', amount: 15 }] },
+      { label: '그냥 지나친다', result: '조용히 자리를 떴다.', effects: [] },
+    ],
+  },
+  {
+    id: 'cursed_tome',
+    title: '저주받은 서고',
+    emoji: '📕',
+    mood: 'dark',
+    description: '먼지 쌓인 서고에서 두 권의 책이 눈에 띈다. 하나는 빛나고, 하나는 어둠을 품고 있다.',
+    choices: [
+      { label: '빛나는 책을 펼친다', result: '축복의 힘이 깃들었지만, 어둠도 함께 스며들었다.', effects: [{ kind: 'add_blessing', count: 1 }, { kind: 'add_curse', count: 1 }] },
+      { label: '어두운 책을 펼친다', result: '강력한 힘을 얻었지만 대가가 따른다.', effects: [{ kind: 'add_card', rarity: 'rare' }, { kind: 'add_curse', count: 2 }] },
+      { label: '둘 다 내려놓는다', result: '현명한 선택이다.', effects: [{ kind: 'upgrade_random', count: 1 }] },
     ],
   },
 ];

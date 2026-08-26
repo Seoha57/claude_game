@@ -98,8 +98,9 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
   document.body.appendChild(overlay);
 }
 
+const CURSE_IDS = new Set(['wound', 'decay', 'parasite', 'doubt']);
 export function isCurseLike(id: string): boolean {
-  return id === 'wound';
+  return CURSE_IDS.has(id);
 }
 
 function typeLabel(t: string): string {

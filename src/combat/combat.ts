@@ -146,16 +146,26 @@ function applyStartOfTurnStatuses(c: any, state: CombatState, name: string): voi
 
 export function endPlayerTurn(state: CombatState): void {
   const p = state.player;
-  // End-of-turn hand handling:
-  // - retain: stays in hand
-  // - ethereal (and not retain): exhausts
-  // - others: discard
+
+  // 저주 카드 턴 종료 효과 (손에 있을 때)
+  for (const c of p.hand) {
+    if (c.defId === 'decay') {
+      p.hp = Math.max(0, p.hp - 2);
+      state.log.push('부식 → HP -2');
+    } else if (c.defId === 'doubt') {
+      applyStatus(p, 'weak', 1);
+      state.log.push('의심 → 약화 +1');
+    }
+  }
+  if (p.hp <= 0) { state.phase = 'lost'; return; }
+
+  // End-of-turn hand handling
   const retained: typeof p.hand = [];
   for (const c of p.hand) {
     const def = getEffectiveDef(c);
     if (def.retain) {
       retained.push(c);
-    } else if (def.ethereal) {
+    } else if (def.ethereal && c.defId !== 'parasite') {
       p.exhaust.push(c);
     } else {
       p.discard.push(c);

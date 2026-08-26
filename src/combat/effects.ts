@@ -161,10 +161,12 @@ export function applyEffect(
       return;
     }
     case 'exhaust_random_hand': {
-      if (player.hand.length === 0) return;
-      const idx = Math.floor(state.rng() * player.hand.length);
-      const [c] = player.hand.splice(idx, 1);
-      player.exhaust.push(c);
+      const eligible = player.hand.filter((c) => c.defId !== 'parasite');
+      if (eligible.length === 0) return;
+      const pick = eligible[Math.floor(state.rng() * eligible.length)];
+      const idx = player.hand.indexOf(pick);
+      player.hand.splice(idx, 1);
+      player.exhaust.push(pick);
       log(`무작위 카드 소멸`);
       triggerOnExhaust(state, log);
       return;

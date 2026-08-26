@@ -138,8 +138,10 @@ export function renderEvent(): HTMLElement {
           run.player.gold = Math.max(0, run.player.gold - effect.amount);
           break;
         case 'add_curse': {
+          const cursePool = ['wound', 'decay', 'parasite', 'doubt'];
           for (let i = 0; i < effect.count; i++) {
-            run.player.deck.push(makeCard('wound'));
+            const id = cursePool[Math.floor(rng() * cursePool.length)];
+            run.player.deck.push(makeCard(id));
           }
           break;
         }
@@ -188,6 +190,15 @@ export function renderEvent(): HTMLElement {
         case 'max_hp': {
           run.player.maxHp = Math.max(1, run.player.maxHp + effect.amount);
           run.player.hp = Math.max(1, Math.min(run.player.maxHp, run.player.hp + effect.amount));
+          break;
+        }
+        case 'add_blessing': {
+          const blessings = ['divine_strike', 'divine_shield', 'miracle'];
+          for (let i = 0; i < effect.count; i++) {
+            const id = blessings[Math.floor(rng() * blessings.length)];
+            run.player.deck.push(makeCard(id));
+          }
+          playSfx('upgrade');
           break;
         }
       }
@@ -267,6 +278,7 @@ function effectChip(e: EventEffect): HTMLElement | null {
     case 'add_random_relic': label = `💎 유물`;              cls += ' gain'; break;
     case 'upgrade_random': label = `✦ 강화 ×${e.count}`;    cls += ' gain'; break;
     case 'add_curse':      label = `☠ 저주 ×${e.count}`;    cls += ' cost'; break;
+    case 'add_blessing':   label = `✨ 축복 ×${e.count}`;   cls += ' gain'; break;
     default: return null;
   }
   return el('span', { class: cls }, label);
