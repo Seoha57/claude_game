@@ -160,7 +160,7 @@ export interface MapNode {
   visited: boolean;
 }
 
-export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync' | 'daily' | 'history';
+export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync' | 'daily' | 'history' | 'endless_wave_clear' | 'endless_result' | 'leaderboard';
 
 export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief';
 
@@ -183,6 +183,10 @@ export interface RunState {
   reward?: RewardChoice;
   pendingNextScreen?: Screen;
   // 데일리 챌린지 진행 중일 때 부여 (제약 ID + 날짜 + 적용된 modifier)
+  endless?: {
+    wave: number;
+    score: number;
+  };
   dailyConfig?: {
     date: string;
     constraintId: string;

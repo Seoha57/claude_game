@@ -171,6 +171,12 @@ export function renderTitle(): HTMLElement {
         onClick: () => setScreen('daily'),
       }, '🌅 오늘의 도전'),
     );
+    utilRow.appendChild(
+      el('button', {
+        style: { background: 'transparent', color: 'var(--accent)', border: '1px solid var(--accent)' },
+        onClick: () => setScreen('leaderboard'),
+      }, '🏆 리더보드'),
+    );
     wrapper.appendChild(utilRow);
 
     // Audio settings row

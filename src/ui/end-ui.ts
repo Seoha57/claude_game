@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { endRun, getRun, getRunOrNull, setScreen, startNextChapter, makeCard, getScreen } from '../state';
+import { endRun, getRun, getRunOrNull, setScreen, startNextChapter, startEndless, makeCard, getScreen } from '../state';
 import { showChapterIntro } from './splash-overlay';
 import { playSfx } from '../audio';
 import { recordRelics } from '../codex';
@@ -180,6 +180,10 @@ export function renderWin(): HTMLElement {
     ...(runAscension >= 10
       ? [el('div', { style: { color: 'var(--accent)', marginTop: '8px' } }, '최고 난이도 클리어! 진정한 승리!')]
       : []),
+    el('button', {
+      style: { background: 'var(--accent-2)', color: 'white' },
+      onClick: () => startEndless(),
+    }, '♾️ 무한 던전 도전'),
     el('button', { onClick: () => endRun() }, '제목 화면으로'),
   );
 }
@@ -258,7 +262,11 @@ export function renderTrueWin(): HTMLElement {
     ...(didUnlock && newMax > 0
       ? [el('div', { style: { color: 'var(--good)', marginTop: '12px' } }, `🔓 등반 A${newMax} 해금!`)]
       : []),
-    el('button', { style: { marginTop: '20px' }, onClick: () => endRun() }, '제목 화면으로'),
+    el('button', {
+      style: { marginTop: '20px', background: 'var(--accent-2)', color: 'white' },
+      onClick: () => startEndless(),
+    }, '♾️ 무한 던전 도전'),
+    el('button', { style: { marginTop: '8px' }, onClick: () => endRun() }, '제목 화면으로'),
   );
 }
 

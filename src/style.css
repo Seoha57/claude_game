@@ -2357,3 +2357,35 @@ button:disabled {
   .splash-title { font-size: 24px; }
   .splash-emoji { font-size: 44px; }
 }
+
+/* Leaderboard */
+.leaderboard-table {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+.lb-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 60px 60px 70px;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--panel);
+  border-radius: 6px;
+  font-size: 13px;
+}
+.lb-row.lb-header {
+  background: transparent;
+  color: var(--muted);
+  font-weight: bold;
+  font-size: 11px;
+}
+.lb-row.lb-top {
+  background: var(--panel-2);
+  border: 1px solid var(--accent);
+}
+.lb-rank { text-align: center; }
+.lb-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb-score { text-align: right; color: var(--accent); font-weight: bold; }
+.lb-wave { text-align: right; color: var(--muted); }
+.lb-class { text-align: center; color: var(--muted); font-size: 12px; }

@@ -221,6 +221,8 @@ function bgmTrackForScreen(s: Screen): BgmTrack | null {
   if (s === 'map' || s === 'reward' || s === 'rest' || s === 'shop' || s === 'event' || s === 'chapter_clear') {
     return 'map';
   }
+  if (s === 'endless_wave_clear') return 'map';
+  if (s === 'endless_result' || s === 'leaderboard') return 'title';
   if (s === 'title' || s === 'character_select' || s === 'help' || s === 'stats' || s === 'codex') {
     return 'title';
   }
@@ -400,6 +402,13 @@ export function startNextChapter(): void {
   runState.floor = 0;
   combatState = null;
   setScreen('map');
+}
+
+export function startEndless(): void {
+  if (!runState) return;
+  runState.endless = { wave: 0, score: 0 };
+  combatState = null;
+  setScreen('endless_wave_clear');
 }
 
 export function endRun(): void {

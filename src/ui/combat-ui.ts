@@ -177,7 +177,8 @@ export function renderCombat(): HTMLElement {
   }
   if (state.phase === 'lost') {
     if (lastPhasePlayed !== 'lost') { playSfx('defeat'); lastPhasePlayed = 'lost'; }
-    setTimeout(() => setScreen('lose'), 0);
+    const run = getRunOrNull();
+    setTimeout(() => setScreen(run?.endless ? 'endless_result' : 'lose'), 0);
     return el('div', { class: 'combat-screen' });
   }
   // Reset for next combat
@@ -929,6 +930,28 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
   const isChapterBoss = isBossNode && (run.chapter === 1 || run.chapter === 2);
   const hasAllKeys = run.player.keys.includes('will') && run.player.keys.includes('emotion') && run.player.keys.includes('body');
 
+  // Endless mode — skip normal routing
+  if (run.endless) {
+    // Apply end-of-combat relics
+    if (!(_state as any)._victoryAppliedRelics) {
+      applyVictoryRelics(run, _state);
+      (_state as any)._victoryAppliedRelics = true;
+    }
+    const wave = run.endless.wave;
+    return el('div', { class: 'combat-screen' },
+      el('div', { class: 'combat-top', style: { flexDirection: 'column', gap: '16px' } },
+        el('h2', { style: { color: 'var(--good)', margin: 0 } }, `웨이브 ${wave} 클리어!`),
+        el('div', { style: { color: 'var(--muted)' } }, `HP ${run.player.hp}/${run.player.maxHp} · 점수 ${run.endless.score + wave * 100 + run.player.hp + run.player.gold + run.player.relics.length * 25}`),
+        el('button', {
+          onClick: () => {
+            setCombat(null);
+            setScreen('endless_wave_clear');
+          },
+        }, '다음 웨이브'),
+      ),
+    );
+  }
+
   // Determine next-screen routing
   let nextScreen: 'reward' | 'chapter_clear' | 'win' | 'true_win' | 'true_ending_choice' = 'reward';
   let nextLabel = '보상 받기';
@@ -966,47 +989,7 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
   }
 
   if (!(_state as any)._victoryAppliedRelics) {
-    if (run.player.relics.includes('burning_blood')) {
-      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 6);
-    }
-    if (run.player.relics.includes('blood_vial')) {
-      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 2);
-    }
-    if (run.player.relics.includes('herb_pouch')) {
-      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 5);
-    }
-    if (run.player.relics.includes('soul_lantern')) {
-      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
-    }
-    if (
-      run.player.relics.includes('meat_on_the_bone') &&
-      run.player.hp / run.player.maxHp <= 0.5
-    ) {
-      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 12);
-    }
-    if (run.player.relics.includes('rich_seal')) {
-      run.player.gold += 8;
-    }
-    if (run.player.relics.includes('trophy_necklace')) {
-      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
-      run.player.gold += 12;
-    }
-    for (const syn of getActiveSynergies(run.player.relics)) {
-      if (syn.timing !== 'combat_end') continue;
-      if (syn.id === 'undying') {
-        run.player.hp = Math.min(run.player.maxHp, run.player.hp + 10);
-      }
-    }
-    // Potion drop
-    if (run.player.potions.length < 3) {
-      const isElite = cur?.kind === 'elite';
-      const dropChance = isElite ? 0.5 : 0.3;
-      const victoryRng = makeRng(run.seed * 71 + run.floor * 13);
-      if (victoryRng() < dropChance) {
-        const dropped = pick(victoryRng, POTION_LIST);
-        run.player.potions.push(dropped.id);
-      }
-    }
+    applyVictoryRelics(run, _state);
     (_state as any)._victoryAppliedRelics = true;
   }
 
@@ -1208,6 +1191,45 @@ function handleKeydown(e: KeyboardEvent): void {
 
 if (typeof window !== 'undefined') {
   window.addEventListener('keydown', handleKeydown);
+}
+
+function applyVictoryRelics(run: any, _state: any): void {
+  const cur = run.currentNodeId ? run.map.find((n: any) => n.id === run.currentNodeId) : null;
+  if (run.player.relics.includes('burning_blood')) {
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 6);
+  }
+  if (run.player.relics.includes('blood_vial')) {
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 2);
+  }
+  if (run.player.relics.includes('herb_pouch')) {
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 5);
+  }
+  if (run.player.relics.includes('soul_lantern')) {
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
+  }
+  if (run.player.relics.includes('meat_on_the_bone') && run.player.hp / run.player.maxHp <= 0.5) {
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 12);
+  }
+  if (run.player.relics.includes('rich_seal')) run.player.gold += 8;
+  if (run.player.relics.includes('trophy_necklace')) {
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
+    run.player.gold += 12;
+  }
+  for (const syn of getActiveSynergies(run.player.relics)) {
+    if (syn.timing !== 'combat_end') continue;
+    if (syn.id === 'undying') {
+      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 10);
+    }
+  }
+  if (run.player.potions.length < 3) {
+    const isElite = cur?.kind === 'elite' || !!run.endless;
+    const dropChance = isElite ? 0.5 : 0.3;
+    const victoryRng = makeRng(run.seed * 71 + (run.endless?.wave ?? run.floor) * 13);
+    if (victoryRng() < dropChance) {
+      const dropped = pick(victoryRng, POTION_LIST);
+      run.player.potions.push(dropped.id);
+    }
+  }
 }
 
 export function getKeyboardTargetedEnemyUid(state: CombatState): string | null {

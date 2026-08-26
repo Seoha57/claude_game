@@ -17,6 +17,7 @@ import { renderNeowBlessing } from './neow-ui';
 import { renderSync } from './sync-ui';
 import { renderDaily } from './daily-ui';
 import { renderHistory } from './history-ui';
+import { renderEndlessWaveClear, renderEndlessResult, renderLeaderboard } from './endless-ui';
 
 export function render(): void {
   const root = document.getElementById('app');
@@ -90,6 +91,15 @@ export function render(): void {
       break;
     case 'history':
       view = renderHistory();
+      break;
+    case 'endless_wave_clear':
+      view = renderEndlessWaveClear();
+      break;
+    case 'endless_result':
+      view = renderEndlessResult();
+      break;
+    case 'leaderboard':
+      view = renderLeaderboard();
       break;
   }
   root.appendChild(view);
