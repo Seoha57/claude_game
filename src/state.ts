@@ -35,10 +35,10 @@ export function saveRun(): void {
   try {
     const data: SaveData = { version: SAVE_VERSION, runState };
     localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    markDirty();
   } catch (e) {
     console.warn('save failed', e);
   }
-  markDirty();
 }
 
 export function loadRun(): boolean {

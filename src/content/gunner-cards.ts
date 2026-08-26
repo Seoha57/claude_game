@@ -167,7 +167,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     exhaust: true,
   },
 
-  // ── Uncommon ──
+  // ── Rare ──
   g_satellite: {
     id: 'g_satellite',
     name: '하늘의 빛줄기',

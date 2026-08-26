@@ -97,14 +97,19 @@ export function applyEffect(
       return;
     }
     case 'damage_all': {
+      const isFirst = state.flags.firstAttackThisTurn;
+      state.flags.firstAttackThisTurn = false;
       for (const e of state.enemies) {
         if (e.hp <= 0) continue;
+        if (isFirst && getRunOrNull()?.player.relics.includes('venom_fang')) {
+          applyStatus(e, 'poison', 2);
+          log('독니 → 중독 +2');
+        }
         const modified = modifyAttackAmount(state, effect.amount);
         const hpDmg = dealDamage(state, source, e, modified, true);
         log(`전체 → ${nameOf(e, state)}: ${hpDmg} 데미지`);
         onAttackAfter(state, log);
       }
-      state.flags.firstAttackThisTurn = false;
       return;
     }
     case 'block': {

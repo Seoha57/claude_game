@@ -19,9 +19,11 @@ window.addEventListener('dungeoncard:sync-applied', () => {
   try { render(); } catch { /* ignore */ }
 });
 
-// SW가 업데이트되면 새 코드를 로드하기 위해 페이지 리로드
+// SW가 업데이트되면 새 코드를 로드하기 위해 페이지 리로드 (무한 루프 방지)
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (sessionStorage.getItem('sw_reloaded')) return;
+    sessionStorage.setItem('sw_reloaded', '1');
     window.location.reload();
   });
 }

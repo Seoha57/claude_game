@@ -3,7 +3,7 @@ import { el } from './dom';
 const NOTICE_KEY = 'dod_rebrand_seen';
 
 export function showRebrandNotice(): void {
-  if (localStorage.getItem(NOTICE_KEY)) return;
+  try { if (localStorage.getItem(NOTICE_KEY)) return; } catch { return; }
 
   const backdrop = el('div', {
     style: {
@@ -59,7 +59,7 @@ export function showRebrandNotice(): void {
         fontWeight: 'bold',
       },
       onClick: () => {
-        localStorage.setItem(NOTICE_KEY, '1');
+        try { localStorage.setItem(NOTICE_KEY, '1'); } catch { /* ignore */ }
         backdrop.style.animation = 'rebrand-fade-out 0.25s ease forwards';
         setTimeout(() => backdrop.remove(), 260);
       },
