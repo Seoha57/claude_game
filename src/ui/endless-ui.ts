@@ -37,8 +37,11 @@ export function startNextWave(): void {
   run.endless.wave += 1;
   const wave = run.endless.wave;
 
-  // Every 5th wave (except boss waves at 10, 20...): rest
+  // Every 5th wave (except boss waves at 10, 20...): rest — heal before save
   if (wave > 1 && (wave - 1) % 5 === 0 && (wave - 1) % 10 !== 0) {
+    const heal = Math.ceil(run.player.maxHp * 0.25);
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + heal);
+    run.endless.lastHeal = heal;
     setScreen('endless_wave_clear');
     return;
   }
@@ -173,12 +176,7 @@ export function renderEndlessWaveClear(): HTMLElement {
   }
 
   if (isRest) {
-    // Rest stop
-    const heal = Math.ceil(run.player.maxHp * 0.25);
-    if (!(run as any)._endlessRestApplied) {
-      run.player.hp = Math.min(run.player.maxHp, run.player.hp + heal);
-      (run as any)._endlessRestApplied = true;
-    }
+    const heal = run.endless.lastHeal ?? Math.ceil(run.player.maxHp * 0.25);
     wrapper.appendChild(el('h1', { style: { color: 'var(--good)' } }, '🔥 휴식'));
     wrapper.appendChild(
       el('div', { style: { color: 'var(--good)', marginBottom: '8px' } },
@@ -190,11 +188,14 @@ export function renderEndlessWaveClear(): HTMLElement {
     );
     wrapper.appendChild(
       el('button', {
-        onClick: () => {
-          (run as any)._endlessRestApplied = false;
-          startNextWave();
-        },
+        onClick: () => startNextWave(),
       }, `웨이브 ${wave + 1} 시작`),
+    );
+    wrapper.appendChild(
+      el('button', {
+        style: { marginTop: '8px', background: 'transparent', color: 'var(--bad)', border: '1px solid var(--bad)' },
+        onClick: () => setScreen('endless_result'),
+      }, '🏳️ 그만두기'),
     );
     return wrapper;
   }
@@ -209,6 +210,12 @@ export function renderEndlessWaveClear(): HTMLElement {
     el('button', {
       onClick: () => startNextWave(),
     }, `웨이브 ${wave + 1} 시작`),
+  );
+  wrapper.appendChild(
+    el('button', {
+      style: { marginTop: '8px', background: 'transparent', color: 'var(--bad)', border: '1px solid var(--bad)' },
+      onClick: () => setScreen('endless_result'),
+    }, '🏳️ 그만두기'),
   );
   return wrapper;
 }

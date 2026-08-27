@@ -186,6 +186,7 @@ export interface RunState {
   endless?: {
     wave: number;
     score: number;
+    lastHeal?: number;
   };
   dailyConfig?: {
     date: string;
