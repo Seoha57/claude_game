@@ -18,6 +18,7 @@ import { renderSync } from './sync-ui';
 import { renderDaily } from './daily-ui';
 import { renderHistory } from './history-ui';
 import { renderEndlessWaveClear, renderEndlessResult, renderLeaderboard } from './endless-ui';
+import { renderSettings } from './settings-ui';
 
 export function render(): void {
   const root = document.getElementById('app');
@@ -100,6 +101,9 @@ export function render(): void {
       break;
     case 'leaderboard':
       view = renderLeaderboard();
+      break;
+    case 'settings':
+      view = renderSettings();
       break;
   }
   root.appendChild(view);

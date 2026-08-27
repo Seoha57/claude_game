@@ -1303,6 +1303,19 @@ button:disabled {
 }
 .hb-item:hover, .hb-item:active { background: var(--panel-2); }
 
+/* ── Settings screen ── */
+.settings-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  gap: 12px;
+  padding: 28px 20px 60px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
 /* ── Audio controls ── */
 .audio-row {
   display: flex;
