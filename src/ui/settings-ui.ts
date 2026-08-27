@@ -1,7 +1,6 @@
 import { el } from './dom';
 import { setScreen } from '../state';
 import { getMuted, setMuted, getVolume, setVolume, playSfx, getBgmMuted, setBgmMuted, getBgmVolume, setBgmVolume } from '../audio';
-import { FRAMES, getCardFrame, setCardFrame } from '../card-frame';
 
 export function renderSettings(): HTMLElement {
   const wrapper = el('div', { class: 'settings-screen' });
@@ -48,32 +47,6 @@ export function renderSettings(): HTMLElement {
       }));
     }
     wrapper.appendChild(bgmRow);
-
-    // Card frame
-    const currentFrame = getCardFrame();
-    wrapper.appendChild(el('div', {
-      style: { color: 'var(--muted)', fontSize: '13px', marginTop: '16px', marginBottom: '8px' },
-    }, '카드 프레임'));
-    const frameRow = el('div', {
-      style: { display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' },
-    });
-    for (const f of FRAMES) {
-      const unlocked = f.check();
-      const active = currentFrame === f.id;
-      frameRow.appendChild(el('button', {
-        style: {
-          fontSize: '12px', padding: '6px 12px',
-          background: active ? 'var(--accent-2)' : 'transparent',
-          color: unlocked ? (active ? 'white' : 'var(--text)') : 'var(--muted)',
-          border: `1px solid ${active ? 'var(--accent)' : 'var(--border)'}`,
-          borderRadius: '6px',
-          cursor: unlocked ? 'pointer' : 'default',
-          opacity: unlocked ? '1' : '0.5',
-        },
-        onClick: () => { if (unlocked) { setCardFrame(f.id); rebuild(); } },
-      }, unlocked ? `${f.emoji} ${f.name}` : `🔒 ${f.name}`));
-    }
-    wrapper.appendChild(frameRow);
 
     wrapper.appendChild(el('button', {
       style: { marginTop: '24px' },
