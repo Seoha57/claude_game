@@ -129,29 +129,43 @@ export function renderTitle(): HTMLElement {
       ),
     );
 
-    const menuBtn = (label: string, screen: string, accent = false) =>
+    const menuBtn = (label: string, screen: string) =>
+      el('button', {
+        class: 'hb-item',
+        onClick: () => setScreen(screen as any),
+      }, label);
+
+    const accentBtn = (label: string, screen: string) =>
       el('button', {
         style: {
           background: 'transparent',
-          color: accent ? 'var(--accent)' : 'var(--muted)',
-          border: `1px solid ${accent ? 'var(--accent)' : 'var(--border)'}`,
+          color: 'var(--accent)',
+          border: '1px solid var(--accent)',
           fontSize: '13px', padding: '8px 14px',
         },
         onClick: () => setScreen(screen as any),
       }, label);
 
-    const row1 = el('div', { style: { display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap', justifyContent: 'center' } });
-    row1.appendChild(menuBtn('❓ 도움말', 'help'));
-    row1.appendChild(menuBtn('📖 도감', 'codex'));
-    row1.appendChild(menuBtn('🏅 도전과제', 'achievements'));
-    row1.appendChild(menuBtn('📊 통계', 'stats'));
-    row1.appendChild(menuBtn('📜 기록', 'history'));
-    row1.appendChild(menuBtn('☁️ 동기화', 'sync'));
-    wrapper.appendChild(row1);
+    // Hamburger menu
+    const hbWrap = el('div', { class: 'hb-wrap' });
+    const hbBtn = el('button', {
+      class: 'hb-toggle',
+      onClick: () => hbWrap.classList.toggle('open'),
+    }, '☰ 메뉴');
+    hbWrap.appendChild(hbBtn);
+    const hbPanel = el('div', { class: 'hb-panel' });
+    hbPanel.appendChild(menuBtn('❓ 도움말', 'help'));
+    hbPanel.appendChild(menuBtn('📖 도감', 'codex'));
+    hbPanel.appendChild(menuBtn('🏅 도전과제', 'achievements'));
+    hbPanel.appendChild(menuBtn('📊 통계', 'stats'));
+    hbPanel.appendChild(menuBtn('📜 기록', 'history'));
+    hbPanel.appendChild(menuBtn('☁️ 동기화', 'sync'));
+    hbWrap.appendChild(hbPanel);
+    wrapper.appendChild(hbWrap);
 
     const row2 = el('div', { style: { display: 'flex', gap: '8px', marginTop: '6px', justifyContent: 'center' } });
-    row2.appendChild(menuBtn('🌅 오늘의 도전', 'daily', true));
-    row2.appendChild(menuBtn('🏆 리더보드', 'leaderboard', true));
+    row2.appendChild(accentBtn('🌅 오늘의 도전', 'daily'));
+    row2.appendChild(accentBtn('🏆 리더보드', 'leaderboard'));
     wrapper.appendChild(row2);
 
     // Audio settings row

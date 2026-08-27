@@ -1261,6 +1261,45 @@ button:disabled {
   gap: 20px;
   padding: 32px 16px 60px;
 }
+/* ── Hamburger menu ── */
+.hb-wrap {
+  position: relative;
+  margin-top: 8px;
+  text-align: center;
+}
+.hb-toggle {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  padding: 8px 20px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.hb-panel {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.hb-wrap.open .hb-panel { display: flex; }
+.hb-wrap.open .hb-toggle { color: var(--accent); border-color: var(--accent); }
+.hb-item {
+  background: transparent;
+  color: var(--text);
+  border: none;
+  font-size: 14px;
+  padding: 10px 16px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.hb-item:hover, .hb-item:active { background: var(--panel-2); }
+
 /* ── Audio controls ── */
 .audio-row {
   display: flex;
