@@ -59,7 +59,7 @@ const CHARACTERS: CharacterInfo[] = [
     hp: 65,
     startRelic: '마탑의 결정',
     signatureRelic: '원소 공명',
-    signatureDesc: '스킬 카드 2장 연속 사용 시 1장 드로우',
+    signatureDesc: '방어 카드 2장 연속 사용 시 1장 드로우',
     description: '매 턴 시작 시 무작위 적에게 3 데미지. 다양한 원소 마법으로 광역 전투에 강하다.',
     starterCards: '마력 화살×5 · 마력 방벽×4 · 차원 전환×1',
     emoji: '🔮',

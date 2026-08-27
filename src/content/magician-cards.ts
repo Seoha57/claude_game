@@ -322,7 +322,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'common',
     cost: 1,
     target: 'enemy',
-    description: '6 데미지. 직전이 스킬이면 +7 데미지.',
+    description: '6 데미지. 직전이 방어카드면 +7 데미지.',
     effects: [
       { kind: 'damage', amount: 6 },
       { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 7 }] },
@@ -407,7 +407,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     id: 'm_arcane_orb',
     name: '비전 구체',
     type: 'attack', rarity: 'uncommon', cost: 1, target: 'enemy',
-    description: '9 데미지. 직전이 스킬이면 +6 데미지.',
+    description: '9 데미지. 직전이 방어카드면 +6 데미지.',
     effects: [
       { kind: 'damage', amount: 9 },
       { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 6 }] },
@@ -440,7 +440,7 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_astral_storm:   { name: '별빛 폭풍+',              description: '42 데미지.',                             effects: [{ kind: 'damage', amount: 42 }] },
   m_kasiyas:        { name: '소환: 대정령+',            description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
   // 콤보 시너지
-  m_amplify:        { name: '마력 증폭+',  description: '9 데미지. 직전이 스킬이면 +10 데미지.',
+  m_amplify:        { name: '마력 증폭+',  description: '9 데미지. 직전이 방어카드면 +10 데미지.',
                        effects: [{ kind: 'damage', amount: 9 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 10 }] }] },
   m_chain_lightning:{ name: '연쇄 번개+',  description: '5 데미지 3회. 이번 턴 2번째 이후 카드면 +2회 추가.',
                        effects: [{ kind: 'damage', amount: 5, times: 3 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 5, times: 2 }] }] },
@@ -455,7 +455,7 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_fire_burst:     { name: '불꽃 폭발+',   description: '모든 적에게 12 데미지. 화상 +4.',         effects: [{ kind: 'damage_all', amount: 12 }, { kind: 'apply_all', status: 'burn', amount: 4 }] },
   m_energy_circuit: { name: '에너지 회로+', description: '턴 종료 시 방어도 +6.',                   effects: [{ kind: 'apply_self', status: 'metallicize', amount: 6 }] },
   m_time_warp:      { name: '타임 워프+',   description: '카드 5장 드로우. 에너지 +3. 소멸.',       effects: [{ kind: 'draw', amount: 5 }, { kind: 'energy', amount: 3 }] },
-  m_arcane_orb:     { name: '비전 구체+',   description: '12 데미지. 직전이 스킬이면 +8 데미지.',
+  m_arcane_orb:     { name: '비전 구체+',   description: '12 데미지. 직전이 방어카드면 +8 데미지.',
                       effects: [{ kind: 'damage', amount: 12 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 8 }] }] },
 };
 

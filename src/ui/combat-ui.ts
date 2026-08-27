@@ -674,8 +674,8 @@ function applyPotionEnemy(state: CombatState, potionId: string, enemy: Enemy): v
 
 function typeLabel(t: string): string {
   if (t === 'attack') return '공격';
-  if (t === 'skill') return '스킬';
-  return '파워';
+  if (t === 'skill') return '방어';
+  return '효과';
 }
 
 function isCardEnemyTargeted(c: CardInstance | null): boolean {

@@ -201,5 +201,5 @@ function renderRelicSlot(def: RelicDef, isSeen: boolean): HTMLElement {
 }
 
 function typeLabel(t: string): string {
-  return t === 'attack' ? '공격' : t === 'skill' ? '스킬' : '파워';
+  return t === 'attack' ? '공격' : t === 'skill' ? '방어' : '효과';
 }

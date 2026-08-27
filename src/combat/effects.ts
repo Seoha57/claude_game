@@ -308,7 +308,7 @@ export function playCard(
   // Snapshot alive enemies before effects for on_kill scaling detection
   const beforeAlive = state.enemies.filter((e) => e.hp > 0).length;
 
-  // ── 원소 공명 (마법사) — 스킬 카드 연속 사용 ──
+  // ── 원소 공명 (마법사) — 방어 카드 연속 사용 ──
   const run = getRunOrNull();
   if (run?.player.relics.includes('elemental_resonance')
       && def.type === 'skill' && state.flags.lastPlayedType === 'skill') {

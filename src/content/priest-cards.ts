@@ -318,7 +318,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'common',
     cost: 1,
     target: 'enemy',
-    description: '8 데미지. 직전이 스킬이면 +6 데미지.',
+    description: '8 데미지. 직전이 방어카드면 +6 데미지.',
     effects: [
       { kind: 'damage', amount: 8 },
       { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 6 }] },
@@ -366,7 +366,7 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
     id: 'p_faith_strike',
     name: '신앙의 일격',
     type: 'attack', rarity: 'uncommon', cost: 1, target: 'enemy',
-    description: '11 데미지. 직전이 스킬이면 +5 데미지.',
+    description: '11 데미지. 직전이 방어카드면 +5 데미지.',
     effects: [
       { kind: 'damage', amount: 11 },
       { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 5 }] },
@@ -452,7 +452,7 @@ export const PRIEST_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   p_immortal:          { name: '불사+',          description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   p_true_avenger:      { name: '궁극의 복수자+',       description: 'HP -6. 힘 +3. 민첩 +2.',                 effects: [{ kind: 'lose_hp', amount: 6 }, { kind: 'apply_self', status: 'strength', amount: 3 }, { kind: 'apply_self', status: 'dexterity', amount: 2 }] },
   // 콤보 시너지
-  p_blessed_blade:     { name: '축복의 칼날+',     description: '11 데미지. 직전이 스킬이면 +9 데미지.',
+  p_blessed_blade:     { name: '축복의 칼날+',     description: '11 데미지. 직전이 방어카드면 +9 데미지.',
                           effects: [{ kind: 'damage', amount: 11 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 9 }] }] },
   p_meditation:        { name: '묵상+',            description: '이번 턴 첫 카드면 에너지 +1, 2장 드로우. 소멸.',
                           effects: [{ kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'energy', amount: 1 }, { kind: 'draw', amount: 2 }] }] },
@@ -460,7 +460,7 @@ export const PRIEST_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                           effects: [{ kind: 'damage_per_attack', amount: 4 }] },
   // 풀 확장
   p_holy_shield:       { name: '신성한 방패+',   description: '방어도 +11. 가시 +3.',                    effects: [{ kind: 'block', amount: 11 }, { kind: 'apply_self', status: 'thorns', amount: 3 }] },
-  p_faith_strike:      { name: '신앙의 일격+',   description: '15 데미지. 직전이 스킬이면 +6 데미지.',
+  p_faith_strike:      { name: '신앙의 일격+',   description: '15 데미지. 직전이 방어카드면 +6 데미지.',
                           effects: [{ kind: 'damage', amount: 15 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 6 }] }] },
   p_requiem:           { name: '위령제+',        description: '모든 적에게 11 데미지. 약화 +3.',         effects: [{ kind: 'damage_all', amount: 11 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
   p_radiance:          { name: '광휘+',          description: '모든 적에게 빙결 +2. 2장 드로우.',         effects: [{ kind: 'apply_all', status: 'freeze', amount: 2 }, { kind: 'draw', amount: 2 }] },

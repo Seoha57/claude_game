@@ -30,6 +30,7 @@ import { showBossIntro } from './splash-overlay';
 import { bossIntroFlavor } from '../content/lore';
 
 const markedNodes = new Set<string>();
+let markedChapter = -1;
 
 const NODE_ICON: Record<NodeKind, string> = {
   start: '🏁',
@@ -50,6 +51,7 @@ const PADDING_Y = 60;
 
 export function renderMap(): HTMLElement {
   const run = getRun();
+  if (run.chapter !== markedChapter) { markedNodes.clear(); markedChapter = run.chapter; }
   const cur = run.currentNodeId ? nodeById(run.map, run.currentNodeId) : null;
   const accessibleIds = new Set<string>();
   if (cur) for (const n of cur.next) accessibleIds.add(n);

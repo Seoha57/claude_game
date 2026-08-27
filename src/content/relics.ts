@@ -90,7 +90,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   elemental_resonance: {
     id: 'elemental_resonance',
     name: '원소 공명',
-    description: '스킬 카드를 2장 연속 사용 시 카드 1장 드로우.',
+    description: '방어 카드를 2장 연속 사용 시 카드 1장 드로우.',
     rarity: 'starter',
   },
   holy_seal: {

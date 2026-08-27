@@ -362,6 +362,6 @@ function appendRemovalPicker(wrapper: HTMLElement, run: ReturnType<typeof getRun
 
 function typeLabel(t: string): string {
   if (t === 'attack') return '공격';
-  if (t === 'skill') return '스킬';
-  return '파워';
+  if (t === 'skill') return '방어';
+  return '효과';
 }
