@@ -116,6 +116,7 @@ export function renderMap(): HTMLElement {
   svg.setAttribute('width', String(width));
   svg.setAttribute('height', String(height));
 
+  const edgesByPair = new Map<string, SVGLineElement>();
   for (const n of run.map) {
     for (const nextId of n.next) {
       const nb = nodeById(run.map, nextId);
@@ -132,9 +133,22 @@ export function renderMap(): HTMLElement {
       if (markedNodes.has(n.id) && markedNodes.has(nextId)) cls += ' marked';
       line.setAttribute('class', cls);
       svg.appendChild(line);
+      edgesByPair.set(`${n.id}|${nextId}`, line);
     }
   }
   canvas.appendChild(svg);
+
+  const nodeEls = new Map<string, HTMLElement>();
+
+  const refreshMarks = () => {
+    for (const [key, line] of edgesByPair) {
+      const [a, b] = key.split('|');
+      line.classList.toggle('marked', markedNodes.has(a) && markedNodes.has(b));
+    }
+    for (const [id, dom] of nodeEls) {
+      dom.classList.toggle('marked', markedNodes.has(id));
+    }
+  };
 
   // Nodes
   for (const n of run.map) {
@@ -146,7 +160,7 @@ export function renderMap(): HTMLElement {
       if (n.visited && !isCurrent) return;
       if (markedNodes.has(n.id)) markedNodes.delete(n.id);
       else markedNodes.add(n.id);
-      setScreen('map');
+      refreshMarks();
     };
     const nodeEl = el(
       'div',
@@ -168,6 +182,7 @@ export function renderMap(): HTMLElement {
     }, { passive: false });
     nodeEl.addEventListener('touchend', () => clearTimeout(lpTimer));
     nodeEl.addEventListener('touchmove', () => clearTimeout(lpTimer));
+    nodeEls.set(n.id, nodeEl);
     canvas.appendChild(nodeEl);
   }
 
