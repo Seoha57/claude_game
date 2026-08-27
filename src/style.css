@@ -1303,6 +1303,40 @@ button:disabled {
 }
 .hb-item:hover, .hb-item:active { background: var(--panel-2); }
 
+/* ── Combat gear / audio panel ── */
+.combat-gear {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 16px;
+  padding: 4px 8px;
+  cursor: pointer;
+  z-index: 30;
+}
+.combat-audio-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.combat-audio-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  min-width: 200px;
+}
+
 /* ── Settings screen ── */
 .settings-screen {
   display: flex;

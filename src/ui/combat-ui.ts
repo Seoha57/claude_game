@@ -13,7 +13,7 @@ import { playCard } from '../combat/effects';
 import type { CardInstance, CombatState, Enemy } from '../types';
 import { POTION_DEFS, POTION_LIST } from '../content/potions';
 import { isCurseLike } from './deck-overlay';
-import { playSfx } from '../audio';
+import { playSfx, getMuted, setMuted, getVolume, setVolume, getBgmMuted, setBgmMuted, getBgmVolume, setBgmVolume } from '../audio';
 import { makeRng, pick } from '../rng';
 import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison } from '../achievements';
 import { getCardFrame } from '../card-frame';
@@ -410,7 +410,63 @@ function renderMid(state: CombatState): HTMLElement {
   const relicBar = run ? renderRelicBar(run.player.relics) : el('div');
   const potionBar = renderPotionBar(state);
 
-  return el('div', { class: 'combat-mid' }, playerStats, relicBar, potionBar, piles, endTurn);
+  const gearBtn = el('button', {
+    class: 'combat-gear',
+    onClick: (e: Event) => {
+      e.stopPropagation();
+      const existing = document.querySelector('.combat-audio-panel');
+      if (existing) { existing.remove(); return; }
+      const panel = buildAudioPanel();
+      document.getElementById('app')!.appendChild(panel);
+    },
+  }, '⚙️');
+
+  return el('div', { class: 'combat-mid' }, playerStats, relicBar, potionBar, piles, endTurn, gearBtn);
+}
+
+function buildAudioPanel(): HTMLElement {
+  const overlay = el('div', { class: 'combat-audio-panel' });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+  const box = el('div', { class: 'combat-audio-box' });
+
+  const rebuild = () => {
+    box.innerHTML = '';
+    const muted = getMuted();
+    box.appendChild(el('button', {
+      class: 'audio-toggle',
+      onClick: () => { setMuted(!getMuted()); if (!getMuted()) playSfx('click'); rebuild(); },
+    }, muted ? '🔇 음소거' : '🔊 음향 ON'));
+    if (!muted) {
+      box.appendChild(el('input', {
+        type: 'range', min: '0', max: '100',
+        value: String(Math.round(getVolume() * 100)),
+        class: 'volume-slider',
+        onInput: (e: Event) => setVolume(parseInt((e.target as HTMLInputElement).value, 10) / 100),
+      }));
+    }
+    const bgmM = getBgmMuted();
+    box.appendChild(el('button', {
+      class: 'audio-toggle',
+      onClick: () => { setBgmMuted(!getBgmMuted()); rebuild(); },
+    }, bgmM ? '🎵 BGM OFF' : '🎵 BGM ON'));
+    if (!bgmM) {
+      box.appendChild(el('input', {
+        type: 'range', min: '0', max: '100',
+        value: String(Math.round(getBgmVolume() * 100)),
+        class: 'volume-slider',
+        onInput: (e: Event) => setBgmVolume(parseInt((e.target as HTMLInputElement).value, 10) / 100),
+      }));
+    }
+    box.appendChild(el('button', {
+      style: { fontSize: '12px', padding: '6px 16px', marginTop: '4px' },
+      onClick: () => overlay.remove(),
+    }, '닫기'));
+  };
+
+  rebuild();
+  overlay.appendChild(box);
+  return overlay;
 }
 
 // Preserve hand scroll position across rerenders
