@@ -128,9 +128,11 @@ export function renderMap(): HTMLElement {
       line.setAttribute('x2', String(x2));
       line.setAttribute('y2', String(y2));
       let cls = 'edge-line';
-      if (n.visited && nb.visited) cls += ' traveled';
-      else if (run.currentNodeId === n.id && accessibleIds.has(nb.id)) cls += ' accessible';
-      if (markedNodes.has(n.id) && markedNodes.has(nextId)) cls += ' marked';
+      const isTraveled = n.visited && nb.visited;
+      const isAccEdge = run.currentNodeId === n.id && accessibleIds.has(nb.id);
+      if (isTraveled) cls += ' traveled';
+      else if (isAccEdge) cls += ' accessible';
+      if (!isTraveled && !isAccEdge && markedNodes.has(n.id) && markedNodes.has(nextId)) cls += ' marked';
       line.setAttribute('class', cls);
       svg.appendChild(line);
       edgesByPair.set(`${n.id}|${nextId}`, line);
@@ -143,7 +145,8 @@ export function renderMap(): HTMLElement {
   const refreshMarks = () => {
     for (const [key, line] of edgesByPair) {
       const [a, b] = key.split('|');
-      line.classList.toggle('marked', markedNodes.has(a) && markedNodes.has(b));
+      const skip = line.classList.contains('traveled') || line.classList.contains('accessible');
+      line.classList.toggle('marked', !skip && markedNodes.has(a) && markedNodes.has(b));
     }
     for (const [id, dom] of nodeEls) {
       dom.classList.toggle('marked', markedNodes.has(id));
