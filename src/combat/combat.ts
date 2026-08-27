@@ -203,10 +203,10 @@ export function endPlayerTurn(state: CombatState): void {
         state.phase = 'lost';
         return;
       }
-    }
-    // 보스 빙결 면역 쿨다운 감소 (빙결 처리 후)
-    if ((e.freezeImmuneTurns ?? 0) > 0) {
-      e.freezeImmuneTurns! -= 1;
+      // 보스 빙결 면역 쿨다운 감소 (행동한 턴에만 감소)
+      if ((e.freezeImmuneTurns ?? 0) > 0) {
+        e.freezeImmuneTurns! -= 1;
+      }
     }
     // 적이 자기 공격 중 가시 등으로 죽었으면 턴종료 상태처리(재생 부활 등) 스킵
     if (e.hp <= 0) continue;
