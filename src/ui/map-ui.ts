@@ -29,6 +29,8 @@ import { ENEMY_ART, resetCombatUiState } from './combat-ui';
 import { showBossIntro } from './splash-overlay';
 import { bossIntroFlavor } from '../content/lore';
 
+const markedNodes = new Set<string>();
+
 const NODE_ICON: Record<NodeKind, string> = {
   start: '🏁',
   combat: '⚔',
@@ -127,6 +129,7 @@ export function renderMap(): HTMLElement {
       let cls = 'edge-line';
       if (n.visited && nb.visited) cls += ' traveled';
       else if (run.currentNodeId === n.id && accessibleIds.has(nb.id)) cls += ' accessible';
+      if (markedNodes.has(n.id) && markedNodes.has(nextId)) cls += ' marked';
       line.setAttribute('class', cls);
       svg.appendChild(line);
     }
@@ -138,17 +141,23 @@ export function renderMap(): HTMLElement {
     const isAccessible = accessibleIds.has(n.id);
     const isCurrent = run.currentNodeId === n.id;
     const [x, y] = nodePos(n, height);
+    const marked = markedNodes.has(n.id);
     canvas.appendChild(
       el(
         'div',
         {
           class: `map-node ${n.kind} ${isAccessible ? 'accessible' : ''} ${
             n.visited && !isCurrent ? 'visited' : ''
-          } ${isCurrent ? 'current' : ''}`,
+          } ${isCurrent ? 'current' : ''} ${marked ? 'marked' : ''}`,
           style: { left: `${x}px`, top: `${y}px` },
           'data-tooltip': nodeLabel(n),
           onClick: () => {
-            if (isAccessible) enterNode(n);
+            if (isAccessible) { enterNode(n); return; }
+            if (!n.visited && !isCurrent) {
+              if (markedNodes.has(n.id)) markedNodes.delete(n.id);
+              else markedNodes.add(n.id);
+              setScreen('map');
+            }
           },
         },
         NODE_ICON[n.kind] ?? '?',
