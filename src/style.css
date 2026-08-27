@@ -2275,24 +2275,20 @@ button:disabled {
   stroke-dasharray: none;
   opacity: 0.6;
 }
-.map-node.marked {
-  border-color: #50d0f0;
-  box-shadow: 0 0 10px rgba(80, 208, 240, 0.5);
-}
 .map-node.marked::before {
   content: '📌';
   position: absolute;
-  top: -10px;
-  right: -8px;
-  font-size: 14px;
+  top: -12px;
+  right: -10px;
+  font-size: 16px;
   z-index: 2;
-  filter: drop-shadow(0 0 2px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 0 3px rgba(0,0,0,0.8));
 }
 .edge-line.marked {
-  stroke: #50d0f0;
-  stroke-width: 2.5;
-  stroke-dasharray: 6 3;
-  opacity: 0.7;
+  stroke: var(--muted);
+  stroke-width: 2;
+  stroke-dasharray: 8 4;
+  opacity: 0.4;
 }
 
 /* ────────────────────────────────────────────────────────────────
