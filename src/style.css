@@ -2481,8 +2481,8 @@ button:disabled {
 
 /* Card frames */
 .card.frame-silver {
-  border-color: #b0b8c8;
-  box-shadow: 0 0 6px rgba(180,192,210,0.3);
+  border-width: 2.5px;
+  box-shadow: 0 0 8px rgba(180,192,210,0.35);
 }
 .card.frame-silver::after {
   content: '';
@@ -2493,15 +2493,15 @@ button:disabled {
   pointer-events: none;
 }
 .card.frame-gold {
-  border-color: #d4a020;
-  box-shadow: 0 0 10px rgba(212,160,32,0.35);
+  border-width: 3px;
+  box-shadow: 0 0 12px rgba(212,160,32,0.35);
 }
 .card.frame-gold::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: 6px;
-  background: linear-gradient(135deg, rgba(255,215,0,0.12) 0%, transparent 40%, rgba(255,215,0,0.12) 100%);
+  background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, transparent 40%, rgba(255,215,0,0.1) 100%);
   pointer-events: none;
   animation: gold-shimmer 3s ease-in-out infinite;
 }
@@ -2510,15 +2510,15 @@ button:disabled {
   50% { opacity: 1; }
 }
 .card.frame-diamond {
-  border-color: #88ccff;
-  box-shadow: 0 0 14px rgba(136,204,255,0.4), inset 0 0 8px rgba(136,204,255,0.08);
+  border-width: 3px;
+  box-shadow: 0 0 16px rgba(136,204,255,0.4), inset 0 0 8px rgba(136,204,255,0.08);
 }
 .card.frame-diamond::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: 6px;
-  background: linear-gradient(135deg, rgba(180,230,255,0.15) 0%, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%, rgba(180,230,255,0.15) 100%);
+  background: linear-gradient(135deg, rgba(180,230,255,0.12) 0%, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%, rgba(180,230,255,0.12) 100%);
   pointer-events: none;
   animation: diamond-sparkle 2.5s ease-in-out infinite;
 }
