@@ -6,6 +6,7 @@ import { unlockProgress } from '../unlocks';
 import { CARD_DEFS } from '../content/cards';
 import { RELIC_LIST } from '../content/relics';
 import { isCurseLike } from './deck-overlay';
+import { FRAMES, getCardFrame, setCardFrame } from '../card-frame';
 
 let pendingSeed = 0;
 let pendingAscension = 0;
@@ -247,6 +248,30 @@ export function renderTitle(): HTMLElement {
       );
     }
     wrapper.appendChild(bgmRow);
+
+    // Card frame selector
+    const currentFrame = getCardFrame();
+    const frameRow = el('div', {
+      style: { display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '8px' },
+    });
+    frameRow.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px', alignSelf: 'center' } }, '카드 프레임:'));
+    for (const f of FRAMES) {
+      const unlocked = f.check();
+      const active = currentFrame === f.id;
+      frameRow.appendChild(el('button', {
+        style: {
+          fontSize: '12px', padding: '4px 10px',
+          background: active ? 'var(--accent-2)' : 'transparent',
+          color: unlocked ? (active ? 'white' : 'var(--text)') : 'var(--muted)',
+          border: `1px solid ${active ? 'var(--accent)' : 'var(--border)'}`,
+          borderRadius: '6px',
+          cursor: unlocked ? 'pointer' : 'default',
+          opacity: unlocked ? '1' : '0.5',
+        },
+        onClick: () => { if (unlocked) { setCardFrame(f.id); rebuild(); } },
+      }, unlocked ? `${f.emoji} ${f.name}` : `🔒 ${f.name}`));
+    }
+    wrapper.appendChild(frameRow);
   };
 
   append();

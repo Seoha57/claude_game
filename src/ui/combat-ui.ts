@@ -16,6 +16,7 @@ import { isCurseLike } from './deck-overlay';
 import { playSfx } from '../audio';
 import { makeRng, pick } from '../rng';
 import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison } from '../achievements';
+import { getCardFrame } from '../card-frame';
 
 let selectedCardUid: string | null = null;
 let selectedPotionId: string | null = null;
@@ -452,7 +453,7 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
   return el(
     'div',
     {
-      class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''} ${canPlay ? '' : 'disabled'} ${noEnergy ? 'no-energy' : ''} ${selected ? 'selected' : ''} ${upgraded ? 'upgraded' : ''} ${upgradedPlus ? 'upgraded-plus' : ''}`,
+      class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''} ${canPlay ? '' : 'disabled'} ${noEnergy ? 'no-energy' : ''} ${selected ? 'selected' : ''} ${upgraded ? 'upgraded' : ''} ${upgradedPlus ? 'upgraded-plus' : ''} frame-${getCardFrame()}`,
       'data-card-uid': c.uid,
       onMouseEnter: () => onCardHover(c.uid),
       onMouseLeave: () => onCardHover(null),

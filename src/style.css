@@ -2389,3 +2389,51 @@ button:disabled {
 .lb-score { text-align: right; color: var(--accent); font-weight: bold; }
 .lb-wave { text-align: right; color: var(--muted); }
 .lb-class { text-align: center; color: var(--muted); font-size: 12px; }
+
+/* Card frames */
+.card.frame-silver {
+  border-color: #b0b8c8;
+  box-shadow: 0 0 6px rgba(180,192,210,0.3);
+}
+.card.frame-silver::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(200,210,230,0.08) 0%, transparent 50%, rgba(200,210,230,0.08) 100%);
+  pointer-events: none;
+}
+.card.frame-gold {
+  border-color: #d4a020;
+  box-shadow: 0 0 10px rgba(212,160,32,0.35);
+}
+.card.frame-gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(255,215,0,0.12) 0%, transparent 40%, rgba(255,215,0,0.12) 100%);
+  pointer-events: none;
+  animation: gold-shimmer 3s ease-in-out infinite;
+}
+@keyframes gold-shimmer {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.card.frame-diamond {
+  border-color: #88ccff;
+  box-shadow: 0 0 14px rgba(136,204,255,0.4), inset 0 0 8px rgba(136,204,255,0.08);
+}
+.card.frame-diamond::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(180,230,255,0.15) 0%, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%, rgba(180,230,255,0.15) 100%);
+  pointer-events: none;
+  animation: diamond-sparkle 2.5s ease-in-out infinite;
+}
+@keyframes diamond-sparkle {
+  0%, 100% { opacity: 0.5; background-position: 0% 0%; }
+  50% { opacity: 1; background-position: 100% 100%; }
+}
