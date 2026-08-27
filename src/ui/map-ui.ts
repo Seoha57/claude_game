@@ -142,27 +142,33 @@ export function renderMap(): HTMLElement {
     const isCurrent = run.currentNodeId === n.id;
     const [x, y] = nodePos(n, height);
     const marked = markedNodes.has(n.id);
-    canvas.appendChild(
-      el(
-        'div',
-        {
-          class: `map-node ${n.kind} ${isAccessible ? 'accessible' : ''} ${
-            n.visited && !isCurrent ? 'visited' : ''
-          } ${isCurrent ? 'current' : ''} ${marked ? 'marked' : ''}`,
-          style: { left: `${x}px`, top: `${y}px` },
-          'data-tooltip': nodeLabel(n),
-          onClick: () => {
-            if (isAccessible) { enterNode(n); return; }
-            if (!n.visited && !isCurrent) {
-              if (markedNodes.has(n.id)) markedNodes.delete(n.id);
-              else markedNodes.add(n.id);
-              setScreen('map');
-            }
-          },
-        },
-        NODE_ICON[n.kind] ?? '?',
-      ),
+    const toggleMark = () => {
+      if (n.visited && !isCurrent) return;
+      if (markedNodes.has(n.id)) markedNodes.delete(n.id);
+      else markedNodes.add(n.id);
+      setScreen('map');
+    };
+    const nodeEl = el(
+      'div',
+      {
+        class: `map-node ${n.kind} ${isAccessible ? 'accessible' : ''} ${
+          n.visited && !isCurrent ? 'visited' : ''
+        } ${isCurrent ? 'current' : ''} ${marked ? 'marked' : ''}`,
+        style: { left: `${x}px`, top: `${y}px` },
+        'data-tooltip': nodeLabel(n),
+        onClick: () => { if (isAccessible) enterNode(n); },
+        onContextmenu: (e: Event) => { e.preventDefault(); toggleMark(); },
+      },
+      NODE_ICON[n.kind] ?? '?',
     );
+    // Long press for mobile
+    let lpTimer = 0;
+    nodeEl.addEventListener('touchstart', (e) => {
+      lpTimer = window.setTimeout(() => { e.preventDefault(); toggleMark(); }, 400);
+    }, { passive: false });
+    nodeEl.addEventListener('touchend', () => clearTimeout(lpTimer));
+    nodeEl.addEventListener('touchmove', () => clearTimeout(lpTimer));
+    canvas.appendChild(nodeEl);
   }
 
   const board = el('div', { class: 'map-board' }, canvas);
