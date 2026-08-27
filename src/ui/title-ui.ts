@@ -150,8 +150,9 @@ export function renderTitle(): HTMLElement {
     const hbWrap = el('div', { class: 'hb-wrap' });
     const hbBtn = el('button', {
       class: 'hb-toggle',
-      onClick: () => hbWrap.classList.toggle('open'),
-    }, '☰ 메뉴');
+      onClick: (e: Event) => { e.stopPropagation(); hbWrap.classList.toggle('open'); },
+    }, '☰');
+    wrapper.addEventListener('click', () => hbWrap.classList.remove('open'));
     hbWrap.appendChild(hbBtn);
     const hbPanel = el('div', { class: 'hb-panel' });
     hbPanel.appendChild(menuBtn('❓ 도움말', 'help'));
