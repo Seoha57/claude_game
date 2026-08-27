@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { setScreen, hasSave, loadRun, clearSave } from '../state';
+import { setScreen, hasSave, loadRun, clearSave, getRunOrNull } from '../state';
 import { getUnlockedMax } from '../ascension';
 import { unlockProgress } from '../unlocks';
 import { CARD_DEFS } from '../content/cards';
@@ -99,7 +99,8 @@ export function renderTitle(): HTMLElement {
             style: { marginTop: '16px', background: 'var(--good)', color: '#1a1416', fontWeight: 'bold' },
             onClick: () => {
               if (loadRun()) {
-                setScreen('map');
+                const r = getRunOrNull();
+                setScreen(r?.endless ? 'endless_wave_clear' : 'map');
               }
             },
           },

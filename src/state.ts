@@ -111,8 +111,8 @@ export function getScreen(): Screen {
 
 export function setScreen(s: Screen): void {
   currentScreen = s;
-  // Auto-save when entering a stable map state. Map = checkpoint.
-  if (s === 'map' && runState) saveRun();
+  // Auto-save when entering a stable state. Map / endless wave clear = checkpoint.
+  if ((s === 'map' || s === 'endless_wave_clear') && runState) saveRun();
   // Stats — record run outcomes once on entry to terminal screens
   if (runState) {
     if (s === 'win') {
@@ -137,7 +137,7 @@ export function setScreen(s: Screen): void {
     }
   }
   // Clear save on terminal screens.
-  if (s === 'win' || s === 'true_win' || s === 'lose' || s === 'title') clearSave();
+  if (s === 'win' || s === 'true_win' || s === 'lose' || s === 'title' || s === 'endless_result') clearSave();
   // BGM track based on screen
   updateBgmForScreen(s);
   rerender();
