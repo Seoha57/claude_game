@@ -1,6 +1,7 @@
 import { el } from './dom';
 import { setScreen } from '../state';
-import { ACHIEVEMENTS, getUnlockedSet, resetAchievements, reconcileAchievements, getCharClearStatus } from '../achievements';
+import { ACHIEVEMENTS, getUnlockedSet, resetAchievements, reconcileAchievements, getCharClearStatus, getAchievementTitle } from '../achievements';
+import type { AchievementTitle } from '../achievements';
 import type { AchievementDef } from '../achievements';
 import type { CharacterClass } from '../types';
 
@@ -47,6 +48,28 @@ export function renderAchievements(): HTMLElement {
     const bar = el('div', { class: 'ach-progress-bar' });
     bar.appendChild(el('div', { class: 'ach-progress-fill', style: { width: `${(done / total) * 100}%` } }));
     wrapper.appendChild(bar);
+
+    // 칭호 표시
+    const title = getAchievementTitle();
+    const TITLES: AchievementTitle[] = [
+      { threshold: 3, emoji: '🌱', name: '초보 모험가' },
+      { threshold: 8, emoji: '⚔️', name: '숙련된 전사' },
+      { threshold: 15, emoji: '🔥', name: '던전 정복자' },
+      { threshold: 22, emoji: '👑', name: '전설의 영웅' },
+    ];
+    const nextTitle = TITLES.find((t) => t.threshold > done);
+    wrapper.appendChild(
+      el('div', {
+        style: { color: 'var(--accent)', fontSize: '14px', margin: '8px 0 4px' },
+      }, title ? `${title.emoji} 칭호: ${title.name}` : '칭호 없음'),
+    );
+    if (nextTitle) {
+      wrapper.appendChild(
+        el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px' } },
+          `다음 칭호: ${nextTitle.emoji} ${nextTitle.name} (${nextTitle.threshold - done}개 더 달성)`,
+        ),
+      );
+    }
 
     // Group by category
     const categories: AchievementDef['category'][] = ['progression', 'character', 'difficulty', 'combat', 'collection'];

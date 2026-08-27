@@ -1,5 +1,6 @@
 import { el } from './dom';
 import { getRun, getRunOrNull, setScreen, setCombat, endRun } from '../state';
+import { getAchievementTitle } from '../achievements';
 import { startCombat } from '../combat/combat';
 import { applyStatus } from '../combat/statuses';
 import { drawCards } from '../combat/effects';
@@ -259,6 +260,7 @@ export function renderEndlessResult(): HTMLElement {
             score,
             wave,
             characterClass: run?.characterClass ?? 'swordmaster',
+            title: getAchievementTitle()?.name ?? '',
           }),
         });
         if (res.ok) {
@@ -330,7 +332,7 @@ export function renderLeaderboard(): HTMLElement {
         const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`;
         table.appendChild(el('div', { class: `lb-row ${i < 3 ? 'lb-top' : ''}` },
           el('span', { class: 'lb-rank' }, medal),
-          el('span', { class: 'lb-name' }, e.nickname),
+          el('span', { class: 'lb-name' }, e.title ? `${e.nickname} · ${e.title}` : e.nickname),
           el('span', { class: 'lb-class' }, CLASS_LABEL[e.characterClass] ?? e.characterClass),
           el('span', { class: 'lb-wave' }, `${e.wave}`),
           el('span', { class: 'lb-score' }, `${e.score}`),

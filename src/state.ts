@@ -4,8 +4,8 @@ import { generateMap, startNode } from './map/map';
 import { uid } from './rng';
 import { getModifiers } from './ascension';
 import { recordRunStart, recordWin, recordTrueWin, recordLoss } from './stats';
-import { checkWin, checkTrueWin } from './achievements';
-import { recordCards, recordRelic } from './codex';
+import { checkWin, checkTrueWin, getUnlockedCount } from './achievements';
+import { recordCards, recordRelic, getCodexCounts } from './codex';
 import { playBgm, stopBgm } from './audio';
 import type { BgmTrack } from './audio';
 import { markDirty } from './sync/sync';
@@ -297,6 +297,19 @@ export function startNewRun(
     potions: [],
     keys: [],
   };
+  // 도감 달성 보상
+  const codex = getCodexCounts();
+  const discovered = codex.cards + codex.relics;
+  if (discovered >= 31) player.gold += 30;
+  if (discovered >= 62) { player.maxHp += 5; player.hp += 5; }
+  if (discovered >= 93) player.maxEnergy += 1;
+
+  // 업적 달성 보상
+  const achCount = getUnlockedCount();
+  if (achCount >= 3) player.gold += 20;
+  if (achCount >= 8) { player.maxHp += 3; player.hp += 3; }
+  if (achCount >= 15) player.gold += 30;
+
   const map = generateMap(makeSeedRng(seed), 1);
   runState = {
     player,

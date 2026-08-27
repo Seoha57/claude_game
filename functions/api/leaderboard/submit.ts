@@ -5,6 +5,7 @@ interface LeaderboardEntry {
   score: number;
   wave: number;
   characterClass: string;
+  title?: string;
   timestamp: number;
 }
 
@@ -26,10 +27,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const score = typeof body.score === 'number' ? Math.floor(body.score) : 0;
   const wave = typeof body.wave === 'number' ? Math.floor(body.wave) : 0;
   const characterClass = String(body.characterClass ?? '').slice(0, 20);
+  const title = String(body.title ?? '').slice(0, 20);
 
   if (score <= 0 || wave <= 0) return errorResponse('invalid score/wave');
 
-  const entry: LeaderboardEntry = { nickname, score, wave, characterClass, timestamp: Date.now() };
+  const entry: LeaderboardEntry = { nickname, score, wave, characterClass, ...(title && { title }), timestamp: Date.now() };
 
   const raw = await env.SYNC_KV.get(LB_KEY);
   const entries: LeaderboardEntry[] = raw ? JSON.parse(raw) : [];

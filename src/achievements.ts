@@ -92,6 +92,28 @@ export function getUnlockedSet(): Set<string> {
   return new Set(load().unlocked);
 }
 
+export function getUnlockedCount(): number {
+  return load().unlocked.length;
+}
+
+export interface AchievementTitle { name: string; emoji: string; threshold: number }
+
+const TITLES: AchievementTitle[] = [
+  { threshold: 3, emoji: '🌱', name: '초보 모험가' },
+  { threshold: 8, emoji: '⚔️', name: '숙련된 전사' },
+  { threshold: 15, emoji: '🔥', name: '던전 정복자' },
+  { threshold: 22, emoji: '👑', name: '전설의 영웅' },
+];
+
+export function getAchievementTitle(): AchievementTitle | null {
+  const count = getUnlockedCount();
+  let best: AchievementTitle | null = null;
+  for (const t of TITLES) {
+    if (count >= t.threshold) best = t;
+  }
+  return best;
+}
+
 // 캐릭터별 클리어/진엔딩 현황 (도전과제 화면 표시용). stats도 교차 참조.
 export function getCharClearStatus(): {
   clear: Record<CharacterClass, boolean>;

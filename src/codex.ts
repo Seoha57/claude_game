@@ -87,6 +87,11 @@ export function getSeenRelics(): Set<string> {
   return new Set(load().relics);
 }
 
+export function getCodexCounts(): { cards: number; relics: number } {
+  const d = load();
+  return { cards: d.cards.length, relics: d.relics.length };
+}
+
 export function resetCodex(): void {
   try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
 }

@@ -115,6 +115,22 @@ export function renderHelp(): HTMLElement {
     '보스 유물(노란색)은 챕터 클리어 시 3개 중 1개 선택 — 매우 강력.',
   ]));
 
+  wrapper.appendChild(section('📖 도감 보상', [
+    '카드와 유물을 발견할수록 시작 보너스가 해금됩니다.',
+    '25% (31개) — 시작 골드 +30',
+    '50% (62개) — 시작 최대HP +5',
+    '75% (93개) — 시작 에너지 +1',
+  ]));
+
+  wrapper.appendChild(section('🏅 업적 보상', [
+    '업적을 달성할수록 칭호와 시작 보너스를 얻습니다.',
+    '3개 — 🌱 초보 모험가 (시작 골드 +20)',
+    '8개 — ⚔️ 숙련된 전사 (시작 최대HP +3)',
+    '15개 — 🔥 던전 정복자 (시작 골드 +30)',
+    '22개 — 👑 전설의 영웅',
+    '칭호는 리더보드에 표시됩니다.',
+  ]));
+
   wrapper.appendChild(
     el('button', { style: { marginTop: '20px' }, onClick: () => setScreen('title') }, '← 제목으로'),
   );
