@@ -24,8 +24,11 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
     id: 't_rising_cut',
     name: '올려 베기',
     type: 'attack', rarity: 'common', cost: 1, target: 'enemy',
-    description: '8 데미지.',
-    effects: [{ kind: 'damage', amount: 8 }],
+    description: '6 데미지. 직전이 방어카드면 중독 +3.',
+    effects: [
+      { kind: 'damage', amount: 6 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'apply_enemy', status: 'poison', amount: 3 }] },
+    ],
   },
   t_shining_cut: {
     id: 't_shining_cut',
@@ -291,7 +294,8 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
 export const THIEF_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   t_slicer:          { name: '베기+',             description: '9 데미지.',                              effects: [{ kind: 'damage', amount: 9 }] },
   t_bone_shield:     { name: '뼈 방패+',         description: '방어도 +8.',                             effects: [{ kind: 'block', amount: 8 }] },
-  t_rising_cut:      { name: '올려 베기+',       description: '11 데미지.',                             effects: [{ kind: 'damage', amount: 11 }] },
+  t_rising_cut:      { name: '올려 베기+',       description: '8 데미지. 직전이 방어카드면 중독 +4.',
+                       effects: [{ kind: 'damage', amount: 8 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'apply_enemy', status: 'poison', amount: 4 }] }] },
   t_shining_cut:     { name: '섬광 베기+',       description: '5 데미지 2회.',                          effects: [{ kind: 'damage', amount: 5, times: 2 }] },
   t_kunai:           { name: '암기 투척+',       description: '10 데미지. 1장 드로우.',                 effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 1 }] },
   t_dark_soul:       { name: '암흑의 혼+',       description: '7 데미지. 중독 +4.',                     effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 4 }] },

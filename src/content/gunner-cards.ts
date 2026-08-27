@@ -214,8 +214,11 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'uncommon',
     cost: 2,
     target: 'all_enemies',
-    description: '모든 적에게 10 데미지.',
-    effects: [{ kind: 'damage_all', amount: 10 }],
+    description: '모든 적에게 8 데미지. 직전이 효과카드면 화상 +3.',
+    effects: [
+      { kind: 'damage_all', amount: 8 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'power' }, then: [{ kind: 'apply_all', status: 'burn', amount: 3 }] },
+    ],
     exhaust: true,
   },
   g_g14: {
@@ -435,7 +438,8 @@ const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_satellite:      { name: '하늘의 빛줄기+',           description: '모든 적에게 24 데미지. 약화 +3.',      effects: [{ kind: 'damage_all', amount: 24 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
   g_viper:          { name: '불꽃 연격+',                  description: '7 데미지. 중독 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
   g_optical:        { name: '중저격총+',       description: 'HP -2. 에너지 +3.',                    effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
-  g_napalm:         { name: '화염방사기+',                description: '모든 적에게 14 데미지.',               effects: [{ kind: 'damage_all', amount: 14 }] },
+  g_napalm:         { name: '화염방사기+',                description: '모든 적에게 12 데미지. 직전이 효과카드면 화상 +4.',
+                      effects: [{ kind: 'damage_all', amount: 12 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'power' }, then: [{ kind: 'apply_all', status: 'burn', amount: 4 }] }] },
   g_g14:            { name: '파열 수류탄+',           description: '11 데미지. 취약 +3.',                  effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   g_reinforce:      { name: '대전차포+',               description: '힘 +3.',                               effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   g_sparrow:        { name: '자폭 기계+',         description: '턴 종료 시 방어도 +4.',                effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },

@@ -366,10 +366,10 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
     id: 'p_faith_strike',
     name: '신앙의 일격',
     type: 'attack', rarity: 'uncommon', cost: 1, target: 'enemy',
-    description: '11 데미지. 직전이 방어카드면 +5 데미지.',
+    description: '11 데미지. 직전이 공격이면 방어도 +6.',
     effects: [
       { kind: 'damage', amount: 11 },
-      { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 5 }] },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'block', amount: 6 }] },
     ],
   },
   p_requiem: {
@@ -460,8 +460,8 @@ export const PRIEST_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                           effects: [{ kind: 'damage_per_attack', amount: 4 }] },
   // 풀 확장
   p_holy_shield:       { name: '신성한 방패+',   description: '방어도 +11. 가시 +3.',                    effects: [{ kind: 'block', amount: 11 }, { kind: 'apply_self', status: 'thorns', amount: 3 }] },
-  p_faith_strike:      { name: '신앙의 일격+',   description: '15 데미지. 직전이 방어카드면 +6 데미지.',
-                          effects: [{ kind: 'damage', amount: 15 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 6 }] }] },
+  p_faith_strike:      { name: '신앙의 일격+',   description: '15 데미지. 직전이 공격이면 방어도 +8.',
+                          effects: [{ kind: 'damage', amount: 15 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'block', amount: 8 }] }] },
   p_requiem:           { name: '위령제+',        description: '모든 적에게 11 데미지. 약화 +3.',         effects: [{ kind: 'damage_all', amount: 11 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
   p_radiance:          { name: '광휘+',          description: '모든 적에게 빙결 +2. 2장 드로우.',         effects: [{ kind: 'apply_all', status: 'freeze', amount: 2 }, { kind: 'draw', amount: 2 }] },
   p_wrath_of_god:      { name: '신의 진노+',     description: '모든 적에게 32 데미지. 소멸.',            effects: [{ kind: 'damage_all', amount: 32 }] },

@@ -90,10 +90,11 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'common',
     cost: 1,
     target: 'enemy',
-    description: '9 데미지. 1장 드로우.',
+    description: '7 데미지. 1장 드로우. 직전이 방어카드면 방어도 +5.',
     effects: [
-      { kind: 'damage', amount: 9 },
+      { kind: 'damage', amount: 7 },
       { kind: 'draw', amount: 1 },
+      { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'block', amount: 5 }] },
     ],
   },
   f_nen_bullet: {
@@ -412,7 +413,8 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_aerial_stomp:  { name: '공중 밟기+',                description: '모든 적에게 11 데미지.',                effects: [{ kind: 'damage_all', amount: 11 }] },
   f_dragon_kick:   { name: '연속 타격+',                     description: '모든 적에게 7 데미지. 취약 +1.',        effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
   f_heavy_punch:   { name: '내려차기+',                description: '14 데미지. 빙결 +1.',                  effects: [{ kind: 'damage', amount: 14 }, { kind: 'apply_enemy', status: 'freeze', amount: 1 }] },
-  f_combo:         { name: '기합포+',                description: '10 데미지. 2장 드로우.',                effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 2 }] },
+  f_combo:         { name: '기합포+',                description: '9 데미지. 1장 드로우. 직전이 방어카드면 방어도 +7.',
+                     effects: [{ kind: 'damage', amount: 9 }, { kind: 'draw', amount: 1 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'block', amount: 7 }] }] },
   f_nen_bullet:    { name: '기탄+',                    description: '5 데미지를 세 번.',                     effects: [{ kind: 'damage', amount: 5, times: 3 }] },
   f_iron_body:     { name: '광폭 난타+',                description: '7 데미지. 방어도 +7.',                  effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
   f_ki_focus:      { name: '낮은 자세+',                  description: '힘 +4.',                                effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
