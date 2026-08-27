@@ -2276,11 +2276,20 @@ button:disabled {
   opacity: 0.6;
 }
 .map-node.marked {
-  border-color: var(--accent);
-  box-shadow: 0 0 10px rgba(212, 160, 91, 0.5);
+  border-color: #50d0f0;
+  box-shadow: 0 0 10px rgba(80, 208, 240, 0.5);
+}
+.map-node.marked::before {
+  content: '📌';
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  font-size: 14px;
+  z-index: 2;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.6));
 }
 .edge-line.marked {
-  stroke: var(--accent);
+  stroke: #50d0f0;
   stroke-width: 2.5;
   stroke-dasharray: 6 3;
   opacity: 0.7;
