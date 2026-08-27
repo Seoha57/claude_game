@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { getRun, makeCard, setScreen } from '../state';
+import { getRun, makeCard, setScreen, rerender } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS } from '../content/cards';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
 import type { CardDef } from '../types';
@@ -7,7 +7,7 @@ import type { CardDef } from '../types';
 function filterUnlocked(pool: CardDef[], ignoreLocks: boolean): CardDef[] {
   if (ignoreLocks) return pool;
   const out = pool.filter((c) => isCardUnlocked(c));
-  return out.length > 0 ? out : pool; // 모두 잠겨있을 때 fallback
+  return out.length > 0 ? out : pool;
 }
 import { PICKABLE_RELICS, ELITE_RELICS, RELIC_DEFS } from '../content/relics';
 import { nodeById } from '../map/map';
@@ -15,15 +15,65 @@ import { makeRng, pick, shuffle } from '../rng';
 import { playSfx } from '../audio';
 import { recordCards, recordRelic } from '../codex';
 
+const REROLL_COSTS = [10, 15, 25, 40, 60];
+
 interface RewardChoiceUI {
   cardChoices: string[];
   gold: number;
   relicId: string | null;
   picked: boolean;
+  rerollCount: number;
 }
 
 let cachedReward: RewardChoiceUI | null = null;
 let lastRewardKey: string | null = null;
+
+function rollCards(rng: () => number, isElite: boolean, commonPool: CardDef[], uncommonPool: CardDef[], rarePool: CardDef[]): string[] {
+  const choices: string[] = [];
+  for (let i = 0; i < 3; i++) {
+    const r = rng();
+    let pool = commonPool;
+    if (isElite) {
+      if (r < 0.4) pool = commonPool;
+      else if (r < 0.85) pool = uncommonPool;
+      else pool = rarePool;
+    } else {
+      if (r < 0.6) pool = commonPool;
+      else if (r < 0.95) pool = uncommonPool;
+      else pool = rarePool;
+    }
+    const tries = shuffle(rng, pool.slice());
+    let picked = tries[0]?.id;
+    for (const c of tries) {
+      if (!choices.includes(c.id)) { picked = c.id; break; }
+    }
+    if (picked) choices.push(picked);
+  }
+  return choices;
+}
+
+function rerollCards(): void {
+  if (!cachedReward) return;
+  const run = getRun();
+  const cost = REROLL_COSTS[Math.min(cachedReward.rerollCount, REROLL_COSTS.length - 1)];
+  if (run.player.gold < cost) return;
+  run.player.gold -= cost;
+  cachedReward.rerollCount++;
+
+  const cc = run.characterClass;
+  const ignoreLocks = !!run.dailyConfig;
+  const commonPool = filterUnlocked(cc === 'gunner' ? GUNNER_COMMON_CARDS : cc === 'fighter' ? FIGHTER_COMMON_CARDS : cc === 'magician' ? MAGICIAN_COMMON_CARDS : cc === 'priest' ? PRIEST_COMMON_CARDS : cc === 'thief' ? THIEF_COMMON_CARDS : COMMON_CARDS, ignoreLocks);
+  const uncommonPool = filterUnlocked(cc === 'gunner' ? GUNNER_UNCOMMON_CARDS : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS : cc === 'magician' ? MAGICIAN_UNCOMMON_CARDS : cc === 'priest' ? PRIEST_UNCOMMON_CARDS : cc === 'thief' ? THIEF_UNCOMMON_CARDS : UNCOMMON_CARDS, ignoreLocks);
+  const rarePool = filterUnlocked(cc === 'gunner' ? GUNNER_RARE_CARDS : cc === 'fighter' ? FIGHTER_RARE_CARDS : cc === 'magician' ? MAGICIAN_RARE_CARDS : cc === 'priest' ? PRIEST_RARE_CARDS : cc === 'thief' ? THIEF_RARE_CARDS : RARE_CARDS, ignoreLocks);
+
+  const cur = run.currentNodeId ? nodeById(run.map, run.currentNodeId) : null;
+  const isElite = cur?.kind === 'elite';
+  const rng = makeRng(run.seed * 13 + run.floor * 47 + cachedReward.rerollCount * 311);
+  cachedReward.cardChoices = rollCards(rng, isElite, commonPool, uncommonPool, rarePool);
+  cachedReward.picked = false;
+  recordCards(cachedReward.cardChoices);
+  rerender();
+}
 
 function ensureReward(): RewardChoiceUI {
   const run = getRun();
@@ -67,30 +117,7 @@ function ensureReward(): RewardChoiceUI {
     ignoreLocks,
   );
 
-  // pool: 60% common, 35% uncommon, 5% rare on regular; elite shifts toward rare
-  const choices: string[] = [];
-  for (let i = 0; i < 3; i++) {
-    const r = rng();
-    let pool = commonPool;
-    if (isElite) {
-      if (r < 0.4) pool = commonPool;
-      else if (r < 0.85) pool = uncommonPool;
-      else pool = rarePool;
-    } else {
-      if (r < 0.6) pool = commonPool;
-      else if (r < 0.95) pool = uncommonPool;
-      else pool = rarePool;
-    }
-    const tries = shuffle(rng, pool.slice());
-    let picked = tries[0]?.id;
-    for (const c of tries) {
-      if (!choices.includes(c.id)) {
-        picked = c.id;
-        break;
-      }
-    }
-    if (picked) choices.push(picked);
-  }
+  const choices = rollCards(rng, isElite, commonPool, uncommonPool, rarePool);
 
   const gold = isElite ? 25 + Math.floor(rng() * 10) : 10 + Math.floor(rng() * 10);
   let relicId: string | null = null;
@@ -107,7 +134,7 @@ function ensureReward(): RewardChoiceUI {
     }
   }
 
-  cachedReward = { cardChoices: choices, gold, relicId, picked: false };
+  cachedReward = { cardChoices: choices, gold, relicId, picked: false, rerollCount: 0 };
   // Codex: shown card choices + relic option
   recordCards(choices);
   if (relicId) recordRelic(relicId);
@@ -188,6 +215,21 @@ export function renderReward(): HTMLElement {
     relicEl ?? el('div'),
     el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '카드 1장 선택 또는 건너뛰기'),
     cardsRow,
+    (() => {
+      const cost = REROLL_COSTS[Math.min(reward.rerollCount, REROLL_COSTS.length - 1)];
+      const canAfford = run.player.gold >= cost;
+      return el('button', {
+        style: {
+          background: 'transparent',
+          color: canAfford ? 'var(--accent)' : 'var(--muted)',
+          border: `1px solid ${canAfford ? 'var(--accent)' : 'var(--border)'}`,
+          fontSize: '13px', padding: '8px 16px',
+          cursor: canAfford ? 'pointer' : 'default',
+          opacity: canAfford ? '1' : '0.5',
+        },
+        onClick: () => { if (!reward.picked && canAfford) rerollCards(); },
+      }, `🔄 카드 리롤 (${cost}G)`);
+    })(),
     el(
       'button',
       {
