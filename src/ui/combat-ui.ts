@@ -197,8 +197,10 @@ export function renderCombat(): HTMLElement {
     { class: 'combat-screen' },
     renderTop(state),
     renderMid(state),
-    renderHand(state),
-    renderDeckPile(state),
+    el('div', { class: 'combat-hand-row' },
+      renderHand(state),
+      renderDeckPile(state),
+    ),
   );
 }
 
