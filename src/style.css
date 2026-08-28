@@ -901,10 +901,10 @@ button:disabled {
 .card.rarity-rare::before     { background: #d4aa44; }
 .card.rarity-starter::before  { background: #555; }
 
-/* Upgraded cards — gold border + star badge */
+/* Upgraded cards — gold glow + star badge (keep type border color) */
 .card.upgraded {
-  border-color: #d4a05b !important;
-  box-shadow: 0 0 10px rgba(212, 160, 91, 0.4);
+  border-width: 2.5px;
+  box-shadow: 0 0 10px rgba(212, 160, 91, 0.5), 0 0 20px rgba(212, 160, 91, 0.2);
 }
 .card.upgraded .card-name {
   color: #ffd080;
@@ -922,9 +922,9 @@ button:disabled {
   z-index: 3;
 }
 
-/* ★★ 이중 강화 (++) — brighter gold with glow halo */
+/* ★★ 이중 강화 (++) — brighter glow halo (keep type border color) */
 .card.upgraded-plus {
-  border-color: #ffd64a !important;
+  border-width: 3px;
   box-shadow: 0 0 14px rgba(255, 214, 74, 0.7), 0 0 24px rgba(255, 200, 60, 0.35);
   animation: plusplus-pulse 2.4s ease-in-out infinite;
 }
