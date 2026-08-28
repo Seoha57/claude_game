@@ -2310,7 +2310,7 @@ button:disabled {
 /* ── Log ── */
 .combat-log {
   position: absolute;
-  right: 16px;
+  left: 16px;
   top: 16px;
   width: 240px;
   max-height: 200px;
@@ -2526,7 +2526,7 @@ button:disabled {
     width: 150px;
     max-height: 70px;
     font-size: 9px;
-    right: 6px;
+    left: 6px;
     top: 6px;
     padding: 4px 6px;
     opacity: 0.85;
