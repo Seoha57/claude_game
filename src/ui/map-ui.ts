@@ -2,7 +2,7 @@ import { el } from './dom';
 import { getRun, setScreen, setCombat, getScreen } from '../state';
 import { openDeckOverlay } from './deck-overlay';
 import { nodeById } from '../map/map';
-import { startCombat } from '../combat/combat';
+import { startCombat, applyRelicCombatStart } from '../combat/combat';
 import {
   EASY_ENCOUNTERS,
   ELITE_ENCOUNTERS,
@@ -19,11 +19,9 @@ import {
   CH4_BOSS_ENCOUNTERS,
   pickEncounter,
 } from '../content/enemies';
-import { applyStatus } from '../combat/statuses';
-import { drawCards } from '../combat/effects';
 import type { MapNode, NodeKind } from '../types';
 import { makeRng } from '../rng';
-import { RELIC_DEFS, getActiveSynergies } from '../content/relics';
+import { RELIC_DEFS } from '../content/relics';
 import { ENEMY_DEFS } from '../content/enemies';
 import { ENEMY_ART, resetCombatUiState } from './combat-ui';
 import { showBossIntro } from './splash-overlay';
@@ -256,79 +254,7 @@ function enterNode(n: MapNode): void {
       resetCombatUiState();
       const cs = startCombat(run.player, enemyIds, run.seed + n.y * 17 + n.x * 7);
 
-      if (run.player.relics.includes('vajra')) applyStatus(cs.player, 'strength', 1);
-      if (run.player.relics.includes('fighting_spirit')) applyStatus(cs.player, 'strength', 2);
-      if (run.player.relics.includes('oddly_smooth_stone')) applyStatus(cs.player, 'dexterity', 1);
-      if (run.player.relics.includes('anchor')) cs.player.block += 10;
-      if (run.player.relics.includes('bag_of_marbles')) {
-        for (const e of cs.enemies) applyStatus(e, 'vulnerable', 1);
-      }
-      if (run.player.relics.includes('frozen_dart')) {
-        for (const e of cs.enemies) applyStatus(e, 'weak', 1);
-      }
-      if (run.player.relics.includes('thick_hide')) applyStatus(cs.player, 'metallicize', 2);
-      if (run.player.relics.includes('holy_charm')) drawCards(cs, 1);
-      if (run.player.relics.includes('iron_will')) applyStatus(cs.player, 'strength', 4);
-      if (run.player.relics.includes('dragon_scale')) cs.player.block += 20;
-      if (run.player.relics.includes('adrenaline_surge')) {
-        cs.player.energy += 1;
-        drawCards(cs, 1);
-      }
-      if (run.player.relics.includes('spiked_armor')) applyStatus(cs.player, 'thorns', 3);
-      if (run.player.relics.includes('sturdy_boots')) cs.player.block += 6;
-      if (run.player.relics.includes('kinetic_belt')) applyStatus(cs.player, 'dexterity', 2);
-      if (run.player.relics.includes('fury_banner')) applyStatus(cs.player, 'strength', 3);
-      if (run.player.relics.includes('phoenix_feather')) applyStatus(cs.player, 'regen', 5);
-      if (run.player.relics.includes('champion_belt')) {
-        applyStatus(cs.player, 'strength', 1);
-        applyStatus(cs.player, 'dexterity', 1);
-      }
-      if (run.player.relics.includes('holy_chalice')) applyStatus(cs.player, 'regen', 3);
-      // Elite relics
-      if (run.player.relics.includes('war_drum')) {
-        for (const e of cs.enemies) { applyStatus(e, 'weak', 1); applyStatus(e, 'vulnerable', 1); }
-      }
-      if (run.player.relics.includes('master_scabbard')) {
-        applyStatus(cs.player, 'strength', 2); drawCards(cs, 1);
-      }
-      if (run.player.relics.includes('incendiary_round')) {
-        for (const e of cs.enemies) applyStatus(e, 'burn', 3);
-      }
-      if (run.player.relics.includes('iron_gauntlet')) {
-        applyStatus(cs.player, 'thorns', 4); cs.player.block += 8;
-      }
-      if (run.player.relics.includes('arcane_focus')) {
-        for (const e of cs.enemies) applyStatus(e, 'vulnerable', 2);
-        drawCards(cs, 1);
-      }
-      if (run.player.relics.includes('blessed_water')) {
-        applyStatus(cs.player, 'regen', 4); applyStatus(cs.player, 'metallicize', 3);
-      }
-      if (run.player.relics.includes('lethal_poison')) {
-        for (const e of cs.enemies) applyStatus(e, 'poison', 5);
-      }
-      // Synergy sets
-      for (const syn of getActiveSynergies(run.player.relics)) {
-        if (syn.timing !== 'combat_start') continue;
-        cs.log.push(`⚡ 시너지: ${syn.name}`);
-        switch (syn.id) {
-          case 'eye_of_storm':
-            for (const e of cs.enemies) applyStatus(e, 'vulnerable', 1);
-            break;
-          case 'time_beyond':
-            cs.player.energy += 1;
-            break;
-          case 'exploit_weakness':
-            for (const e of cs.enemies) applyStatus(e, 'frail', 1);
-            break;
-          case 'warlord':
-            applyStatus(cs.player, 'strength', 2);
-            break;
-          case 'guardians_oath':
-            applyStatus(cs.player, 'metallicize', 4);
-            break;
-        }
-      }
+      applyRelicCombatStart(run.player.relics, cs);
 
       setCombat(cs);
       setScreen('combat');

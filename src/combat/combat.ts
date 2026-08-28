@@ -7,6 +7,7 @@ import { getModifiers } from '../ascension';
 import { getRunOrNull } from '../state';
 import { checkBurnKill } from '../achievements';
 import { getEffectiveDef } from '../content/cards';
+import { getActiveSynergies } from '../content/relics';
 
 const PLAYER_DRAW = 5;
 
@@ -277,4 +278,79 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
 
 export function canPlayCard(state: CombatState, costAfterMods: number): boolean {
   return state.player.energy >= costAfterMods;
+}
+
+export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
+  if (relics.includes('vajra')) applyStatus(cs.player, 'strength', 1);
+  if (relics.includes('fighting_spirit')) applyStatus(cs.player, 'strength', 2);
+  if (relics.includes('oddly_smooth_stone')) applyStatus(cs.player, 'dexterity', 1);
+  if (relics.includes('anchor')) cs.player.block += 10;
+  if (relics.includes('bag_of_marbles')) {
+    for (const e of cs.enemies) applyStatus(e, 'vulnerable', 1);
+  }
+  if (relics.includes('frozen_dart')) {
+    for (const e of cs.enemies) applyStatus(e, 'weak', 1);
+  }
+  if (relics.includes('thick_hide')) applyStatus(cs.player, 'metallicize', 2);
+  if (relics.includes('holy_charm')) drawCards(cs, 1);
+  if (relics.includes('iron_will')) applyStatus(cs.player, 'strength', 4);
+  if (relics.includes('dragon_scale')) cs.player.block += 20;
+  if (relics.includes('adrenaline_surge')) {
+    cs.player.energy += 1;
+    drawCards(cs, 1);
+  }
+  if (relics.includes('spiked_armor')) applyStatus(cs.player, 'thorns', 3);
+  if (relics.includes('sturdy_boots')) cs.player.block += 6;
+  if (relics.includes('kinetic_belt')) applyStatus(cs.player, 'dexterity', 2);
+  if (relics.includes('fury_banner')) applyStatus(cs.player, 'strength', 3);
+  if (relics.includes('phoenix_feather')) applyStatus(cs.player, 'regen', 5);
+  if (relics.includes('champion_belt')) {
+    applyStatus(cs.player, 'strength', 1);
+    applyStatus(cs.player, 'dexterity', 1);
+  }
+  if (relics.includes('holy_chalice')) applyStatus(cs.player, 'regen', 3);
+  if (relics.includes('war_drum')) {
+    for (const e of cs.enemies) { applyStatus(e, 'weak', 1); applyStatus(e, 'vulnerable', 1); }
+  }
+  if (relics.includes('master_scabbard')) {
+    applyStatus(cs.player, 'strength', 2); drawCards(cs, 1);
+  }
+  if (relics.includes('incendiary_round')) {
+    for (const e of cs.enemies) applyStatus(e, 'burn', 3);
+  }
+  if (relics.includes('iron_gauntlet')) {
+    applyStatus(cs.player, 'thorns', 4); cs.player.block += 8;
+  }
+  if (relics.includes('arcane_focus')) {
+    for (const e of cs.enemies) applyStatus(e, 'vulnerable', 2);
+    drawCards(cs, 1);
+  }
+  if (relics.includes('blessed_water')) {
+    applyStatus(cs.player, 'regen', 4); applyStatus(cs.player, 'metallicize', 3);
+  }
+  if (relics.includes('lethal_poison')) {
+    for (const e of cs.enemies) applyStatus(e, 'poison', 5);
+  }
+  // Synergy sets
+  for (const syn of getActiveSynergies(relics)) {
+    if (syn.timing !== 'combat_start') continue;
+    cs.log.push(`⚡ 시너지: ${syn.name}`);
+    switch (syn.id) {
+      case 'eye_of_storm':
+        for (const e of cs.enemies) applyStatus(e, 'vulnerable', 1);
+        break;
+      case 'time_beyond':
+        cs.player.energy += 1;
+        break;
+      case 'exploit_weakness':
+        for (const e of cs.enemies) applyStatus(e, 'frail', 1);
+        break;
+      case 'warlord':
+        applyStatus(cs.player, 'strength', 2);
+        break;
+      case 'guardians_oath':
+        applyStatus(cs.player, 'metallicize', 4);
+        break;
+    }
+  }
 }

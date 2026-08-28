@@ -1,10 +1,8 @@
 import { el } from './dom';
 import { getRun, getRunOrNull, setScreen, setCombat, endRun } from '../state';
 import { getAchievementTitle } from '../achievements';
-import { startCombat } from '../combat/combat';
+import { startCombat, applyRelicCombatStart } from '../combat/combat';
 import { applyStatus } from '../combat/statuses';
-import { drawCards } from '../combat/effects';
-import { getActiveSynergies } from '../content/relics';
 import {
   NORMAL_ENCOUNTERS, ELITE_ENCOUNTERS, BOSS_ENCOUNTERS,
   CH2_NORMAL_ENCOUNTERS, CH2_ELITE_ENCOUNTERS, CH2_BOSS_ENCOUNTERS,
@@ -62,88 +60,10 @@ export function startNextWave(): void {
     if (strBonus > 0) applyStatus(e, 'strength', strBonus);
   }
 
-  // Apply relic combat-start effects (same as map-ui.ts)
-  applyRelicCombatStart(run, cs);
+  applyRelicCombatStart(run.player.relics, cs);
 
   setCombat(cs);
   setScreen('combat');
-}
-
-function applyRelicCombatStart(run: any, cs: any): void {
-  const p = run.player;
-  if (p.relics.includes('vajra')) applyStatus(cs.player, 'strength', 1);
-  if (p.relics.includes('fighting_spirit')) applyStatus(cs.player, 'strength', 2);
-  if (p.relics.includes('oddly_smooth_stone')) applyStatus(cs.player, 'dexterity', 1);
-  if (p.relics.includes('anchor')) cs.player.block += 10;
-  if (p.relics.includes('bag_of_marbles')) {
-    for (const e of cs.enemies) applyStatus(e, 'vulnerable', 1);
-  }
-  if (p.relics.includes('frozen_dart')) {
-    for (const e of cs.enemies) applyStatus(e, 'weak', 1);
-  }
-  if (p.relics.includes('thick_hide')) applyStatus(cs.player, 'metallicize', 2);
-  if (p.relics.includes('holy_charm')) drawCards(cs, 1);
-  if (p.relics.includes('iron_will')) applyStatus(cs.player, 'strength', 4);
-  if (p.relics.includes('dragon_scale')) cs.player.block += 20;
-  if (p.relics.includes('adrenaline_surge')) {
-    cs.player.energy += 1;
-    drawCards(cs, 1);
-  }
-  if (p.relics.includes('spiked_armor')) applyStatus(cs.player, 'thorns', 3);
-  if (p.relics.includes('sturdy_boots')) cs.player.block += 6;
-  if (p.relics.includes('kinetic_belt')) applyStatus(cs.player, 'dexterity', 2);
-  if (p.relics.includes('fury_banner')) applyStatus(cs.player, 'strength', 3);
-  if (p.relics.includes('phoenix_feather')) applyStatus(cs.player, 'regen', 5);
-  if (p.relics.includes('champion_belt')) {
-    applyStatus(cs.player, 'strength', 1);
-    applyStatus(cs.player, 'dexterity', 1);
-  }
-  if (p.relics.includes('holy_chalice')) applyStatus(cs.player, 'regen', 3);
-  // Elite relics
-  if (p.relics.includes('war_drum')) {
-    for (const e of cs.enemies) { applyStatus(e, 'weak', 1); applyStatus(e, 'vulnerable', 1); }
-  }
-  if (p.relics.includes('master_scabbard')) {
-    applyStatus(cs.player, 'strength', 2); drawCards(cs, 1);
-  }
-  if (p.relics.includes('incendiary_round')) {
-    for (const e of cs.enemies) applyStatus(e, 'burn', 3);
-  }
-  if (p.relics.includes('iron_gauntlet')) {
-    applyStatus(cs.player, 'thorns', 4); cs.player.block += 8;
-  }
-  if (p.relics.includes('arcane_focus')) {
-    for (const e of cs.enemies) applyStatus(e, 'vulnerable', 2);
-    drawCards(cs, 1);
-  }
-  if (p.relics.includes('blessed_water')) {
-    applyStatus(cs.player, 'regen', 4); applyStatus(cs.player, 'metallicize', 3);
-  }
-  if (p.relics.includes('lethal_poison')) {
-    for (const e of cs.enemies) applyStatus(e, 'poison', 5);
-  }
-  // Synergy sets
-  for (const syn of getActiveSynergies(p.relics)) {
-    if (syn.timing !== 'combat_start') continue;
-    cs.log.push(`⚡ 시너지: ${syn.name}`);
-    switch (syn.id) {
-      case 'eye_of_storm':
-        for (const e of cs.enemies) applyStatus(e, 'vulnerable', 1);
-        break;
-      case 'time_beyond':
-        cs.player.energy += 1;
-        break;
-      case 'exploit_weakness':
-        for (const e of cs.enemies) applyStatus(e, 'frail', 1);
-        break;
-      case 'warlord':
-        applyStatus(cs.player, 'strength', 2);
-        break;
-      case 'guardians_oath':
-        applyStatus(cs.player, 'metallicize', 4);
-        break;
-    }
-  }
 }
 
 export function calcEndlessScore(run: any): number {
