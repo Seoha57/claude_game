@@ -419,6 +419,7 @@ export function startNextChapter(): void {
 
 export function startEndless(): void {
   if (!runState) return;
+  runState.player.hp = runState.player.maxHp;
   runState.endless = { wave: 0, score: 0 };
   combatState = null;
   setScreen('endless_wave_clear');
