@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { getRun, makeCard, setScreen, rerender } from '../state';
+import { getRun, makeCard, setScreen, rerender, canAddCard } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS } from '../content/cards';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
 import type { CardDef } from '../types';
@@ -148,13 +148,15 @@ export function renderReward(): HTMLElement {
   const cardsRow = el('div', { class: 'reward-cards' });
   for (const id of reward.cardChoices) {
     const def = CARD_DEFS[id];
+    const atMax = !canAddCard(run.player.deck, def.id);
     cardsRow.appendChild(
       el(
         'div',
         {
-          class: `card ${def.type} rarity-${def.rarity}`,
+          class: `card ${def.type} rarity-${def.rarity} ${atMax ? 'disabled' : ''}`,
+          style: atMax ? { cursor: 'default' } : {},
           onClick: () => {
-            if (reward.picked) return;
+            if (reward.picked || atMax) return;
             reward.picked = true;
             run.player.deck.push(makeCard(def.id));
             close();
@@ -164,6 +166,7 @@ export function renderReward(): HTMLElement {
         el('div', { class: 'card-name' }, def.name),
         el('div', { class: 'card-desc' }, def.description),
         el('div', { class: 'card-type' }, typeLabel(def.type)),
+        ...(atMax ? [el('div', { style: { color: 'var(--bad)', fontSize: '11px', marginTop: '4px' } }, '최대 보유')] : []),
       ),
     );
   }

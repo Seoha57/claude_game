@@ -394,6 +394,16 @@ export function makeCard(defId: string): CardInstance {
   return { uid: uid(), defId };
 }
 
+export const MAX_CARD_COPIES = 3;
+
+export function countCardCopies(deck: CardInstance[], defId: string): number {
+  return deck.filter((c) => c.defId === defId).length;
+}
+
+export function canAddCard(deck: CardInstance[], defId: string): boolean {
+  return countCardCopies(deck, defId) < MAX_CARD_COPIES;
+}
+
 function makeSeedRng(seed: number): () => number {
   let a = seed >>> 0;
   return () => {

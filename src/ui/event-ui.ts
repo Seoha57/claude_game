@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { getRun, setScreen, makeCard } from '../state';
+import { getRun, setScreen, makeCard, canAddCard } from '../state';
 import { EVENT_DEFS } from '../content/events';
 import type { EventEffect, EventChoice } from '../content/events';
 import { POTION_LIST } from '../content/potions';
@@ -171,7 +171,7 @@ export function renderEvent(): HTMLElement {
           break;
         }
         case 'add_card': {
-          const pool = poolFor(effect.rarity);
+          const pool = poolFor(effect.rarity).filter((c) => canAddCard(run.player.deck, c.id));
           if (pool.length > 0) {
             const chosen = pick(rng, pool);
             run.player.deck.push(makeCard(chosen.id));
@@ -195,7 +195,9 @@ export function renderEvent(): HTMLElement {
         case 'add_blessing': {
           const blessings = ['divine_strike', 'divine_shield', 'miracle'];
           for (let i = 0; i < effect.count; i++) {
-            const id = blessings[Math.floor(rng() * blessings.length)];
+            const available = blessings.filter((b) => canAddCard(run.player.deck, b));
+            if (available.length === 0) break;
+            const id = available[Math.floor(rng() * available.length)];
             run.player.deck.push(makeCard(id));
           }
           playSfx('upgrade');

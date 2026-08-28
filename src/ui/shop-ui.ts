@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { getRun, makeCard, setScreen } from '../state';
+import { getRun, makeCard, setScreen, canAddCard } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS } from '../content/cards';
 import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
 import { POTION_LIST, POTION_DEFS } from '../content/potions';
@@ -194,17 +194,19 @@ function renderCardItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild:
   const def = CARD_DEFS[item.id!];
   const canAfford = run.player.gold >= item.price;
 
+  const atMax = !canAddCard(run.player.deck, def.id);
+  const blocked = item.sold || !canAfford || atMax;
+
   return el(
     'div',
     { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' } },
     el(
       'div',
       {
-        class: `card ${def.type} rarity-${def.rarity} ${item.sold || !canAfford ? 'disabled' : ''}`,
-        style: { cursor: item.sold || !canAfford ? 'default' : 'pointer' },
+        class: `card ${def.type} rarity-${def.rarity} ${blocked ? 'disabled' : ''}`,
+        style: { cursor: blocked ? 'default' : 'pointer' },
         onClick: () => {
-          // 클릭 시점의 라이브 골드/판매 상태로 재확인 (더블클릭/stale 방어)
-          if (item.sold || run.player.gold < item.price) return;
+          if (item.sold || run.player.gold < item.price || !canAddCard(run.player.deck, def.id)) return;
           run.player.gold -= item.price;
           run.player.deck.push(makeCard(def.id));
           item.sold = true;
@@ -218,7 +220,9 @@ function renderCardItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild:
     ),
     item.sold
       ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '판매 완료')
-      : el(
+      : atMax
+        ? el('div', { style: { color: 'var(--bad)', fontSize: '13px' } }, '최대 보유')
+        : el(
           'div',
           { style: { color: canAfford ? 'var(--accent)' : 'var(--bad)', fontWeight: 'bold' } },
           `💰 ${item.price}`,

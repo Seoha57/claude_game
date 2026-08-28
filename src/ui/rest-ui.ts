@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { getRun, setScreen, makeCard } from '../state';
+import { getRun, setScreen, makeCard, canAddCard } from '../state';
 import { getEffectiveDef, canUpgrade } from '../content/cards';
 import { getModifiers } from '../ascension';
 import { isCurseLike } from './deck-overlay';
@@ -75,8 +75,8 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
 function buildDuplicate(onBack: () => void): HTMLElement {
   const run = getRun();
 
-  // Filter out curses (no point duplicating)
-  const dupable = run.player.deck.filter((c) => !isCurseLike(getEffectiveDef(c).id));
+  // Filter out curses and cards already at max copies
+  const dupable = run.player.deck.filter((c) => !isCurseLike(getEffectiveDef(c).id) && canAddCard(run.player.deck, c.defId));
 
   const cardRow = el('div', { class: 'rest-card-row' });
   for (const card of sortForUpgrade(dupable)) {
