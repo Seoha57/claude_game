@@ -1041,24 +1041,24 @@ button:disabled {
 /* ── Deck pile (Hearthstone-style draw pile on the right) ── */
 .deck-pile {
   position: absolute;
-  right: 12px;
-  bottom: 236px;
-  width: 70px;
-  height: 96px;
+  right: 16px;
+  bottom: 55px;
+  width: 80px;
+  height: 110px;
   cursor: pointer;
   z-index: 20;
   transition: transform 0.15s;
 }
-.deck-pile:hover { transform: scale(1.06); }
+.deck-pile:hover { transform: scale(1.08); }
 .deck-pile-card {
   position: absolute;
   left: 0;
-  width: 70px;
-  height: 96px;
-  border-radius: 6px;
-  border: 2px solid #7a6a50;
-  background: linear-gradient(145deg, #3a2820 0%, #28201a 40%, #3a2820 100%);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  width: 80px;
+  height: 110px;
+  border-radius: 8px;
+  border: 2px solid #8a7a60;
+  background: linear-gradient(145deg, #4a3428 0%, #352820 30%, #2a1e18 60%, #3a2820 100%);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 .deck-pile-card::before {
   content: '';
@@ -1066,8 +1066,9 @@ button:disabled {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 28px;
-  opacity: 0.6;
+  font-size: 32px;
+  opacity: 0.7;
+  filter: drop-shadow(0 0 4px rgba(200,160,80,0.3));
 }
 .deck-pile-card.top::before {
   content: '🃏';
@@ -1075,38 +1076,41 @@ button:disabled {
 .deck-pile-card::after {
   content: '';
   position: absolute;
-  inset: 4px;
-  border-radius: 3px;
-  border: 1px solid rgba(180, 150, 100, 0.25);
+  inset: 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(200, 170, 110, 0.2);
+  background: linear-gradient(135deg, rgba(200,170,110,0.06) 0%, transparent 50%, rgba(200,170,110,0.06) 100%);
   pointer-events: none;
 }
 .deck-pile-count {
   position: absolute;
-  bottom: -8px;
-  right: -8px;
-  min-width: 24px;
-  height: 24px;
-  background: var(--accent);
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #c05020, #a04018);
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
-  border-radius: 12px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  padding: 0 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.7);
   z-index: 1;
 }
 
 /* Flying card-back from deck to hand */
 .deck-fly-card {
   position: fixed;
-  width: 70px;
-  height: 96px;
-  border-radius: 6px;
-  border: 2px solid #7a6a50;
-  background: linear-gradient(145deg, #3a2820 0%, #28201a 40%, #3a2820 100%);
+  width: 80px;
+  height: 110px;
+  border-radius: 8px;
+  border: 2px solid #8a7a60;
+  background: linear-gradient(145deg, #4a3428 0%, #352820 30%, #2a1e18 60%, #3a2820 100%);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
   z-index: 1500;
   pointer-events: none;
   opacity: 0;
@@ -1117,7 +1121,7 @@ button:disabled {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 24px;
+  font-size: 28px;
   opacity: 0.6;
 }
 .deck-fly-card.flying {
@@ -2393,9 +2397,9 @@ button:disabled {
   .card-desc { font-size: 10px; }
   .combat-bottom { height: 200px; gap: 4px; padding: 10px; }
   .combat-top { padding: 10px; gap: 18px; }
-  .deck-pile { width: 60px; height: 82px; bottom: 216px; right: 8px; }
-  .deck-pile-card { width: 60px; height: 82px; }
-  .deck-pile-card::before { font-size: 22px; }
+  .deck-pile { width: 64px; height: 88px; bottom: 50px; right: 8px; }
+  .deck-pile-card { width: 64px; height: 88px; }
+  .deck-pile-card::before { font-size: 24px; }
   .stats-summary { gap: 6px; }
   .stats-box { min-width: 80px; padding: 10px 12px; }
   .stats-box-value { font-size: 18px; }
@@ -2494,11 +2498,10 @@ button:disabled {
     padding: 4px 6px;
     opacity: 0.85;
   }
-  .deck-pile { width: 50px; height: 68px; bottom: auto; top: 50%; transform: translateY(-50%); right: 4px; }
-  .deck-pile:hover { transform: translateY(-50%) scale(1.06); }
-  .deck-pile-card { width: 50px; height: 68px; }
-  .deck-pile-card::before { font-size: 18px; }
-  .deck-pile-count { min-width: 20px; height: 20px; font-size: 11px; bottom: -6px; right: -6px; }
+  .deck-pile { width: 54px; height: 74px; bottom: 70px; right: 6px; }
+  .deck-pile-card { width: 54px; height: 74px; border-radius: 6px; }
+  .deck-pile-card::before { font-size: 20px; }
+  .deck-pile-count { min-width: 22px; height: 22px; font-size: 11px; }
 
   /* Header */
   .map-header .info {

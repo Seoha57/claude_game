@@ -520,15 +520,15 @@ function spawnDrawFromDeck(cardEl: HTMLElement, delay: number): void {
   const deckRect = deckEl.getBoundingClientRect();
   const flyCard = document.createElement('div');
   flyCard.className = 'deck-fly-card';
-  flyCard.style.left = `${deckRect.left + deckRect.width / 2 - 35}px`;
-  flyCard.style.top = `${deckRect.top + deckRect.height / 2 - 48}px`;
+  flyCard.style.left = `${deckRect.left + deckRect.width / 2 - 40}px`;
+  flyCard.style.top = `${deckRect.top + deckRect.height / 2 - 55}px`;
   flyCard.style.animationDelay = `${delay}ms`;
   document.body.appendChild(flyCard);
   setTimeout(() => {
     const targetRect = cardEl.getBoundingClientRect();
     if (targetRect.width === 0) { flyCard.remove(); return; }
-    const dx = targetRect.left + targetRect.width / 2 - 35 - parseFloat(flyCard.style.left);
-    const dy = targetRect.top + targetRect.height / 2 - 48 - parseFloat(flyCard.style.top);
+    const dx = targetRect.left + targetRect.width / 2 - 40 - parseFloat(flyCard.style.left);
+    const dy = targetRect.top + targetRect.height / 2 - 55 - parseFloat(flyCard.style.top);
     flyCard.style.setProperty('--fly-dx', `${dx}px`);
     flyCard.style.setProperty('--fly-dy', `${dy}px`);
     flyCard.classList.add('flying');
