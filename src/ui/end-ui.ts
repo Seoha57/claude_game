@@ -5,8 +5,11 @@ import { playSfx } from '../audio';
 import { recordRelics } from '../codex';
 import { unlockNextAscension, getUnlockedMax } from '../ascension';
 import { ENEMY_DEFS } from '../content/enemies';
-import { BOSS_RELICS } from '../content/relics';
+import { BOSS_RELICS, RELIC_DEFS } from '../content/relics';
 import { makeRng, shuffle } from '../rng';
+import { getEffectiveDef } from '../content/cards';
+import { isCurseLike } from './deck-overlay';
+import type { RunState } from '../types';
 
 export function renderChapterClear(): HTMLElement {
   const run = getRunOrNull();
@@ -169,17 +172,13 @@ export function renderWin(): HTMLElement {
     'div',
     { class: 'end-screen' },
     el('h1', { class: 'win' }, '승리!'),
-    el(
-      'div',
-      { style: { color: 'var(--muted)' } },
-      run ? `최종 덱 ${run.player.deck.length}장 / 골드 ${run.player.gold}` : '',
-    ),
     ...(didUnlock && newMax > 0
       ? [el('div', { style: { color: 'var(--good)', marginTop: '12px' } }, `🔓 등반 A${newMax} 해금!`)]
       : []),
     ...(runAscension >= 10
       ? [el('div', { style: { color: 'var(--accent)', marginTop: '8px' } }, '최고 난이도 클리어! 진정한 승리!')]
       : []),
+    ...(run ? [renderRunSummary(run)] : []),
     el('button', {
       style: { background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),
@@ -254,14 +253,10 @@ export function renderTrueWin(): HTMLElement {
       { style: { color: 'var(--accent)', fontSize: '15px', maxWidth: '500px', textAlign: 'center', lineHeight: '1.8' } },
       '차원의 지배자를 쓰러뜨렸다. 모든 균열이 닫히고, 세상은 평화를 되찾았다. 진정한 영웅으로서 그대의 이름이 영원히 기록될 것이다.',
     ),
-    el(
-      'div',
-      { style: { color: 'var(--muted)', marginTop: '20px' } },
-      run ? `최종 덱 ${run.player.deck.length}장 / 골드 ${run.player.gold}` : '',
-    ),
     ...(didUnlock && newMax > 0
       ? [el('div', { style: { color: 'var(--good)', marginTop: '12px' } }, `🔓 등반 A${newMax} 해금!`)]
       : []),
+    ...(run ? [renderRunSummary(run)] : []),
     el('button', {
       style: { marginTop: '20px', background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),
@@ -322,6 +317,85 @@ export function renderLose(): HTMLElement {
       el('div', { class: 'lose-stat' }, `💎 ${run.player.relics.length}유물`),
       run.ascension > 0 ? el('div', { class: 'lose-stat' }, `A${run.ascension}`) : el('div'),
     ),
+    renderRunSummary(run),
     el('button', { onClick: () => endRun() }, '제목 화면으로'),
   );
+}
+
+function renderRunSummary(run: RunState): HTMLElement {
+  const wrapper = el('div', { class: 'run-summary' });
+
+  // Relics
+  if (run.player.relics.length > 0) {
+    const relicSection = el('div', { class: 'run-summary-section' });
+    relicSection.appendChild(el('div', { class: 'run-summary-label' }, `유물 (${run.player.relics.length})`));
+    const relicGrid = el('div', { class: 'run-summary-relics' });
+    for (const id of run.player.relics) {
+      const def = RELIC_DEFS[id];
+      if (!def) continue;
+      relicGrid.appendChild(
+        el('div', { class: 'run-summary-relic', 'data-tooltip': def.description }, def.name),
+      );
+    }
+    relicSection.appendChild(relicGrid);
+    wrapper.appendChild(relicSection);
+  }
+
+  // Deck
+  const deckSection = el('div', { class: 'run-summary-section' });
+  const deckGrid = el('div', { class: 'run-summary-deck', style: { display: 'none' } });
+  const toggle = el('span', {}, '▶');
+  const deckHeader = el('div', {
+    class: 'run-summary-label clickable',
+    onClick: () => {
+      const visible = deckGrid.style.display !== 'none';
+      deckGrid.style.display = visible ? 'none' : 'flex';
+      toggle.textContent = visible ? '▶' : '▼';
+    },
+  });
+  deckHeader.appendChild(toggle);
+  deckHeader.appendChild(document.createTextNode(` 최종 덱 (${run.player.deck.length}장)`));
+  deckSection.appendChild(deckHeader);
+
+  const attacks = run.player.deck.filter((c) => { const d = getEffectiveDef(c); return !isCurseLike(d.id) && d.type === 'attack'; }).length;
+  const skills = run.player.deck.filter((c) => { const d = getEffectiveDef(c); return !isCurseLike(d.id) && d.type === 'skill'; }).length;
+  const powers = run.player.deck.filter((c) => { const d = getEffectiveDef(c); return !isCurseLike(d.id) && d.type === 'power'; }).length;
+  const curses = run.player.deck.filter((c) => isCurseLike(getEffectiveDef(c).id)).length;
+  const typeSummary = [`공격 ${attacks}`, `방어 ${skills}`, `효과 ${powers}`];
+  if (curses > 0) typeSummary.push(`저주 ${curses}`);
+  deckSection.appendChild(el('div', { class: 'run-summary-type-counts' }, typeSummary.join(' · ')));
+
+  const sorted = [...run.player.deck].sort((a, b) => {
+    const da = getEffectiveDef(a);
+    const db = getEffectiveDef(b);
+    const ca = isCurseLike(da.id) ? 1 : 0;
+    const cb = isCurseLike(db.id) ? 1 : 0;
+    if (ca !== cb) return ca - cb;
+    const order = { attack: 0, skill: 1, power: 2 } as const;
+    const oa = order[da.type] ?? 3;
+    const ob = order[db.type] ?? 3;
+    if (oa !== ob) return oa - ob;
+    return da.cost - db.cost;
+  });
+
+  for (const card of sorted) {
+    const def = getEffectiveDef(card);
+    const curse = isCurseLike(def.id);
+    const lvl = card.upgraded ?? 0;
+    const typeClass = curse ? 'curse' : def.type;
+    const upgradeMark = lvl >= 2 ? '++' : lvl === 1 ? '+' : '';
+    deckGrid.appendChild(
+      el('div', {
+        class: `run-summary-card ${typeClass}`,
+        'data-tooltip': def.description,
+      },
+        el('span', { class: 'rsc-cost' }, String(def.cost)),
+        el('span', {}, `${def.name}${upgradeMark}`),
+      ),
+    );
+  }
+
+  deckSection.appendChild(deckGrid);
+  wrapper.appendChild(deckSection);
+  return wrapper;
 }

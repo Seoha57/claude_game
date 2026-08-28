@@ -2319,6 +2319,81 @@ button:disabled {
   border-radius: 6px;
 }
 
+/* ── Run Summary (end screens) ── */
+.run-summary {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 16px;
+}
+.run-summary-section {
+  margin-bottom: 12px;
+}
+.run-summary-label {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+.run-summary-label.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+.run-summary-label.clickable:hover {
+  color: var(--fg);
+}
+.run-summary-type-counts {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.run-summary-relics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.run-summary-relic {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--fg);
+  cursor: default;
+}
+.run-summary-deck {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.run-summary-card {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--fg);
+  cursor: default;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.run-summary-card.attack { border-color: #c0392b; }
+.run-summary-card.skill { border-color: #2980b9; }
+.run-summary-card.power { border-color: #8e44ad; }
+.run-summary-card.curse { border-color: #555; color: var(--muted); }
+.rsc-cost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  font-size: 10px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
 /* ── Log ── */
 .combat-log {
   position: absolute;

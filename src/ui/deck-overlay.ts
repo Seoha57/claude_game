@@ -6,11 +6,19 @@ import type { CardInstance } from '../types';
 export interface CardListOptions {
   title?: string;
   emptyText?: string;
-  shuffleHint?: boolean; // For draw pile, hint that order is shuffled
+  shuffleHint?: boolean;
+  showFilter?: boolean;
 }
+
+type FilterType = 'all' | 'attack' | 'skill' | 'power' | 'curse';
+type SortType = 'type' | 'cost' | 'name';
 
 export function openDeckOverlay(deck: CardInstance[], options: CardListOptions = {}): void {
   const title = options.title ?? '덱 보기';
+  const showFilter = options.showFilter !== false;
+
+  let currentFilter: FilterType = 'all';
+  let currentSort: SortType = 'type';
 
   const overlay = el('div', {
     class: 'card-list-overlay',
@@ -37,20 +45,107 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
     );
   }
 
-  if (deck.length === 0) {
-    overlay.appendChild(
-      el('div', { style: { color: 'var(--muted)', marginTop: '32px' } },
-        options.emptyText ?? '비어있습니다.'),
-    );
-  } else {
-    const grid = el('div', {
-      style: { display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', maxWidth: '900px' },
+  // Filter + Sort controls
+  let controlsEl: HTMLElement | null = null;
+  if (showFilter && deck.length > 0) {
+    controlsEl = el('div', {
+      style: {
+        display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '14px',
+        width: '100%', maxWidth: '900px', alignItems: 'center',
+      },
     });
+    overlay.appendChild(controlsEl);
+  }
 
-    // Sort: curses last, then by type (attack/skill/power), then by cost asc
-    const sorted = [...deck].sort((a, b) => {
+  const grid = el('div', {
+    style: { display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', maxWidth: '900px' },
+  });
+  overlay.appendChild(grid);
+
+  function countByType(type: FilterType): number {
+    if (type === 'all') return deck.length;
+    if (type === 'curse') return deck.filter((c) => isCurseLike(getEffectiveDef(c).id)).length;
+    return deck.filter((c) => {
+      const def = getEffectiveDef(c);
+      return !isCurseLike(def.id) && def.type === type;
+    }).length;
+  }
+
+  function renderControls(): void {
+    if (!controlsEl) return;
+    controlsEl.innerHTML = '';
+
+    const filters: { key: FilterType; label: string }[] = [
+      { key: 'all', label: '전체' },
+      { key: 'attack', label: '공격' },
+      { key: 'skill', label: '방어' },
+      { key: 'power', label: '효과' },
+      { key: 'curse', label: '저주' },
+    ];
+
+    for (const f of filters) {
+      const count = countByType(f.key);
+      if (f.key !== 'all' && count === 0) continue;
+      const active = currentFilter === f.key;
+      controlsEl.appendChild(el('button', {
+        style: {
+          fontSize: '12px', padding: '4px 10px', borderRadius: '12px',
+          background: active ? 'var(--accent)' : 'rgba(255,255,255,0.08)',
+          color: active ? 'white' : 'var(--muted)',
+          border: 'none', cursor: 'pointer',
+        },
+        onClick: () => { currentFilter = f.key; renderControls(); renderGrid(); },
+      }, `${f.label} ${count}`));
+    }
+
+    // Separator
+    controlsEl.appendChild(el('span', { style: { width: '1px', height: '16px', background: 'var(--border)', margin: '0 4px' } }));
+
+    const sorts: { key: SortType; label: string }[] = [
+      { key: 'type', label: '타입순' },
+      { key: 'cost', label: '코스트순' },
+      { key: 'name', label: '이름순' },
+    ];
+
+    for (const s of sorts) {
+      const active = currentSort === s.key;
+      controlsEl.appendChild(el('button', {
+        style: {
+          fontSize: '12px', padding: '4px 10px', borderRadius: '12px',
+          background: active ? 'var(--accent-2, var(--accent))' : 'rgba(255,255,255,0.08)',
+          color: active ? 'white' : 'var(--muted)',
+          border: 'none', cursor: 'pointer',
+        },
+        onClick: () => { currentSort = s.key; renderControls(); renderGrid(); },
+      }, s.label));
+    }
+  }
+
+  function renderGrid(): void {
+    grid.innerHTML = '';
+
+    let filtered = [...deck];
+    if (currentFilter === 'curse') {
+      filtered = filtered.filter((c) => isCurseLike(getEffectiveDef(c).id));
+    } else if (currentFilter !== 'all') {
+      filtered = filtered.filter((c) => {
+        const def = getEffectiveDef(c);
+        return !isCurseLike(def.id) && def.type === currentFilter;
+      });
+    }
+
+    filtered.sort((a, b) => {
       const da = getEffectiveDef(a);
       const db = getEffectiveDef(b);
+
+      if (currentSort === 'cost') {
+        if (da.cost !== db.cost) return da.cost - db.cost;
+        return da.name.localeCompare(db.name, 'ko');
+      }
+      if (currentSort === 'name') {
+        return da.name.localeCompare(db.name, 'ko');
+      }
+      // type sort (default)
       const ca = isCurseLike(da.id) ? 1 : 0;
       const cb = isCurseLike(db.id) ? 1 : 0;
       if (ca !== cb) return ca - cb;
@@ -61,7 +156,15 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
       return da.cost - db.cost;
     });
 
-    for (const card of sorted) {
+    if (filtered.length === 0) {
+      grid.appendChild(
+        el('div', { style: { color: 'var(--muted)', marginTop: '32px' } },
+          options.emptyText ?? '비어있습니다.'),
+      );
+      return;
+    }
+
+    for (const card of filtered) {
       const def = getEffectiveDef(card);
       const curse = isCurseLike(def.id);
       const lvl = card.upgraded ?? 0;
@@ -82,8 +185,16 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
         ),
       );
     }
+  }
 
-    overlay.appendChild(grid);
+  if (deck.length === 0) {
+    grid.appendChild(
+      el('div', { style: { color: 'var(--muted)', marginTop: '32px' } },
+        options.emptyText ?? '비어있습니다.'),
+    );
+  } else {
+    renderControls();
+    renderGrid();
   }
 
   // Esc to close
