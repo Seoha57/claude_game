@@ -478,6 +478,7 @@ let previousHandUids = new Set<string>();
 function renderHand(state: CombatState): HTMLElement {
   const hand = el('div', { class: 'combat-bottom' });
   hand.addEventListener('scroll', () => { savedHandScroll = hand.scrollLeft; });
+  const inner = el('div', { class: 'hand-cards' });
   const newHandUids = new Set<string>();
   state.player.hand.forEach((c, i) => {
     const isFresh = !previousHandUids.has(c.uid);
@@ -489,8 +490,9 @@ function renderHand(state: CombatState): HTMLElement {
       const capturedIdx = i;
       requestAnimationFrame(() => spawnDrawFromDeck(cardEl, capturedIdx * 55));
     }
-    hand.appendChild(cardEl);
+    inner.appendChild(cardEl);
   });
+  hand.appendChild(inner);
   previousHandUids = newHandUids;
   // Restore on next frame so the layout is settled
   requestAnimationFrame(() => { hand.scrollLeft = savedHandScroll; });
@@ -1154,7 +1156,7 @@ function playCardWithFx(state: CombatState, card: CardInstance, target: Enemy | 
   if (state.player.energy < def.cost) return;
   playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
   // Animate via hotkey: find the card element in current hand DOM
-  const handCards = document.querySelectorAll('.combat-bottom .card');
+  const handCards = document.querySelectorAll('.hand-cards .card');
   const idxInHand = state.player.hand.findIndex((c) => c.uid === card.uid);
   if (idxInHand >= 0 && handCards[idxInHand]) {
     spawnCardPlayAnim(handCards[idxInHand] as HTMLElement, { exhaust: !!def.exhaust });
