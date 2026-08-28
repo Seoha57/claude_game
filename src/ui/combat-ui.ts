@@ -499,8 +499,9 @@ function renderHand(state: CombatState): HTMLElement {
 
 function renderDeckPile(state: CombatState): HTMLElement {
   const count = state.player.draw.length;
+  const frame = getCardFrame();
   const pile = el('div', {
-    class: 'deck-pile',
+    class: `deck-pile frame-${frame}`,
     'data-tooltip': `드로우 더미: ${count}장`,
     onClick: () => openDeckOverlay(state.player.draw, { title: '드로우', shuffleHint: true, emptyText: '비어있습니다.' }),
   });
