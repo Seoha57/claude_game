@@ -198,6 +198,7 @@ export function renderCombat(): HTMLElement {
     renderTop(state),
     renderMid(state),
     renderHand(state),
+    renderDeckPile(state),
   );
 }
 
@@ -485,6 +486,8 @@ function renderHand(state: CombatState): HTMLElement {
     if (isFresh) {
       cardEl.classList.add('card-fresh');
       cardEl.style.animationDelay = `${i * 55}ms`;
+      const capturedIdx = i;
+      requestAnimationFrame(() => spawnDrawFromDeck(cardEl, capturedIdx * 55));
     }
     hand.appendChild(cardEl);
   });
@@ -492,6 +495,45 @@ function renderHand(state: CombatState): HTMLElement {
   // Restore on next frame so the layout is settled
   requestAnimationFrame(() => { hand.scrollLeft = savedHandScroll; });
   return hand;
+}
+
+function renderDeckPile(state: CombatState): HTMLElement {
+  const count = state.player.draw.length;
+  const pile = el('div', {
+    class: 'deck-pile',
+    'data-tooltip': `드로우 더미: ${count}장`,
+    onClick: () => openDeckOverlay(state.player.draw, { title: '드로우', shuffleHint: true, emptyText: '비어있습니다.' }),
+  });
+  const stackCount = Math.min(count, 5);
+  for (let i = 0; i < stackCount; i++) {
+    const isTop = i === stackCount - 1;
+    const card = el('div', { class: `deck-pile-card${isTop ? ' top' : ''}`, style: { bottom: `${i * 3}px` } });
+    pile.appendChild(card);
+  }
+  pile.appendChild(el('div', { class: 'deck-pile-count' }, String(count)));
+  return pile;
+}
+
+function spawnDrawFromDeck(cardEl: HTMLElement, delay: number): void {
+  const deckEl = document.querySelector('.deck-pile');
+  if (!deckEl) return;
+  const deckRect = deckEl.getBoundingClientRect();
+  const flyCard = document.createElement('div');
+  flyCard.className = 'deck-fly-card';
+  flyCard.style.left = `${deckRect.left + deckRect.width / 2 - 35}px`;
+  flyCard.style.top = `${deckRect.top + deckRect.height / 2 - 48}px`;
+  flyCard.style.animationDelay = `${delay}ms`;
+  document.body.appendChild(flyCard);
+  setTimeout(() => {
+    const targetRect = cardEl.getBoundingClientRect();
+    if (targetRect.width === 0) { flyCard.remove(); return; }
+    const dx = targetRect.left + targetRect.width / 2 - 35 - parseFloat(flyCard.style.left);
+    const dy = targetRect.top + targetRect.height / 2 - 48 - parseFloat(flyCard.style.top);
+    flyCard.style.setProperty('--fly-dx', `${dx}px`);
+    flyCard.style.setProperty('--fly-dy', `${dy}px`);
+    flyCard.classList.add('flying');
+    setTimeout(() => flyCard.remove(), 400 + delay);
+  }, 10 + delay);
 }
 
 function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLElement {
