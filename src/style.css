@@ -863,6 +863,7 @@ button:disabled {
   justify-content: center;
   gap: 8px;
   padding: 16px;
+  padding-right: 110px;
   overflow-x: auto;
 }
 .card {
@@ -2428,7 +2429,7 @@ button:disabled {
   .card { width: 120px; height: 168px; }
   .card-name { font-size: 12px; }
   .card-desc { font-size: 10px; }
-  .combat-bottom { height: 200px; gap: 4px; padding: 10px; }
+  .combat-bottom { height: 200px; gap: 4px; padding: 10px; padding-right: 90px; }
   .combat-top { padding: 10px; gap: 18px; }
   .deck-pile { width: 64px; height: 88px; bottom: 50px; right: 8px; }
   .deck-pile-card { width: 64px; height: 88px; }
@@ -2473,7 +2474,7 @@ button:disabled {
     min-height: 200px;
     flex-shrink: 0;
     gap: 10px;
-    padding: 14px 12px max(10px, env(safe-area-inset-bottom));
+    padding: 14px 76px max(10px, env(safe-area-inset-bottom)) 12px;
     justify-content: flex-start;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
