@@ -443,7 +443,7 @@ const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_g14:            { name: '파열 수류탄+',           description: '11 데미지. 취약 +3.',                  effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   g_reinforce:      { name: '대전차포+',               description: '힘 +3.',                               effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   g_sparrow:        { name: '자폭 기계+',         description: '턴 종료 시 방어도 +4.',                effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
-  g_gods_hail:      { name: '강철의 비+',               description: '8 데미지. 사용할 때마다 영구 데미지 +3.', effects: [{ kind: 'damage', amount: 8 }] },
+  g_gods_hail:      { name: '강철의 비+',               description: '8 데미지. 사용할 때마다 영구 데미지 +3.', effects: [{ kind: 'damage', amount: 8 }], scaling: { kind: 'on_play', amount: 3 } },
   g_divergent:      { name: '확산탄+',              description: '카드 소멸 시 카드 2장 드로우.',         effects: [{ kind: 'apply_self', status: 'on_exhaust_draw', amount: 2 }] },
   g_overheat:       { name: '집중 제압+',       description: '42 데미지. 취약 +3. 유지.',            effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   g_mech_drop:      { name: '시한폭탄+',           description: '34 데미지.',                           effects: [{ kind: 'damage', amount: 34 }] },

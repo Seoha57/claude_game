@@ -435,7 +435,7 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_rose_bind:      { name: '장미 덩굴+',                  description: '방어도 +13.',                            effects: [{ kind: 'block', amount: 13 }] },
   m_mirror:         { name: '분신술+',                 description: '힘 +3.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   m_goblin_charge:  { name: '소환: 돌격 정령+',   description: '턴 종료 시 방어도 +4.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
-  m_ouroboros:      { name: '자기 재생+',                description: '15 데미지. 처치 시 영구 데미지 +6. 소멸.', effects: [{ kind: 'damage', amount: 15 }] },
+  m_ouroboros:      { name: '자기 재생+',                description: '15 데미지. 처치 시 영구 데미지 +6. 소멸.', effects: [{ kind: 'damage', amount: 15 }], scaling: { kind: 'on_kill', amount: 6 } },
   m_doll_forest:    { name: '인형의 숲+',                 description: '카드 소멸 시 에너지 +1, 카드 1장 드로우.', effects: [{ kind: 'apply_self', status: 'on_exhaust_energy', amount: 1 }, { kind: 'apply_self', status: 'on_exhaust_draw', amount: 1 }] },
   m_astral_storm:   { name: '별빛 폭풍+',              description: '42 데미지.',                             effects: [{ kind: 'damage', amount: 42 }] },
   m_kasiyas:        { name: '소환: 대정령+',            description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },

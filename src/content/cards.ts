@@ -526,7 +526,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   inflame:          { name: '검의 정수+',          description: '힘 +3.',                              effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   rage:             { name: '재생의 숨결+',          description: '재생 +8.',                            effects: [{ kind: 'apply_self', status: 'regen', amount: 8 }] },
   metallicize_card: { name: '철벽의 검+',  description: '턴 종료 시 방어도 +4.',              effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
-  mugeukdo:         { name: '극참+',         description: '13 데미지. 처치 시 영구 데미지 +5.',  effects: [{ kind: 'damage', amount: 13 }] },
+  mugeukdo:         { name: '극참+',         description: '13 데미지. 처치 시 영구 데미지 +5.',  effects: [{ kind: 'damage', amount: 13 }], scaling: { kind: 'on_kill', amount: 5 } },
   chain_release:    { name: '속박 해방+',      description: '카드 소멸 시 힘 +2.',                  effects: [{ kind: 'apply_self', status: 'on_exhaust_str', amount: 2 }] },
   bludgeon:         { name: '폭풍의 검+',           description: '42 데미지. 유지.',                effects: [{ kind: 'damage', amount: 42 }] },
   demon_form:       { name: '전투의 눈+',                   description: '턴 시작 시 힘 +3. 선천.',         effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
@@ -547,7 +547,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   infinite_cut:     { name: '무한참+',        description: '6 데미지 3회.',                       effects: [{ kind: 'damage', amount: 6, times: 3 }] },
   awakening:        { name: '각성+',          description: '힘 +5. 소멸.',                        effects: [{ kind: 'apply_self', status: 'strength', amount: 5 }] },
   demon_one_slash:  { name: '멸귀일섬+',      description: '36 데미지. 처치 시 영구 데미지 +5. 소멸.',
-                      effects: [{ kind: 'damage', amount: 36 }] },
+                      effects: [{ kind: 'damage', amount: 36 }], scaling: { kind: 'on_kill', amount: 5 } },
 };
 
 import type { CardInstance } from '../types';

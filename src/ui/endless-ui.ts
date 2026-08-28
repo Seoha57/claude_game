@@ -155,7 +155,7 @@ export function renderEndlessWaveClear(): HTMLElement {
   const run = getRunOrNull();
   if (!run?.endless) return el('div', {}, '오류');
   const wave = run.endless.wave;
-  const isRest = wave > 0 && wave % 5 === 0 && wave % 10 !== 0;
+  const isRest = wave > 1 && (wave - 1) % 5 === 0 && (wave - 1) % 10 !== 0;
 
   const wrapper = el('div', { class: 'end-screen' });
 

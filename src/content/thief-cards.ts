@@ -326,7 +326,7 @@ export const THIEF_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   t_toxic_spread:    { name: '맹독 확산+',       description: '8 데미지. 중독 +7.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
   t_balakar:         { name: '학살의 망령 소환+', description: '턴 시작 시 힘 +3. 선천.',           effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   t_yasakani:        { name: '비취 곡옥+',       description: '모든 적에게 9 데미지 2회.',              effects: [{ kind: 'damage_all', amount: 9 }, { kind: 'damage_all', amount: 9 }] },
-  t_death_shadow:    { name: '죽음의 그림자+',   description: '34 데미지. 처치 시 영구 데미지 +5. 소멸.', effects: [{ kind: 'damage', amount: 34 }] },
+  t_death_shadow:    { name: '죽음의 그림자+',   description: '34 데미지. 처치 시 영구 데미지 +5. 소멸.', effects: [{ kind: 'damage', amount: 34 }], scaling: { kind: 'on_kill', amount: 5 } },
   t_silvermoon:      { name: '은월+',            description: '데미지 = 4 × 이번 전투 누적 공격 수.',   effects: [{ kind: 'damage_per_attack', amount: 4 }] },
   t_plague:          { name: '역병+',            description: '모든 적에게 중독 +14.',                  effects: [{ kind: 'apply_all', status: 'poison', amount: 14 }] },
   t_nightmare:       { name: '악몽+',             description: '15 데미지 3회. 소멸.',                   effects: [{ kind: 'damage', amount: 15, times: 3 }] },

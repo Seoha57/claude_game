@@ -427,7 +427,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_hadouken:      { name: '번개 던지기+',                   description: '힘 +3.',                                effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
   f_mount:         { name: '화약 발차기+',                   description: '재생 +8.',                              effects: [{ kind: 'apply_self', status: 'regen', amount: 8 }] },
   f_double_open:   { name: '기공 해방+',                 description: '턴 종료 시 방어도 +4.',                 effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
-  f_saro_hwanyeol: { name: '염화 연격+',                description: '10 데미지. 사용할 때마다 영구 데미지 +3.', effects: [{ kind: 'damage', amount: 10 }] },
+  f_saro_hwanyeol: { name: '염화 연격+',                description: '10 데미지. 사용할 때마다 영구 데미지 +3.', effects: [{ kind: 'damage', amount: 10 }], scaling: { kind: 'on_play', amount: 3 } },
   f_red_dragon:    { name: '붉은 불꽃+',                  description: '카드 소멸 시 방어도 +5.',                effects: [{ kind: 'apply_self', status: 'on_exhaust_block', amount: 5 }] },
   f_golden_thunder: { name: '뇌호 : 심판의 기수+',   description: '42 데미지. 취약 +3.',                   effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   f_flame_kick:    { name: '화염 발차기+',                description: '모든 적에게 28 데미지.',                effects: [{ kind: 'damage_all', amount: 28 }] },

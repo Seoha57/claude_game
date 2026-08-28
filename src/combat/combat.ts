@@ -74,6 +74,7 @@ export function beginPlayerTurn(state: CombatState): void {
   p.block = 0;
   p.energy = p.maxEnergy;
   state.flags.firstAttackThisTurn = true;
+  state.flags.lastPlayedType = undefined;
   // Reset per-turn signature counters
   state.flags.cardsPlayedThisTurn = 0;
   state.flags.fighterProcThisTurn = false;
@@ -108,6 +109,7 @@ export function beginPlayerTurn(state: CombatState): void {
         target.block -= absorbed;
         target.hp = Math.max(0, target.hp - (3 - absorbed));
         state.log.push(`마탑의 결정 → ${target.defId}에게 3 데미지`);
+        maybeTriggerPhase(state, target);
       }
     }
     if (run.player.relics.includes('storm_core')) {
@@ -118,6 +120,7 @@ export function beginPlayerTurn(state: CombatState): void {
         target.block -= absorbed;
         target.hp = Math.max(0, target.hp - (6 - absorbed));
         state.log.push(`폭풍의 핵 → ${target.defId}에게 6 데미지`);
+        maybeTriggerPhase(state, target);
       }
     }
     if (run.player.relics.includes('storm_banner')) p.block += 4;
@@ -125,6 +128,7 @@ export function beginPlayerTurn(state: CombatState): void {
 
   // Start-of-turn statuses for player
   applyStartOfTurnStatuses(p, state, '플레이어');
+  if (p.hp <= 0) { state.phase = 'lost'; return; }
 
   // 데일리 제약: 손패 ±N
   const drawCount = Math.max(1, PLAYER_DRAW + (run?.dailyConfig?.handDrawDelta ?? 0));

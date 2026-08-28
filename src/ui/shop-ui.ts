@@ -339,6 +339,7 @@ function appendRemovalPicker(wrapper: HTMLElement, run: ReturnType<typeof getRun
             if (removal.sold || removalState !== 'picking') return;
             const idx = run.player.deck.findIndex((c) => c.uid === card.uid);
             if (idx < 0) return;
+            if (run.player.gold < removal.price) return;
             run.player.gold -= removal.price;
             run.player.deck.splice(idx, 1);
             removal.sold = true;
