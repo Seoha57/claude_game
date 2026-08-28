@@ -325,7 +325,7 @@ function renderStatuses(s: Record<string, number | undefined>): HTMLElement {
 
 function renderMid(state: CombatState): HTMLElement {
   const p = state.player;
-  const energy = el('div', { class: 'energy-orb' }, `${p.energy}/${p.maxEnergy}`);
+  const energy = el('div', { class: 'energy-orb' }, `${p.energy}`);
 
   const hpPct = p.hp / p.maxHp;
   const hpFill = el('div', {
