@@ -227,6 +227,7 @@ export function renderEndlessResult(): HTMLElement {
 const CLASS_LABEL: Record<string, string> = {
   swordmaster: '검사', gunner: '사수', fighter: '격투가',
   magician: '마법사', priest: '성직자', thief: '도적',
+  summoner: '정령술사',
 };
 
 export function renderLeaderboard(): HTMLElement {

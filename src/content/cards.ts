@@ -4,7 +4,7 @@ import { FIGHTER_CARD_DEFS, fighterGetEffectiveDef, canUpgradeFighter } from './
 import { MAGICIAN_CARD_DEFS, magicianGetEffectiveDef, canUpgradeMagician } from './magician-cards';
 import { PRIEST_CARD_DEFS, priestGetEffectiveDef, canUpgradePriest } from './priest-cards';
 import { THIEF_CARD_DEFS, thiefGetEffectiveDef, canUpgradeThief } from './thief-cards';
-import { SUMMONER_CARD_DEFS, summonerGetEffectiveDef } from './summoner-cards';
+import { SUMMONER_CARD_DEFS, summonerGetEffectiveDef, canUpgradeSummoner } from './summoner-cards';
 export { GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS } from './gunner-cards';
 export { FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS } from './fighter-cards';
 export { MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS } from './magician-cards';
@@ -656,5 +656,6 @@ export function canUpgrade(card: CardInstance): boolean {
   if (card.defId.startsWith('m_')) return canUpgradeMagician(card);
   if (card.defId.startsWith('p_')) return canUpgradePriest(card);
   if (card.defId.startsWith('t_')) return canUpgradeThief(card);
+  if (card.defId.startsWith('s_')) return canUpgradeSummoner(card);
   return (card.upgraded ?? 0) < 2 && card.defId in UPGRADE_MAP;
 }
