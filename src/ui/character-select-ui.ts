@@ -88,6 +88,18 @@ const CHARACTERS: CharacterInfo[] = [
     starterCards: '베기×5 · 뼈 방패×4 · 암흑의 혼×1',
     emoji: '🗡️',
   },
+  {
+    id: 'summoner',
+    name: '정령술사',
+    subname: '(정령·영혼·소환·계약)',
+    hp: 62,
+    startRelic: '영혼의 등불',
+    signatureRelic: '정령 계약서',
+    signatureDesc: 'power 카드 사용 시 방어도 +3',
+    description: '정령 소환과 영혼 마법으로 전투를 지배하는 정령술사. HP가 낮지만 다양한 power 스케일링이 강하다.',
+    starterCards: '마력탄×5 · 보호막×4 · 대지 정령 소환×1',
+    emoji: '👻',
+  },
 ];
 
 export function renderCharacterSelect(seed: number, ascension: number): HTMLElement {

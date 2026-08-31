@@ -239,7 +239,7 @@ export function startNewRun(
   options: { goToScreen?: Screen; daily?: { date: string; constraint: DailyConstraint } } = {},
 ): void {
   const mods = getModifiers(ascension);
-  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82, thief: 68 };
+  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82, thief: 68, summoner: 62 };
   let baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
   // 데일리 제약: HP 배율
   if (options.daily?.constraint.hpMult !== undefined) {
@@ -251,6 +251,7 @@ export function startNewRun(
     characterClass === 'magician' ? makeMagicianStarterDeck() :
     characterClass === 'priest' ? makePriestStarterDeck() :
     characterClass === 'thief' ? makeThiefStarterDeck() :
+    characterClass === 'summoner' ? makeSummonerStarterDeck() :
     makeStarterDeck();
   for (let i = 0; i < mods.cursesInDeck; i++) deck.push(makeCard('wound'));
   // 데일리 제약: 시작 저주
@@ -264,6 +265,7 @@ export function startNewRun(
     magician: 'mage_orb',
     priest: 'holy_chalice',
     thief: 'oddly_smooth_stone',
+    summoner: 'soul_lantern',
   };
   // 시그니처 유물 — 캐릭터 정체성을 강화하는 두 번째 시작 유물
   const signatureMap: Record<CharacterClass, string> = {
@@ -273,6 +275,7 @@ export function startNewRun(
     magician: 'elemental_resonance',
     priest: 'holy_seal',
     thief: 'venom_fang',
+    summoner: 'spirit_contract',
   };
   const startingRelic = relicMap[characterClass];
   const signatureRelic = signatureMap[characterClass];
@@ -386,6 +389,14 @@ function makeThiefStarterDeck(): CardInstance[] {
   for (let i = 0; i < 5; i++) deck.push(makeCard('t_slicer'));
   for (let i = 0; i < 4; i++) deck.push(makeCard('t_bone_shield'));
   deck.push(makeCard('t_dark_soul'));
+  return deck;
+}
+
+function makeSummonerStarterDeck(): CardInstance[] {
+  const deck: CardInstance[] = [];
+  for (let i = 0; i < 5; i++) deck.push(makeCard('s_spirit_bolt'));
+  for (let i = 0; i < 4; i++) deck.push(makeCard('s_ward'));
+  deck.push(makeCard('s_summon_earth'));
   return deck;
 }
 

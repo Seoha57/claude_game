@@ -39,7 +39,7 @@ const CONSTRAINTS: DailyConstraint[] = [
   { id: 'titan_clash',   name: '거인의 전쟁',  desc: 'HP +30%, 적 HP +40%',              hpMult: 1.3, enemyHpMult: 1.4 },
 ];
 
-const CHARACTERS: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief'];
+const CHARACTERS: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief', 'summoner'];
 
 // ── 일자 계산 (UTC 고정) ────────────────────────────────────────
 export function todayDateString(): string {

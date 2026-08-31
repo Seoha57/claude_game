@@ -105,6 +105,12 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '매 턴 첫 공격이 적에게 중독 +2.',
     rarity: 'starter',
   },
+  spirit_contract: {
+    id: 'spirit_contract',
+    name: '정령 계약서',
+    description: 'power 카드 사용 시 방어도 +3.',
+    rarity: 'starter',
+  },
 
   // ── Common ──
   frozen_dart: {
@@ -271,6 +277,13 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '전투 시작 시 모든 적에게 중독 +5.',
     rarity: 'elite',
     forClass: 'thief',
+  },
+  soul_crystal: {
+    id: 'soul_crystal',
+    name: '영혼 수정',
+    description: '전투 시작 시 카드 1장 드로우, 방어도 +6.',
+    rarity: 'elite',
+    forClass: 'summoner',
   },
 
   // ── Boss relics ──
