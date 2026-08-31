@@ -20,6 +20,17 @@ import { renderHistory } from './history-ui';
 import { renderEndlessWaveClear, renderEndlessResult, renderLeaderboard } from './endless-ui';
 import { renderSettings } from './settings-ui';
 
+type Screen = ReturnType<typeof getScreen>;
+let prevScreen: Screen | null = null;
+
+function getTransitionClass(from: Screen | null, to: Screen): string {
+  if (!from || from === to) return '';
+  if (to === 'combat') return 'screen-enter-combat';
+  if (from === 'combat' && (to === 'reward' || to === 'win' || to === 'lose' || to === 'true_win')) return 'screen-enter-fade';
+  if (to === 'lose') return 'screen-enter-fade';
+  return 'screen-enter';
+}
+
 export function render(): void {
   const root = document.getElementById('app');
   if (!root) return;
@@ -106,5 +117,10 @@ export function render(): void {
       view = renderSettings();
       break;
   }
+
+  const transition = getTransitionClass(prevScreen, screen);
+  if (transition) view.classList.add(transition);
+  prevScreen = screen;
+
   root.appendChild(view);
 }

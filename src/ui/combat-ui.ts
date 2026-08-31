@@ -208,8 +208,13 @@ export function renderCombat(): HTMLElement {
 function renderTop(state: CombatState): HTMLElement {
   const enemiesEl = el('div', { class: 'enemies' });
   const enemyRow = el('div', { style: { display: 'flex', gap: '32px' } });
-  for (const e of state.enemies) {
-    enemyRow.appendChild(renderEnemy(state, e));
+  for (let i = 0; i < state.enemies.length; i++) {
+    const enemyEl = renderEnemy(state, state.enemies[i]);
+    if (state.turn === 1 && state.enemies[i].hp > 0) {
+      enemyEl.classList.add('enemy-intro');
+      enemyEl.style.animationDelay = `${i * 120}ms`;
+    }
+    enemyRow.appendChild(enemyEl);
   }
   enemiesEl.appendChild(enemyRow);
 

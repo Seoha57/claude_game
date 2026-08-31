@@ -279,6 +279,16 @@ button:disabled {
   100% { transform: translateY(30px) rotate(-15deg); }
 }
 
+/* Enemy intro — staggered entrance on combat start */
+.enemy.enemy-intro {
+  animation: enemy-intro-in 0.5s cubic-bezier(0.2, 1, 0.3, 1) backwards;
+}
+@keyframes enemy-intro-in {
+  0%   { opacity: 0; transform: translateY(-30px) scale(0.6); }
+  60%  { opacity: 1; transform: translateY(4px) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* Enemy lunge — fires when enemy attacks the player */
 .enemy.enemy-lunge .enemy-art {
   animation: enemy-lunge-anim 0.4s ease-out;
@@ -1284,8 +1294,9 @@ button:disabled {
 }
 @media (hover: hover) and (pointer: fine) {
   .card:hover:not(.disabled) {
-    transform: translateY(-12px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    transform: translateY(-24px) scale(1.12);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+    z-index: 10;
   }
 }
 .card.disabled {
@@ -2452,6 +2463,30 @@ button:disabled {
   font-size: 10px;
   font-weight: bold;
   flex-shrink: 0;
+}
+
+/* ── Screen transitions ── */
+.screen-enter {
+  animation: screen-fade-in 0.25s ease-out;
+}
+@keyframes screen-fade-in {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.screen-enter-combat {
+  animation: screen-combat-in 0.4s ease-out;
+}
+@keyframes screen-combat-in {
+  0%   { opacity: 0; filter: brightness(0); }
+  40%  { opacity: 1; filter: brightness(0.3); }
+  100% { opacity: 1; filter: brightness(1); }
+}
+.screen-enter-fade {
+  animation: screen-slow-fade 0.35s ease-out;
+}
+@keyframes screen-slow-fade {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 /* ── Log ── */
