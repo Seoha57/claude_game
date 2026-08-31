@@ -14,7 +14,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_reload: {
     id: 'g_reload',
-    name: '슬라이딩',
+    name: '긴급 회피',
     type: 'skill',
     rarity: 'starter',
     cost: 1,
@@ -39,7 +39,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_double_gunhawk: {
     id: 'g_double_gunhawk',
-    name: '발차기',
+    name: '이중 사격',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -49,7 +49,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_western_fire: {
     id: 'g_western_fire',
-    name: '회전 킥',
+    name: '난사',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -59,7 +59,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_frag: {
     id: 'g_frag',
-    name: '연속 회전',
+    name: '섬광탄',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -107,7 +107,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   // ── Common skills ──
   g_smoke: {
     id: 'g_smoke',
-    name: '승천 회전',
+    name: '연막 사격',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -117,7 +117,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_booster: {
     id: 'g_booster',
-    name: '속사의 극치',
+    name: '전투 집중',
     type: 'skill',
     rarity: 'common',
     cost: 0,
@@ -303,7 +303,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_arms_dealer: {
     id: 'g_arms_dealer',
-    name: '발도 사격',
+    name: '결사 사격',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -317,7 +317,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_airstrike: {
     id: 'g_airstrike',
-    name: '마탄',
+    name: '폭풍 사격',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -409,7 +409,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
   },
   g_helios: {
     id: 'g_helios',
-    name: '헬리오스',
+    name: '최종 병기',
     type: 'attack', rarity: 'rare', cost: 3, target: 'enemy',
     description: '35 데미지. 모든 적 약화 +2. 소멸.',
     effects: [
