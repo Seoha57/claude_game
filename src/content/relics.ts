@@ -377,6 +377,13 @@ export const SYNERGY_SETS: SynergySet[] = [
     description: '전투 시작 시 금속화 +4.',
     timing: 'combat_start',
   },
+  {
+    id: 'spirit_bond',
+    name: '정령의 유대',
+    relics: ['soul_lantern', 'soul_crystal'],
+    description: '전투 시작 시 카드 1장 드로우, 방어도 +4.',
+    timing: 'combat_start',
+  },
 ];
 
 export function getActiveSynergies(relicIds: string[]): SynergySet[] {

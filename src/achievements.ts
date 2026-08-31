@@ -42,6 +42,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'cryomancer', title: '얼음의 지배자', description: '빙결로 적 행동을 4턴 연속 봉인.', emoji: '❄', category: 'combat' },
   { id: 'venomous',   title: '맹독술사',  description: '한 적에게 중독 20 이상 누적.', emoji: '☠️', category: 'combat' },
   { id: 'big_hit',    title: '필살의 일격', description: '단일 카드로 60 이상 데미지.', emoji: '🌟', category: 'combat' },
+  { id: 'spirit_master', title: '정령의 주인', description: '한 전투에서 의식(ritual) 10 이상 누적.', emoji: '👻', category: 'combat' },
 
   // ── Collection ──
   { id: 'cards_30',  title: '카드 수집가', description: '30종 카드 발견.',  emoji: '📖', category: 'collection' },
@@ -276,6 +277,9 @@ export function checkBurnKill(): void {
 }
 export function checkFreezeChain(consecutive: number): void {
   if (consecutive >= 4) unlockId('cryomancer');
+}
+export function checkRitual(amount: number): void {
+  if (amount >= 10) unlockId('spirit_master');
 }
 
 export function checkCodexCards(count: number): void {

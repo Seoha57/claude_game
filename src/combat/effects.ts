@@ -10,6 +10,7 @@ import { getEffectiveDef } from '../content/cards';
 import { ENEMY_DEFS } from '../content/enemies';
 import { getRunOrNull } from '../state';
 import { playSfx } from '../audio';
+import { checkRitual } from '../achievements';
 
 // Apply raw damage to a combatant, accounting for block. Returns hp damage dealt (post-block).
 export function dealDamage(
@@ -131,6 +132,9 @@ export function applyEffect(
       applyStatus(source as any, effect.status, effect.amount);
       log(`${nameOf(source, state)} ${statusName(effect.status)} +${effect.amount}`);
       playStatusSfx(effect.status, true);
+      if (effect.status === 'ritual') {
+        checkRitual(getStatus((source as any).statuses, 'ritual'));
+      }
       return;
     }
     case 'apply_enemy': {
@@ -314,6 +318,12 @@ export function playCard(
       && def.type === 'skill' && state.flags.lastPlayedType === 'skill') {
     drawCards(state, 1);
     log(`원소 공명 → 카드 +1`);
+  }
+
+  // 정령 계약서 (정령술사) — power 카드 사용 시 방어도 +3
+  if (run?.player.relics.includes('spirit_contract') && def.type === 'power') {
+    p.block += 3;
+    log(`정령 계약서 → 방어도 +3`);
   }
 
   // Track cards played this turn for 일심

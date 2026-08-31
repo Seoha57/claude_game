@@ -331,6 +331,9 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
   if (relics.includes('lethal_poison')) {
     for (const e of cs.enemies) applyStatus(e, 'poison', 5);
   }
+  if (relics.includes('soul_crystal')) {
+    drawCards(cs, 1); cs.player.block += 6;
+  }
   // Synergy sets
   for (const syn of getActiveSynergies(relics)) {
     if (syn.timing !== 'combat_start') continue;
@@ -350,6 +353,9 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
         break;
       case 'guardians_oath':
         applyStatus(cs.player, 'metallicize', 4);
+        break;
+      case 'spirit_bond':
+        drawCards(cs, 1); cs.player.block += 4;
         break;
     }
   }
