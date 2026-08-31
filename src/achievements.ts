@@ -43,6 +43,8 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'venomous',   title: '맹독술사',  description: '한 적에게 중독 20 이상 누적.', emoji: '☠️', category: 'combat' },
   { id: 'big_hit',    title: '필살의 일격', description: '단일 카드로 60 이상 데미지.', emoji: '🌟', category: 'combat' },
   { id: 'spirit_master', title: '정령의 주인', description: '한 전투에서 의식(ritual) 10 이상 누적.', emoji: '👻', category: 'combat' },
+  { id: 'glass_cannon',  title: '유리 대포',   description: 'HP 1인 상태에서 전투 승리.', emoji: '💀', category: 'combat' },
+  { id: 'soul_eater',    title: '영혼 포식자', description: '한 전투에서 카드 10장 이상 소멸.', emoji: '🌀', category: 'combat' },
 
   // ── Collection ──
   { id: 'cards_30',  title: '카드 수집가', description: '30종 카드 발견.',  emoji: '📖', category: 'collection' },
@@ -280,6 +282,12 @@ export function checkFreezeChain(consecutive: number): void {
 }
 export function checkRitual(amount: number): void {
   if (amount >= 10) unlockId('spirit_master');
+}
+export function checkGlassCannon(hp: number): void {
+  if (hp === 1) unlockId('glass_cannon');
+}
+export function checkExhaust(count: number): void {
+  if (count >= 10) unlockId('soul_eater');
 }
 
 export function checkCodexCards(count: number): void {

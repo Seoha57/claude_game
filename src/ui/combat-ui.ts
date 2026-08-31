@@ -15,7 +15,7 @@ import { POTION_DEFS, POTION_LIST } from '../content/potions';
 import { isCurseLike } from './deck-overlay';
 import { playSfx, getMuted, setMuted, getVolume, setVolume, getBgmMuted, setBgmMuted, getBgmVolume, setBgmVolume } from '../audio';
 import { makeRng, pick } from '../rng';
-import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison } from '../achievements';
+import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison, checkGlassCannon, checkExhaust } from '../achievements';
 import { getCardFrame } from '../card-frame';
 
 let selectedCardUid: string | null = null;
@@ -173,6 +173,8 @@ export function renderCombat(): HTMLElement {
     if (lastPhasePlayed !== 'won') {
       playSfx('victory');
       checkTurnCount(state.turn);
+      checkGlassCannon(state.player.hp);
+      checkExhaust(state.player.exhaust.length);
       lastPhasePlayed = 'won';
     }
     return renderCombatVictory(state);
