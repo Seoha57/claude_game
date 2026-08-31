@@ -400,9 +400,9 @@ function renderMid(state: CombatState): HTMLElement {
         playSfx('turn_end');
         const before = snapshotFx(state);
         endPlayerTurn(state);
-        detectFx(state, before);
+        detectEnemyTurnFx(state, before);
         rerender();
-        flushFx();
+        flushEnemyTurnFx();
       },
     },
     '턴 종료',
@@ -780,12 +780,14 @@ function checkCombatAchievements(state: CombatState): void {
 type PendingFx =
   | { kind: 'attack'; enemyUid: string; damage: number }
   | { kind: 'block'; amount: number }
-  | { kind: 'player_dmg'; amount: number };
+  | { kind: 'player_dmg'; amount: number }
+  | { kind: 'enemy_died'; enemyUid: string }
+  | { kind: 'enemy_lunge'; enemyUid: string; delay: number };
 let pendingFx: PendingFx[] = [];
 
 function snapshotFx(state: CombatState) {
   return {
-    enemies: state.enemies.map((e) => ({ uid: e.uid, total: e.hp + e.block })),
+    enemies: state.enemies.map((e) => ({ uid: e.uid, total: e.hp + e.block, hp: e.hp })),
     playerBlock: state.player.block,
     playerHp: state.player.hp,
   };
@@ -800,6 +802,9 @@ function detectFx(state: CombatState, before: ReturnType<typeof snapshotFx>): vo
       pendingFx.push({ kind: 'attack', enemyUid: e.uid, damage: dmg });
       checkDamage(dmg);
     }
+    if (b.hp > 0 && e.hp <= 0) {
+      pendingFx.push({ kind: 'enemy_died', enemyUid: e.uid });
+    }
   }
   const blockGained = state.player.block - before.playerBlock;
   if (blockGained > 0) {
@@ -808,6 +813,33 @@ function detectFx(state: CombatState, before: ReturnType<typeof snapshotFx>): vo
   const hpLost = before.playerHp - state.player.hp;
   if (hpLost > 0) {
     pendingFx.push({ kind: 'player_dmg', amount: hpLost });
+  }
+}
+
+function detectEnemyTurnFx(state: CombatState, before: ReturnType<typeof snapshotFx>): void {
+  const hpLost = before.playerHp - state.player.hp;
+  const blockGained = state.player.block - before.playerBlock;
+  // Lunge all living enemies that acted (staggered)
+  let lungeIdx = 0;
+  for (const e of state.enemies) {
+    const b = before.enemies.find((x) => x.uid === e.uid);
+    if (!b || b.hp <= 0) continue;
+    pendingFx.push({ kind: 'enemy_lunge', enemyUid: e.uid, delay: lungeIdx * 200 });
+    lungeIdx++;
+  }
+  if (hpLost > 0) {
+    pendingFx.push({ kind: 'player_dmg', amount: hpLost });
+  }
+  if (blockGained > 0) {
+    pendingFx.push({ kind: 'block', amount: blockGained });
+  }
+  // Detect enemies that died during enemy turn (e.g., thorns/poison)
+  for (const e of state.enemies) {
+    const b = before.enemies.find((x) => x.uid === e.uid);
+    if (!b) continue;
+    if (b.hp > 0 && e.hp <= 0) {
+      pendingFx.push({ kind: 'enemy_died', enemyUid: e.uid });
+    }
   }
 }
 
@@ -836,12 +868,66 @@ function flushFx(): void {
       triggerPlayerHitFlash();
       if (!playedPlayerDmg) { playSfx('enemy_attack'); playedPlayerDmg = true; }
       if (fx.amount > maxDamageThisFlush) maxDamageThisFlush = fx.amount;
+    } else if (fx.kind === 'enemy_died') {
+      triggerEnemyDeath(fx.enemyUid);
     }
   }
-  // Screen shake scales with the biggest single hit
   if (maxDamageThisFlush >= 25) triggerScreenShake('heavy');
   else if (maxDamageThisFlush >= 15) triggerScreenShake('light');
   pendingFx = [];
+}
+
+function flushEnemyTurnFx(): void {
+  const lunges = pendingFx.filter((fx): fx is Extract<PendingFx, { kind: 'enemy_lunge' }> => fx.kind === 'enemy_lunge');
+  const playerDmg = pendingFx.find((fx): fx is Extract<PendingFx, { kind: 'player_dmg' }> => fx.kind === 'player_dmg');
+  const blockFx = pendingFx.find((fx): fx is Extract<PendingFx, { kind: 'block' }> => fx.kind === 'block');
+  const deaths = pendingFx.filter((fx): fx is Extract<PendingFx, { kind: 'enemy_died' }> => fx.kind === 'enemy_died');
+
+  const maxDelay = lunges.length > 0 ? Math.max(...lunges.map((l) => l.delay)) : 0;
+
+  for (const lunge of lunges) {
+    setTimeout(() => {
+      const enemyEl = document.querySelector(`[data-enemy-uid="${lunge.enemyUid}"]`);
+      if (enemyEl) triggerEnemyLunge(enemyEl as HTMLElement);
+    }, lunge.delay);
+  }
+
+  // Player damage appears after first lunge impact
+  const impactDelay = lunges.length > 0 ? 150 : 0;
+  setTimeout(() => {
+    if (playerDmg) {
+      spawnPlayerDamageNumber(playerDmg.amount);
+      triggerPlayerHitFlash();
+      playSfx('enemy_attack');
+      if (playerDmg.amount >= 25) triggerScreenShake('heavy');
+      else if (playerDmg.amount >= 15) triggerScreenShake('light');
+    }
+    if (blockFx) {
+      spawnBlockFx(blockFx.amount);
+      playSfx('block_gain');
+    }
+  }, impactDelay);
+
+  // Deaths after all lunges
+  setTimeout(() => {
+    for (const d of deaths) triggerEnemyDeath(d.enemyUid);
+  }, maxDelay + 300);
+
+  pendingFx = [];
+}
+
+function triggerEnemyLunge(enemyEl: HTMLElement): void {
+  enemyEl.classList.remove('enemy-lunge');
+  void enemyEl.offsetWidth;
+  enemyEl.classList.add('enemy-lunge');
+  setTimeout(() => enemyEl.classList.remove('enemy-lunge'), 400);
+}
+
+function triggerEnemyDeath(enemyUid: string): void {
+  const enemyEl = document.querySelector(`[data-enemy-uid="${enemyUid}"]`) as HTMLElement | null;
+  if (!enemyEl || enemyEl.classList.contains('death-anim')) return;
+  enemyEl.classList.add('death-anim');
+  playSfx('damage_hit');
 }
 
 function triggerHitFlash(enemyEl: HTMLElement): void {
@@ -1206,9 +1292,9 @@ function endTurnHotkey(): void {
   playSfx('turn_end');
   const before = snapshotFx(state);
   endPlayerTurn(state);
-  detectFx(state, before);
+  detectEnemyTurnFx(state, before);
   rerender();
-  flushFx();
+  flushEnemyTurnFx();
 }
 
 function cycleEnemyTarget(): void {
