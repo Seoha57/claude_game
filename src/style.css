@@ -933,16 +933,16 @@ button:disabled {
 .combat-bottom {
   flex: 1;
   min-width: 0;
-  height: 220px;
+  height: 250px;
   overflow-x: auto;
   overflow-y: hidden;
 }
 .hand-cards {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
   min-height: 100%;
-  padding: 16px;
+  padding: 40px 16px 16px;
   width: fit-content;
   margin: 0 auto;
 }
@@ -2610,8 +2610,8 @@ button:disabled {
   .card { width: 120px; height: 168px; }
   .card-name { font-size: 12px; }
   .card-desc { font-size: 10px; }
-  .combat-bottom { height: 200px; }
-  .hand-cards { gap: 4px; padding: 10px; }
+  .combat-bottom { height: 220px; }
+  .hand-cards { gap: 4px; padding: 30px 10px 10px; }
   .deck-pile { width: 76px; }
   .deck-pile-card { width: 58px; height: 80px; }
   .combat-top { padding: 10px; gap: 18px; }
@@ -2659,7 +2659,7 @@ button:disabled {
   }
   .hand-cards {
     gap: 10px;
-    padding: 14px 12px max(10px, env(safe-area-inset-bottom)) 12px;
+    padding: 30px 12px max(10px, env(safe-area-inset-bottom)) 12px;
   }
 
   /* Combat-mid: stack into 2 rows for clean grouping */
