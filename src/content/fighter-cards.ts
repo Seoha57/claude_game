@@ -85,7 +85,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
   },
   f_combo: {
     id: 'f_combo',
-    name: '기합포',
+    name: '강렬한 주먹',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -99,7 +99,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
   },
   f_nen_bullet: {
     id: 'f_nen_bullet',
-    name: '기탄',
+    name: '기파탄',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -109,7 +109,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
   },
   f_iron_body: {
     id: 'f_iron_body',
-    name: '광폭 난타',
+    name: '견고한 권격',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -132,7 +132,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
   },
   f_dodge: {
     id: 'f_dodge',
-    name: '분신',
+    name: '잔상',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -173,7 +173,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
   },
   f_lion_roar: {
     id: 'f_lion_roar',
-    name: '금강 파쇄',
+    name: '분쇄격',
     type: 'attack',
     rarity: 'uncommon',
     cost: 2,
@@ -264,7 +264,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
   // ── Rare (1차 각성기) ──
   f_golden_thunder: {
     id: 'f_golden_thunder',
-    name: '뇌호 : 심판의 기수',
+    name: '천둥의 수호자',
     type: 'attack',
     rarity: 'rare',
     cost: 3,
@@ -389,7 +389,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
   },
   f_shadow_kick: {
     id: 'f_shadow_kick',
-    name: '무영 발차기',
+    name: '무영각',
     type: 'attack', rarity: 'rare', cost: 2, target: 'enemy',
     description: '18 데미지 2회. 소멸.',
     effects: [{ kind: 'damage', amount: 18, times: 2 }],
@@ -413,15 +413,15 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_aerial_stomp:  { name: '공중 밟기+',                description: '모든 적에게 11 데미지.',                effects: [{ kind: 'damage_all', amount: 11 }] },
   f_dragon_kick:   { name: '연속 타격+',                     description: '모든 적에게 7 데미지. 취약 +1.',        effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
   f_heavy_punch:   { name: '내려차기+',                description: '14 데미지. 빙결 +1.',                  effects: [{ kind: 'damage', amount: 14 }, { kind: 'apply_enemy', status: 'freeze', amount: 1 }] },
-  f_combo:         { name: '기합포+',                description: '9 데미지. 1장 드로우. 직전이 방어카드면 방어도 +7.',
+  f_combo:         { name: '강렬한 주먹+',                description: '9 데미지. 1장 드로우. 직전이 방어카드면 방어도 +7.',
                      effects: [{ kind: 'damage', amount: 9 }, { kind: 'draw', amount: 1 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'block', amount: 7 }] }] },
-  f_nen_bullet:    { name: '기탄+',                    description: '5 데미지를 세 번.',                     effects: [{ kind: 'damage', amount: 5, times: 3 }] },
-  f_iron_body:     { name: '광폭 난타+',                description: '7 데미지. 방어도 +7.',                  effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
+  f_nen_bullet:    { name: '기파탄+',                    description: '5 데미지를 세 번.',                     effects: [{ kind: 'damage', amount: 5, times: 3 }] },
+  f_iron_body:     { name: '견고한 권격+',                description: '7 데미지. 방어도 +7.',                  effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
   f_ki_focus:      { name: '낮은 자세+',                  description: '힘 +4.',                                effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
-  f_dodge:         { name: '분신+',                     description: '방어도 +11. 1장 드로우.',               effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
+  f_dodge:         { name: '잔상+',                     description: '방어도 +11. 1장 드로우.',               effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
   f_focus:         { name: '집중 방어+',                     description: '방어도 +9. 무작위 카드 1장 소멸.',      effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
   f_needle_throw:  { name: '독 바르기+',                description: '7 데미지. 중독 +7.',                    effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
-  f_lion_roar:     { name: '금강 파쇄+',                   description: '15 데미지. 취약 +2. 약화 +2.',          effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
+  f_lion_roar:     { name: '분쇄격+',                   description: '15 데미지. 취약 +2. 약화 +2.',          effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   f_snap_shot:     { name: '목 꺾기+',                  description: 'HP -2. 에너지 +3.',                     effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
   f_slide_grab:    { name: '파쇄권+',            description: '방어도 +13.',                           effects: [{ kind: 'block', amount: 13 }] },
   f_hadouken:      { name: '번개 던지기+',                   description: '힘 +3.',                                effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
@@ -429,7 +429,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_double_open:   { name: '기공 해방+',                 description: '턴 종료 시 방어도 +4.',                 effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
   f_saro_hwanyeol: { name: '염화 연격+',                description: '10 데미지. 사용할 때마다 영구 데미지 +3.', effects: [{ kind: 'damage', amount: 10 }], scaling: { kind: 'on_play', amount: 3 } },
   f_red_dragon:    { name: '붉은 불꽃+',                  description: '카드 소멸 시 방어도 +5.',                effects: [{ kind: 'apply_self', status: 'on_exhaust_block', amount: 5 }] },
-  f_golden_thunder: { name: '뇌호 : 심판의 기수+',   description: '42 데미지. 취약 +3.',                   effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
+  f_golden_thunder: { name: '천둥의 수호자+',   description: '42 데미지. 취약 +3.',                   effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   f_flame_kick:    { name: '화염 발차기+',                description: '모든 적에게 28 데미지.',                effects: [{ kind: 'damage_all', amount: 28 }] },
   f_sky_fall:      { name: '천지 붕괴+',                 description: '턴 시작 시 힘 +3. 선천.',               effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   f_my_rhythm:     { name: '나의 전투 리듬!!+',       description: 'HP -3. 24 데미지.',                     effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
@@ -446,7 +446,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                        effects: [{ kind: 'damage', amount: 7, times: 2 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 7 }] }] },
   f_counter:        { name: '카운터+',      description: '11 데미지. 가시 +5.',                    effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
   f_rage_burst:     { name: '분노 폭발+',   description: 'HP -3. 모든 적에게 14 데미지.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_all', amount: 14 }] },
-  f_shadow_kick:    { name: '무영 발차기+',      description: '22 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 22, times: 2 }] },
+  f_shadow_kick:    { name: '무영각+',      description: '22 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 22, times: 2 }] },
   f_ten_count:      { name: '연타 카운트+',   description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.', effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
 };
 

@@ -60,14 +60,14 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
   },
   t_flying_squirrel: {
     id: 't_flying_squirrel',
-    name: '날다람쥐',
+    name: '경신술',
     type: 'skill', rarity: 'common', cost: 1, target: 'self',
     description: '방어도 +5. 민첩 +1.',
     effects: [{ kind: 'block', amount: 5 }, { kind: 'apply_self', status: 'dexterity', amount: 1 }],
   },
   t_molting: {
     id: 't_molting',
-    name: '은신: 허물벗기',
+    name: '그림자 은폐',
     type: 'skill', rarity: 'common', cost: 1, target: 'self',
     description: '방어도 +8.',
     effects: [{ kind: 'block', amount: 8 }],
@@ -84,7 +84,7 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
   },
   t_diving_arrow: {
     id: 't_diving_arrow',
-    name: '급강하 일격',
+    name: '낙하 습격',
     type: 'attack', rarity: 'common', cost: 2, target: 'enemy',
     description: '14 데미지.',
     effects: [{ kind: 'damage', amount: 14 }],
@@ -113,7 +113,7 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
   },
   t_backstab: {
     id: 't_backstab',
-    name: '뒤치기',
+    name: '급소 찌르기',
     type: 'attack', rarity: 'common', cost: 1, target: 'enemy',
     description: '9 데미지. 이번 턴 첫 카드면 +5 데미지.',
     effects: [
@@ -125,7 +125,7 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
   // ── Uncommon ──
   t_eraser: {
     id: 't_eraser',
-    name: '소거',
+    name: '독칼 난도',
     type: 'attack', rarity: 'uncommon', cost: 2, target: 'enemy',
     description: '14 데미지. 중독 +4.',
     effects: [{ kind: 'damage', amount: 14 }, { kind: 'apply_enemy', status: 'poison', amount: 4 }],
@@ -150,7 +150,7 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
   },
   t_shadow_clone: {
     id: 't_shadow_clone',
-    name: '분신',
+    name: '잔상',
     type: 'power', rarity: 'uncommon', cost: 1, target: 'self',
     description: '카드 소멸 시 카드 1장 드로우.',
     effects: [{ kind: 'apply_self', status: 'on_exhaust_draw', amount: 1 }],
@@ -232,7 +232,7 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
   // ── Rare ──
   t_balakar: {
     id: 't_balakar',
-    name: '학살의 망령 소환',
+    name: '죽음의 망령',
     type: 'power', rarity: 'rare', cost: 2, target: 'self',
     description: '턴 시작 시 힘 +2. 선천.',
     effects: [{ kind: 'apply_self', status: 'ritual', amount: 2 }],
@@ -256,7 +256,7 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
   },
   t_silvermoon: {
     id: 't_silvermoon',
-    name: '은월',
+    name: '초승달 베기',
     type: 'attack', rarity: 'rare', cost: 1, target: 'enemy',
     description: '데미지 = 3 × 이번 전투 누적 공격 수.',
     effects: [{ kind: 'damage_per_attack', amount: 3 }],

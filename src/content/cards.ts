@@ -235,7 +235,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   warcry: {
     id: 'warcry',
-    name: '잔영술',
+    name: '전술적 드로우',
     type: 'skill',
     rarity: 'common',
     cost: 0,
@@ -428,7 +428,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   lingering_image: {
     id: 'lingering_image',
-    name: '잔영',
+    name: '검기 폭발',
     type: 'attack',
     rarity: 'uncommon',
     cost: 1,
@@ -485,7 +485,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   demon_one_slash: {
     id: 'demon_one_slash',
-    name: '멸귀일섬',
+    name: '만검귀환',
     type: 'attack', rarity: 'rare', cost: 2, target: 'enemy',
     description: '28 데미지. 처치 시 영구 데미지 +4. 소멸.',
     effects: [{ kind: 'damage', amount: 28 }],
@@ -518,7 +518,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   shrug_it_off:     { name: '월광 방어+',        description: '방어도 +11. 1장 드로우.',            effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
   flex:             { name: '전의 고양+',  description: '힘 +4.',                              effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
   true_grit:        { name: '갈라치기+',          description: '방어도 +9. 무작위 카드 1장 소멸.',   effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
-  warcry:           { name: '잔영술+',          description: '2장 드로우. 무작위 카드 1장 소멸.', effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
+  warcry:           { name: '전술적 드로우+',          description: '2장 드로우. 무작위 카드 1장 소멸.', effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
   dropkick:         { name: '돌진+',     description: '8 데미지. 직전이 방어카드면 에너지 +1.', effects: [{ kind: 'damage', amount: 8 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'energy', amount: 1 }] }] },
   uppercut:         { name: '지진격+',description: '15 데미지. 취약 +2. 약화 +2.',        effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   bloodletting:     { name: '기세+',        description: 'HP -2. 에너지 +3.',                  effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
@@ -536,7 +536,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   // 콤보 시너지
   chain_slash:      { name: '연계 베기+',     description: '7 데미지. 이번 턴 2번째 이후 카드면 +9 데미지.',
                       effects: [{ kind: 'damage', amount: 7 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 9 }] }] },
-  lingering_image:  { name: '잔영+',          description: '12 데미지. 직전이 공격이면 +9 데미지.',
+  lingering_image:  { name: '검기 폭발+',          description: '12 데미지. 직전이 공격이면 +9 데미지.',
                       effects: [{ kind: 'damage', amount: 12 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 9 }] }] },
   thousand_cuts:    { name: '천 번의 칼날+',        description: '데미지 = 3 × 이번 전투 누적 공격 수.',
                       effects: [{ kind: 'damage_per_attack', amount: 3 }] },
@@ -546,7 +546,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                       effects: [{ kind: 'damage', amount: 9 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 7 }] }] },
   infinite_cut:     { name: '무한참+',        description: '6 데미지 3회.',                       effects: [{ kind: 'damage', amount: 6, times: 3 }] },
   awakening:        { name: '각성+',          description: '힘 +5. 소멸.',                        effects: [{ kind: 'apply_self', status: 'strength', amount: 5 }] },
-  demon_one_slash:  { name: '멸귀일섬+',      description: '36 데미지. 처치 시 영구 데미지 +5. 소멸.',
+  demon_one_slash:  { name: '만검귀환+',      description: '36 데미지. 처치 시 영구 데미지 +5. 소멸.',
                       effects: [{ kind: 'damage', amount: 36 }], scaling: { kind: 'on_kill', amount: 5 } },
 };
 

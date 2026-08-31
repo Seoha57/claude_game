@@ -97,7 +97,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   // ── Common skills ──
   m_pluto: {
     id: 'm_pluto',
-    name: '명왕성의 힘',
+    name: '성간의 힘',
     type: 'skill',
     rarity: 'common',
     cost: 1,
@@ -110,7 +110,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_frost: {
     id: 'm_frost',
-    name: '서리 머리',
+    name: '서리 화살',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -147,7 +147,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_summon_horus: {
     id: 'm_summon_horus',
-    name: '소환 : 기갑 골렘',
+    name: '소환: 수호 골렘',
     type: 'skill',
     rarity: 'common',
     cost: 0,
@@ -424,11 +424,11 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_lantern:        { name: '화염 등불+',                description: '8 데미지. 화상 +5.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'burn', amount: 5 }] },
   m_air_lantern:    { name: '공중 화염+',           description: '모든 적에게 11 데미지.',                 effects: [{ kind: 'damage_all', amount: 11 }] },
   m_petal:          { name: '꽃잎 폭발+',                     description: '모든 적에게 7 데미지. 취약 +1.',         effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
-  m_pluto:          { name: '명왕성의 힘+',                     description: '7 데미지. 방어도 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
-  m_frost:          { name: '서리 머리+',              description: '7 데미지. 빙결 +2. 소멸.',               effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
+  m_pluto:          { name: '성간의 힘+',                     description: '7 데미지. 방어도 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
+  m_frost:          { name: '서리 화살+',              description: '7 데미지. 빙결 +2. 소멸.',               effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
   m_disenchant:     { name: '마력 해제+',                 description: '힘 +4.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
   m_no_entry:       { name: '접근 금지!+',                 description: '방어도 +9. 무작위 카드 1장 소멸.',       effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
-  m_summon_horus:   { name: '소환 : 기갑 골렘+',     description: '2장 드로우. 무작위 카드 1장 소멸.',      effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
+  m_summon_horus:   { name: '소환: 수호 골렘+',     description: '2장 드로우. 무작위 카드 1장 소멸.',      effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
   m_blossom:        { name: '가시 회전+',              description: '15 데미지. 취약 +2. 약화 +2.',           effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   m_whip:           { name: '채찍 일격+',                     description: '7 데미지. 중독 +7.',                     effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
   m_showtime:       { name: '무대 위로+',                     description: 'HP -2. 에너지 +3.',                      effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
