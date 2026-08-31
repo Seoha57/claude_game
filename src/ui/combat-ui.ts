@@ -32,6 +32,7 @@ export function resetCombatUiState(): void {
   targetedEnemyIdx = 0;
   lastPhasePlayed = null;
   pendingFx = [];
+  prevStatusKeys.clear();
 }
 
 // Compute damage preview for a card against a specific enemy.
@@ -275,7 +276,7 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
       : `${display.symbol} ${display.fallbackLabel}`,
   );
 
-  const statuses = renderStatuses(e.statuses);
+  const statuses = renderStatuses(e.statuses, e.uid);
 
   const kbTargeted = getKeyboardTargetedEnemyUid(state) === e.uid;
   const enemyEl = el(
@@ -304,24 +305,31 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
   return enemyEl;
 }
 
-function renderStatuses(s: Record<string, number | undefined>): HTMLElement {
+const prevStatusKeys = new Map<string, Set<string>>();
+
+function renderStatuses(s: Record<string, number | undefined>, ownerId = '_player'): HTMLElement {
   const row = el('div', { class: 'statuses' });
+  const prev = prevStatusKeys.get(ownerId) ?? new Set();
+  const cur = new Set<string>();
   for (const [k, v] of Object.entries(s)) {
     if (!v) continue;
     const info = STATUS_INFO[k as keyof typeof STATUS_INFO];
     if (!info) continue;
+    cur.add(k);
     const key = k as keyof typeof STATUS_INFO;
+    const isNew = !prev.has(k);
     row.appendChild(
       el(
         'div',
         {
-          class: `status ${info.buff ? 'buff' : 'debuff'}`,
+          class: `status ${info.buff ? 'buff' : 'debuff'} ${isNew ? 'status-new' : ''}`,
           'data-tooltip': getStatusTooltip(key, v),
         },
         `${info.name} ${getStatusValueLabel(key, v)}`,
       ),
     );
   }
+  prevStatusKeys.set(ownerId, cur);
   return row;
 }
 
@@ -945,6 +953,13 @@ function triggerPlayerHitFlash(): void {
   void (root as HTMLElement).offsetWidth;
   root.classList.add('player-hit-flash');
   setTimeout(() => root.classList.remove('player-hit-flash'), 360);
+  const stats = document.querySelector('.player-stats') as HTMLElement | null;
+  if (stats) {
+    stats.classList.remove('player-hit-shake');
+    void stats.offsetWidth;
+    stats.classList.add('player-hit-shake');
+    setTimeout(() => stats.classList.remove('player-hit-shake'), 350);
+  }
 }
 
 function triggerScreenShake(intensity: 'light' | 'heavy'): void {
