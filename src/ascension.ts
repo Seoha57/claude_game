@@ -1,6 +1,6 @@
 import { markDirty } from './sync/sync';
 
-const STORAGE_KEY = 'dungeoncard_ascension';
+const STORAGE_KEY = 'dod_ascension';
 
 export interface AscensionModifiers {
   enemyHpMult: number;      // multiplier on enemy max HP

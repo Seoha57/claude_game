@@ -10,20 +10,20 @@
 //           visibilitychange 'visible' 시 pull.
 // ─────────────────────────────────────────────────────────────────
 
-const CREDS_KEY = 'dungeoncard_sync_creds';
-const VERSION_KEY = 'dungeoncard_sync_version'; // last known server version
-const LAST_SYNC_KEY = 'dungeoncard_sync_lastat'; // last successful sync timestamp
+const CREDS_KEY = 'dod_sync_creds';
+const VERSION_KEY = 'dod_sync_version'; // last known server version
+const LAST_SYNC_KEY = 'dod_sync_lastat'; // last successful sync timestamp
 
 // localStorage keys to sync
 const SYNC_KEYS = [
-  'dungeoncard_stats',
-  'dungeoncard_audio',
-  'dungeoncard_codex',
-  'dungeoncard_ascension',
-  'dungeoncard_achievements',
-  'dungeoncard_save',
-  'dungeoncard_daily',
-  'dungeoncard_history',
+  'dod_stats',
+  'dod_audio',
+  'dod_codex',
+  'dod_ascension',
+  'dod_achievements',
+  'dod_save',
+  'dod_daily',
+  'dod_history',
 ];
 
 export interface SyncCredentials {
@@ -107,7 +107,7 @@ export function applySnapshot(snap: SyncSnapshot): void {
     } catch { /* ignore */ }
   }
   // Notify the rest of the app that on-disk state changed
-  window.dispatchEvent(new CustomEvent('dungeoncard:sync-applied'));
+  window.dispatchEvent(new CustomEvent('dod:sync-applied'));
 }
 
 // ── Merge (additive, never destructive) ──────────────────────────
@@ -129,22 +129,22 @@ function mergeKey(key: string, local: unknown, remote: unknown): unknown {
   if (remote == null) return local;
 
   switch (key) {
-    case 'dungeoncard_codex':
+    case 'dod_codex':
       return mergeCodex(local, remote);
-    case 'dungeoncard_achievements':
+    case 'dod_achievements':
       return mergeAchievements(local, remote);
-    case 'dungeoncard_stats':
+    case 'dod_stats':
       return mergeStats(local, remote);
-    case 'dungeoncard_ascension':
+    case 'dod_ascension':
       // Ascension is the highest unlocked level — take max
       return Math.max(Number(local) || 0, Number(remote) || 0);
-    case 'dungeoncard_save':
+    case 'dod_save':
       return mergeSave(local, remote);
-    case 'dungeoncard_daily':
+    case 'dod_daily':
       return mergeDaily(local, remote);
-    case 'dungeoncard_history':
+    case 'dod_history':
       return mergeHistory(local, remote);
-    case 'dungeoncard_audio':
+    case 'dod_audio':
     default:
       // Last-write-wins for prefs — both are recent snapshots, pick remote if
       // it appears newer (we don't track per-key timestamps; this is fine).

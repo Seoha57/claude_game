@@ -2,7 +2,7 @@
 
 import { markDirty } from './sync/sync';
 
-const STORAGE_KEY = 'dungeoncard_audio';
+const STORAGE_KEY = 'dod_audio';
 
 interface AudioPrefs {
   muted: boolean;

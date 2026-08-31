@@ -2,7 +2,7 @@ import type { CharacterClass } from './types';
 import { markDirty } from './sync/sync';
 import { loadStats } from './stats';
 
-const STORAGE_KEY = 'dungeoncard_achievements';
+const STORAGE_KEY = 'dod_achievements';
 const STORAGE_VERSION = 1;
 
 export interface AchievementDef {
@@ -230,7 +230,7 @@ export function reconcileAchievements(): void {
 
 function readCodexCounts(): { cards: number; relics: number } {
   try {
-    const raw = localStorage.getItem('dungeoncard_codex');
+    const raw = localStorage.getItem('dod_codex');
     if (!raw) return { cards: 0, relics: 0 };
     const data = JSON.parse(raw);
     return {

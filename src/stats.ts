@@ -1,7 +1,7 @@
 import type { CharacterClass } from './types';
 import { markDirty } from './sync/sync';
 
-const STORAGE_KEY = 'dungeoncard_stats';
+const STORAGE_KEY = 'dod_stats';
 const STATS_VERSION = 1;
 
 export interface CharStats {

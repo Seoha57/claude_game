@@ -6,7 +6,7 @@
 import type { CharacterClass } from './types';
 import { markDirty } from './sync/sync';
 
-const STORAGE_KEY = 'dungeoncard_history';
+const STORAGE_KEY = 'dod_history';
 const STORAGE_VERSION = 1;
 const MAX_ENTRIES = 30;
 

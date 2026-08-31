@@ -11,7 +11,7 @@
 import type { CharacterClass } from './types';
 import { markDirty } from './sync/sync';
 
-const STORAGE_KEY = 'dungeoncard_daily';
+const STORAGE_KEY = 'dod_daily';
 const STORAGE_VERSION = 1;
 
 export interface DailyConstraint {

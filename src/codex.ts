@@ -3,7 +3,7 @@
 import { checkCodexCards, checkCodexRelics } from './achievements';
 import { markDirty } from './sync/sync';
 
-const STORAGE_KEY = 'dungeoncard_codex';
+const STORAGE_KEY = 'dod_codex';
 const CODEX_VERSION = 1;
 
 interface CodexData {

@@ -28,7 +28,7 @@ export function renderDaily(): HTMLElement {
   // 현재 진행 중인 데일리 런이 세이브에 있는지
   const savedRun = (() => {
     try {
-      const raw = localStorage.getItem('dungeoncard_save');
+      const raw = localStorage.getItem('dod_save');
       if (!raw) return null;
       const data = JSON.parse(raw);
       return data.runState ?? null;
@@ -146,7 +146,7 @@ export function renderDaily(): HTMLElement {
               floor: run?.floor ?? 0,
               timestamp: Date.now(),
             });
-            try { localStorage.removeItem('dungeoncard_save'); } catch { /* ignore */ }
+            try { localStorage.removeItem('dod_save'); } catch { /* ignore */ }
             setScreen('title');
           },
         },
@@ -165,7 +165,7 @@ export function renderDaily(): HTMLElement {
             if (hasOtherRun) {
               const ok = confirm('진행 중인 일반 런이 있습니다. 데일리를 시작하면 기존 진행이 삭제됩니다. 계속할까요?');
               if (!ok) return;
-              try { localStorage.removeItem('dungeoncard_save'); } catch { /* ignore */ }
+              try { localStorage.removeItem('dod_save'); } catch { /* ignore */ }
             }
             startNewRun(setup.seed, 0, setup.character, {
               goToScreen: 'neow_blessing' as Screen,

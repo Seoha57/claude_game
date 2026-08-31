@@ -1,4 +1,6 @@
 import './style.css';
+import { migrateStorage } from './migrate-storage';
+migrateStorage();
 import { setRenderer } from './state';
 import { render } from './ui/router';
 import { setAchievementNotifier, reconcileAchievements } from './achievements';
@@ -14,7 +16,7 @@ render();
 showRebrandNotice();
 
 // Re-render when sync pulls in remote changes
-window.addEventListener('dungeoncard:sync-applied', () => {
+window.addEventListener('dod:sync-applied', () => {
   try { reconcileAchievements(); } catch { /* ignore */ }
   try { render(); } catch { /* ignore */ }
 });
