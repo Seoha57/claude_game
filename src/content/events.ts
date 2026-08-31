@@ -29,6 +29,7 @@ export interface EventDef {
   description: string;
   emoji: string;
   mood?: EventMood;
+  forClass?: import('../types').CharacterClass;
   choices: EventChoice[];
 }
 
@@ -392,6 +393,60 @@ export const EVENT_DEFS: EventDef[] = [
       { label: '영혼 조각을 판다 (최대HP -5)', result: '유령이 만족하며 유물을 건넨다.', effects: [{ kind: 'max_hp', amount: -5 }, { kind: 'add_random_relic' }] },
       { label: '골드로 사겠다 (40골드)', result: '유령이 실망하지만 거래를 수락했다.', condition: { kind: 'min_gold', amount: 40 }, effects: [{ kind: 'lose_gold', amount: 40 }, { kind: 'add_card', rarity: 'rare' }] },
       { label: '거절한다', result: '유령이 안개처럼 사라졌다.', effects: [] },
+    ],
+  },
+
+  // ── 정령술사 전용 이벤트 ──────────────────────────────────────
+  {
+    id: 'spirit_trial',
+    title: '정령의 시련',
+    emoji: '🌀',
+    mood: 'mystic',
+    forClass: 'summoner',
+    description: '어둠 속에서 고대 정령이 나타나 영혼의 힘을 시험한다. 시련을 통과하면 보답하겠다고 한다.',
+    choices: [
+      { label: '영혼을 바친다 (최대HP -6)', result: '정령이 영혼의 힘을 인정하며 강력한 카드를 남겼다.', effects: [{ kind: 'max_hp', amount: -6 }, { kind: 'add_card', rarity: 'rare' }] },
+      { label: '정령과 대화한다', result: '정령이 오래된 지혜를 전했다. 카드 2장이 강화되었다.', effects: [{ kind: 'upgrade_random', count: 2 }] },
+      { label: '도망친다 (HP -8)', result: '정령의 분노를 겨우 피했다.', effects: [{ kind: 'lose_hp', amount: 8 }] },
+    ],
+  },
+  {
+    id: 'soul_well',
+    title: '영혼의 우물',
+    emoji: '🕳️',
+    mood: 'dark',
+    forClass: 'summoner',
+    description: '영혼이 소용돌이치는 우물이 있다. 속삭이는 목소리가 힘을 나눠주겠다고 한다.',
+    choices: [
+      { label: '영혼을 흡수한다 (HP -10)', result: '강력한 영혼의 힘이 몸에 깃들었다.', effects: [{ kind: 'lose_hp', amount: 10 }, { kind: 'add_card', rarity: 'rare' }, { kind: 'max_hp', amount: 5 }] },
+      { label: '금화를 던진다 (50골드)', result: '영혼들이 감사하며 유물을 건넸다.', condition: { kind: 'min_gold', amount: 50 }, effects: [{ kind: 'lose_gold', amount: 50 }, { kind: 'add_random_relic' }] },
+      { label: '무시한다', result: '우물의 속삭임이 점점 희미해졌다.', effects: [] },
+    ],
+  },
+  {
+    id: 'ruined_circle',
+    title: '소환진의 잔해',
+    emoji: '⭕',
+    mood: 'mystic',
+    forClass: 'summoner',
+    description: '바닥에 희미한 소환진이 새겨져 있다. 아직 마력이 남아 있는 것 같다.',
+    choices: [
+      { label: '소환진을 활성화한다 (HP -7)', result: '소환진에서 정령이 나타나 두 장의 카드를 남기고 사라졌다.', effects: [{ kind: 'lose_hp', amount: 7 }, { kind: 'add_card', rarity: 'uncommon' }, { kind: 'add_card', rarity: 'uncommon' }] },
+      { label: '마력만 흡수한다', result: '소환진의 잔여 마력으로 카드가 강화되었다.', effects: [{ kind: 'upgrade_random', count: 1 }] },
+      { label: '소환진을 파괴한다 (HP -5)', result: '소환진이 폭발하며 금화가 쏟아졌다.', effects: [{ kind: 'lose_hp', amount: 5 }, { kind: 'gold', amount: 70 }] },
+    ],
+  },
+  {
+    id: 'contract_demon',
+    title: '계약의 악마',
+    emoji: '😈',
+    mood: 'danger',
+    forClass: 'summoner',
+    description: '붉은 눈의 악마가 나타나 속삭인다. "영혼의 조각을 주면 큰 힘을 주마..."',
+    choices: [
+      { label: '계약한다 (최대HP -10)', result: '악마와 계약했다. 강력한 힘과 유물을 얻었지만, 저주가 따라왔다.', effects: [{ kind: 'max_hp', amount: -10 }, { kind: 'add_random_relic' }, { kind: 'add_card', rarity: 'rare' }, { kind: 'add_curse', count: 1 }] },
+      { label: '작은 거래만 한다 (HP -8)', result: '악마가 비웃지만 거래를 수락했다.', effects: [{ kind: 'lose_hp', amount: 8 }, { kind: 'add_card', rarity: 'uncommon' }, { kind: 'add_potion' }] },
+      { label: '거절한다', result: '악마가 씩 웃으며 어둠 속으로 사라졌다.', effects: [] },
     ],
   },
 ];

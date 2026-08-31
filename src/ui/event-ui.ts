@@ -42,7 +42,8 @@ let resolvedEventText: string | null = null;
 export function renderEvent(): HTMLElement {
   const run = getRun();
   const rng = makeRng(run.seed * 53 + run.floor * 17);
-  const eventDef = pick(rng, EVENT_DEFS);
+  const pool = EVENT_DEFS.filter((e) => !e.forClass || e.forClass === run.characterClass);
+  const eventDef = pick(rng, pool);
 
   const eventKey = `${run.seed}_${run.chapter}_${run.currentNodeId}`;
   // 이미 해결된 이벤트면 결과 화면부터 시작

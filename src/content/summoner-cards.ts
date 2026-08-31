@@ -15,8 +15,8 @@ export const SUMMONER_CARD_DEFS: Record<string, CardDef> = {
     id: 's_ward',
     name: '보호막',
     type: 'skill', rarity: 'starter', cost: 1, target: 'self',
-    description: '방어도 +5.',
-    effects: [{ kind: 'block', amount: 5 }],
+    description: '방어도 +6.',
+    effects: [{ kind: 'block', amount: 6 }],
   },
 
   // ── Common ──
@@ -87,8 +87,8 @@ export const SUMMONER_CARD_DEFS: Record<string, CardDef> = {
     id: 's_summon_earth',
     name: '대지 정령 소환',
     type: 'power', rarity: 'common', cost: 1, target: 'self',
-    description: '턴 종료 시 방어도 +3.',
-    effects: [{ kind: 'apply_self', status: 'metallicize', amount: 3 }],
+    description: '턴 종료 시 방어도 +4.',
+    effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }],
   },
   s_soul_wall: {
     id: 's_soul_wall',
@@ -111,8 +111,8 @@ export const SUMMONER_CARD_DEFS: Record<string, CardDef> = {
     id: 's_summon_thunder',
     name: '번개 정령 소환',
     type: 'power', rarity: 'uncommon', cost: 1, target: 'self',
-    description: '가시 +3.',
-    effects: [{ kind: 'apply_self', status: 'thorns', amount: 3 }],
+    description: '가시 +2.',
+    effects: [{ kind: 'apply_self', status: 'thorns', amount: 2 }],
   },
   s_soul_storm: {
     id: 's_soul_storm',
@@ -263,7 +263,7 @@ export const SUMMONER_CARD_DEFS: Record<string, CardDef> = {
 // ── Upgrade map ──
 export const SUMMONER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   s_spirit_bolt:       { name: '마력탄+',           description: '9 데미지.',                              effects: [{ kind: 'damage', amount: 9 }] },
-  s_ward:              { name: '보호막+',           description: '방어도 +8.',                             effects: [{ kind: 'block', amount: 8 }] },
+  s_ward:              { name: '보호막+',           description: '방어도 +9.',                             effects: [{ kind: 'block', amount: 9 }] },
   s_soul_arrow:        { name: '영혼 화살+',        description: '10 데미지. 1장 드로우.',                 effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 1 }] },
   s_double_bolt:       { name: '쌍발 마력탄+',      description: '5 데미지 2회.',                          effects: [{ kind: 'damage', amount: 5, times: 2 }] },
   s_spirit_shield:     { name: '정령 방패+',        description: '방어도 +11.',                            effects: [{ kind: 'block', amount: 11 }] },
@@ -273,10 +273,10 @@ export const SUMMONER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   s_spirit_sight:      { name: '정령의 눈+',        description: '2장 드로우. 민첩 +1.',                   effects: [{ kind: 'draw', amount: 2 }, { kind: 'apply_self', status: 'dexterity', amount: 1 }] },
   s_bind:              { name: '영혼 결박+',        description: '8 데미지. 취약 +3.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   s_summon_fire:       { name: '화염 정령 소환+',   description: '턴 시작 시 힘 +2.',                      effects: [{ kind: 'apply_self', status: 'ritual', amount: 2 }] },
-  s_summon_earth:      { name: '대지 정령 소환+',   description: '턴 종료 시 방어도 +5.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 5 }] },
+  s_summon_earth:      { name: '대지 정령 소환+',   description: '턴 종료 시 방어도 +6.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 6 }] },
   s_soul_wall:         { name: '영혼의 벽+',        description: '방어도 +9. 1장 드로우.',                 effects: [{ kind: 'block', amount: 9 }, { kind: 'draw', amount: 1 }] },
   s_leech:             { name: '생명력 착취+',      description: '14 데미지. 소멸.',                       effects: [{ kind: 'damage', amount: 14 }] },
-  s_summon_thunder:    { name: '번개 정령 소환+',   description: '가시 +5.',                               effects: [{ kind: 'apply_self', status: 'thorns', amount: 5 }] },
+  s_summon_thunder:    { name: '번개 정령 소환+',   description: '가시 +3.',                               effects: [{ kind: 'apply_self', status: 'thorns', amount: 3 }] },
   s_soul_storm:        { name: '영혼 폭풍+',        description: '모든 적에게 11 데미지. 약화 +2.',        effects: [{ kind: 'damage_all', amount: 11 }, { kind: 'apply_all', status: 'weak', amount: 2 }] },
   s_spirit_link:       { name: '정령 결속+',        description: '힘 +3. 1장 드로우.',                     effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }, { kind: 'draw', amount: 1 }] },
   s_dimension_gate:    { name: '차원문+',           description: '방어도 +14. 1장 드로우.',                effects: [{ kind: 'block', amount: 14 }, { kind: 'draw', amount: 1 }] },
