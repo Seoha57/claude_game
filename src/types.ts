@@ -187,6 +187,8 @@ export interface RunState {
     wave: number;
     score: number;
     lastHeal?: number;
+    bonusStr?: number;
+    bonusDex?: number;
   };
   dailyConfig?: {
     date: string;
