@@ -175,7 +175,7 @@ export function renderTitle(): HTMLElement {
     const frameRow = el('div', {
       style: { display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '8px' },
     });
-    frameRow.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px', alignSelf: 'center' } }, '카드 프레임:'));
+    frameRow.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px', alignSelf: 'center', width: '100%', textAlign: 'center' } }, '카드 프레임'));
     for (const f of FRAMES) {
       const unlocked = f.check();
       const active = currentFrame === f.id;
@@ -189,8 +189,9 @@ export function renderTitle(): HTMLElement {
           cursor: unlocked ? 'pointer' : 'default',
           opacity: unlocked ? '1' : '0.5',
         },
+        title: unlocked ? f.name : `해금: ${f.unlockLabel}`,
         onClick: () => { if (unlocked) { setCardFrame(f.id); rebuild(); } },
-      }, unlocked ? `${f.emoji} ${f.name}` : `🔒 ${f.name}`));
+      }, unlocked ? `${f.emoji} ${f.name}` : `🔒 ${f.unlockLabel || f.name}`));
     }
     wrapper.appendChild(frameRow);
   };

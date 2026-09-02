@@ -16,6 +16,13 @@ import { canUpgrade } from '../content/cards';
 import { POTION_LIST } from '../content/potions';
 import type { RunState } from '../types';
 
+function saveEndlessBest(wave: number): void {
+  try {
+    const prev = parseInt(localStorage.getItem('dod_endless_best') ?? '0', 10) || 0;
+    if (wave > prev) localStorage.setItem('dod_endless_best', String(wave));
+  } catch { /* ignore */ }
+}
+
 function waveEncounterTable(wave: number): string[][] {
   if (wave % 10 === 0) return BOSS_ENCOUNTERS.concat(CH2_BOSS_ENCOUNTERS);
   if (wave % 5 === 0) return ELITE_ENCOUNTERS.concat(CH2_ELITE_ENCOUNTERS).concat(CH3_ELITE_ENCOUNTERS);
@@ -349,6 +356,9 @@ export function renderEndlessResult(): HTMLElement {
   const run = getRunOrNull();
   const wave = run?.endless?.wave ?? 0;
   const score = run ? calcEndlessScore(run) : 0;
+
+  // Save best wave record
+  saveEndlessBest(wave);
 
   const wrapper = el('div', { class: 'end-screen' });
   wrapper.appendChild(el('h1', { class: 'lose' }, '무한 던전 종료'));
