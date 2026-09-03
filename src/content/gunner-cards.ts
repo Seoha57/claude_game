@@ -418,6 +418,14 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     ],
     exhaust: true,
   },
+  g_weapon_calibration: {
+    id: 'g_weapon_calibration',
+    name: '무기 보정',
+    type: 'power', rarity: 'rare', cost: 2, target: 'self',
+    description: '턴 시작 시 힘 +2. 선천.',
+    effects: [{ kind: 'apply_self', status: 'ritual', amount: 2 }],
+    innate: true,
+  },
 };
 
 const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -462,6 +470,7 @@ const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_grenade_launcher:{name: '유탄발사기+',    description: '모든 적에게 16 데미지. 약화 +2. 소멸.',effects: [{ kind: 'damage_all', amount: 16 }, { kind: 'apply_all', status: 'weak', amount: 2 }] },
   g_kevlar:         { name: '방탄조끼+',      description: '방어도 +12. 가시 +5.',                effects: [{ kind: 'block', amount: 12 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
   g_helios:         { name: '헬리오스+',      description: '45 데미지. 모든 적 약화 +3. 소멸.',   effects: [{ kind: 'damage', amount: 45 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
+  g_weapon_calibration: { name: '무기 보정+', description: '턴 시작 시 힘 +3. 선천.',              effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
 };
 
 export function gunnerGetEffectiveDef(card: CardInstance): CardDef {

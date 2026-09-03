@@ -79,7 +79,7 @@ export const SUMMONER_CARD_DEFS: Record<string, CardDef> = {
   s_summon_fire: {
     id: 's_summon_fire',
     name: '화염 정령 소환',
-    type: 'power', rarity: 'common', cost: 1, target: 'self',
+    type: 'power', rarity: 'uncommon', cost: 1, target: 'self',
     description: '턴 시작 시 힘 +1.',
     effects: [{ kind: 'apply_self', status: 'ritual', amount: 1 }],
   },
@@ -87,8 +87,8 @@ export const SUMMONER_CARD_DEFS: Record<string, CardDef> = {
     id: 's_summon_earth',
     name: '대지 정령 소환',
     type: 'power', rarity: 'common', cost: 1, target: 'self',
-    description: '턴 종료 시 방어도 +4.',
-    effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }],
+    description: '턴 종료 시 방어도 +3.',
+    effects: [{ kind: 'apply_self', status: 'metallicize', amount: 3 }],
   },
   s_soul_wall: {
     id: 's_soul_wall',
@@ -273,7 +273,7 @@ export const SUMMONER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   s_spirit_sight:      { name: '정령의 눈+',        description: '2장 드로우. 민첩 +1.',                   effects: [{ kind: 'draw', amount: 2 }, { kind: 'apply_self', status: 'dexterity', amount: 1 }] },
   s_bind:              { name: '영혼 결박+',        description: '8 데미지. 취약 +3.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   s_summon_fire:       { name: '화염 정령 소환+',   description: '턴 시작 시 힘 +2.',                      effects: [{ kind: 'apply_self', status: 'ritual', amount: 2 }] },
-  s_summon_earth:      { name: '대지 정령 소환+',   description: '턴 종료 시 방어도 +6.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 6 }] },
+  s_summon_earth:      { name: '대지 정령 소환+',   description: '턴 종료 시 방어도 +4.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
   s_soul_wall:         { name: '영혼의 벽+',        description: '방어도 +9. 1장 드로우.',                 effects: [{ kind: 'block', amount: 9 }, { kind: 'draw', amount: 1 }] },
   s_leech:             { name: '생명력 착취+',      description: '14 데미지. 소멸.',                       effects: [{ kind: 'damage', amount: 14 }] },
   s_summon_thunder:    { name: '번개 정령 소환+',   description: '가시 +3.',                               effects: [{ kind: 'apply_self', status: 'thorns', amount: 3 }] },

@@ -79,6 +79,7 @@ export function beginPlayerTurn(state: CombatState): void {
   // Reset per-turn signature counters
   state.flags.cardsPlayedThisTurn = 0;
   state.flags.fighterProcThisTurn = false;
+  state.flags.resonanceUsedThisTurn = false;
 
   // Innate cards — on turn 1 only, pull all innates from draw pile to hand
   // up to hand cap (10). Then normal draw fills the rest.

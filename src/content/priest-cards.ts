@@ -112,10 +112,10 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'common',
     cost: 1,
     target: 'enemy',
-    description: 'HP -3. 14 데미지.',
+    description: 'HP -3. 12 데미지.',
     effects: [
       { kind: 'lose_hp', amount: 3 },
-      { kind: 'damage', amount: 14 },
+      { kind: 'damage', amount: 12 },
     ],
   },
   p_second_upper: {
@@ -435,7 +435,7 @@ export const PRIEST_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   p_falling_phoenix:   { name: '낙뢰 강타+',          description: '19 데미지.',                             effects: [{ kind: 'damage', amount: 19 }] },
   p_gong_cham:         { name: '빛의 연격+',          description: '8 데미지 2회.',                          effects: [{ kind: 'damage', amount: 8, times: 2 }] },
   p_holy_chant:        { name: '축복의 노래+',            description: '힘 +2. 1장 드로우.',                     effects: [{ kind: 'apply_self', status: 'strength', amount: 2 }, { kind: 'draw', amount: 1 }] },
-  p_rage_grip:         { name: '분노의 손아귀+',   description: 'HP -3. 19 데미지.',                      effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 19 }] },
+  p_rage_grip:         { name: '분노의 손아귀+',   description: 'HP -3. 16 데미지.',                      effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 16 }] },
   p_second_upper:      { name: '이중 올려치기+',     description: '10 데미지. 약화 +2.',                    effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   p_dragon_punch:      { name: '성광 연타+',          description: '7 데미지 3회.',                          effects: [{ kind: 'damage', amount: 7, times: 3 }] },
   p_holy_water:        { name: '성수+',            description: '16 회복. 방어도 +10.',                   effects: [{ kind: 'heal', amount: 16 }, { kind: 'block', amount: 10 }] },

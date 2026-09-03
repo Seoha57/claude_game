@@ -296,7 +296,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     name: '원소 융합',
     type: 'power',
     rarity: 'rare',
-    cost: 3,
+    cost: 2,
     target: 'self',
     description: '턴 시작 시 힘 +2. 선천.',
     effects: [{ kind: 'apply_self', status: 'ritual', amount: 2 }],

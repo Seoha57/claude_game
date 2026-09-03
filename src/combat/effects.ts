@@ -312,10 +312,11 @@ export function playCard(
   // Snapshot alive enemies before effects for on_kill scaling detection
   const beforeAlive = state.enemies.filter((e) => e.hp > 0).length;
 
-  // ── 원소 공명 (마법사) — 방어 카드 연속 사용 ──
+  // ── 원소 공명 (마법사) — 방어 카드 사용 시 드로우 (턴당 1회) ──
   const run = getRunOrNull();
   if (run?.player.relics.includes('elemental_resonance')
-      && def.type === 'skill' && state.flags.lastPlayedType === 'skill') {
+      && def.type === 'skill' && !state.flags.resonanceUsedThisTurn) {
+    state.flags.resonanceUsedThisTurn = true;
     drawCards(state, 1);
     log(`원소 공명 → 카드 +1`);
   }
