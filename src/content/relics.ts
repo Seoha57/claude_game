@@ -96,7 +96,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   holy_seal: {
     id: 'holy_seal',
     name: '신성한 인장',
-    description: '회복/재생이 발동할 때 방어도 +3.',
+    description: '회복/재생이 발동할 때 방어도 +2.',
     rarity: 'starter',
   },
   venom_fang: {

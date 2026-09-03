@@ -241,8 +241,8 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
       if (c === state.player) {
         const run = getRunOrNull();
         if (run?.player.relics.includes('holy_seal')) {
-          c.block += 3;
-          state.log.push('신성한 인장 → 방어도 +3');
+          c.block += 2;
+          state.log.push('신성한 인장 → 방어도 +2');
         }
       }
     }

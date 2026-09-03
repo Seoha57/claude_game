@@ -439,8 +439,8 @@ export function onHealTrigger(state: CombatState, log: (s: string) => void): voi
   const run = getRunOrNull();
   if (!run) return;
   if (run.player.relics.includes('holy_seal')) {
-    state.player.block += 3;
-    log('신성한 인장 → 방어도 +3');
+    state.player.block += 2;
+    log('신성한 인장 → 방어도 +2');
   }
 }
 
