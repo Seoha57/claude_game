@@ -187,10 +187,10 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
     id: 't_silver_stream',
     name: '은빛 흐름',
     type: 'power', rarity: 'uncommon', cost: 1, target: 'self',
-    description: '민첩 +2. 턴 종료 시 방어도 +3.',
+    description: '민첩 +2. 턴 종료 시 방어도 +2.',
     effects: [
       { kind: 'apply_self', status: 'dexterity', amount: 2 },
-      { kind: 'apply_self', status: 'metallicize', amount: 3 },
+      { kind: 'apply_self', status: 'metallicize', amount: 2 },
     ],
   },
   t_combo_strike: {
@@ -318,7 +318,7 @@ export const THIEF_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   t_assassinate:     { name: '암살+',            description: '26 데미지. 약화 +2.',                    effects: [{ kind: 'damage', amount: 26 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   t_dagger_throw:    { name: '연속 투척+',        description: '5 데미지 3회.',                          effects: [{ kind: 'damage', amount: 5, times: 3 }] },
   t_dance:           { name: '그림자 춤+',       description: '민첩 +3. 1장 드로우.',                   effects: [{ kind: 'apply_self', status: 'dexterity', amount: 3 }, { kind: 'draw', amount: 1 }] },
-  t_silver_stream:   { name: '은빛 흐름+',       description: '민첩 +3. 턴 종료 시 방어도 +5.', effects: [{ kind: 'apply_self', status: 'dexterity', amount: 3 }, { kind: 'apply_self', status: 'metallicize', amount: 5 }] },
+  t_silver_stream:   { name: '은빛 흐름+',       description: '민첩 +3. 턴 종료 시 방어도 +3.', effects: [{ kind: 'apply_self', status: 'dexterity', amount: 3 }, { kind: 'apply_self', status: 'metallicize', amount: 3 }] },
   t_combo_strike:    { name: '연계 베기+',       description: '10 데미지. 이번 턴 2번째 이후 카드면 +11 데미지.',
                        effects: [{ kind: 'damage', amount: 10 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 11 }] }] },
   t_grave_curse:     { name: '저주의 무덤+',     description: '중독 +12.',                              effects: [{ kind: 'apply_enemy', status: 'poison', amount: 12 }] },

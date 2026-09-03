@@ -246,8 +246,11 @@ export const SUMMONER_CARD_DEFS: Record<string, CardDef> = {
     id: 's_spirit_pact',
     name: '정령 서약',
     type: 'power', rarity: 'rare', cost: 1, target: 'self',
-    description: '민첩 +4. 1장 드로우. 선천.',
-    effects: [{ kind: 'apply_self', status: 'dexterity', amount: 4 }, { kind: 'draw', amount: 1 }],
+    description: '힘 +2. 턴 종료 시 방어도 +2. 선천.',
+    effects: [
+      { kind: 'apply_self', status: 'strength', amount: 2 },
+      { kind: 'apply_self', status: 'metallicize', amount: 2 },
+    ],
     innate: true,
   },
   s_plague_spirit: {
@@ -294,7 +297,7 @@ export const SUMMONER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   s_spirit_frenzy:     { name: '사역마 폭주+',      description: '데미지 = 4 × 이번 전투 누적 공격 수.',   effects: [{ kind: 'damage_per_attack', amount: 4 }] },
   s_reaper_summon:     { name: '사신 소환+',        description: '34 데미지. 처치 시 영구 데미지 +5. 소멸.', effects: [{ kind: 'damage', amount: 34 }], scaling: { kind: 'on_kill', amount: 5 } },
   s_void_explosion:    { name: '공허 폭발+',        description: '15 데미지 3회. 소멸.',                   effects: [{ kind: 'damage', amount: 15, times: 3 }] },
-  s_spirit_pact:       { name: '정령 서약+',        description: '민첩 +5. 1장 드로우. 선천.',             effects: [{ kind: 'apply_self', status: 'dexterity', amount: 5 }, { kind: 'draw', amount: 1 }] },
+  s_spirit_pact:       { name: '정령 서약+',        description: '힘 +3. 턴 종료 시 방어도 +3. 선천.',     effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }, { kind: 'apply_self', status: 'metallicize', amount: 3 }] },
   s_plague_spirit:     { name: '역병 정령+',        description: '모든 적에게 중독 +14. 소멸.',            effects: [{ kind: 'apply_all', status: 'poison', amount: 14 }] },
 };
 

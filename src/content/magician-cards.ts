@@ -309,9 +309,9 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 2,
     target: 'all_enemies',
-    description: '모든 적에게 4 데미지.',
-    effects: [{ kind: 'damage_all', amount: 4 }],
-    exhaust: true,
+    description: '모든 적에게 10 데미지. 사용할 때마다 영구 데미지 +3.',
+    effects: [{ kind: 'damage_all', amount: 10 }],
+    scaling: { kind: 'on_play', amount: 3 },
   },
 
   // ── 마법사 콤보 시너지 ─────────────────────────────────────
@@ -448,7 +448,7 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                        effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
   m_quasar:         { name: '성간 폭발+',          description: '모든 적에게 28 데미지.',                 effects: [{ kind: 'damage_all', amount: 28 }] },
   m_fusion:         { name: '원소 융합+',              description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
-  m_marionette:     { name: '인형 조종+',                 description: '모든 적에게 6 데미지.',                  effects: [{ kind: 'damage_all', amount: 6 }] },
+  m_marionette:     { name: '인형 조종+',                 description: '모든 적에게 14 데미지. 사용할 때마다 영구 데미지 +4.', effects: [{ kind: 'damage_all', amount: 14 }], scaling: { kind: 'on_play', amount: 4 } },
   // 풀 확장
   m_frost_bolt:     { name: '냉기 화살+',   description: '8 데미지. 빙결 +2.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
   m_mana_charge:    { name: '마나 충전+',   description: '에너지 +2. 2장 드로우. 소멸.',           effects: [{ kind: 'energy', amount: 2 }, { kind: 'draw', amount: 2 }] },
