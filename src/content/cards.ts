@@ -266,7 +266,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
   },
   uppercut: {
     id: 'uppercut',
-    name: '분쇄격',
+    name: '쇄파격',
     type: 'attack',
     rarity: 'uncommon',
     cost: 2,
@@ -522,7 +522,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   true_grit:        { name: '갈라치기+',          description: '방어도 +9. 무작위 카드 1장 소멸.',   effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
   warcry:           { name: '전술적 드로우+',          description: '2장 드로우. 무작위 카드 1장 소멸.', effects: [{ kind: 'draw', amount: 2 }, { kind: 'exhaust_random_hand' }] },
   dropkick:         { name: '돌진+',     description: '8 데미지. 직전이 방어카드면 에너지 +1.', effects: [{ kind: 'damage', amount: 8 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'energy', amount: 1 }] }] },
-  uppercut:         { name: '분쇄격+',description: '15 데미지. 취약 +2. 약화 +2.',        effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
+  uppercut:         { name: '쇄파격+',description: '15 데미지. 취약 +2. 약화 +2.',        effects: [{ kind: 'damage', amount: 15 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   bloodletting:     { name: '기세+',        description: 'HP -2. 에너지 +3.',                  effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
   ghostly_armor:    { name: '검무+',     description: '방어도 +13.',                         effects: [{ kind: 'block', amount: 13 }] },
   inflame:          { name: '검의 정수+',          description: '힘 +3.',                              effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },

@@ -99,7 +99,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
   },
   f_nen_bullet: {
     id: 'f_nen_bullet',
-    name: '기파탄',
+    name: '연타권',
     type: 'attack',
     rarity: 'common',
     cost: 1,
@@ -389,7 +389,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
   },
   f_shadow_kick: {
     id: 'f_shadow_kick',
-    name: '무영각',
+    name: '폭풍각',
     type: 'attack', rarity: 'rare', cost: 2, target: 'enemy',
     description: '18 데미지 2회. 소멸.',
     effects: [{ kind: 'damage', amount: 18, times: 2 }],
@@ -415,7 +415,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_heavy_punch:   { name: '내려차기+',                description: '14 데미지. 빙결 +1.',                  effects: [{ kind: 'damage', amount: 14 }, { kind: 'apply_enemy', status: 'freeze', amount: 1 }] },
   f_combo:         { name: '강렬한 주먹+',                description: '9 데미지. 1장 드로우. 직전이 방어카드면 방어도 +7.',
                      effects: [{ kind: 'damage', amount: 9 }, { kind: 'draw', amount: 1 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'block', amount: 7 }] }] },
-  f_nen_bullet:    { name: '기파탄+',                    description: '5 데미지를 세 번.',                     effects: [{ kind: 'damage', amount: 5, times: 3 }] },
+  f_nen_bullet:    { name: '연타권+',                    description: '5 데미지를 세 번.',                     effects: [{ kind: 'damage', amount: 5, times: 3 }] },
   f_iron_body:     { name: '견고한 권격+',                description: '7 데미지. 방어도 +7.',                  effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
   f_ki_focus:      { name: '낮은 자세+',                  description: '힘 +4.',                                effects: [{ kind: 'apply_self', status: 'strength', amount: 4 }] },
   f_dodge:         { name: '잔상+',                     description: '방어도 +11. 1장 드로우.',               effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
@@ -446,7 +446,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
                        effects: [{ kind: 'damage', amount: 7, times: 2 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 7 }] }] },
   f_counter:        { name: '카운터+',      description: '11 데미지. 가시 +5.',                    effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
   f_rage_burst:     { name: '분노 폭발+',   description: 'HP -3. 모든 적에게 14 데미지.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_all', amount: 14 }] },
-  f_shadow_kick:    { name: '무영각+',      description: '22 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 22, times: 2 }] },
+  f_shadow_kick:    { name: '폭풍각+',      description: '22 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 22, times: 2 }] },
   f_ten_count:      { name: '연타 카운트+',   description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.', effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
 };
 
