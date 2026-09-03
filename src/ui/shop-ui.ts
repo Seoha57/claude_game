@@ -1,6 +1,6 @@
 import { el } from './dom';
 import { getRun, makeCard, setScreen, canAddCard } from '../state';
-import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS } from '../content/cards';
+import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS, getEffectiveDef } from '../content/cards';
 import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
 import { POTION_LIST, POTION_DEFS } from '../content/potions';
 import { makeRng, shuffle } from '../rng';
@@ -330,17 +330,17 @@ function appendRemovalPicker(wrapper: HTMLElement, run: ReturnType<typeof getRun
   });
 
   for (const card of run.player.deck) {
-    const def = CARD_DEFS[card.defId];
+    const def = getEffectiveDef(card);
+    const upgraded = (card.upgraded ?? 0) >= 1;
+    const upgradedPlus = (card.upgraded ?? 0) >= 2;
     cardRow.appendChild(
       el(
         'div',
         {
-          class: `card ${def.type} rarity-${def.rarity}`,
+          class: `card ${def.type} rarity-${def.rarity} ${upgraded ? 'upgraded' : ''} ${upgradedPlus ? 'upgraded-plus' : ''}`,
           style: { cursor: 'pointer' },
           onClick: () => {
             const removal = shopItems!.find((i) => i.kind === 'removal')!;
-            // 더블클릭/stale 방어: 이미 사용했거나, 픽 모드가 아니거나,
-            // 카드가 덱에 없으면(이미 제거됨) 무시
             if (removal.sold || removalState !== 'picking') return;
             const idx = run.player.deck.findIndex((c) => c.uid === card.uid);
             if (idx < 0) return;
