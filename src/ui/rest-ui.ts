@@ -5,6 +5,7 @@ import { getModifiers } from '../ascension';
 import { isCurseLike } from './deck-overlay';
 import { playSfx } from '../audio';
 import type { CardInstance } from '../types';
+import { kwDesc } from './keywords';
 
 type RestMode = 'choose' | 'purge' | 'smith' | 'dup';
 
@@ -170,7 +171,7 @@ function renderCardChoice(card: CardInstance, onClick: () => void): HTMLElement 
     },
     el('div', { class: 'card-cost' }, String(def.cost)),
     el('div', { class: 'card-name' }, def.name),
-    el('div', { class: 'card-desc' }, def.description),
+    el('div', { class: 'card-desc' }, kwDesc(def.description)),
     el('div', { class: 'card-type' }, curse ? '저주' : typeLabel(def.type)),
   );
 }
@@ -183,7 +184,7 @@ function buildSmithCard(card: CardInstance): HTMLElement {
 
   const costEl = el('div', { class: 'card-cost' }, String(baseDef.cost));
   const nameEl = el('div', { class: 'card-name' }, baseDef.name);
-  const descEl = el('div', { class: 'card-desc' }, baseDef.description);
+  const descEl = el('div', { class: 'card-desc' }, kwDesc(baseDef.description));
   const typeEl = el('div', { class: 'card-type' }, typeLabel(baseDef.type));
   const previewBadge = el(
     'div',
@@ -193,12 +194,16 @@ function buildSmithCard(card: CardInstance): HTMLElement {
   previewBadge.style.display = 'none';
 
   let previewing = false;
+  const replaceDesc = (text: string) => {
+    descEl.textContent = '';
+    descEl.appendChild(kwDesc(text));
+  };
   const showPreview = () => {
     if (previewing) return;
     previewing = true;
     costEl.textContent = String(upgradedView.cost);
     nameEl.textContent = upgradedView.name;
-    descEl.textContent = upgradedView.description;
+    replaceDesc(upgradedView.description);
     typeEl.textContent = typeLabel(upgradedView.type);
     cardEl.classList.add('upgrading');
     previewBadge.style.display = '';
@@ -208,7 +213,7 @@ function buildSmithCard(card: CardInstance): HTMLElement {
     previewing = false;
     costEl.textContent = String(baseDef.cost);
     nameEl.textContent = baseDef.name;
-    descEl.textContent = baseDef.description;
+    replaceDesc(baseDef.description);
     typeEl.textContent = typeLabel(baseDef.type);
     cardEl.classList.remove('upgrading');
     previewBadge.style.display = 'none';

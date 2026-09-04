@@ -3,6 +3,7 @@ import { getRun, makeCard, setScreen, rerender, canAddCard } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS } from '../content/cards';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
 import type { CardDef } from '../types';
+import { kwDesc } from './keywords';
 
 function filterUnlocked(pool: CardDef[], ignoreLocks: boolean): CardDef[] {
   if (ignoreLocks) return pool;
@@ -170,7 +171,7 @@ export function renderReward(): HTMLElement {
         },
         el('div', { class: 'card-cost' }, String(def.cost)),
         el('div', { class: 'card-name' }, def.name),
-        el('div', { class: 'card-desc' }, def.description),
+        el('div', { class: 'card-desc' }, kwDesc(def.description)),
         el('div', { class: 'card-type' }, typeLabel(def.type)),
         ...(atMax ? [el('div', { style: { color: 'var(--bad)', fontSize: '11px', marginTop: '4px' } }, '최대 보유')] : []),
         ...(inDeck && !atMax ? [el('div', { style: { color: 'var(--muted)', fontSize: '11px', marginTop: '4px' } }, `덱에 ${deckCount}장 보유`)] : []),

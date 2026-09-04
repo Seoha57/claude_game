@@ -2,6 +2,7 @@ import { el } from './dom';
 import { getEffectiveDef } from '../content/cards';
 import { cardFlavor } from '../content/lore';
 import type { CardInstance } from '../types';
+import { kwDesc } from './keywords';
 
 export interface CardListOptions {
   title?: string;
@@ -179,7 +180,7 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
           },
           el('div', { class: 'card-cost' }, String(def.cost)),
           el('div', { class: 'card-name' }, def.name),
-          el('div', { class: 'card-desc' }, def.description),
+          el('div', { class: 'card-desc' }, kwDesc(def.description)),
           ...(flavor ? [el('div', { class: 'card-flavor' }, flavor)] : []),
           el('div', { class: 'card-type' }, upgradeLabel ?? (curse ? '저주' : typeLabel(def.type))),
         ),

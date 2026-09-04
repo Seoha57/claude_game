@@ -503,6 +503,39 @@ button:disabled {
 .status.status-new {
   animation: status-pop 0.4s cubic-bezier(0.2, 1.2, 0.3, 1);
 }
+/* Per-status colors (override generic buff/debuff) */
+.status.st-vulnerable  { color: #ff6b6b; border-color: rgba(255,107,107,0.4); background: rgba(255,107,107,0.10); }
+.status.st-weak        { color: #ffa502; border-color: rgba(255,165,2,0.4);   background: rgba(255,165,2,0.10);   }
+.status.st-poison      { color: #2ed573; border-color: rgba(46,213,115,0.4);  background: rgba(46,213,115,0.10);  }
+.status.st-burn        { color: #ff6348; border-color: rgba(255,99,72,0.4);   background: rgba(255,99,72,0.10);   }
+.status.st-freeze      { color: #70a1ff; border-color: rgba(112,161,255,0.4); background: rgba(112,161,255,0.10); }
+.status.st-frail       { color: #a29bfe; border-color: rgba(162,155,254,0.4); background: rgba(162,155,254,0.10); }
+.status.st-strength    { color: #ff4757; border-color: rgba(255,71,87,0.4);   background: rgba(255,71,87,0.10);   }
+.status.st-dexterity   { color: #54a0ff; border-color: rgba(84,160,255,0.4);  background: rgba(84,160,255,0.10);  }
+.status.st-regen       { color: #7bed9f; border-color: rgba(123,237,159,0.4); background: rgba(123,237,159,0.10); }
+.status.st-thorns      { color: #ff9f43; border-color: rgba(255,159,67,0.4);  background: rgba(255,159,67,0.10);  }
+.status.st-ritual      { color: #feca57; border-color: rgba(254,202,87,0.4);  background: rgba(254,202,87,0.10);  }
+.status.st-metallicize { color: #c8d6e5; border-color: rgba(200,214,229,0.4); background: rgba(200,214,229,0.10); }
+
+/* Keyword highlights in card descriptions */
+.kw { font-weight: 600; }
+.kw-vulnerable  { color: #ff6b6b; }
+.kw-weak        { color: #ffa502; }
+.kw-poison      { color: #2ed573; }
+.kw-burn        { color: #ff6348; }
+.kw-freeze      { color: #70a1ff; }
+.kw-frail       { color: #a29bfe; }
+.kw-strength    { color: #ff4757; }
+.kw-dexterity   { color: #54a0ff; }
+.kw-regen       { color: #7bed9f; }
+.kw-thorns      { color: #ff9f43; }
+.kw-ritual      { color: #feca57; }
+.kw-metallicize { color: #c8d6e5; }
+.kw-exhaust     { color: #a29bfe; }
+.kw-innate      { color: #ffeaa7; }
+.kw-retain      { color: #81ecec; }
+.kw-ethereal    { color: #dfe6e9; }
+
 @keyframes status-pop {
   0%   { transform: scale(0.4); opacity: 0; }
   50%  { transform: scale(1.25); opacity: 1; }

@@ -1,4 +1,5 @@
 import { el } from './dom';
+import { kwDesc } from './keywords';
 import { getRun, makeCard, setScreen, canAddCard } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS, getEffectiveDef } from '../content/cards';
 import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
@@ -216,7 +217,7 @@ function renderCardItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild:
       },
       el('div', { class: 'card-cost' }, String(def.cost)),
       el('div', { class: 'card-name' }, def.name),
-      el('div', { class: 'card-desc' }, def.description),
+      el('div', { class: 'card-desc' }, kwDesc(def.description)),
       el('div', { class: 'card-type' }, typeLabel(def.type)),
     ),
     item.sold
@@ -253,7 +254,7 @@ function renderRelicItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild
     },
     el('div', { style: { fontSize: '13px', color: 'var(--muted)' } }, '유물'),
     el('div', { style: { fontWeight: 'bold' } }, def.name),
-    el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, def.description),
+    el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, kwDesc(def.description)),
     item.sold || alreadyOwned
       ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, alreadyOwned ? '이미 보유' : '판매 완료')
       : el(
@@ -297,7 +298,7 @@ function renderPotionItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuil
     },
     el('div', { style: { fontSize: '13px', color: 'var(--muted)' } }, '🧪 물약'),
     el('div', { style: { fontWeight: 'bold' } }, def.name),
-    el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, def.description),
+    el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, kwDesc(def.description)),
     item.sold
       ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '판매 완료')
       : potionsFull
@@ -354,7 +355,7 @@ function appendRemovalPicker(wrapper: HTMLElement, run: ReturnType<typeof getRun
         },
         el('div', { class: 'card-cost' }, String(def.cost)),
         el('div', { class: 'card-name' }, def.name),
-        el('div', { class: 'card-desc' }, def.description),
+        el('div', { class: 'card-desc' }, kwDesc(def.description)),
         el('div', { class: 'card-type' }, typeLabel(def.type)),
       ),
     );

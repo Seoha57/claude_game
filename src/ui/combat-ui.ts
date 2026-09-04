@@ -7,6 +7,7 @@ import { openDeckOverlay } from './deck-overlay';
 import { ENEMY_DEFS } from '../content/enemies';
 import { bossDefeatFlavor } from '../content/lore';
 import { STATUS_INFO, applyStatus, modifiedAttackDamage, getStatusValueLabel, getStatusTooltip } from '../combat/statuses';
+import { kwDesc, STATUS_ICON } from './keywords';
 import { buildIntentDisplay } from '../combat/intent';
 import { endPlayerTurn } from '../combat/combat';
 import { playCard } from '../combat/effects';
@@ -337,14 +338,15 @@ function renderStatuses(s: Record<string, number | undefined>, ownerId = '_playe
     cur.add(k);
     const key = k as keyof typeof STATUS_INFO;
     const isNew = !prev.has(k);
+    const icon = STATUS_ICON[key] ?? '';
     row.appendChild(
       el(
         'div',
         {
-          class: `status ${info.buff ? 'buff' : 'debuff'} ${isNew ? 'status-new' : ''}`,
+          class: `status ${info.buff ? 'buff' : 'debuff'} st-${key} ${isNew ? 'status-new' : ''}`,
           'data-tooltip': getStatusTooltip(key, v),
         },
-        `${info.name} ${getStatusValueLabel(key, v)}`,
+        `${icon} ${info.name} ${getStatusValueLabel(key, v)}`,
       ),
     );
   }
@@ -617,7 +619,7 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
     hotkey ? el('div', { class: 'card-hotkey' }, hotkey) : el('div'),
     el('div', { class: 'card-cost' }, String(def.cost)),
     el('div', { class: 'card-name' }, def.name),
-    el('div', { class: 'card-desc' }, def.description),
+    el('div', { class: 'card-desc' }, kwDesc(def.description)),
     el('div', { class: 'card-type' }, typeLabel(def.type)),
   );
 }

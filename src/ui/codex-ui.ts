@@ -6,6 +6,7 @@ import { getSeenCards, getSeenRelics, resetCodex } from '../codex';
 import { isCurseLike } from './deck-overlay';
 import type { CardDef, RelicDef } from '../types';
 import { isCardUnlocked, isRelicUnlocked, cardUnlockReq, relicUnlockReq, reqLabel } from '../unlocks';
+import { kwDesc } from './keywords';
 
 type Tab = 'cards' | 'relics';
 type CardFilter = 'all' | 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner';
@@ -167,7 +168,7 @@ function renderCardSlot(def: CardDef, isSeen: boolean): HTMLElement {
   return el('div', { class: cls, style: { cursor: 'default' } },
     el('div', { class: 'card-cost' }, String(def.cost)),
     el('div', { class: 'card-name' }, def.name),
-    el('div', { class: 'card-desc' }, unlocked ? def.description : lockText),
+    el('div', { class: 'card-desc' }, unlocked ? kwDesc(def.description) : lockText),
     el('div', { class: 'card-type' }, unlocked ? typeLabel(def.type) : '🔒'),
   );
 }
