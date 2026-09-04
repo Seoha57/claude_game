@@ -13,6 +13,8 @@ interface CharacterInfo {
   description: string;
   starterCards: string;
   emoji: string;
+  difficulty: 1 | 2 | 3;     // 1=쉬움, 2=보통, 3=어려움
+  diffLabel: string;
 }
 
 const CHARACTERS: CharacterInfo[] = [
@@ -27,6 +29,8 @@ const CHARACTERS: CharacterInfo[] = [
     description: '전투 승리 시 HP 6 회복. 강력한 근접 검술로 적을 압도한다.',
     starterCards: '검격×5 · 가드×4 · 찌르기×1',
     emoji: '⚔️',
+    difficulty: 1,
+    diffLabel: '직관적인 공격 스타일, 입문용으로 추천',
   },
   {
     id: 'gunner',
@@ -39,6 +43,8 @@ const CHARACTERS: CharacterInfo[] = [
     description: '전투 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.',
     starterCards: '속사×5 · 전술 재장전×4 · 정밀 사격×1',
     emoji: '🔫',
+    difficulty: 2,
+    diffLabel: '디버프와 콤보 시너지 활용이 핵심',
   },
   {
     id: 'fighter',
@@ -51,6 +57,8 @@ const CHARACTERS: CharacterInfo[] = [
     description: '전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.',
     starterCards: '질풍 발차기×5 · 강철 방어×4 · 올려차기×1',
     emoji: '🥊',
+    difficulty: 1,
+    diffLabel: '높은 체력과 힘 버프로 안정적인 플레이',
   },
   {
     id: 'magician',
@@ -59,10 +67,12 @@ const CHARACTERS: CharacterInfo[] = [
     hp: 65,
     startRelic: '마탑의 결정',
     signatureRelic: '원소 공명',
-    signatureDesc: '방어 카드 2장 연속 사용 시 1장 드로우',
+    signatureDesc: '방어 카드 사용 시 1장 드로우 (턴당 1회)',
     description: '매 턴 시작 시 무작위 적에게 3 데미지. 다양한 원소 마법으로 광역 전투에 강하다.',
     starterCards: '마력 화살×5 · 마력 방벽×4 · 차원 전환×1',
     emoji: '🔮',
+    difficulty: 3,
+    diffLabel: '낮은 체력, 카드 순서와 콤보 관리 필요',
   },
   {
     id: 'priest',
@@ -75,6 +85,8 @@ const CHARACTERS: CharacterInfo[] = [
     description: '전투 시작 시 재생 +3. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.',
     starterCards: '강타×5 · 신성 방어×4 · 행운의 일격×1',
     emoji: '⛪',
+    difficulty: 1,
+    diffLabel: '회복이 풍부해 실수를 만회하기 쉬움',
   },
   {
     id: 'thief',
@@ -87,6 +99,8 @@ const CHARACTERS: CharacterInfo[] = [
     description: '전투 시작 시 민첩 +1. 중독과 다단히트, 그림자를 다루는 날렵한 암살자.',
     starterCards: '베기×5 · 뼈 방패×4 · 암흑의 혼×1',
     emoji: '🗡️',
+    difficulty: 2,
+    diffLabel: '중독과 민첩 활용, 덱 구성이 중요',
   },
   {
     id: 'summoner',
@@ -99,6 +113,8 @@ const CHARACTERS: CharacterInfo[] = [
     description: '정령 소환과 영혼 마법으로 전투를 지배하는 정령술사. HP가 낮지만 다양한 power 스케일링이 강하다.',
     starterCards: '마력탄×5 · 보호막×4 · 대지 정령 소환×1',
     emoji: '👻',
+    difficulty: 3,
+    diffLabel: '최저 체력, 파워 카드 스케일링에 의존',
   },
 ];
 
@@ -147,7 +163,15 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
         el('div', { style: { fontSize: '36px', marginBottom: '8px' } }, ch.emoji),
         el('div', { style: { fontWeight: 'bold', fontSize: '18px', marginBottom: '2px' } }, ch.name),
         el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '12px' } }, ch.subname),
-        el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px' } }, `❤ ${ch.hp}  |  유물: ${ch.startRelic}`),
+        el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '4px' } }, `❤ ${ch.hp}  |  유물: ${ch.startRelic}`),
+        el('div', {
+          style: {
+            fontSize: '11px',
+            marginBottom: '8px',
+            color: ch.difficulty === 1 ? 'var(--good)' : ch.difficulty === 2 ? 'var(--accent)' : 'var(--bad)',
+          },
+          title: ch.diffLabel,
+        }, `${'★'.repeat(ch.difficulty)}${'☆'.repeat(3 - ch.difficulty)} ${ch.difficulty === 1 ? '쉬움' : ch.difficulty === 2 ? '보통' : '어려움'}`),
         el('div', { style: { fontSize: '12px', color: 'var(--fg)', marginBottom: '10px', lineHeight: '1.5' } }, ch.description),
         el(
           'div',
