@@ -17,6 +17,7 @@ import { playSfx, getMuted, setMuted, getVolume, setVolume, getBgmMuted, setBgmM
 import { makeRng, pick } from '../rng';
 import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison, checkGlassCannon, checkExhaust } from '../achievements';
 import { getCardFrame } from '../card-frame';
+import { isTutorialDone, showTutorialOverlay } from './tutorial-overlay';
 
 let selectedCardUid: string | null = null;
 let selectedPotionId: string | null = null;
@@ -194,6 +195,11 @@ export function renderCombat(): HTMLElement {
   }
   // Re-apply damage previews after DOM mount
   requestAnimationFrame(updateDamagePreviews);
+
+  // 첫 전투 첫 턴에 튜토리얼 오버레이
+  if (state.turn === 1 && !isTutorialDone()) {
+    requestAnimationFrame(() => showTutorialOverlay());
+  }
 
   return el(
     'div',
