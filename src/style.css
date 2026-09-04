@@ -239,7 +239,13 @@ button:disabled {
   padding: 16px;
   background: linear-gradient(180deg, #2a1a20 0%, #1a1416 100%);
   position: relative;
+  transition: background 0.6s ease;
 }
+/* Chapter-specific combat backgrounds */
+.ch-1 .combat-top { background: linear-gradient(180deg, #1a2a1a 0%, #141a14 60%, #1a1416 100%); }
+.ch-2 .combat-top { background: linear-gradient(180deg, #1a1a2e 0%, #141428 60%, #1a1416 100%); }
+.ch-3 .combat-top { background: linear-gradient(180deg, #2a1a2e 0%, #201428 60%, #1a1416 100%); }
+.ch-4 .combat-top { background: linear-gradient(180deg, #2e1a1a 0%, #281414 60%, #1a1416 100%); }
 .enemy {
   display: flex;
   flex-direction: column;
@@ -2855,7 +2861,24 @@ button:disabled {
     padding: 8px 14px;
   }
   .end-turn-btn { min-height: 44px; }
+  .end-turn-btn::after {
+    content: '← 스와이프';
+    display: block;
+    font-size: 9px;
+    opacity: 0.5;
+    margin-top: 2px;
+  }
   .audio-toggle { min-height: 28px; }
+
+  /* Swipe feedback flash */
+  .combat-screen.swipe-flash .combat-top {
+    animation: swipe-hint 0.3s ease-out;
+  }
+}
+
+@keyframes swipe-hint {
+  0%   { filter: brightness(1.4); }
+  100% { filter: brightness(1); }
 }
 
 /* Very small phones — stack vertically */

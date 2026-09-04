@@ -185,7 +185,7 @@ export function renderCombat(): HTMLElement {
     if (lastPhasePlayed !== 'lost') { playSfx('defeat'); lastPhasePlayed = 'lost'; }
     const run = getRunOrNull();
     setTimeout(() => setScreen(run?.endless ? 'endless_result' : 'lose'), 0);
-    return el('div', { class: 'combat-screen' });
+    return el('div', { class: `combat-screen ch-${(run?.chapter ?? 1)}` });
   }
   // Reset for next combat
   if (state.phase === 'player' && lastPhasePlayed !== null) lastPhasePlayed = null;
@@ -202,9 +202,11 @@ export function renderCombat(): HTMLElement {
     requestAnimationFrame(() => showTutorialOverlay());
   }
 
-  return el(
+  const run = getRunOrNull();
+  const ch = run?.chapter ?? 1;
+  const screen = el(
     'div',
-    { class: 'combat-screen' },
+    { class: `combat-screen ch-${ch}` },
     renderTop(state),
     renderMid(state),
     el('div', { class: 'combat-hand-row' },
@@ -212,6 +214,25 @@ export function renderCombat(): HTMLElement {
       renderDeckPile(state),
     ),
   );
+
+  // Swipe-left to end turn (mobile)
+  let touchStartX = 0;
+  let touchStartY = 0;
+  screen.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  screen.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (dx < -80 && Math.abs(dy) < 60 && state.phase === 'player') {
+      screen.classList.add('swipe-flash');
+      endPlayerTurn(state);
+      rerender();
+    }
+  }, { passive: true });
+
+  return screen;
 }
 
 function renderTop(state: CombatState): HTMLElement {
@@ -1166,7 +1187,7 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
       (_state as any)._victoryAppliedRelics = true;
     }
     const wave = run.endless.wave;
-    return el('div', { class: 'combat-screen' },
+    return el('div', { class: `combat-screen ch-${run.chapter}` },
       el('div', { class: 'combat-top', style: { flexDirection: 'column', gap: '16px' } },
         el('h2', { style: { color: 'var(--good)', margin: 0 } }, `웨이브 ${wave} 클리어!`),
         el('div', { style: { color: 'var(--muted)' } }, `HP ${run.player.hp}/${run.player.maxHp} · 점수 ${run.endless.score + wave * 100 + run.player.hp + run.player.gold + run.player.relics.length * 25}`),
@@ -1226,7 +1247,7 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
 
   return el(
     'div',
-    { class: 'combat-screen' },
+    { class: `combat-screen ch-${run.chapter}` },
     el(
       'div',
       { class: 'combat-top', style: { flexDirection: 'column', gap: '16px' } },
