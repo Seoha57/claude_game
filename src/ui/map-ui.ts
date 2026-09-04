@@ -191,6 +191,19 @@ export function renderMap(): HTMLElement {
 
   const board = el('div', { class: 'map-board' }, canvas);
 
+  // 현재 노드 위치로 스크롤: 시작 지점이면 맨 아래, 이후엔 가운데
+  if (cur) {
+    requestAnimationFrame(() => {
+      const [, curY] = nodePos(cur, height);
+      if (cur.y === 0) {
+        board.scrollTop = board.scrollHeight;
+      } else {
+        const targetScroll = curY - board.clientHeight / 2;
+        board.scrollTop = Math.max(0, targetScroll);
+      }
+    });
+  }
+
   return el('div', { class: 'map-screen' }, header, board);
 }
 
