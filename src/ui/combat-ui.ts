@@ -227,9 +227,15 @@ function renderTop(state: CombatState): HTMLElement {
   enemiesEl.appendChild(enemyRow);
 
   const log = el('div', { class: 'combat-log' });
-  const recent = state.log.slice(-12);
+  // 적 턴 요약: "── 턴 N" 마커 이후 로그를 하이라이트
+  const turnMarkerPrefix = `── 턴 `;
+  const recent = state.log.slice(-16);
+  let inEnemySection = false;
   for (const entry of recent) {
-    log.appendChild(el('div', { class: 'entry' }, entry));
+    if (entry.startsWith(turnMarkerPrefix)) inEnemySection = true;
+    else if (entry === '── 플레이어 턴 ──') inEnemySection = false;
+    const cls = inEnemySection ? 'entry enemy-log' : 'entry';
+    log.appendChild(el('div', { class: cls }, entry));
   }
 
   return el('div', { class: 'combat-top' }, enemiesEl, log);
@@ -675,9 +681,11 @@ function renderPotionBar(state: CombatState): HTMLElement {
         }, def.name[0]),
       );
     } else {
-      bar.appendChild(el('div', { class: 'potion-slot empty' }, '·'));
+      bar.appendChild(el('div', { class: 'potion-slot empty', 'data-tooltip': `물약 슬롯 ${i + 1} (비어있음)` }, ''));
     }
   }
+  const filledCount = run.player.potions.filter(Boolean).length;
+  bar.appendChild(el('span', { style: { fontSize: '10px', color: 'var(--muted)', alignSelf: 'center' } }, `${filledCount}/${MAX_POTIONS}`));
   return bar;
 }
 

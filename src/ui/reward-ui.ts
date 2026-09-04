@@ -149,9 +149,12 @@ export function renderReward(): HTMLElement {
   const reward = ensureReward();
 
   const cardsRow = el('div', { class: 'reward-cards' });
+  const deckDefIds = new Set(run.player.deck.map((c) => c.defId));
   for (const id of reward.cardChoices) {
     const def = CARD_DEFS[id];
     const atMax = !canAddCard(run.player.deck, def.id);
+    const inDeck = deckDefIds.has(id);
+    const deckCount = inDeck ? run.player.deck.filter((c) => c.defId === id).length : 0;
     cardsRow.appendChild(
       el(
         'div',
@@ -170,6 +173,7 @@ export function renderReward(): HTMLElement {
         el('div', { class: 'card-desc' }, def.description),
         el('div', { class: 'card-type' }, typeLabel(def.type)),
         ...(atMax ? [el('div', { style: { color: 'var(--bad)', fontSize: '11px', marginTop: '4px' } }, '최대 보유')] : []),
+        ...(inDeck && !atMax ? [el('div', { style: { color: 'var(--muted)', fontSize: '11px', marginTop: '4px' } }, `덱에 ${deckCount}장 보유`)] : []),
       ),
     );
   }

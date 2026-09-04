@@ -9,7 +9,17 @@ import { BOSS_RELICS, RELIC_DEFS } from '../content/relics';
 import { makeRng, shuffle } from '../rng';
 import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
-import type { RunState } from '../types';
+import type { RunState, CharacterClass } from '../types';
+
+const CLASS_LABEL: Record<CharacterClass, string> = {
+  swordmaster: '⚔️ 검사',
+  gunner: '🔫 사수',
+  fighter: '🥊 격투가',
+  magician: '🔮 마법사',
+  priest: '⛪ 성직자',
+  thief: '🗡️ 도적',
+  summoner: '👻 정령술사',
+};
 
 export function renderChapterClear(): HTMLElement {
   const run = getRunOrNull();
@@ -311,10 +321,12 @@ export function renderLose(): HTMLElement {
     el(
       'div',
       { class: 'lose-summary' },
+      el('div', { class: 'lose-stat' }, `${CLASS_LABEL[run.characterClass] ?? run.characterClass}`),
       el('div', { class: 'lose-stat' }, `💀 ${run.player.maxHp} max HP`),
       el('div', { class: 'lose-stat' }, `🃏 ${run.player.deck.length}장`),
       el('div', { class: 'lose-stat' }, `💰 ${run.player.gold}`),
       el('div', { class: 'lose-stat' }, `💎 ${run.player.relics.length}유물`),
+      el('div', { class: 'lose-stat' }, `⚔ ${run.map.filter((n) => n.visited && (n.kind === 'combat' || n.kind === 'elite' || n.kind === 'boss')).length}전투`),
       run.ascension > 0 ? el('div', { class: 'lose-stat' }, `A${run.ascension}`) : el('div'),
     ),
     renderRunSummary(run),

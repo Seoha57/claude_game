@@ -187,6 +187,7 @@ export function endPlayerTurn(state: CombatState): void {
   }
 
   state.phase = 'enemy_act';
+  state.log.push(`── 턴 ${state.turn} 적 행동 ──`);
   for (const e of state.enemies) {
     if (e.hp <= 0) continue;
     e.block = 0;

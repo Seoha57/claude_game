@@ -172,7 +172,7 @@ export function renderMap(): HTMLElement {
           n.visited && !isCurrent ? 'visited' : ''
         } ${isCurrent ? 'current' : ''} ${marked ? 'marked' : ''}`,
         style: { left: `${x}px`, top: `${y}px` },
-        'data-tooltip': nodeLabel(n),
+        'data-tooltip': nodeLabel(n, run.chapter),
         onClick: () => { if (isAccessible) enterNode(n); },
         onContextmenu: (e: Event) => { e.preventDefault(); toggleMark(); },
       },
@@ -214,7 +214,7 @@ function nodePos(n: MapNode, totalHeight: number): [number, number] {
   return [x, y];
 }
 
-function nodeLabel(n: MapNode): string {
+function nodeLabel(n: MapNode, chapter?: number): string {
   switch (n.kind) {
     case 'start':   return '시작 지점';
     case 'combat':  return '⚔ 전투\n몬스터와 싸워 골드와 카드 보상을 획득합니다.';
@@ -222,7 +222,14 @@ function nodeLabel(n: MapNode): string {
     case 'rest':    return '🔥 모닥불\nHP를 회복하거나 카드를 강화할 수 있습니다.';
     case 'reward':  return '💰 보물\n골드와 카드 선택 보상을 받습니다.';
     case 'shop':    return '🛒 상점\n카드·유물 구매 및 카드 제거 서비스.';
-    case 'boss':    return '👑 보스\n챕터 보스. 처치 시 다음 챕터로 진행합니다.';
+    case 'boss': {
+      const table =
+        chapter === 4 ? CH4_BOSS_ENCOUNTERS :
+        chapter === 3 ? CH3_BOSS_ENCOUNTERS :
+        chapter === 2 ? CH2_BOSS_ENCOUNTERS : BOSS_ENCOUNTERS;
+      const names = table.map((ids) => ids.map((id) => ENEMY_DEFS[id]?.name ?? id).join(' & ')).join(' / ');
+      return `👑 보스\n후보: ${names}`;
+    }
     case 'event':   return '❓ 이벤트\n예상치 못한 만남. 선택에 따라 다른 결과가...';
   }
 }

@@ -2561,6 +2561,10 @@ button:disabled {
   padding: 1px 0;
   border-bottom: 1px solid rgba(80, 64, 74, 0.3);
 }
+.combat-log .entry.enemy-log {
+  color: var(--bad);
+  font-weight: bold;
+}
 
 /* ── Potion bar ── */
 .potion-bar {
