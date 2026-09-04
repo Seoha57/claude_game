@@ -26,6 +26,10 @@ export interface DailyConstraint {
   startCurses?: number;       // 시작 덱에 상처 N장
   disableUpgrade?: boolean;   // 모닥불 강화 불가
   disableRemove?: boolean;    // 모닥불 정화 불가
+  noShop?: boolean;           // 상점 비활성화
+  costIncrease?: number;      // 모든 카드 비용 +N
+  enemyStrBonus?: number;     // 적 시작 힘 +N
+  startStr?: number;          // 플레이어 시작 힘 +N
 }
 
 const CONSTRAINTS: DailyConstraint[] = [
@@ -37,6 +41,14 @@ const CONSTRAINTS: DailyConstraint[] = [
   { id: 'no_remove',     name: '정화 봉인',    desc: '카드 제거 불가',                  disableRemove: true },
   { id: 'tradeoff',      name: '둔중함',       desc: '손패 -1, 최대 에너지 +1',         handDrawDelta: -1, bonusMaxEnergy: 1 },
   { id: 'titan_clash',   name: '거인의 전쟁',  desc: 'HP +30%, 적 HP +40%',              hpMult: 1.3, enemyHpMult: 1.4 },
+  { id: 'costly',        name: '과중한 대가',  desc: '모든 카드 비용 +1',               costIncrease: 1 },
+  { id: 'no_shop',       name: '상점 폐쇄',    desc: '상점 이용 불가',                  noShop: true },
+  { id: 'brutal',        name: '잔혹한 적',    desc: '적 시작 힘 +2',                   enemyStrBonus: 2 },
+  { id: 'glass_fury',    name: '유리의 분노',  desc: 'HP -50%, 에너지 +1',              hpMult: 0.5, bonusMaxEnergy: 1 },
+  { id: 'overdrive',     name: '과부하',       desc: '손패 +2, 에너지 -1',              handDrawDelta: 2, bonusMaxEnergy: -1 },
+  { id: 'berserker',     name: '광전사',       desc: '힘 +3, 상처 3장',                 startStr: 3, startCurses: 3 },
+  { id: 'double_seal',   name: '이중 봉인',    desc: '강화·정화 모두 불가',             disableUpgrade: true, disableRemove: true },
+  { id: 'fragile',       name: '취약체질',     desc: 'HP -20%, 적 HP -15%',             hpMult: 0.8, enemyHpMult: 0.85 },
 ];
 
 const CHARACTERS: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief', 'summoner'];

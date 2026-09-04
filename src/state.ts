@@ -312,6 +312,12 @@ export function startNewRun(
   if (achCount >= 3) player.gold += 20;
   if (achCount >= 8) { player.maxHp += 3; player.hp += 3; }
   if (achCount >= 15) player.gold += 30;
+  if (achCount >= 20) { player.maxHp += 5; player.hp += 5; }
+  if (achCount >= 25) player.gold += 50;
+
+  if (options.daily?.constraint.startStr) {
+    player.statuses.strength = (player.statuses.strength ?? 0) + options.daily.constraint.startStr;
+  }
 
   const map = generateMap(makeSeedRng(seed), 1);
   runState = {
@@ -332,6 +338,9 @@ export function startNewRun(
         disableUpgrade: options.daily.constraint.disableUpgrade,
         disableRemove: options.daily.constraint.disableRemove,
         enemyHpMult: options.daily.constraint.enemyHpMult,
+        noShop: options.daily.constraint.noShop,
+        costIncrease: options.daily.constraint.costIncrease,
+        enemyStrBonus: options.daily.constraint.enemyStrBonus,
       },
     }),
   };

@@ -199,6 +199,9 @@ export interface RunState {
     disableUpgrade?: boolean;
     disableRemove?: boolean;
     enemyHpMult?: number;
+    noShop?: boolean;
+    costIncrease?: number;
+    enemyStrBonus?: number;
   };
 }
 

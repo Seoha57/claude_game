@@ -65,6 +65,10 @@ export function spawnEnemy(defId: string, rng: () => number): Enemy {
   if (mods.enemyStrBonus > 0) {
     applyStatus(enemy, 'strength', mods.enemyStrBonus);
   }
+  const dailyStr = run?.dailyConfig?.enemyStrBonus ?? 0;
+  if (dailyStr > 0) {
+    applyStatus(enemy, 'strength', dailyStr);
+  }
   return enemy;
 }
 

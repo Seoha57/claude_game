@@ -190,6 +190,12 @@ button:disabled {
 .map-node.elite {
   border-color: var(--accent-2);
 }
+.map-node.disabled {
+  opacity: 0.4;
+  pointer-events: auto;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
 
 /* ── Map node tooltip ── */
 .map-node[data-tooltip] {

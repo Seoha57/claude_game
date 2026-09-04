@@ -165,15 +165,16 @@ export function renderMap(): HTMLElement {
       else markedNodes.add(n.id);
       refreshMarks();
     };
+    const shopBlocked = n.kind === 'shop' && !!run.dailyConfig?.noShop;
     const nodeEl = el(
       'div',
       {
-        class: `map-node ${n.kind} ${isAccessible ? 'accessible' : ''} ${
+        class: `map-node ${n.kind} ${isAccessible && !shopBlocked ? 'accessible' : ''} ${
           n.visited && !isCurrent ? 'visited' : ''
-        } ${isCurrent ? 'current' : ''} ${marked ? 'marked' : ''}`,
+        } ${isCurrent ? 'current' : ''} ${marked ? 'marked' : ''} ${shopBlocked ? 'disabled' : ''}`,
         style: { left: `${x}px`, top: `${y}px` },
-        'data-tooltip': nodeLabel(n, run.chapter),
-        onClick: () => { if (isAccessible) enterNode(n); },
+        'data-tooltip': shopBlocked ? '🚫 상점 폐쇄\n오늘의 도전: 상점 이용 불가' : nodeLabel(n, run.chapter),
+        onClick: () => { if (isAccessible && !shopBlocked) enterNode(n); },
         onContextmenu: (e: Event) => { e.preventDefault(); toggleMark(); },
       },
       NODE_ICON[n.kind] ?? '?',
@@ -305,6 +306,10 @@ function enterNode(n: MapNode): void {
   } else if (n.kind === 'reward') {
     setScreen('reward');
   } else if (n.kind === 'shop') {
+    if (run.dailyConfig?.noShop) {
+      setScreen('map');
+      return;
+    }
     setScreen('shop');
   } else if (n.kind === 'event') {
     setScreen('event');

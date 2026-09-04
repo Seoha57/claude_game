@@ -18,6 +18,11 @@ import { playSfx, getMuted, setMuted, getVolume, setVolume, getBgmMuted, setBgmM
 import { makeRng, pick } from '../rng';
 import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison, checkGlassCannon, checkExhaust } from '../achievements';
 import { getCardFrame } from '../card-frame';
+
+function playCost(baseCost: number): number {
+  const run = getRunOrNull();
+  return baseCost + (run?.dailyConfig?.costIncrease ?? 0);
+}
 import { isTutorialDone, showTutorialOverlay } from './tutorial-overlay';
 
 let selectedCardUid: string | null = null;
@@ -424,7 +429,7 @@ function renderMid(state: CombatState): HTMLElement {
   // 낭비 경고: 사용 가능한 카드가 있는데 턴 끝내려 하면 한 번 흔들어 알림
   const hasPlayable = state.player.hand.some((c) => {
     const def = getEffectiveDef(c);
-    return state.player.energy >= def.cost && !isCurseLike(def.id);
+    return state.player.energy >= playCost(def.cost) && !isCurseLike(def.id);
   });
   const endTurn = el(
     'button',
@@ -594,7 +599,8 @@ function spawnDrawFromDeck(cardEl: HTMLElement, delay: number): void {
 function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLElement {
   const def = getEffectiveDef(c);
   const inPlayerPhase = state.phase === 'player';
-  const canAfford = state.player.energy >= def.cost;
+  const cost = playCost(def.cost);
+  const canAfford = state.player.energy >= cost;
   const canPlay = inPlayerPhase && canAfford;
   const noEnergy = inPlayerPhase && !canAfford; // distinct visual state
   const selected = selectedCardUid === c.uid;
@@ -617,7 +623,7 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
         const live = getCombatOrNull();
         if (!live || live.phase !== 'player') return;
         if (!live.player.hand.some((h) => h.uid === c.uid)) return;
-        if (live.player.energy < def.cost) return;
+        if (live.player.energy < cost) return;
         if (def.target === 'enemy') {
           selectedCardUid = selected ? null : c.uid;
           // Selecting an enemy-target card cancels any pending potion targeting
@@ -627,7 +633,7 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
           selectedCardUid = null;
           spawnCardPlayAnim(e.currentTarget as HTMLElement, { exhaust: !!def.exhaust });
           const before = snapshotFx(state);
-          state.player.energy -= def.cost;
+          state.player.energy -= cost;
           playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
           playCard(state, c, null, (s) => state.log.push(s));
           checkCombatEnd(state);
@@ -638,7 +644,7 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
       },
     },
     hotkey ? el('div', { class: 'card-hotkey' }, hotkey) : el('div'),
-    el('div', { class: 'card-cost' }, String(def.cost)),
+    el('div', { class: 'card-cost' }, String(cost)),
     el('div', { class: 'card-name' }, def.name),
     el('div', { class: 'card-desc' }, kwDesc(def.description)),
     el('div', { class: 'card-type' }, typeLabel(def.type)),
@@ -795,12 +801,12 @@ function playSelectedCard(target: Enemy): void {
   // 카드가 아직 손패에 있는지 확인 (더블클릭/stale 방어)
   if (!state.player.hand.some((h) => h.uid === card.uid)) { selectedCardUid = null; return; }
   const def = getEffectiveDef(card);
-  if (state.player.energy < def.cost) return;
-  // Animate the selected card flying out before rerender wipes it
+  const cost = playCost(def.cost);
+  if (state.player.energy < cost) return;
   const selectedEl = document.querySelector('.card.selected') as HTMLElement | null;
   if (selectedEl) spawnCardPlayAnim(selectedEl, { exhaust: !!def.exhaust });
   const before = snapshotFx(state);
-  state.player.energy -= def.cost;
+  state.player.energy -= cost;
   selectedCardUid = null;
   playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
   playCard(state, card, target, (s) => state.log.push(s));
@@ -1300,16 +1306,16 @@ function playCardWithFx(state: CombatState, card: CardInstance, target: Enemy | 
   // 카드가 아직 손패에 있을 때만 진행 (핫키 연타/stale 방어)
   if (!state.player.hand.some((h) => h.uid === card.uid)) return;
   const def = getEffectiveDef(card);
-  if (state.player.energy < def.cost) return;
+  const cost = playCost(def.cost);
+  if (state.player.energy < cost) return;
   playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
-  // Animate via hotkey: find the card element in current hand DOM
   const handCards = document.querySelectorAll('.hand-cards .card');
   const idxInHand = state.player.hand.findIndex((c) => c.uid === card.uid);
   if (idxInHand >= 0 && handCards[idxInHand]) {
     spawnCardPlayAnim(handCards[idxInHand] as HTMLElement, { exhaust: !!def.exhaust });
   }
   const before = snapshotFx(state);
-  state.player.energy -= def.cost;
+  state.player.energy -= cost;
   selectedCardUid = null;
   playCard(state, card, target, (s) => state.log.push(s));
   checkCombatEnd(state);
@@ -1321,7 +1327,7 @@ function playCardWithFx(state: CombatState, card: CardInstance, target: Enemy | 
 function selectOrPlayCard(card: CardInstance): void {
   const state = getCombat();
   const def = getEffectiveDef(card);
-  if (state.player.energy < def.cost) return;
+  if (state.player.energy < playCost(def.cost)) return;
 
   if (def.target === 'enemy') {
     const alive = aliveEnemies(state);

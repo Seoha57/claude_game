@@ -8,8 +8,9 @@
 
 import type { CardRarity, CardDef, RelicDef } from './types';
 import { loadStats } from './stats';
+import { isUnlocked as isAchUnlocked, ACHIEVEMENTS } from './achievements';
 
-export type UnlockReq = 'always' | 'any_win' | 'wins_3' | 'true_win';
+export type UnlockReq = 'always' | 'any_win' | 'wins_3' | 'true_win' | `ach:${string}`;
 
 // 희귀도 기본 잠금 단계 — 진엔딩이 어려워서 락이 영원히 안 풀리는 일을 피하려고 완화.
 // 보스 유물은 챕터 클리어로 자동 획득되니까 항상 노출.
@@ -32,7 +33,15 @@ const CARD_OVERRIDES: Record<string, UnlockReq> = {
   // 예: 특정 시그니처 카드를 처음부터 풀기
 };
 const RELIC_OVERRIDES: Record<string, UnlockReq> = {
-  // 시작 유물(starter rarity)은 이미 always지만 명시
+  master_scabbard: 'ach:sword_clear',
+  incendiary_round: 'ach:pyromaniac',
+  iron_gauntlet: 'ach:iron_wall',
+  arcane_focus: 'ach:mage_clear',
+  blessed_water: 'ach:priest_clear',
+  lethal_poison: 'ach:venomous',
+  soul_crystal: 'ach:soul_eater',
+  champion_belt: 'ach:all_classes_win',
+  storm_core: 'ach:asc5',
 };
 
 export function cardUnlockReq(def: CardDef): UnlockReq {
@@ -46,6 +55,7 @@ export function relicUnlockReq(def: RelicDef): UnlockReq {
 // 현재 플레이어 진행 상태에서 해당 잠금 단계가 풀려있는가
 export function isReqMet(req: UnlockReq): boolean {
   if (req === 'always') return true;
+  if (req.startsWith('ach:')) return isAchUnlocked(req.slice(4));
   const s = loadStats();
   const wins = s.totalWins + s.totalTrueWins;
   const trueWins = s.totalTrueWins;
@@ -65,12 +75,15 @@ export function isRelicUnlocked(def: RelicDef): boolean {
 
 // UI 라벨용 한국어 요구사항 텍스트
 export function reqLabel(req: UnlockReq): string {
-  switch (req) {
-    case 'always': return '';
-    case 'any_win': return '🔒 첫 승리 시 해제';
-    case 'wins_3': return '🔒 3회 승리 시 해제';
-    case 'true_win': return '🔒 진엔딩 클리어 시 해제';
+  if (req === 'always') return '';
+  if (req === 'any_win') return '🔒 첫 승리 시 해제';
+  if (req === 'wins_3') return '🔒 3회 승리 시 해제';
+  if (req === 'true_win') return '🔒 진엔딩 클리어 시 해제';
+  if (req.startsWith('ach:')) {
+    const ach = ACHIEVEMENTS.find((a) => a.id === req.slice(4));
+    return ach ? `🔒 '${ach.title}' 업적 달성 시 해제` : '🔒 업적 달성 시 해제';
   }
+  return '';
 }
 
 // 진행도 (몇/몇 해제) — 코덱스/타이틀에 노출용
@@ -104,6 +117,7 @@ export function newUnlocksAfterWin(
 
   function wasLocked(req: UnlockReq): boolean {
     if (req === 'always') return false;
+    if (req.startsWith('ach:')) return false;
     if (req === 'any_win') return prev.wins < 1;
     if (req === 'wins_3') return prev.wins < 3;
     if (req === 'true_win') return prev.trueWins < 1;
@@ -111,6 +125,7 @@ export function newUnlocksAfterWin(
   }
   function nowMet(req: UnlockReq): boolean {
     if (req === 'always') return true;
+    if (req.startsWith('ach:')) return isAchUnlocked(req.slice(4));
     if (req === 'any_win') return curWins >= 1;
     if (req === 'wins_3') return curWins >= 3;
     if (req === 'true_win') return curTrue >= 1;
