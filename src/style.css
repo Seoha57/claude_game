@@ -1303,6 +1303,27 @@ button:disabled {
   animation: obsidian-gleam 4s ease-in-out infinite;
 }
 
+.deck-pile.frame-crimson .deck-pile-card {
+  border-color: #6a2020;
+  background: linear-gradient(145deg, #1e1212 0%, #1a0e0e 30%, #201414 60%, #1e1212 100%);
+  box-shadow: 0 2px 10px rgba(180, 30, 30, 0.3), inset 0 0 4px rgba(220, 60, 60, 0.05);
+}
+.deck-pile.frame-crimson .deck-pile-card::after {
+  border-color: rgba(200, 30, 30, 0.2);
+  background: linear-gradient(135deg, rgba(200,30,30,0.08) 0%, transparent 40%, rgba(255,80,40,0.04) 50%, transparent 60%, rgba(200,30,30,0.08) 100%);
+  animation: crimson-pulse 3s ease-in-out infinite;
+}
+.deck-pile.frame-celestial .deck-pile-card {
+  border-color: #8a7030;
+  background: linear-gradient(145deg, #1e1a10 0%, #18140c 30%, #201c14 60%, #1e1a10 100%);
+  box-shadow: 0 2px 12px rgba(255, 215, 80, 0.25), 0 0 6px rgba(180, 140, 255, 0.15);
+}
+.deck-pile.frame-celestial .deck-pile-card::after {
+  border-color: rgba(255, 215, 80, 0.2);
+  background: linear-gradient(135deg, rgba(255,215,80,0.06) 0%, transparent 35%, rgba(180,140,255,0.04) 50%, transparent 65%, rgba(255,215,80,0.06) 100%);
+  animation: celestial-shine 4s ease-in-out infinite;
+}
+
 /* Flying card-back from deck to hand */
 .deck-fly-card {
   position: fixed;
@@ -3063,6 +3084,45 @@ button:disabled {
 @keyframes obsidian-gleam {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 0.8; }
+}
+
+/* Crimson frame (A7) */
+.card.frame-crimson {
+  border-width: 3px;
+  box-shadow: 0 0 18px rgba(180, 30, 30, 0.5), inset 0 0 8px rgba(220, 60, 60, 0.1);
+}
+.card.frame-crimson::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(200,30,30,0.12) 0%, transparent 30%, rgba(255,80,40,0.08) 50%, transparent 70%, rgba(200,30,30,0.1) 100%);
+  pointer-events: none;
+  animation: crimson-pulse 3s ease-in-out infinite;
+}
+@keyframes crimson-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* Celestial frame (A10) */
+.card.frame-celestial {
+  border-width: 3px;
+  box-shadow: 0 0 20px rgba(255, 215, 80, 0.4), 0 0 40px rgba(180, 140, 255, 0.2), inset 0 0 10px rgba(255, 230, 150, 0.1);
+}
+.card.frame-celestial::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(255,215,80,0.1) 0%, transparent 25%, rgba(180,140,255,0.08) 50%, transparent 75%, rgba(255,215,80,0.1) 100%);
+  background-size: 200% 200%;
+  pointer-events: none;
+  animation: celestial-shine 4s ease-in-out infinite;
+}
+@keyframes celestial-shine {
+  0%, 100% { opacity: 0.5; background-position: 0% 0%; }
+  50% { opacity: 1; background-position: 100% 100%; }
 }
 
 /* ── Tutorial overlay ── */

@@ -189,6 +189,10 @@ export function renderWin(): HTMLElement {
       ? [el('div', { style: { color: 'var(--accent)', marginTop: '8px' } }, '최고 난이도 클리어! 진정한 승리!')]
       : []),
     ...(run ? [renderRunSummary(run)] : []),
+    ...(runAscension > 0
+      ? [el('div', { style: { color: 'var(--accent)', fontSize: '13px', marginTop: '4px' } },
+          `무한 던전 점수 ×${(1 + runAscension * 0.1).toFixed(1)} (A${runAscension} 보너스)`)]
+      : []),
     el('button', {
       style: { background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),
@@ -267,6 +271,10 @@ export function renderTrueWin(): HTMLElement {
       ? [el('div', { style: { color: 'var(--good)', marginTop: '12px' } }, `🔓 등반 A${newMax} 해금!`)]
       : []),
     ...(run ? [renderRunSummary(run)] : []),
+    ...(runAscension > 0
+      ? [el('div', { style: { color: 'var(--accent)', fontSize: '13px', marginTop: '4px' } },
+          `무한 던전 점수 ×${(1 + runAscension * 0.1).toFixed(1)} (A${runAscension} 보너스)`)]
+      : []),
     el('button', {
       style: { marginTop: '20px', background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),

@@ -1,6 +1,6 @@
 const STORAGE_KEY = 'dod_card_frame';
 
-export type CardFrame = 'default' | 'silver' | 'gold' | 'diamond' | 'ruby' | 'sapphire' | 'emerald' | 'amethyst' | 'obsidian';
+export type CardFrame = 'default' | 'silver' | 'gold' | 'diamond' | 'ruby' | 'sapphire' | 'emerald' | 'amethyst' | 'obsidian' | 'crimson' | 'celestial';
 
 export interface FrameDef {
   id: CardFrame;
@@ -36,6 +36,8 @@ export const FRAMES: FrameDef[] = [
   { id: 'emerald', name: '에메랄드', emoji: '🟢', unlockLabel: '7캐릭 클리어', check: () => { const a = readAch(); return (a.unlocked ?? []).includes('all_classes_win'); } },
   { id: 'amethyst', name: '자수정', emoji: '🟣', unlockLabel: '등반 A5 클리어', check: () => { const a = readAch(); return (a.unlocked ?? []).includes('asc5'); } },
   { id: 'obsidian', name: '흑요석', emoji: '⚫', unlockLabel: '업적 22개', check: () => (readAch().unlocked?.length ?? 0) >= 22 },
+  { id: 'crimson', name: '진홍', emoji: '🩸', unlockLabel: '등반 A7 클리어', check: () => { try { return parseInt(localStorage.getItem('dod_ascension') ?? '0', 10) >= 7; } catch { return false; } } },
+  { id: 'celestial', name: '천상', emoji: '✨', unlockLabel: '등반 A10 클리어', check: () => { const a = readAch(); return (a.unlocked ?? []).includes('asc10'); } },
 ];
 
 export function getCardFrame(): CardFrame {

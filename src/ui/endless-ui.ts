@@ -84,7 +84,13 @@ export function startNextWave(): void {
 
 export function calcEndlessScore(run: any): number {
   const wave = run.endless?.wave ?? 0;
-  return wave * 100 + run.player.hp + run.player.gold + run.player.relics.length * 25;
+  const base = wave * 100 + run.player.hp + run.player.gold + run.player.relics.length * 25;
+  const ascMult = 1 + (run.ascension ?? 0) * 0.1;
+  return Math.floor(base * ascMult);
+}
+
+export function getAscensionMult(run: any): number {
+  return 1 + (run.ascension ?? 0) * 0.1;
 }
 
 // ── Wave clear rewards ─────────────────────────────────────────
@@ -366,10 +372,16 @@ export function renderEndlessResult(): HTMLElement {
     el('div', { style: { fontSize: '18px', color: 'var(--accent)', marginBottom: '8px' } },
       `🏆 최종 웨이브: ${wave}`),
   );
+  const asc = run?.ascension ?? 0;
+  const multEl = asc > 0
+    ? el('div', { style: { fontSize: '13px', color: 'var(--accent)', marginBottom: '16px' } },
+        `A${asc} 보너스 ×${(1 + asc * 0.1).toFixed(1)}`)
+    : el('div');
   wrapper.appendChild(
-    el('div', { style: { fontSize: '22px', color: 'var(--good)', marginBottom: '20px' } },
+    el('div', { style: { fontSize: '22px', color: 'var(--good)', marginBottom: '4px' } },
       `점수: ${score}`),
   );
+  wrapper.appendChild(multEl);
 
   // Nickname input + submit
   const inputRow = el('div', { style: { display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '16px' } });
@@ -403,6 +415,7 @@ export function renderEndlessResult(): HTMLElement {
             wave,
             characterClass: run?.characterClass ?? 'swordmaster',
             title: getAchievementTitle()?.name ?? '',
+            ascension: run?.ascension ?? 0,
           }),
         });
         if (res.ok) {
@@ -473,10 +486,11 @@ export function renderLeaderboard(): HTMLElement {
       ));
       entries.forEach((e: any, i: number) => {
         const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`;
+        const ascLabel = e.ascension > 0 ? ` A${e.ascension}` : '';
         table.appendChild(el('div', { class: `lb-row ${i < 3 ? 'lb-top' : ''}` },
           el('span', { class: 'lb-rank' }, medal),
           el('span', { class: 'lb-name' }, e.title ? `${e.nickname} · ${e.title}` : e.nickname),
-          el('span', { class: 'lb-class' }, CLASS_LABEL[e.characterClass] ?? e.characterClass),
+          el('span', { class: 'lb-class' }, `${CLASS_LABEL[e.characterClass] ?? e.characterClass}${ascLabel}`),
           el('span', { class: 'lb-wave' }, `${e.wave}`),
           el('span', { class: 'lb-score' }, `${e.score}`),
         ));

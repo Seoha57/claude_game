@@ -214,9 +214,11 @@ function renderModifierHints(level: number): HTMLElement {
   if (level >= 9) hints.push('적 힘 +1 추가');
   if (level >= 10) hints.push('적 HP +15% 추가');
 
+  const mult = `무한 던전 점수 ×${(1 + level * 0.1).toFixed(1)}`;
   return el(
     'div',
-    { style: { color: 'var(--bad)', fontSize: '12px', maxWidth: '320px', textAlign: 'center', marginBottom: '4px' } },
-    hints.join(' · '),
+    { style: { fontSize: '12px', maxWidth: '320px', textAlign: 'center', marginBottom: '4px' } },
+    el('span', { style: { color: 'var(--bad)' } }, hints.join(' · ')),
+    el('span', { style: { color: 'var(--good)', marginLeft: '8px' } }, mult),
   );
 }
