@@ -6,18 +6,30 @@ function attack(amount: number, hits = 1): Intent {
   return { kind: 'attack', damage: amount, hits, label: `${amount}×${hits}` };
 }
 
+function wPick(rng: () => number, options: [Intent, number][]): Intent {
+  const total = options.reduce((s, [, w]) => s + w, 0);
+  let roll = rng() * total;
+  for (const [val, w] of options) {
+    roll -= w;
+    if (roll <= 0) return val;
+  }
+  return options[options.length - 1][0];
+}
+
 export const ENEMY_DEFS: Record<string, EnemyDef> = {
   // ── Easy ──
   jaw_worm: {
     id: 'jaw_worm',
     name: '턱벌레',
     hpRange: [40, 44],
-    decideIntent(_state, _self, turn) {
-      // chomp / thrash / bellow rotation
-      const i = turn % 3;
-      if (i === 0) return attack(11, 1);
-      if (i === 1) return { kind: 'attack_block', damage: 7, hits: 1, block: 5 };
-      return { kind: 'buff', label: '힘+3, 방어+6' };
+    decideIntent(state, self, turn) {
+      const low = self.hp < self.maxHp * 0.5;
+      const last = self.intent.kind;
+      return wPick(state.rng, [
+        [attack(11, 1), last === 'attack' ? 2 : 5],
+        [{ kind: 'attack_block', damage: 7, hits: 1, block: 5 }, last === 'attack_block' ? 1 : 3],
+        [{ kind: 'buff', label: '힘+3, 방어+6' }, low ? 5 : (turn === 0 ? 0 : 2)],
+      ]);
     },
     act(state, self) {
       const it = self.intent;
@@ -94,10 +106,13 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     id: 'sentinel',
     name: '파수병',
     hpRange: [38, 42],
-    decideIntent(_state, _self, turn) {
-      const i = turn % 2;
-      if (i === 0) return { kind: 'attack_block', damage: 9, block: 5, label: '9 / 방어 5' };
-      return { kind: 'block', block: 8, label: '방어 8' };
+    decideIntent(state, self) {
+      const low = self.hp < self.maxHp * 0.5;
+      return wPick(state.rng, [
+        [{ kind: 'attack_block', damage: 9, block: 5, label: '9 / 방어 5' }, low ? 2 : 4],
+        [{ kind: 'block', block: 8, label: '방어 8' }, low ? 5 : 2],
+        [attack(12, 1), low ? 1 : 3],
+      ]);
     },
     act(state, self) {
       const it = self.intent;
@@ -106,6 +121,8 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
         if (it.block) gainBlock(self, it.block);
       } else if (it.kind === 'block' && it.block) {
         gainBlock(self, it.block);
+      } else if (it.kind === 'attack' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
       }
     },
   },
@@ -211,15 +228,20 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     id: 'blue_slaver',
     name: '청 노예상',
     hpRange: [46, 52],
-    decideIntent(_state, _self, turn) {
-      const i = turn % 3;
-      if (i === 2) return { kind: 'debuff', label: '약화 +2' };
-      return attack(12, 1);
+    decideIntent(state, self) {
+      const low = self.hp < self.maxHp * 0.4;
+      return wPick(state.rng, [
+        [attack(12, 1), low ? 3 : 5],
+        [{ kind: 'debuff', label: '약화 +2' }, low ? 4 : 2],
+        [attack(7, 2), 2],
+      ]);
     },
     act(state, self) {
       const it = self.intent;
       if (it.kind === 'debuff') applyStatus(state.player, 'weak', 2);
-      else if (it.damage) dealDamage(state, self, state.player, it.damage, true);
+      else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) dealDamage(state, self, state.player, it.damage, true);
+      }
     },
   },
 
@@ -227,15 +249,21 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     id: 'red_slaver',
     name: '홍 노예상',
     hpRange: [46, 52],
-    decideIntent(_state, _self, turn) {
-      const i = turn % 3;
-      if (i === 1) return { kind: 'debuff', label: '취약 +2' };
-      return attack(13, 1);
+    decideIntent(state, self) {
+      const low = self.hp < self.maxHp * 0.4;
+      return wPick(state.rng, [
+        [attack(13, 1), low ? 2 : 5],
+        [{ kind: 'debuff', label: '취약 +2' }, low ? 4 : 2],
+        [{ kind: 'attack_block', damage: 9, block: 4, label: '9 / 방어 4' }, low ? 3 : 1],
+      ]);
     },
     act(state, self) {
       const it = self.intent;
       if (it.kind === 'debuff') applyStatus(state.player, 'vulnerable', 2);
-      else if (it.damage) dealDamage(state, self, state.player, it.damage, true);
+      else if (it.kind === 'attack_block' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.block) gainBlock(self, it.block);
+      } else if (it.damage) dealDamage(state, self, state.player, it.damage, true);
     },
   },
 
@@ -330,17 +358,23 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     id: 'centurion',
     name: '백부장',
     hpRange: [76, 82],
-    decideIntent(_state, _self, turn) {
-      const i = turn % 3;
-      if (i === 0) return { kind: 'attack_buff', damage: 16, label: '16 + 힘+2' };
-      if (i === 1) return { kind: 'attack_block', damage: 12, block: 8, label: '12 / 방어 8' };
-      return attack(20, 1);
+    decideIntent(state, self) {
+      const low = self.hp < self.maxHp * 0.4;
+      const last = self.intent.kind;
+      return wPick(state.rng, [
+        [{ kind: 'attack_buff', damage: 16, label: '16 + 힘+2' }, low ? 5 : (last === 'attack_buff' ? 1 : 3)],
+        [{ kind: 'attack_block', damage: 12, block: 8, label: '12 / 방어 8' }, last === 'attack_block' ? 1 : 3],
+        [attack(20, 1), low ? 4 : 2],
+        [attack(10, 2), 2],
+      ]);
     },
     act(state, self) {
       const it = self.intent;
       if (it.kind === 'attack_buff' && it.damage) { dealDamage(state, self, state.player, it.damage, true); applyStatus(self, 'strength', 2); }
       else if (it.kind === 'attack_block' && it.damage) { dealDamage(state, self, state.player, it.damage, true); if (it.block) gainBlock(self, it.block); }
-      else if (it.damage) dealDamage(state, self, state.player, it.damage, true);
+      else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) dealDamage(state, self, state.player, it.damage, true);
+      }
     },
   },
 
@@ -789,12 +823,15 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     id: 'dark_knight',
     name: '암흑 기사',
     hpRange: [58, 66],
-    decideIntent(_state, _self, turn) {
-      const i = turn % 4;
-      if (i === 0) return attack(13, 1);
-      if (i === 1) return { kind: 'attack_block', damage: 8, block: 8, label: '8 / 방어 8' };
-      if (i === 2) return attack(7, 2);
-      return { kind: 'attack', damage: 10, hits: 1, label: '10 + 취약' };
+    decideIntent(state, self) {
+      const low = self.hp < self.maxHp * 0.4;
+      const last = self.intent.kind;
+      return wPick(state.rng, [
+        [attack(13, 1), last === 'attack' ? 2 : 4],
+        [{ kind: 'attack_block', damage: 8, block: 8, label: '8 / 방어 8' }, low ? 3 : 2],
+        [attack(7, 2), 3],
+        [{ kind: 'attack', damage: 10, hits: 1, label: '10 + 취약' }, low ? 4 : 2],
+      ]);
     },
     act(state, self) {
       const it = self.intent;
@@ -802,9 +839,8 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
         dealDamage(state, self, state.player, it.damage, true);
         if (it.block) gainBlock(self, it.block);
       } else if (it.damage) {
-        const hits = it.hits ?? 1;
-        for (let h = 0; h < hits; h++) dealDamage(state, self, state.player, it.damage, true);
-        if ((self.turn % 4) === 3) applyStatus(state.player, 'vulnerable', 1);
+        for (let h = 0; h < (it.hits ?? 1); h++) dealDamage(state, self, state.player, it.damage, true);
+        if (it.label?.includes('취약')) applyStatus(state.player, 'vulnerable', 1);
       }
     },
   },
@@ -1266,6 +1302,93 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
       }
     },
   },
+
+  // ─────────────────────────────────────────────────────────
+  // 다양성 추가 적
+  // ─────────────────────────────────────────────────────────
+
+  // Ch1 — escalating poison; forces quick kills
+  poison_spider: {
+    id: 'poison_spider',
+    name: '독거미',
+    hpRange: [26, 32],
+    decideIntent(state, self, turn) {
+      const stack = 2 + Math.min(turn, 4);
+      return wPick(state.rng, [
+        [{ kind: 'attack', damage: 5, hits: 1, label: `5 + 중독 ${stack}` }, 4],
+        [attack(9, 1), 3],
+        [{ kind: 'debuff', label: '약화 +1' }, self.hp < self.maxHp * 0.5 ? 3 : 1],
+      ]);
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'debuff') {
+        applyStatus(state.player, 'weak', 1);
+      } else if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.label?.includes('중독')) {
+          const stack = 2 + Math.min(self.turn, 4);
+          applyStatus(state.player, 'poison', stack);
+        }
+      }
+    },
+  },
+
+  // Ch2 — life drain tank; sustain forces burst damage
+  vampiric_bat: {
+    id: 'vampiric_bat',
+    name: '흡혈 박쥐',
+    hpRange: [48, 56],
+    decideIntent(state, self) {
+      const low = self.hp < self.maxHp * 0.5;
+      return wPick(state.rng, [
+        [{ kind: 'attack', damage: 8, hits: 1, label: '8 + 흡혈 4' }, low ? 5 : 3],
+        [attack(12, 1), 3],
+        [{ kind: 'buff', label: '재생 +3' }, low ? 4 : 2],
+      ]);
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') {
+        applyStatus(self, 'regen', 3);
+      } else if (it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.label?.includes('흡혈')) {
+          self.hp = Math.min(self.maxHp, self.hp + 4);
+          state.log.push('흡혈 박쥐: HP +4 회복');
+        }
+      }
+    },
+  },
+
+  // Ch3 — thorns+block counter-attacker; punishes reckless attacking
+  mirror_knight: {
+    id: 'mirror_knight',
+    name: '거울 기사',
+    hpRange: [65, 74],
+    decideIntent(state, self) {
+      const low = self.hp < self.maxHp * 0.4;
+      const last = self.intent.kind;
+      return wPick(state.rng, [
+        [{ kind: 'buff', label: '가시 +3, 방어 8' }, last === 'buff' ? 1 : (low ? 4 : 3)],
+        [attack(14, 1), 3],
+        [{ kind: 'attack_block', damage: 10, block: 6, label: '10 / 방어 6' }, 3],
+        [attack(6, 3), low ? 4 : 2],
+      ]);
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') {
+        applyStatus(self, 'thorns', 3);
+        gainBlock(self, 8);
+      } else if (it.kind === 'attack_block' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.block) gainBlock(self, it.block);
+      } else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) dealDamage(state, self, state.player, it.damage, true);
+      }
+    },
+  },
 };
 
 // ── Encounter tables ──
@@ -1277,6 +1400,8 @@ export const EASY_ENCOUNTERS: string[][] = [
   ['goblin_berserker'],
   ['flame_wisp'],
   ['flame_wisp', 'flame_wisp'],
+  ['poison_spider'],
+  ['poison_spider', 'fungi_beast'],
 ];
 
 export const NORMAL_ENCOUNTERS: string[][] = [
@@ -1290,6 +1415,8 @@ export const NORMAL_ENCOUNTERS: string[][] = [
   ['charging_boar'],
   ['flame_wisp', 'cultist'],
   ['charging_boar', 'flame_wisp'],
+  ['poison_spider', 'wandering_swordsman'],
+  ['poison_spider', 'jaw_worm'],
 ];
 
 export const ELITE_ENCOUNTERS: string[][] = [
@@ -1316,6 +1443,9 @@ export const CH2_NORMAL_ENCOUNTERS: string[][] = [
   ['mech_scout'],
   ['curse_priest', 'shield_gremlin'],
   ['mech_scout', 'arcane_scholar'],
+  ['vampiric_bat'],
+  ['vampiric_bat', 'blue_slaver'],
+  ['vampiric_bat', 'curse_priest'],
 ];
 
 export const CH2_ELITE_ENCOUNTERS: string[][] = [
@@ -1343,6 +1473,8 @@ export const CH3_NORMAL_ENCOUNTERS: string[][] = [
   ['corrupted_beast', 'looter'],
   ['exorcist_hunter'],
   ['exorcist_hunter', 'corrupted_beast'],
+  ['mirror_knight'],
+  ['mirror_knight', 'dark_slime'],
 ];
 
 export const CH3_ELITE_ENCOUNTERS: string[][] = [

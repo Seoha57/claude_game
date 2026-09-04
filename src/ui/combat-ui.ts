@@ -156,6 +156,9 @@ export const ENEMY_ART: Record<string, string> = {
   forest_spirit: '🌳',
   dimension_sorcerer: '🌌',
   titan_golem: '🗿',
+  poison_spider: '🕷️',
+  vampiric_bat: '🦇',
+  mirror_knight: '🪞',
   // Chapter 4
   void_echo: '🌀',
   dimensional_warden: '🛡️',
