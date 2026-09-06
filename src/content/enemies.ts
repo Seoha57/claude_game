@@ -1313,7 +1313,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     name: '독거미',
     hpRange: [26, 32],
     decideIntent(state, self, turn) {
-      const stack = 2 + Math.min(turn, 4);
+      const stack = 2 + Math.min(turn, 3);
       return wPick(state.rng, [
         [{ kind: 'attack', damage: 5, hits: 1, label: `5 + 중독 ${stack}` }, 4],
         [attack(9, 1), 3],
@@ -1327,7 +1327,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
       } else if (it.damage) {
         dealDamage(state, self, state.player, it.damage, true);
         if (it.label?.includes('중독')) {
-          const stack = 2 + Math.min(self.turn, 4);
+          const stack = 2 + Math.min(self.turn, 3);
           applyStatus(state.player, 'poison', stack);
         }
       }
@@ -1342,20 +1342,20 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     decideIntent(state, self) {
       const low = self.hp < self.maxHp * 0.5;
       return wPick(state.rng, [
-        [{ kind: 'attack', damage: 8, hits: 1, label: '8 + 흡혈 4' }, low ? 5 : 3],
+        [{ kind: 'attack', damage: 8, hits: 1, label: '8 + 흡혈 3' }, low ? 4 : 3],
         [attack(12, 1), 3],
-        [{ kind: 'buff', label: '재생 +3' }, low ? 4 : 2],
+        [{ kind: 'buff', label: '재생 +2' }, low ? 4 : 2],
       ]);
     },
     act(state, self) {
       const it = self.intent;
       if (it.kind === 'buff') {
-        applyStatus(self, 'regen', 3);
+        applyStatus(self, 'regen', 2);
       } else if (it.damage) {
         dealDamage(state, self, state.player, it.damage, true);
         if (it.label?.includes('흡혈')) {
-          self.hp = Math.min(self.maxHp, self.hp + 4);
-          state.log.push('흡혈 박쥐: HP +4 회복');
+          self.hp = Math.min(self.maxHp, self.hp + 3);
+          state.log.push('흡혈 박쥐: HP +3 회복');
         }
       }
     },
@@ -1370,7 +1370,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
       const low = self.hp < self.maxHp * 0.4;
       const last = self.intent.kind;
       return wPick(state.rng, [
-        [{ kind: 'buff', label: '가시 +3, 방어 8' }, last === 'buff' ? 1 : (low ? 4 : 3)],
+        [{ kind: 'buff', label: '가시 +2, 방어 8' }, last === 'buff' ? 1 : (low ? 4 : 3)],
         [attack(14, 1), 3],
         [{ kind: 'attack_block', damage: 10, block: 6, label: '10 / 방어 6' }, 3],
         [attack(6, 3), low ? 4 : 2],
@@ -1379,7 +1379,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     act(state, self) {
       const it = self.intent;
       if (it.kind === 'buff') {
-        applyStatus(self, 'thorns', 3);
+        applyStatus(self, 'thorns', 2);
         gainBlock(self, 8);
       } else if (it.kind === 'attack_block' && it.damage) {
         dealDamage(state, self, state.player, it.damage, true);
