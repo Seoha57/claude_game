@@ -135,7 +135,7 @@ export const ENEMY_ART: Record<string, string> = {
   abyss_lord: '👿',
   mad_butcher: '🪓',
   obsidian_golem: '🗿',
-  karnak_runemaster: '🔮',
+  karnak_runemaster: '📿',
   sirocco_phantom: '🐲',
   death_apostle: '☠️',
   isaris_overlord: '👑',
