@@ -27,7 +27,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'mage_clear',   title: '마법사 클리어',  description: '마법사로 일반 엔딩 달성.',  emoji: '🔮', category: 'character' },
   { id: 'priest_clear', title: '성직자 클리어',  description: '성직자로 일반 엔딩 달성.',  emoji: '⛪', category: 'character' },
   { id: 'thief_clear',  title: '도적 클리어',    description: '도적으로 일반 엔딩 달성.',  emoji: '🗡️', category: 'character' },
-  { id: 'summoner_clear', title: '정령술사 클리어', description: '정령술사로 일반 엔딩 달성.', emoji: '👻', category: 'character' },
+  { id: 'summoner_clear', title: '정령술사 클리어', description: '정령술사로 일반 엔딩 달성.', emoji: '🪬', category: 'character' },
 
   // ── Difficulty ──
   { id: 'asc5',  title: '등반자',  description: '등반 A5 이상에서 일반 엔딩 달성.',  emoji: '⛰', category: 'difficulty' },
@@ -42,7 +42,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'cryomancer', title: '얼음의 지배자', description: '빙결로 적 행동을 4턴 연속 봉인.', emoji: '❄', category: 'combat' },
   { id: 'venomous',   title: '맹독술사',  description: '한 적에게 중독 20 이상 누적.', emoji: '☠️', category: 'combat' },
   { id: 'big_hit',    title: '필살의 일격', description: '단일 카드로 60 이상 데미지.', emoji: '🌟', category: 'combat' },
-  { id: 'spirit_master', title: '정령의 주인', description: '한 전투에서 의식(ritual) 10 이상 누적.', emoji: '👻', category: 'combat' },
+  { id: 'spirit_master', title: '정령의 주인', description: '한 전투에서 의식(ritual) 10 이상 누적.', emoji: '🪬', category: 'combat' },
   { id: 'glass_cannon',  title: '유리 대포',   description: 'HP 1인 상태에서 전투 승리.', emoji: '💀', category: 'combat' },
   { id: 'soul_eater',    title: '영혼 포식자', description: '한 전투에서 카드 10장 이상 소멸.', emoji: '🌀', category: 'combat' },
 

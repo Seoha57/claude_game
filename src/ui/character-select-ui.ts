@@ -154,7 +154,7 @@ const CHARACTERS: CharacterInfo[] = [
       { name: '보호막', type: 'skill', count: 4 },
       { name: '대지 정령 소환', type: 'power', count: 1 },
     ],
-    emoji: '👻',
+    emoji: '🪬',
     difficulty: 3,
     diffLabel: '최저 체력, 파워 카드 스케일링에 의존',
     color: '#60b0c0',

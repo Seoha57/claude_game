@@ -18,7 +18,7 @@ const CLASS_LABEL: Record<CharacterClass, string> = {
   magician: '🔮 마법사',
   priest: '⛪ 성직자',
   thief: '🗡️ 도적',
-  summoner: '👻 정령술사',
+  summoner: '🪬 정령술사',
 };
 
 export function renderChapterClear(): HTMLElement {
