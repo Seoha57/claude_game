@@ -1,7 +1,7 @@
 import { el } from './dom';
 import { startNewRun, setScreen } from '../state';
 import type { CharacterClass } from '../types';
-import { CHARACTER_SVG, artEl } from './art';
+import { CHARACTER_SVG } from './art';
 
 interface CharacterInfo {
   id: CharacterClass;
@@ -280,14 +280,13 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     wrapper.appendChild(layout);
 
     // Start button
-    const startBtn = el('button', {
-      class: 'cs-start-btn',
-      style: { background: ch.color, borderColor: ch.color },
-      onClick: () => startNewRun(seed, ascension, selected, { goToScreen: 'neow_blessing' }),
-    });
-    startBtn.appendChild(artEl(CHARACTER_SVG[ch.id], 24));
-    startBtn.appendChild(document.createTextNode(` ${ch.name} 시작`));
-    wrapper.appendChild(startBtn);
+    wrapper.appendChild(
+      el('button', {
+        class: 'cs-start-btn',
+        style: { background: ch.color, borderColor: ch.color },
+        onClick: () => startNewRun(seed, ascension, selected, { goToScreen: 'neow_blessing' }),
+      }, `${ch.name} 시작`),
+    );
 
     wrapper.appendChild(
       el('button', {
