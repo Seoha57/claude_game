@@ -3,62 +3,303 @@ const S2 = (paths: [string, string][]) =>
 
 // ── Character Art (detailed, used in select screen + UI) ──
 
+const C = (parts: string) =>
+  `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">${parts}</svg>`;
+const p = (d: string, f: string) => `<path d="${d}" fill="${f}"/>`;
+const ci = (cx: number, cy: number, r: number, f: string) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${f}"/>`;
+const rc = (x: number, y: number, w: number, h: number, f: string) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}"/>`;
+
 export const CHARACTER_SVG: Record<string, string> = {
-  swordmaster: S2([
-    ['M32 8 L26 18 L20 48 L26 56 L38 56 L44 48 L38 18Z', '#e85040'],
-    ['M22 20 L12 32 L16 36 L24 28Z', '#c03830'],
-    ['M42 20 L52 32 L48 36 L40 28Z', '#c03830'],
-    ['M30 14 L28 42 L32 46 L36 42 L34 14Z', '#fff8'],
-    ['M28 4 L36 4 L38 12 L32 16 L26 12Z', '#e8504080'],
-  ]),
-  gunner: S2([
-    ['M28 12 L22 22 L20 48 L26 56 L38 56 L44 48 L42 22 L36 12Z', '#5090d0'],
-    ['M14 28 L8 30 L6 34 L14 36 L22 32Z', '#3870b0'],
-    ['M50 28 L56 30 L58 34 L50 36 L42 32Z', '#3870b0'],
-    ['M24 30 L20 26 L10 24 L8 28 L20 30Z', '#fff6'],
-    ['M29 10 L35 10 L36 16 L32 18 L28 16Z', '#5090d080'],
-  ]),
-  fighter: S2([
-    ['M30 10 L22 20 L18 46 L24 56 L40 56 L46 46 L42 20 L34 10Z', '#e0a030'],
-    ['M16 24 L8 20 L6 24 L10 30 L18 28Z', '#c08020'],
-    ['M48 24 L56 20 L58 24 L54 30 L46 28Z', '#c08020'],
-    ['M28 36 L22 40 L24 46 L32 44Z', '#fff4'],
-    ['M36 36 L42 40 L40 46 L32 44Z', '#fff4'],
-    ['M29 8 L35 8 L36 14 L32 16 L28 14Z', '#e0a03080'],
-  ]),
-  magician: S2([
-    ['M30 14 L24 24 L22 48 L28 56 L36 56 L42 48 L40 24 L34 14Z', '#a060e0'],
-    ['M20 22 L12 18 L10 22 L16 28 L22 26Z', '#8040c0'],
-    ['M44 22 L52 18 L54 22 L48 28 L42 26Z', '#8040c0'],
-    ['M32 4 L28 8 L32 12 L36 8Z', '#d090ff'],
-    ['M30 30 Q32 26 34 30 Q32 34 30 30Z', '#d090ff80'],
-    ['M14 14 L10 10 L8 14 L12 18Z', '#a060e040'],
-    ['M50 14 L54 10 L56 14 L52 18Z', '#a060e040'],
-  ]),
-  priest: S2([
-    ['M28 14 L22 24 L20 48 L26 56 L38 56 L44 48 L42 24 L36 14Z', '#e0d060'],
-    ['M20 24 L14 20 L12 24 L16 30 L22 28Z', '#c0b040'],
-    ['M44 24 L50 20 L52 24 L48 30 L42 28Z', '#c0b040'],
-    ['M30 4 L34 4 L34 12 L30 12Z', '#ffe080'],
-    ['M28 6 L36 6 L36 10 L28 10Z', '#ffe080'],
-    ['M30 2 L34 2 L34 14 L30 14Z', '#fff6'],
-  ]),
-  thief: S2([
-    ['M30 12 L22 20 L20 48 L26 56 L38 56 L44 48 L42 20 L34 12Z', '#60c080'],
-    ['M24 8 L18 14 L22 20 L32 16 L42 20 L46 14 L40 8Z', '#408060'],
-    ['M16 28 L8 34 L12 38 L20 34Z', '#80e0a0'],
-    ['M48 28 L56 34 L52 38 L44 34Z', '#80e0a0'],
-    ['M29 10 L35 10 L34 14 L30 14Z', '#fff4'],
-  ]),
-  summoner: S2([
-    ['M30 14 L24 24 L22 48 L28 56 L36 56 L42 48 L40 24 L34 14Z', '#60b0c0'],
-    ['M20 22 L14 18 L12 22 L16 28 L22 26Z', '#4090a0'],
-    ['M44 22 L50 18 L52 22 L48 28 L42 26Z', '#4090a0'],
-    ['M16 8 Q20 4 24 8 Q20 12 16 8Z', '#80d0e080'],
-    ['M40 6 Q44 2 48 6 Q44 10 40 6Z', '#80d0e060'],
-    ['M8 16 Q12 12 16 16 Q12 20 8 16Z', '#80d0e040'],
-    ['M30 10 L34 10 L34 16 L30 16Z', '#60b0c080'],
-  ]),
+  swordmaster: C([
+    // Cape
+    p('M18 24 L10 30 L8 52 L20 56 L26 44', '#a03028'),
+    p('M46 24 L54 30 L56 52 L44 56 L38 44', '#a03028'),
+    // Body armor
+    p('M24 22 L20 28 L18 48 L28 54 L36 54 L46 48 L44 28 L40 22Z', '#d04840'),
+    // Chest plate
+    p('M28 26 L36 26 L35 40 L29 40Z', '#e86058'),
+    // Armor line
+    p('M30 26 L34 26 L33 40 L31 40Z', '#f08070'),
+    // Belt
+    p('M22 40 L42 40 L42 44 L22 44Z', '#8a2820'),
+    rc(30, 40, 4, 4, '#ffd700'),
+    // Head
+    ci(32, 14, 9, '#f0c8a0'),
+    // Hair spiky
+    p('M24 10 L27 2 L30 8 L33 2 L36 8 L39 2 L40 10 Q32 6 24 10Z', '#c83028'),
+    // Headband
+    p('M23 12 L41 12 L41 14 L23 14Z', '#fff'),
+    // Eyes
+    ci(29, 15, 1.5, '#1a1a2e'),
+    ci(35, 15, 1.5, '#1a1a2e'),
+    // Mouth
+    p('M30 18 Q32 20 34 18', '#c07060'),
+    // Sword blade
+    p('M46 4 L48 2 L50 4 L49 24 L47 24Z', '#c8d0d8'),
+    p('M47.5 4 L48 2 L49 4 L48.5 24 L47.5 24Z', '#e8f0f8'),
+    // Sword guard
+    p('M44 23 L52 23 L52 25.5 L44 25.5Z', '#ffd700'),
+    // Sword handle
+    rc(47, 25.5, 2.5, 5, '#6b3410'),
+    // Sword pommel
+    ci(48.25, 31.5, 1.5, '#ffd700'),
+    // Legs
+    p('M26 54 L24 62 L30 62 L32 54Z', '#c04038'),
+    p('M32 54 L34 62 L40 62 L38 54Z', '#c04038'),
+    // Boots
+    p('M23 60 L22 63 L31 63 L30 60Z', '#4a2818'),
+    p('M33 60 L34 63 L42 63 L41 60Z', '#4a2818'),
+  ].join('')),
+
+  gunner: C([
+    // Coat tails
+    p('M18 38 L14 54 L22 56 L26 44Z', '#2a5a90'),
+    p('M46 38 L50 54 L42 56 L38 44Z', '#2a5a90'),
+    // Body coat
+    p('M22 22 L18 28 L16 48 L28 54 L36 54 L48 48 L46 28 L42 22Z', '#3878b8'),
+    // Coat front panel
+    p('M30 24 L34 24 L34 50 L30 50Z', '#4a90d0'),
+    // Belt / bandolier
+    p('M24 28 L40 38 L40 40 L24 30Z', '#c8a040'),
+    p('M40 28 L24 38 L24 40 L40 30Z', '#c8a040'),
+    // Collar
+    p('M26 22 L32 26 L38 22 L36 20 L28 20Z', '#4a90d0'),
+    // Head
+    ci(32, 13, 9, '#f0c8a0'),
+    // Cap
+    p('M22 10 L32 4 L42 10 L40 14 L24 14Z', '#2a5a90'),
+    p('M24 13 L40 13 L42 15 L22 15Z', '#1a3a60'),
+    // Cap brim
+    p('M22 14 L42 14 L44 16 L20 16Z', '#1a3a60'),
+    // Goggles
+    p('M26 11 L30 11 L30 14 L26 14Z', '#ffd700'),
+    p('M34 11 L38 11 L38 14 L34 14Z', '#ffd700'),
+    ci(28, 12.5, 1.5, '#80d0f0'),
+    ci(36, 12.5, 1.5, '#80d0f0'),
+    // Eyes (behind goggles, visible as dark)
+    ci(28, 12.5, 0.8, '#1a1a2e'),
+    ci(36, 12.5, 0.8, '#1a1a2e'),
+    // Rifle
+    p('M10 30 L12 28 L44 22 L46 24 L14 32Z', '#5a5a5a'),
+    p('M10 30 L6 32 L8 34 L12 32Z', '#4a4a4a'),
+    rc(40, 22, 6, 3, '#6a6a6a'),
+    // Rifle detail
+    p('M14 29 L40 23 L40 24 L14 30Z', '#888'),
+    // Legs
+    p('M26 54 L24 62 L30 62 L32 54Z', '#2a5a90'),
+    p('M32 54 L34 62 L40 62 L38 54Z', '#2a5a90'),
+    // Boots
+    p('M23 60 L22 63 L31 63 L30 60Z', '#3a2818'),
+    p('M33 60 L34 63 L42 63 L41 60Z', '#3a2818'),
+  ].join('')),
+
+  fighter: C([
+    // Body - gi open
+    p('M24 22 L20 28 L18 48 L28 54 L36 54 L46 48 L44 28 L40 22Z', '#d09020'),
+    // Gi opening - skin
+    p('M28 22 L36 22 L34 38 L30 38Z', '#e0b080'),
+    // Gi lapels
+    p('M26 22 L30 22 L30 36 L26 30Z', '#e8a828'),
+    p('M38 22 L34 22 L34 36 L38 30Z', '#e8a828'),
+    // Belt sash
+    p('M20 38 L44 38 L44 42 L20 42Z', '#2a2a2a'),
+    rc(30, 38, 4, 4, '#e0a030'),
+    // Left arm raised - fist up
+    p('M20 26 L14 18 L10 16 L8 18 L12 22 L18 28Z', '#e0b080'),
+    // Left fist
+    ci(9, 17, 4, '#e0b080'),
+    // Left hand wrap
+    p('M6 15 L12 15 L12 17 L6 17Z', '#fff'),
+    p('M6 17 L12 17 L12 19 L6 19Z', '#fff'),
+    // Right arm raised - fist up
+    p('M44 26 L50 18 L54 16 L56 18 L52 22 L46 28Z', '#e0b080'),
+    // Right fist
+    ci(55, 17, 4, '#e0b080'),
+    // Right hand wrap
+    p('M52 15 L58 15 L58 17 L52 17Z', '#fff'),
+    p('M52 17 L58 17 L58 19 L52 19Z', '#fff'),
+    // Head
+    ci(32, 13, 9, '#e0b080'),
+    // Hair - short spiky
+    p('M24 9 L26 4 L29 7 L32 3 L35 7 L38 4 L40 9 Q32 5 24 9Z', '#2a2a2a'),
+    // Headband
+    p('M23 10 L41 10 L41 12 L23 12Z', '#e85040'),
+    // Headband tail
+    p('M41 10 L48 8 L48 10 L41 12Z', '#e85040'),
+    // Eyes - fierce
+    p('M27 14 L31 13 L31 16 L28 16Z', '#1a1a2e'),
+    p('M33 13 L37 14 L36 16 L33 16Z', '#1a1a2e'),
+    // Mouth - grin
+    p('M29 18 Q32 21 35 18', '#c07060'),
+    // Legs
+    p('M26 54 L24 62 L30 62 L32 54Z', '#d09020'),
+    p('M32 54 L34 62 L40 62 L38 54Z', '#d09020'),
+    // Boots/wraps
+    p('M23 58 L22 63 L31 63 L30 58Z', '#2a2a2a'),
+    p('M33 58 L34 63 L42 63 L41 58Z', '#2a2a2a'),
+  ].join('')),
+
+  magician: C([
+    // Robe body
+    p('M22 26 L16 34 L12 54 L28 60 L36 60 L52 54 L48 34 L42 26Z', '#7840b8'),
+    // Robe front
+    p('M30 26 L34 26 L35 58 L29 58Z', '#9060d0'),
+    // Robe trim
+    p('M12 54 L28 60 L36 60 L52 54 L52 56 L36 62 L28 62 L12 56Z', '#5a2890'),
+    // Shoulders
+    p('M20 24 L26 22 L26 28 L18 30Z', '#6830a0'),
+    p('M44 24 L38 22 L38 28 L46 30Z', '#6830a0'),
+    // Head
+    ci(32, 16, 8, '#f0c8a0'),
+    // Wizard hat
+    p('M22 14 L32 -2 L42 14 L40 18 L24 18Z', '#5a2890'),
+    // Hat brim
+    p('M18 17 L46 17 L44 20 L20 20Z', '#6830a0'),
+    // Hat band
+    p('M24 15 L40 15 L40 17 L24 17Z', '#ffd700'),
+    // Hat star
+    p('M32 4 L33 7 L36 7 L34 9 L35 12 L32 10 L29 12 L30 9 L28 7 L31 7Z', '#ffd700'),
+    // Eyes
+    ci(29, 18, 1.5, '#1a1a2e'),
+    ci(35, 18, 1.5, '#1a1a2e'),
+    // Staff
+    rc(8, 8, 2.5, 48, '#6b3410'),
+    // Staff orb
+    ci(9.25, 8, 5, '#d090ff80'),
+    ci(9.25, 8, 3.5, '#d090ff'),
+    ci(9.25, 7, 1.5, '#f0d0ff'),
+    // Magic sparkles
+    p('M52 10 L53 8 L54 10 L56 11 L54 12 L53 14 L52 12 L50 11Z', '#d090ff80'),
+    p('M48 4 L49 2 L50 4 L52 5 L50 6 L49 8 L48 6 L46 5Z', '#d090ff60'),
+    p('M56 18 L57 16 L58 18 L60 19 L58 20 L57 22 L56 20 L54 19Z', '#d090ff40'),
+    // Legs (hidden by robe, just shoes peeking)
+    p('M26 58 L24 63 L30 63 L30 58Z', '#4a2818'),
+    p('M34 58 L34 63 L40 63 L38 58Z', '#4a2818'),
+  ].join('')),
+
+  priest: C([
+    // Halo glow
+    ci(32, 6, 7, '#ffe08030'),
+    ci(32, 6, 5, '#ffe08060'),
+    // Halo ring
+    p('M25 6 Q25 2 32 2 Q39 2 39 6 Q39 8 32 8 Q25 8 25 6Z', '#ffd700'),
+    p('M27 6 Q27 3.5 32 3.5 Q37 3.5 37 6 Q37 7 32 7 Q27 7 27 6Z', '#1a141600'),
+    // Robe body
+    p('M22 24 L18 30 L14 54 L28 60 L36 60 L50 54 L46 30 L42 24Z', '#e8e0c8'),
+    // Robe front panel
+    p('M30 24 L34 24 L34 58 L30 58Z', '#f0e8d0'),
+    // Cross on chest
+    p('M31 28 L33 28 L33 38 L31 38Z', '#ffd700'),
+    p('M29 31 L35 31 L35 33 L29 33Z', '#ffd700'),
+    // Robe trim
+    p('M14 54 L28 60 L36 60 L50 54 L50 56 L36 62 L28 62 L14 56Z', '#c8a040'),
+    // Shoulders/stole
+    p('M22 24 L28 22 L34 28 L26 30Z', '#c8a040'),
+    p('M42 24 L36 22 L30 28 L38 30Z', '#c8a040'),
+    // Head
+    ci(32, 16, 8, '#f0c8a0'),
+    // Hair/hood
+    p('M24 12 L26 8 L38 8 L40 12 L40 18 L38 14 L26 14 L24 18Z', '#c8a040'),
+    // Eyes - gentle
+    ci(29, 16, 1.3, '#1a1a2e'),
+    ci(35, 16, 1.3, '#1a1a2e'),
+    // Gentle smile
+    p('M30 19 Q32 21 34 19', '#c07060'),
+    // Staff
+    rc(50, 6, 2.5, 50, '#c8a040'),
+    // Staff cross top
+    p('M47 4 L55 4 L55 6 L47 6Z', '#ffd700'),
+    p('M50 0 L52.5 0 L52.5 10 L50 10Z', '#ffd700'),
+    // Staff glow
+    ci(51.25, 5, 3, '#ffe08040'),
+    // Legs (shoes)
+    p('M26 58 L24 63 L30 63 L30 58Z', '#8a6830'),
+    p('M34 58 L34 63 L40 63 L38 58Z', '#8a6830'),
+  ].join('')),
+
+  thief: C([
+    // Body - leather
+    p('M24 24 L20 30 L18 48 L28 54 L36 54 L46 48 L44 30 L40 24Z', '#308050'),
+    // Vest detail
+    p('M28 26 L36 26 L36 44 L28 44Z', '#286840'),
+    // Belt
+    p('M20 42 L44 42 L44 46 L20 46Z', '#2a2a2a'),
+    rc(30, 42, 4, 4, '#808080'),
+    // Shoulder pads
+    p('M22 24 L18 22 L16 26 L20 28Z', '#286840'),
+    p('M42 24 L46 22 L48 26 L44 28Z', '#286840'),
+    // Left arm + dagger
+    p('M18 28 L12 34 L10 38 L14 38 L20 32Z', '#e0b080'),
+    // Left dagger blade
+    p('M8 38 L10 34 L12 38 L10 50Z', '#c0c8d0'),
+    p('M9.5 38 L10 34 L11 38 L10 48Z', '#e0e8f0'),
+    // Right arm + dagger
+    p('M46 28 L52 34 L54 38 L50 38 L44 32Z', '#e0b080'),
+    // Right dagger blade
+    p('M56 38 L54 34 L52 38 L54 50Z', '#c0c8d0'),
+    p('M54.5 38 L54 34 L53 38 L54 48Z', '#e0e8f0'),
+    // Head
+    ci(32, 15, 8, '#f0c8a0'),
+    // Hood
+    p('M22 12 L28 4 L36 4 L42 12 L42 18 L40 14 L24 14 L22 18Z', '#286840'),
+    p('M22 12 L26 6 L38 6 L42 12 L40 14 L24 14Z', '#308050'),
+    // Face scarf/mask
+    p('M24 18 L40 18 L40 22 L24 22Z', '#1a3020'),
+    // Eyes - sharp
+    p('M27 14 L31 14 L30 16.5 L27 16Z', '#1a1a2e'),
+    p('M33 14 L37 14 L37 16 L34 16.5Z', '#1a1a2e'),
+    // Eye shine
+    ci(29, 15, 0.6, '#80ffa0'),
+    ci(35, 15, 0.6, '#80ffa0'),
+    // Legs
+    p('M26 54 L24 62 L30 62 L32 54Z', '#286840'),
+    p('M32 54 L34 62 L40 62 L38 54Z', '#286840'),
+    // Boots
+    p('M23 60 L22 63 L31 63 L30 60Z', '#2a2a2a'),
+    p('M33 60 L34 63 L42 63 L41 60Z', '#2a2a2a'),
+  ].join('')),
+
+  summoner: C([
+    // Robe body
+    p('M22 26 L16 34 L12 54 L28 60 L36 60 L52 54 L48 34 L42 26Z', '#408898'),
+    // Robe front
+    p('M30 26 L34 26 L34 58 L30 58Z', '#58a8b8'),
+    // Robe pattern lines
+    p('M16 40 L48 40 L48 42 L16 42Z', '#306878'),
+    p('M14 48 L50 48 L50 50 L14 50Z', '#306878'),
+    // Robe trim
+    p('M12 54 L28 60 L36 60 L52 54 L52 56 L36 62 L28 62 L12 56Z', '#306878'),
+    // Shoulders
+    p('M20 24 L26 22 L26 28 L18 30Z', '#508898'),
+    p('M44 24 L38 22 L38 28 L46 30Z', '#508898'),
+    // Head
+    ci(32, 16, 8, '#f0c8a0'),
+    // Long hair
+    p('M24 12 L28 6 L36 6 L40 12 L42 24 L40 16 L24 16 L22 24Z', '#58a8b8'),
+    // Hair bangs
+    p('M26 10 L30 6 L34 6 L38 10 L36 14 L28 14Z', '#4898a8'),
+    // Eyes
+    ci(29, 16, 1.3, '#1a1a2e'),
+    ci(35, 16, 1.3, '#1a1a2e'),
+    // Crystal staff
+    rc(8, 14, 2, 48, '#6b5030'),
+    // Staff crystal
+    p('M4 10 L9 2 L14 10 L9 14Z', '#80d0e0'),
+    p('M6 9 L9 4 L12 9 L9 12Z', '#a0e8f0'),
+    ci(9, 8, 1.5, '#d0f0ff'),
+    // Floating spirit orbs
+    ci(52, 10, 5, '#80d0e040'),
+    ci(52, 10, 3.5, '#80d0e080'),
+    ci(52, 9, 1.5, '#c0f0ff'),
+    ci(56, 22, 3.5, '#80d0e030'),
+    ci(56, 22, 2.5, '#80d0e060'),
+    ci(56, 21, 1, '#c0f0ff'),
+    ci(48, 2, 2.5, '#80d0e020'),
+    ci(48, 2, 1.5, '#80d0e050'),
+    // Legs (shoes)
+    p('M26 58 L24 63 L30 63 L30 58Z', '#3a2818'),
+    p('M34 58 L34 63 L40 63 L38 58Z', '#3a2818'),
+  ].join('')),
 };
 
 // ── Enemy Art (compact icons for combat screen) ──
