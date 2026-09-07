@@ -9,17 +9,8 @@ import { BOSS_RELICS, RELIC_DEFS } from '../content/relics';
 import { makeRng, shuffle } from '../rng';
 import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
-import type { RunState, CharacterClass } from '../types';
-
-const CLASS_LABEL: Record<CharacterClass, string> = {
-  swordmaster: '⚔️ 검사',
-  gunner: '🔫 사수',
-  fighter: '🥊 격투가',
-  magician: '🔮 마법사',
-  priest: '⛪ 성직자',
-  thief: '🗡️ 도적',
-  summoner: '🪬 정령술사',
-};
+import type { RunState } from '../types';
+import { CHARACTER_SVG, CHAR_NAMES, artEl } from './art';
 
 export function renderChapterClear(): HTMLElement {
   const run = getRunOrNull();
@@ -329,7 +320,7 @@ export function renderLose(): HTMLElement {
     el(
       'div',
       { class: 'lose-summary' },
-      el('div', { class: 'lose-stat' }, `${CLASS_LABEL[run.characterClass] ?? run.characterClass}`),
+      (() => { const s = el('div', { class: 'lose-stat', style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } }); s.appendChild(artEl(CHARACTER_SVG[run.characterClass], 18)); s.appendChild(document.createTextNode(CHAR_NAMES[run.characterClass] ?? run.characterClass)); return s; })(),
       el('div', { class: 'lose-stat' }, `💀 ${run.player.maxHp} max HP`),
       el('div', { class: 'lose-stat' }, `🃏 ${run.player.deck.length}장`),
       el('div', { class: 'lose-stat' }, `💰 ${run.player.gold}`),
@@ -409,7 +400,7 @@ function renderRunSummary(run: RunState): HTMLElement {
         class: `run-summary-card ${typeClass}`,
         'data-tooltip': def.description,
       },
-        el('span', { class: 'rsc-cost' }, String(def.cost)),
+        el('span', { class: 'rsc-cost' }, def.cost < 0 ? 'X' : String(def.cost)),
         el('span', {}, `${def.name}${upgradeMark}`),
       ),
     );

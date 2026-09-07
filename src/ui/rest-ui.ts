@@ -169,7 +169,7 @@ function renderCardChoice(card: CardInstance, onClick: () => void): HTMLElement 
       style: { cursor: 'pointer' },
       onClick,
     },
-    el('div', { class: 'card-cost' }, String(def.cost)),
+    el('div', { class: 'card-cost' }, def.cost < 0 ? 'X' : String(def.cost)),
     el('div', { class: 'card-name' }, def.name),
     el('div', { class: 'card-desc' }, kwDesc(def.description)),
     el('div', { class: 'card-type' }, curse ? '저주' : typeLabel(def.type)),
@@ -182,7 +182,7 @@ function buildSmithCard(card: CardInstance): HTMLElement {
   const upgradedView = getEffectiveDef({ ...card, upgraded: nextLevel });
   const isDouble = nextLevel === 2;
 
-  const costEl = el('div', { class: 'card-cost' }, String(baseDef.cost));
+  const costEl = el('div', { class: 'card-cost' }, baseDef.cost < 0 ? 'X' : String(baseDef.cost));
   const nameEl = el('div', { class: 'card-name' }, baseDef.name);
   const descEl = el('div', { class: 'card-desc' }, kwDesc(baseDef.description));
   const typeEl = el('div', { class: 'card-type' }, typeLabel(baseDef.type));
@@ -201,7 +201,7 @@ function buildSmithCard(card: CardInstance): HTMLElement {
   const showPreview = () => {
     if (previewing) return;
     previewing = true;
-    costEl.textContent = String(upgradedView.cost);
+    costEl.textContent = upgradedView.cost < 0 ? 'X' : String(upgradedView.cost);
     nameEl.textContent = upgradedView.name;
     replaceDesc(upgradedView.description);
     typeEl.textContent = typeLabel(upgradedView.type);
@@ -211,7 +211,7 @@ function buildSmithCard(card: CardInstance): HTMLElement {
   const hidePreview = () => {
     if (!previewing) return;
     previewing = false;
-    costEl.textContent = String(baseDef.cost);
+    costEl.textContent = baseDef.cost < 0 ? 'X' : String(baseDef.cost);
     nameEl.textContent = baseDef.name;
     replaceDesc(baseDef.description);
     typeEl.textContent = typeLabel(baseDef.type);

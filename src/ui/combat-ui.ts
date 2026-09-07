@@ -8,6 +8,7 @@ import { ENEMY_DEFS } from '../content/enemies';
 import { bossDefeatFlavor } from '../content/lore';
 import { STATUS_INFO, applyStatus, modifiedAttackDamage, getStatusValueLabel, getStatusTooltip } from '../combat/statuses';
 import { kwDesc, STATUS_ICON } from './keywords';
+import { ENEMY_SVG } from './art';
 import { buildIntentDisplay } from '../combat/intent';
 import { endPlayerTurn } from '../combat/combat';
 import { playCard } from '../combat/effects';
@@ -114,59 +115,7 @@ function updateDamagePreviews(): void {
   }
 }
 
-export const ENEMY_ART: Record<string, string> = {
-  jaw_worm: '🪱',
-  cultist: '🧙',
-  fungi_beast: '🍄',
-  gremlin_nob: '👹',
-  sentinel: '💂',
-  hexaghost: '👻',
-  blue_slaver: '🥶',
-  red_slaver: '🤬',
-  shield_gremlin: '🧌',
-  taskmaster: '🦹',
-  book_of_stabbing: '📕',
-  the_collector: '🏛️',
-  looter: '🤑',
-  dark_slime: '🫠',
-  centurion: '🪖',
-  writhing_mass: '🐙',
-  void_heart: '💀',
-  abyss_lord: '👿',
-  mad_butcher: '🪓',
-  obsidian_golem: '🗿',
-  karnak_runemaster: '📿',
-  sirocco_phantom: '🐲',
-  death_apostle: '☠️',
-  isaris_overlord: '👑',
-  goblin_berserker: '👺',
-  wandering_swordsman: '🥷',
-  frenzy_gremlin: '😈',
-  arcane_scholar: '🧿',
-  black_butcher: '🔪',
-  heavy_armored: '🦾',
-  dark_knight: '♞',
-  corrupted_beast: '🦂',
-  dragonling: '🐉',
-  flame_wisp: '🔥',
-  charging_boar: '🐗',
-  curse_priest: '🩸',
-  mech_scout: '🤖',
-  exorcist_hunter: '✝️',
-  forest_spirit: '🧚',
-  dimension_sorcerer: '🌌',
-  titan_golem: '⛰️',
-  poison_spider: '🕷️',
-  vampiric_bat: '🦇',
-  mirror_knight: '🪞',
-  // Chapter 4
-  void_echo: '🫥',
-  dimensional_warden: '🔰',
-  whispering_madness: '👁️',
-  rift_titan: '⚡',
-  time_sovereign: '⌛',
-  void_avatar: '💠',
-};
+export { ENEMY_SVG as ENEMY_ART };
 
 let lastPhasePlayed: string | null = null;
 
@@ -279,7 +228,8 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
     ((selectedCardUid !== null && isCardEnemyTargeted(getSelectedCard(state))) ||
      (selectedPotionId !== null));
 
-  const art = el('div', { class: 'enemy-art' }, ENEMY_ART[e.defId] ?? '👤');
+  const art = el('div', { class: 'enemy-art' });
+  art.innerHTML = ENEMY_SVG[e.defId] ?? '👤';
 
   const enemyHpPct = e.hp / e.maxHp;
   const hpFill = el('div', { class: 'fill', style: { width: `${enemyHpPct * 100}%` } });
@@ -647,7 +597,7 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
       },
     },
     hotkey ? el('div', { class: 'card-hotkey' }, hotkey) : el('div'),
-    el('div', { class: 'card-cost' }, String(cost)),
+    el('div', { class: 'card-cost' }, cost < 0 ? 'X' : String(cost)),
     el('div', { class: 'card-name' }, def.name),
     el('div', { class: 'card-desc' }, kwDesc(def.description)),
     el('div', { class: 'card-type' }, typeLabel(def.type)),

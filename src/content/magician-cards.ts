@@ -268,7 +268,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
   },
   m_kasiyas: {
     id: 'm_kasiyas',
-    name: '소환: 대정령',
+    name: '금단의 마술',
     type: 'attack',
     rarity: 'rare',
     cost: 2,
@@ -438,7 +438,7 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_ouroboros:      { name: '자기 재생+',                description: '15 데미지. 처치 시 영구 데미지 +6. 소멸.', effects: [{ kind: 'damage', amount: 15 }], scaling: { kind: 'on_kill', amount: 6 } },
   m_doll_forest:    { name: '인형의 숲+',                 description: '카드 소멸 시 에너지 +1, 카드 1장 드로우.', effects: [{ kind: 'apply_self', status: 'on_exhaust_energy', amount: 1 }, { kind: 'apply_self', status: 'on_exhaust_draw', amount: 1 }] },
   m_astral_storm:   { name: '별빛 폭풍+',              description: '42 데미지.',                             effects: [{ kind: 'damage', amount: 42 }] },
-  m_kasiyas:        { name: '소환: 대정령+',            description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
+  m_kasiyas:        { name: '금단의 마술+',              description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
   // 콤보 시너지
   m_amplify:        { name: '마력 증폭+',  description: '9 데미지. 직전이 방어카드면 +10 데미지.',
                        effects: [{ kind: 'damage', amount: 9 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 10 }] }] },

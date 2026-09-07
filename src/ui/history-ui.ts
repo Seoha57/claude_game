@@ -3,15 +3,16 @@ import { setScreen } from '../state';
 import { getRunHistory, clearRunHistory } from '../run-history';
 import type { RunHistoryEntry } from '../run-history';
 import type { CharacterClass } from '../types';
+import { CHARACTER_SVG, artEl } from './art';
 
-const CHAR_INFO: Record<CharacterClass, { name: string; emoji: string }> = {
-  swordmaster: { name: '검사',     emoji: '⚔️' },
-  gunner:      { name: '사수',     emoji: '🔫' },
-  fighter:     { name: '격투가',   emoji: '🥊' },
-  magician:    { name: '마법사',   emoji: '🔮' },
-  priest:      { name: '성직자',   emoji: '⛪' },
-  thief:       { name: '도적',     emoji: '🗡️' },
-  summoner:    { name: '정령술사', emoji: '🪬' },
+const CHAR_INFO: Record<CharacterClass, { name: string }> = {
+  swordmaster: { name: '검사' },
+  gunner:      { name: '사수' },
+  fighter:     { name: '격투가' },
+  magician:    { name: '마법사' },
+  priest:      { name: '성직자' },
+  thief:       { name: '도적' },
+  summoner:    { name: '정령술사' },
 };
 
 export function renderHistory(): HTMLElement {
@@ -88,7 +89,7 @@ function renderEntry(e: RunHistoryEntry): HTMLElement {
   const main = el(
     'div',
     { style: { display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' } },
-    el('span', { style: { fontSize: '18px' } }, info.emoji),
+    artEl(CHARACTER_SVG[e.characterClass], 22),
     el('span', { style: { fontWeight: 'bold', minWidth: '54px' } }, info.name),
     el('span', { style: { color: outcomeColor, fontWeight: 'bold' } }, outcomeIcon),
     el('span', { style: { color: 'var(--fg)', fontSize: '13px' } }, locText),

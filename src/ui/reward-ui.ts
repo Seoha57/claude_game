@@ -169,7 +169,7 @@ export function renderReward(): HTMLElement {
             close();
           },
         },
-        el('div', { class: 'card-cost' }, String(def.cost)),
+        el('div', { class: 'card-cost' }, def.cost < 0 ? 'X' : String(def.cost)),
         el('div', { class: 'card-name' }, def.name),
         el('div', { class: 'card-desc' }, kwDesc(def.description)),
         el('div', { class: 'card-type' }, typeLabel(def.type)),

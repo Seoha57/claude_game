@@ -42,7 +42,10 @@ export function showSplash(opts: SplashOptions): void {
 
   const inner = el('div', { class: 'splash-inner' });
   if (opts.emoji) {
-    inner.appendChild(el('div', { class: 'splash-emoji' }, opts.emoji));
+    const emojiEl = el('div', { class: 'splash-emoji' });
+    if (opts.emoji.startsWith('<svg')) emojiEl.innerHTML = opts.emoji;
+    else emojiEl.textContent = opts.emoji;
+    inner.appendChild(emojiEl);
   }
   inner.appendChild(el('div', { class: 'splash-title' }, opts.title));
   if (opts.subtitle) {
@@ -58,7 +61,7 @@ export function showSplash(opts: SplashOptions): void {
         'div',
         { class: 'splash-next-boss' },
         el('span', { class: 'splash-next-boss-label' }, '이번 챕터 보스: '),
-        el('span', { class: 'splash-next-boss-emoji' }, boss.emoji),
+        (() => { const s = el('span', { class: 'splash-next-boss-emoji' }); if (boss.emoji.startsWith('<svg')) s.innerHTML = boss.emoji; else s.textContent = boss.emoji; return s; })(),
         el('span', { class: 'splash-next-boss-name' }, boss.name),
       ),
     );

@@ -178,7 +178,7 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
             class: `card ${def.type} rarity-${def.rarity} ${curse ? 'curse' : ''} ${lvl >= 2 ? 'upgraded upgraded-plus' : lvl === 1 ? 'upgraded' : ''}`,
             style: { cursor: 'default', outline },
           },
-          el('div', { class: 'card-cost' }, String(def.cost)),
+          el('div', { class: 'card-cost' }, def.cost < 0 ? 'X' : String(def.cost)),
           el('div', { class: 'card-name' }, def.name),
           el('div', { class: 'card-desc' }, kwDesc(def.description)),
           ...(flavor ? [el('div', { class: 'card-flavor' }, flavor)] : []),

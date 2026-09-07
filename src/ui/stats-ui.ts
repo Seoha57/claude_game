@@ -3,15 +3,16 @@ import { setScreen } from '../state';
 import { loadStats, resetStats } from '../stats';
 import { getUnlockedMax } from '../ascension';
 import type { CharacterClass } from '../types';
+import { CHARACTER_SVG, artEl } from './art';
 
-const CHAR_INFO: Record<CharacterClass, { name: string; emoji: string }> = {
-  swordmaster: { name: '검사',     emoji: '⚔️' },
-  gunner:      { name: '사수',     emoji: '🔫' },
-  fighter:     { name: '격투가',   emoji: '🥊' },
-  magician:    { name: '마법사',   emoji: '🔮' },
-  priest:      { name: '성직자',   emoji: '⛪' },
-  thief:       { name: '도적',     emoji: '🗡️' },
-  summoner:    { name: '정령술사', emoji: '🪬' },
+const CHAR_INFO: Record<CharacterClass, { name: string }> = {
+  swordmaster: { name: '검사' },
+  gunner:      { name: '사수' },
+  fighter:     { name: '격투가' },
+  magician:    { name: '마법사' },
+  priest:      { name: '성직자' },
+  thief:       { name: '도적' },
+  summoner:    { name: '정령술사' },
 };
 
 export function renderStats(): HTMLElement {
@@ -53,7 +54,7 @@ export function renderStats(): HTMLElement {
 
       const card = el('div', { class: 'stats-char-card' });
       card.appendChild(el('div', { class: 'stats-char-header' },
-        el('span', { class: 'stats-char-emoji' }, info.emoji),
+        artEl(CHARACTER_SVG[cls], 22),
         el('span', { class: 'stats-char-name' }, info.name),
       ));
       card.appendChild(el('div', { class: 'stats-char-row' },

@@ -1,6 +1,7 @@
 import { el } from './dom';
 import { startNewRun, setScreen } from '../state';
 import type { CharacterClass } from '../types';
+import { CHARACTER_SVG, artEl } from './art';
 
 interface CharacterInfo {
   id: CharacterClass;
@@ -135,8 +136,8 @@ const CHARACTERS: CharacterInfo[] = [
       { name: '암흑의 혼', type: 'attack', count: 1 },
     ],
     emoji: '🗡️',
-    difficulty: 2,
-    diffLabel: '중독과 민첩 활용, 덱 구성이 중요',
+    difficulty: 3,
+    diffLabel: '낮은 체력, 중독·민첩 콤보를 굴려야 생존',
     color: '#60c080',
     playstyle: '중독 암살형',
   },
@@ -196,7 +197,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
           },
           onClick: () => { selected = ch.id; rebuild(); },
         },
-        el('span', { class: 'cs-item-emoji' }, ch.emoji),
+        (() => { const s = el('span', { class: 'cs-item-emoji' }); s.innerHTML = CHARACTER_SVG[ch.id] ?? ch.emoji; return s; })(),
         el('div', { class: 'cs-item-info' },
           el('div', { class: 'cs-item-name' }, ch.name),
           el('div', { class: 'cs-item-sub' }, ch.playstyle),
@@ -216,10 +217,12 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
 
     // Header: big emoji + name
     const header = el('div', { class: 'cs-detail-header' });
-    header.appendChild(el('div', {
+    const bigEmoji = el('div', {
       class: 'cs-big-emoji',
       style: { background: `radial-gradient(circle, ${ch.color}30 0%, transparent 70%)` },
-    }, ch.emoji));
+    });
+    bigEmoji.innerHTML = CHARACTER_SVG[ch.id] ?? ch.emoji;
+    header.appendChild(bigEmoji);
     const headerText = el('div', { class: 'cs-header-text' });
     headerText.appendChild(el('div', { class: 'cs-char-name' }, ch.name));
     headerText.appendChild(el('div', { class: 'cs-char-sub' }, ch.subname));
@@ -277,13 +280,14 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     wrapper.appendChild(layout);
 
     // Start button
-    wrapper.appendChild(
-      el('button', {
-        class: 'cs-start-btn',
-        style: { background: ch.color, borderColor: ch.color },
-        onClick: () => startNewRun(seed, ascension, selected, { goToScreen: 'neow_blessing' }),
-      }, `${ch.emoji} ${ch.name} 시작`),
-    );
+    const startBtn = el('button', {
+      class: 'cs-start-btn',
+      style: { background: ch.color, borderColor: ch.color },
+      onClick: () => startNewRun(seed, ascension, selected, { goToScreen: 'neow_blessing' }),
+    });
+    startBtn.appendChild(artEl(CHARACTER_SVG[ch.id], 24));
+    startBtn.appendChild(document.createTextNode(` ${ch.name} 시작`));
+    wrapper.appendChild(startBtn);
 
     wrapper.appendChild(
       el('button', {

@@ -159,7 +159,7 @@ export const CARD_FLAVOR: Record<string, string> = {
   m_petal: '꽃잎처럼 흩날리는 칼날.',
   m_doll_forest: '인형들이 숲을 이룬다.',
   m_fusion: '원소가 하나로 융합한다.',
-  m_kasiyas: '대정령의 이름으로 명한다.',
+  m_kasiyas: '금기를 넘은 자만이 쓸 수 있는 마술.',
   m_marionette: '실 끝에서 춤추게 하라.',
   m_quasar: '별의 폭발을 손에 담는다.',
   m_chain_lightning: '번개가 적에서 적으로 옮겨간다.',

@@ -114,7 +114,7 @@ export function beginPlayerTurn(state: CombatState): void {
         const absorbed = Math.min(target.block, 3);
         target.block -= absorbed;
         target.hp = Math.max(0, target.hp - (3 - absorbed));
-        state.log.push(`마탑의 결정 → ${target.defId}에게 3 데미지`);
+        state.log.push(`마탑의 결정 → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}에게 3 데미지`);
         maybeTriggerPhase(state, target);
       }
     }
@@ -125,7 +125,7 @@ export function beginPlayerTurn(state: CombatState): void {
         const absorbed = Math.min(target.block, 6);
         target.block -= absorbed;
         target.hp = Math.max(0, target.hp - (6 - absorbed));
-        state.log.push(`폭풍의 핵 → ${target.defId}에게 6 데미지`);
+        state.log.push(`폭풍의 핵 → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}에게 6 데미지`);
         maybeTriggerPhase(state, target);
       }
     }

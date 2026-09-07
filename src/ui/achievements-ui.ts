@@ -4,15 +4,16 @@ import { ACHIEVEMENTS, getUnlockedSet, resetAchievements, reconcileAchievements,
 import type { AchievementTitle } from '../achievements';
 import type { AchievementDef } from '../achievements';
 import type { CharacterClass } from '../types';
+import { CHARACTER_SVG, artEl } from './art';
 
 const CHAR_LABEL: Record<CharacterClass, string> = {
-  swordmaster: '⚔️검사',
-  gunner: '🔫사수',
-  fighter: '🥊격투가',
-  magician: '🔮마법사',
-  priest: '⛪성직자',
-  thief: '🗡️도적',
-  summoner: '🪬정령술사',
+  swordmaster: '검사',
+  gunner: '사수',
+  fighter: '격투가',
+  magician: '마법사',
+  priest: '성직자',
+  thief: '도적',
+  summoner: '정령술사',
 };
 
 const CATEGORY_LABEL: Record<AchievementDef['category'], string> = {
@@ -93,18 +94,20 @@ export function renderAchievements(): HTMLElement {
         for (const c of Object.keys(CHAR_LABEL) as (keyof typeof CHAR_LABEL)[]) {
           const cleared = status.clear[c];
           const trueCleared = status.trueClear[c];
-          chips.appendChild(
-            el('div', {
-              style: {
-                padding: '3px 8px', borderRadius: '6px', fontSize: '12px',
-                border: `1px solid ${cleared ? 'var(--good)' : 'var(--border)'}`,
-                background: cleared ? 'rgba(80,180,80,0.12)' : 'transparent',
-                color: cleared ? 'var(--fg)' : 'var(--muted)',
-                opacity: cleared ? '1' : '0.55',
-              },
-              title: trueCleared ? '진엔딩 클리어' : cleared ? '일반 클리어' : '미클리어',
-            }, `${CHAR_LABEL[c]} ${trueCleared ? '🏆' : cleared ? '✓' : '—'}`),
-          );
+          const chip = el('div', {
+            style: {
+              padding: '3px 8px', borderRadius: '6px', fontSize: '12px',
+              display: 'inline-flex', alignItems: 'center', gap: '3px',
+              border: `1px solid ${cleared ? 'var(--good)' : 'var(--border)'}`,
+              background: cleared ? 'rgba(80,180,80,0.12)' : 'transparent',
+              color: cleared ? 'var(--fg)' : 'var(--muted)',
+              opacity: cleared ? '1' : '0.55',
+            },
+            title: trueCleared ? '진엔딩 클리어' : cleared ? '일반 클리어' : '미클리어',
+          });
+          chip.appendChild(artEl(CHARACTER_SVG[c], 14));
+          chip.appendChild(document.createTextNode(`${CHAR_LABEL[c]} ${trueCleared ? '🏆' : cleared ? '✓' : '—'}`));
+          chips.appendChild(chip);
         }
         wrapper.appendChild(chips);
       }

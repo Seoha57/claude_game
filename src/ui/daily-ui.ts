@@ -8,15 +8,16 @@ import {
   todayDateString,
 } from '../daily';
 import type { CharacterClass, Screen } from '../types';
+import { CHARACTER_SVG, artEl } from './art';
 
-const CHAR_INFO: Record<CharacterClass, { name: string; emoji: string }> = {
-  swordmaster: { name: '검사',     emoji: '⚔️' },
-  gunner:      { name: '사수',     emoji: '🔫' },
-  fighter:     { name: '격투가',   emoji: '🥊' },
-  magician:    { name: '마법사',   emoji: '🔮' },
-  priest:      { name: '성직자',   emoji: '⛪' },
-  thief:       { name: '도적',     emoji: '🗡️' },
-  summoner:    { name: '정령술사', emoji: '🪬' },
+const CHAR_INFO: Record<CharacterClass, { name: string }> = {
+  swordmaster: { name: '검사' },
+  gunner:      { name: '사수' },
+  fighter:     { name: '격투가' },
+  magician:    { name: '마법사' },
+  priest:      { name: '성직자' },
+  thief:       { name: '도적' },
+  summoner:    { name: '정령술사' },
 };
 
 export function renderDaily(): HTMLElement {
@@ -62,7 +63,7 @@ export function renderDaily(): HTMLElement {
         },
       },
       el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } }, today),
-      el('div', { style: { fontSize: '40px', marginBottom: '4px' } }, info.emoji),
+      artEl(CHARACTER_SVG[setup.character], 48),
       el('div', { style: { fontSize: '20px', fontWeight: 'bold', marginBottom: '10px' } }, info.name),
       el(
         'div',
@@ -201,7 +202,7 @@ export function renderDaily(): HTMLElement {
               },
             },
             el('span', {}, r.date),
-            el('span', {}, `${CHAR_INFO[r.characterClass]?.emoji ?? '?'} ${CHAR_INFO[r.characterClass]?.name ?? r.characterClass}`),
+            (() => { const s = el('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } }); s.appendChild(artEl(CHARACTER_SVG[r.characterClass], 16)); s.appendChild(document.createTextNode(CHAR_INFO[r.characterClass]?.name ?? r.characterClass)); return s; })(),
             el(
               'span',
               {

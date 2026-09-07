@@ -166,7 +166,7 @@ function renderCardSlot(def: CardDef, isSeen: boolean): HTMLElement {
     );
   }
   return el('div', { class: cls, style: { cursor: 'default' } },
-    el('div', { class: 'card-cost' }, String(def.cost)),
+    el('div', { class: 'card-cost' }, def.cost < 0 ? 'X' : String(def.cost)),
     el('div', { class: 'card-name' }, def.name),
     el('div', { class: 'card-desc' }, unlocked ? kwDesc(def.description) : lockText),
     el('div', { class: 'card-type' }, unlocked ? typeLabel(def.type) : '🔒'),

@@ -16,15 +16,14 @@ export type UnlockReq = 'always' | 'any_win' | 'wins_3' | 'true_win' | `ach:${st
 // 보스 유물은 챕터 클리어로 자동 획득되니까 항상 노출.
 function defaultReqForCardRarity(r: CardRarity): UnlockReq {
   if (r === 'starter' || r === 'common') return 'always';
-  if (r === 'uncommon') return 'always';
-  return 'any_win'; // rare — 첫 챕터 3 클리어로 해제
+  if (r === 'uncommon') return 'any_win';
+  return 'wins_3';
 }
 
 function defaultReqForRelicRarity(r: RelicDef['rarity']): UnlockReq {
   if (r === 'starter' || r === 'common') return 'always';
-  if (r === 'uncommon') return 'always';
-  if (r === 'rare') return 'any_win';
-  // boss relic은 챕터 클리어로 자동 획득되니까 코덱스 락은 무의미.
+  if (r === 'uncommon') return 'any_win';
+  if (r === 'rare') return 'wins_3';
   return 'always';
 }
 
