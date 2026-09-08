@@ -351,12 +351,16 @@ function renderMid(state: CombatState): HTMLElement {
 
   const blockBadge = p.block > 0 ? (() => { const d = el('span', { class: 'block-badge' }); d.innerHTML = `${ic('shield')} ${p.block}`; return d; })() : el('span');
 
+  const run = getRunOrNull();
+  const goldBadge = (() => { const d = el('span', { class: 'gold-badge' }); d.innerHTML = `${ic('gold')} ${run?.player.gold ?? 0}`; return d; })();
+
   const playerStats = el(
     'div',
     { class: 'player-stats' },
     energy,
     hpBar,
     blockBadge,
+    goldBadge,
     renderStatuses(p.statuses),
   );
 
@@ -416,7 +420,6 @@ function renderMid(state: CombatState): HTMLElement {
     el('span', { class: 'kbd-hint' }, '(E)'),
   );
 
-  const run = getRunOrNull();
   const relicBar = run ? renderRelicBar(run.player.relics) : el('div');
   const potionBar = renderPotionBar(state);
 
@@ -553,12 +556,12 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
   const def = getEffectiveDef(c);
   const inPlayerPhase = state.phase === 'player';
   const cost = playCost(def.cost);
-  const canAfford = state.player.energy >= cost;
+  const curse = isCurseLike(def.id);
+  const canAfford = !curse && state.player.energy >= cost;
   const canPlay = inPlayerPhase && canAfford;
-  const noEnergy = inPlayerPhase && !canAfford; // distinct visual state
+  const noEnergy = inPlayerPhase && !canAfford && !curse;
   const selected = selectedCardUid === c.uid;
   const hotkey = idx < 9 ? String(idx + 1) : '';
-  const curse = isCurseLike(def.id);
   const upLevel = c.upgraded ?? 0;
   const upgraded = upLevel >= 1;
   const upgradedPlus = upLevel >= 2;
@@ -1261,6 +1264,7 @@ function playCardWithFx(state: CombatState, card: CardInstance, target: Enemy | 
   // 카드가 아직 손패에 있을 때만 진행 (핫키 연타/stale 방어)
   if (!state.player.hand.some((h) => h.uid === card.uid)) return;
   const def = getEffectiveDef(card);
+  if (isCurseLike(def.id)) return;
   const cost = playCost(def.cost);
   if (state.player.energy < cost) return;
   playSfx(def.type === 'attack' ? 'card_attack' : def.type === 'skill' ? 'card_skill' : 'card_power');
@@ -1282,6 +1286,7 @@ function playCardWithFx(state: CombatState, card: CardInstance, target: Enemy | 
 function selectOrPlayCard(card: CardInstance): void {
   const state = getCombat();
   const def = getEffectiveDef(card);
+  if (isCurseLike(def.id)) return;
   if (state.player.energy < playCost(def.cost)) return;
 
   if (def.target === 'enemy') {
