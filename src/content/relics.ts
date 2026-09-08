@@ -78,7 +78,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   gunner_magazine: {
     id: 'gunner_magazine',
     name: '탄창',
-    description: '3번째 공격마다 +5 데미지, 카드 1장 드로우.',
+    description: '3번째 타격마다 +5 데미지. 공격 카드 3회 사용마다 1장 드로우.',
     rarity: 'starter',
   },
   one_mind_belt: {

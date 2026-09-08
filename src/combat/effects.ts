@@ -392,7 +392,7 @@ function triggerOnExhaust(state: CombatState, log: (s: string) => void): void {
   }
   const block = getStatus(p.statuses, 'on_exhaust_block');
   if (block > 0) {
-    p.block += block;
+    gainBlock(p, block);
     log(`소멸 방어 → 방어도 +${block}`);
   }
   const energy = getStatus(p.statuses, 'on_exhaust_energy');
