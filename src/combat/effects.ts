@@ -337,6 +337,14 @@ export function playCard(
     log(`일심 → 힘 +1`);
   }
 
+  // 공격 카드 사용 시 attackCount 증가 (per-card, 검혼/펜촉/탄창 데미지 공용)
+  if (def.type === 'attack') {
+    state.flags.attackCount = (state.flags.attackCount ?? 0) + 1;
+    const ac = state.flags.attackCount;
+    if (run?.player.relics.includes('gwihon_charm') && ac % 5 === 0) log('검혼 발동!');
+    if (run?.player.relics.includes('pen_nib') && ac % 10 === 0) log('펜촉 → 데미지 2배!');
+  }
+
   // 탄창(사수): 공격 카드 3장마다 카드 1장 드로우
   if (run?.player.relics.includes('gunner_magazine') && def.type === 'attack') {
     state.flags.magazineCount = (state.flags.magazineCount ?? 0) + 1;
@@ -403,13 +411,11 @@ function triggerOnExhaust(state: CombatState, log: (s: string) => void): void {
 }
 
 // ── Signature relic hooks ─────────────────────────────────────────
-// 데미지 카드가 적에 적용되기 직전 호출. 보너스/배수를 모두 처리한 최종 데미지를 리턴.
-// 카운터(검혼/탄창/pen_nib)는 이 시점에 증가시킨다.
+// 데미지 카드가 적에 적용되기 직전 호출 (per-hit). 카운터는 playCard에서 per-card로 관리.
 export function modifyAttackAmount(state: CombatState, base: number): number {
   const run = getRunOrNull();
   if (!run) return base;
-  state.flags.attackCount = (state.flags.attackCount ?? 0) + 1;
-  const ac = state.flags.attackCount;
+  const ac = state.flags.attackCount ?? 0;
   let amount = base;
   // 검혼: 5번째 공격마다 +6
   if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
@@ -426,17 +432,8 @@ export function modifyAttackAmount(state: CombatState, base: number): number {
   return amount;
 }
 
-// 데미지 적용 후 호출 — 드로우 등 후속 트리거
-export function onAttackAfter(state: CombatState, log: (s: string) => void): void {
-  const run = getRunOrNull();
-  if (!run) return;
-  const ac = state.flags.attackCount ?? 0;
-  if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
-    log('검혼 발동!');
-  }
-  if (run.player.relics.includes('pen_nib') && ac % 10 === 0) {
-    log('펜촉 → 데미지 2배!');
-  }
+// 데미지 적용 후 호출 (per-hit) — 현재 후속 트리거 없음
+export function onAttackAfter(_state: CombatState, _log: (s: string) => void): void {
 }
 
 // 회복(heal) 또는 재생(regen) 발동 시 호출 (성직자 신성한 인장)

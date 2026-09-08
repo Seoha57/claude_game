@@ -1416,6 +1416,7 @@ if (typeof window !== 'undefined') {
 
 function applyVictoryRelics(run: any, _state: any): void {
   const cur = run.currentNodeId ? run.map.find((n: any) => n.id === run.currentNodeId) : null;
+  const meatEligible = run.player.relics.includes('meat_on_the_bone') && run.player.hp / run.player.maxHp <= 0.5;
   if (run.player.relics.includes('burning_blood')) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 6);
   }
@@ -1428,7 +1429,7 @@ function applyVictoryRelics(run: any, _state: any): void {
   if (run.player.relics.includes('soul_lantern')) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
   }
-  if (run.player.relics.includes('meat_on_the_bone') && run.player.hp / run.player.maxHp <= 0.5) {
+  if (meatEligible) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 12);
   }
   if (run.player.relics.includes('rich_seal')) run.player.gold += 8;
