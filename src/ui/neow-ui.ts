@@ -5,6 +5,17 @@ import { showChapterIntro } from './splash-overlay';
 import { makeRng } from '../rng';
 import { playSfx } from '../audio';
 import { recordRelic } from '../codex';
+import { NEOW_SVG } from './art';
+
+const BLESSING_SVG_KEY: Record<string, string> = {
+  health_blessing: 'heal',
+  wealth_blessing: 'gold',
+  relic_blessing: 'relic',
+  upgrade_blessing: 'power',
+  potion_blessing: 'potion',
+  energy_blessing: 'energy',
+  dark_pact: 'curse',
+};
 
 export function renderNeowBlessing(): HTMLElement {
   const run = getRun();
@@ -15,7 +26,9 @@ export function renderNeowBlessing(): HTMLElement {
 
   const wrapper = el('div', { class: 'neow-screen' });
 
-  wrapper.appendChild(el('div', { class: 'neow-emoji' }, '🌟'));
+  const neowIcon = el('div', { class: 'neow-emoji' });
+  neowIcon.innerHTML = NEOW_SVG.neow;
+  wrapper.appendChild(neowIcon);
   wrapper.appendChild(el('h1', { class: 'neow-title' }, '네오의 축복'));
   wrapper.appendChild(
     el('div', { class: 'neow-flavor' },
@@ -57,7 +70,7 @@ export function renderNeowBlessing(): HTMLElement {
         proceed();
       },
     },
-      el('div', { class: 'neow-card-emoji' }, b.emoji),
+      (() => { const ic = el('div', { class: 'neow-card-emoji' }); const sk = BLESSING_SVG_KEY[b.id]; const sv = sk ? NEOW_SVG[sk] : undefined; if (sv) ic.innerHTML = sv; else ic.textContent = b.emoji; return ic; })(),
       el('div', { class: 'neow-card-title' }, b.title),
       el('div', { class: 'neow-card-desc' }, b.description),
     );

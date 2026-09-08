@@ -19,27 +19,17 @@ import {
   CH4_BOSS_ENCOUNTERS,
   pickEncounter,
 } from '../content/enemies';
-import type { MapNode, NodeKind } from '../types';
+import type { MapNode } from '../types';
 import { makeRng } from '../rng';
 import { RELIC_DEFS } from '../content/relics';
 import { ENEMY_DEFS } from '../content/enemies';
 import { ENEMY_ART, resetCombatUiState } from './combat-ui';
 import { showBossIntro } from './splash-overlay';
 import { bossIntroFlavor } from '../content/lore';
+import { MAP_NODE_SVG } from './art';
 
 const markedNodes = new Set<string>();
 let markedChapter = -1;
-
-const NODE_ICON: Record<NodeKind, string> = {
-  start: '🏁',
-  combat: '⚔',
-  elite: '💀',
-  rest: '🔥',
-  reward: '💰',
-  shop: '🛒',
-  boss: '👑',
-  event: '❓',
-};
 
 const COL_WIDTH = 120;
 const ROW_HEIGHT = 96;
@@ -177,8 +167,10 @@ export function renderMap(): HTMLElement {
         onClick: () => { if (isAccessible && !shopBlocked) enterNode(n); },
         onContextmenu: (e: Event) => { e.preventDefault(); toggleMark(); },
       },
-      NODE_ICON[n.kind] ?? '?',
     );
+    const svg = MAP_NODE_SVG[n.kind];
+    if (svg) nodeEl.innerHTML = svg;
+    else nodeEl.textContent = '?';
     // Long press for mobile
     let lpTimer = 0;
     nodeEl.addEventListener('touchstart', (e) => {

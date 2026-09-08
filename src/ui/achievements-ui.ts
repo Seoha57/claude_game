@@ -4,7 +4,7 @@ import { ACHIEVEMENTS, getUnlockedSet, resetAchievements, reconcileAchievements,
 import type { AchievementTitle } from '../achievements';
 import type { AchievementDef } from '../achievements';
 import type { CharacterClass } from '../types';
-import { CHARACTER_SVG, artEl } from './art';
+import { CHARACTER_SVG, ACHIEVEMENT_SVG, TITLE_SVG, artEl } from './art';
 
 const CHAR_LABEL: Record<CharacterClass, string> = {
   swordmaster: '검사',
@@ -59,18 +59,26 @@ export function renderAchievements(): HTMLElement {
       { threshold: 15, emoji: '🔥', name: '던전 정복자' },
       { threshold: 22, emoji: '👑', name: '전설의 영웅' },
     ];
+    const TITLE_KEYS = ['beginner', 'veteran', 'conqueror', 'legend'];
     const nextTitle = TITLES.find((t) => t.threshold > done);
-    wrapper.appendChild(
-      el('div', {
-        style: { color: 'var(--accent)', fontSize: '14px', margin: '8px 0 4px' },
-      }, title ? `${title.emoji} 칭호: ${title.name}` : '칭호 없음'),
-    );
+    const titleIdx = title ? TITLES.indexOf(title) : -1;
+    const titleRow = el('div', {
+      style: { color: 'var(--accent)', fontSize: '14px', margin: '8px 0 4px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' },
+    });
+    if (title && titleIdx >= 0) {
+      titleRow.appendChild(artEl(TITLE_SVG[TITLE_KEYS[titleIdx]], 20));
+      titleRow.appendChild(document.createTextNode(`칭호: ${title.name}`));
+    } else {
+      titleRow.textContent = '칭호 없음';
+    }
+    wrapper.appendChild(titleRow);
     if (nextTitle) {
-      wrapper.appendChild(
-        el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px' } },
-          `다음 칭호: ${nextTitle.emoji} ${nextTitle.name} (${nextTitle.threshold - done}개 더 달성)`,
-        ),
-      );
+      const nextIdx = TITLES.indexOf(nextTitle);
+      const nextRow = el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' } });
+      nextRow.appendChild(document.createTextNode('다음 칭호: '));
+      if (nextIdx >= 0) nextRow.appendChild(artEl(TITLE_SVG[TITLE_KEYS[nextIdx]], 14));
+      nextRow.appendChild(document.createTextNode(`${nextTitle.name} (${nextTitle.threshold - done}개 더 달성)`));
+      wrapper.appendChild(nextRow);
     }
 
     // Group by category
@@ -138,10 +146,18 @@ export function renderAchievements(): HTMLElement {
 }
 
 function renderAchievementCard(a: AchievementDef, unlocked: boolean): HTMLElement {
+  const iconEl = el('div', { class: 'ach-emoji' });
+  if (unlocked) {
+    const svg = ACHIEVEMENT_SVG[a.id];
+    if (svg) iconEl.innerHTML = svg;
+    else iconEl.textContent = a.emoji;
+  } else {
+    iconEl.textContent = '🔒';
+  }
   return el(
     'div',
     { class: `ach-card ${unlocked ? 'unlocked' : 'locked'}` },
-    el('div', { class: 'ach-emoji' }, unlocked ? a.emoji : '🔒'),
+    iconEl,
     el(
       'div',
       { class: 'ach-text' },

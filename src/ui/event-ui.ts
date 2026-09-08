@@ -8,6 +8,7 @@ import { makeRng, pick, shuffle } from '../rng';
 import { PICKABLE_RELICS } from '../content/relics';
 import { playSfx } from '../audio';
 import { recordCard, recordRelic } from '../codex';
+import { EVENT_SVG } from './art';
 import {
   COMMON_CARDS,
   UNCOMMON_CARDS,
@@ -56,9 +57,13 @@ export function renderEvent(): HTMLElement {
   };
 
   const appendContent = () => {
-    // Hero section with emoji + title
+    // Hero section with SVG art + title
     const hero = el('div', { class: 'event-hero' });
-    hero.appendChild(el('div', { class: 'event-emoji' }, eventDef.emoji));
+    const eventIcon = el('div', { class: 'event-emoji' });
+    const eventSvg = EVENT_SVG[eventDef.id];
+    if (eventSvg) eventIcon.innerHTML = eventSvg;
+    else eventIcon.textContent = eventDef.emoji;
+    hero.appendChild(eventIcon);
     hero.appendChild(el('h2', { class: 'event-title' }, eventDef.title));
     wrapper.appendChild(hero);
 

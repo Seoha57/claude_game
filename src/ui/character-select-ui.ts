@@ -1,7 +1,7 @@
 import { el } from './dom';
 import { startNewRun, setScreen } from '../state';
 import type { CharacterClass } from '../types';
-import { CHARACTER_SVG } from './art';
+import { CHARACTER_SVG, CARD_TYPE_SVG } from './art';
 
 interface CharacterInfo {
   id: CharacterClass;
@@ -262,9 +262,12 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     const deckRow = el('div', { class: 'cs-deck-row' });
     for (const card of ch.starterCards) {
       const typeColor = CARD_TYPE_COLOR[card.type];
-      const typeIcon = CARD_TYPE_ICON[card.type];
+      const cardIconEl = el('div', { class: 'cs-card-icon', style: { color: typeColor } });
+      const csvg = CARD_TYPE_SVG[card.type];
+      if (csvg) cardIconEl.innerHTML = csvg;
+      else cardIconEl.textContent = CARD_TYPE_ICON[card.type];
       const cardEl = el('div', { class: 'cs-card-preview', style: { borderColor: `${typeColor}60` } },
-        el('div', { class: 'cs-card-icon', style: { color: typeColor } }, typeIcon),
+        cardIconEl,
         el('div', { class: 'cs-card-name' }, card.name),
         el('div', { class: 'cs-card-count', style: { background: `${typeColor}20`, color: typeColor } }, `×${card.count}`),
       );

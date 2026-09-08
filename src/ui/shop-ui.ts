@@ -9,6 +9,7 @@ import { getModifiers } from '../ascension';
 import { playSfx } from '../audio';
 import { recordCard, recordRelic } from '../codex';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
+import { RELIC_SVG, POTION_SVG } from './art';
 
 const BASE_CARD_PRICE: Record<string, number> = { common: 40, uncommon: 60, rare: 110 };
 const BASE_RELIC_PRICE = 150;
@@ -252,7 +253,7 @@ function renderRelicItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild
         opacity: item.sold || alreadyOwned ? '0.5' : '1',
       },
     },
-    el('div', { style: { fontSize: '13px', color: 'var(--muted)' } }, '유물'),
+    (() => { const ri = el('div', { style: { width: '32px', height: '32px' } }); const rs = RELIC_SVG[item.id!]; if (rs) ri.innerHTML = rs; else ri.textContent = '💎'; return ri; })(),
     el('div', { style: { fontWeight: 'bold' } }, def.name),
     el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, kwDesc(def.description)),
     item.sold || alreadyOwned
@@ -296,7 +297,7 @@ function renderPotionItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuil
         opacity: blocked ? '0.5' : '1',
       },
     },
-    el('div', { style: { fontSize: '13px', color: 'var(--muted)' } }, '🧪 물약'),
+    (() => { const pi = el('div', { style: { width: '28px', height: '28px' } }); const ps = POTION_SVG[item.id!]; if (ps) pi.innerHTML = ps; else pi.textContent = '🧪'; return pi; })(),
     el('div', { style: { fontWeight: 'bold' } }, def.name),
     el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, kwDesc(def.description)),
     item.sold

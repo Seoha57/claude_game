@@ -8,7 +8,7 @@ import { ENEMY_DEFS } from '../content/enemies';
 import { bossDefeatFlavor } from '../content/lore';
 import { STATUS_INFO, applyStatus, modifiedAttackDamage, getStatusValueLabel, getStatusTooltip } from '../combat/statuses';
 import { kwDesc, STATUS_ICON } from './keywords';
-import { ENEMY_SVG } from './art';
+import { ENEMY_SVG, POTION_SVG, RELIC_SVG } from './art';
 import { buildIntentDisplay } from '../combat/intent';
 import { endPlayerTurn } from '../combat/combat';
 import { playCard } from '../combat/effects';
@@ -615,12 +615,14 @@ function renderRelicBar(relics: string[]): HTMLElement {
     const synText = synFor.map((s) => `⚡ ${s.name}: ${s.description}`).join('\n');
     const tooltip = synText ? `${def.name}\n${def.description}\n${synText}` : `${def.name}\n${def.description}`;
     const hasSynergy = synFor.length > 0;
-    bar.appendChild(
-      el('div', {
-        class: `relic-chip${hasSynergy ? ' synergy-active' : ''}`,
-        'data-tooltip': tooltip,
-      }, def.name),
-    );
+    const chip = el('div', {
+      class: `relic-chip${hasSynergy ? ' synergy-active' : ''}`,
+      'data-tooltip': tooltip,
+    });
+    const rsvg = RELIC_SVG[id];
+    if (rsvg) chip.innerHTML = rsvg;
+    else chip.textContent = def.name;
+    bar.appendChild(chip);
   }
   wrapper.appendChild(bar);
   if (activeSynergies.length > 0) {
@@ -660,7 +662,7 @@ function renderPotionBar(state: CombatState): HTMLElement {
               rerender();
             }
           },
-        }, def.name[0]),
+        }, (() => { const ps = POTION_SVG[potionId]; if (ps) { const d = document.createElement('span'); d.innerHTML = ps; return d; } return document.createTextNode(def.name[0]); })()),
       );
     } else {
       bar.appendChild(el('div', { class: 'potion-slot empty', 'data-tooltip': `물약 슬롯 ${i + 1} (비어있음)` }, ''));
