@@ -276,6 +276,12 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
   );
 
   const statuses = renderStatuses(e.statuses, e.uid);
+  const freezeImm = e.freezeImmuneTurns ?? 0;
+  if (freezeImm > 0) {
+    const badge = el('div', { class: 'status buff st-freeze-immune', 'data-tooltip': `빙결 면역: ${freezeImm}턴 남음\n빙결 해제 후 일정 턴 동안 빙결에 걸리지 않습니다.` });
+    badge.innerHTML = `${ic('shield')} 빙결 면역 ${freezeImm}`;
+    statuses.appendChild(badge);
+  }
 
   const kbTargeted = getKeyboardTargetedEnemyUid(state) === e.uid;
   const enemyEl = el(

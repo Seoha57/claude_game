@@ -158,12 +158,13 @@ function buildRewardPool(run: RunState): EndlessReward[] {
       },
     },
     {
-      id: 'gold', label: '골드', emoji: ic('gold'),
-      desc: '골드 +60',
+      id: 'maxhp', label: '최대 HP', emoji: ic('heart'),
+      desc: '최대 HP +8, 즉시 회복',
       apply: (r) => {
-        r.player.gold += 60;
-        playSfx('gold');
-        return `${ic('gold')} 골드 +60 (총 ${r.player.gold})`;
+        r.player.maxHp += 8;
+        r.player.hp += 8;
+        playSfx('potion');
+        return `${ic('heart')} 최대 HP +8 (${r.player.hp}/${r.player.maxHp})`;
       },
     },
   ];
