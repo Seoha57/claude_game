@@ -220,7 +220,7 @@ button:disabled {
   margin-left: -28px;
   margin-top: -28px;
   border-radius: 50%;
-  background: var(--panel);
+  background: rgba(30, 25, 35, 0.95);
   border: 2px solid var(--border);
   display: flex;
   align-items: center;
@@ -229,10 +229,23 @@ button:disabled {
   cursor: default;
   z-index: 2;
 }
+.map-node svg {
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(0 0 3px rgba(255,255,255,0.15));
+}
+.map-node.boss svg {
+  width: 56px;
+  height: 56px;
+}
 .map-node.accessible {
   border-color: var(--accent);
   cursor: pointer;
   box-shadow: 0 0 12px rgba(212, 160, 91, 0.5);
+  background: rgba(40, 32, 45, 0.95);
+}
+.map-node.accessible svg {
+  filter: drop-shadow(0 0 6px rgba(212, 160, 91, 0.4));
 }
 .map-node.accessible:hover {
   background: var(--panel-2);
@@ -672,6 +685,11 @@ button:disabled {
   cursor: default;
   position: relative;
   white-space: nowrap;
+}
+.relic-chip svg {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
 }
 .relic-chip[data-tooltip]::after {
   content: attr(data-tooltip);
@@ -1970,6 +1988,10 @@ button:disabled {
   width: 36px;
   text-align: center;
 }
+.ach-emoji svg {
+  width: 32px;
+  height: 32px;
+}
 .ach-text {
   flex: 1;
   min-width: 0;
@@ -2305,6 +2327,10 @@ button:disabled {
   font-size: 72px;
   filter: drop-shadow(0 0 16px rgba(212, 160, 91, 0.4));
   line-height: 1;
+}
+.event-emoji svg {
+  width: 72px;
+  height: 72px;
 }
 .event-title {
   margin: 0;
@@ -2735,6 +2761,10 @@ button:disabled {
   font-size: 11px;
   cursor: pointer;
   position: relative;
+}
+.potion-slot svg {
+  width: 24px;
+  height: 24px;
 }
 .potion-slot.filled {
   background: #2a1a4a;
