@@ -9,7 +9,7 @@ import { getModifiers } from '../ascension';
 import { playSfx } from '../audio';
 import { recordCard, recordRelic } from '../codex';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
-import { RELIC_SVG, POTION_SVG } from './art';
+import { RELIC_SVG, POTION_SVG, ic } from './art';
 
 const BASE_CARD_PRICE: Record<string, number> = { common: 40, uncommon: 60, rare: 110 };
 const BASE_RELIC_PRICE = 150;
@@ -110,10 +110,12 @@ export function renderShop(): HTMLElement {
 }
 
 function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>, rebuild: () => void): void {
-  wrapper.appendChild(el('h2', {}, '🛒 상점'));
-  wrapper.appendChild(
-    el('div', { style: { color: 'var(--accent)', marginBottom: '8px' } }, `💰 보유 골드: ${run.player.gold}`),
-  );
+  const shopTitle = el('h2', {});
+  shopTitle.innerHTML = `${ic('cart')} 상점`;
+  wrapper.appendChild(shopTitle);
+  const goldLabel = el('div', { style: { color: 'var(--accent)', marginBottom: '8px' } });
+  goldLabel.innerHTML = `${ic('gold')} 보유 골드: ${run.player.gold}`;
+  wrapper.appendChild(goldLabel);
 
   if (removalState === 'picking') {
     appendRemovalPicker(wrapper, run, rebuild);
@@ -141,7 +143,7 @@ function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>,
     el(
       'div',
       { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', padding: '16px', border: '1px solid var(--border)', borderRadius: '8px', marginBottom: '24px' } },
-      el('div', { style: { fontWeight: 'bold' } }, '🗑 카드 제거 서비스'),
+      (() => { const d = el('div', { style: { fontWeight: 'bold' } }); d.innerHTML = `${ic('trash')} 카드 제거 서비스`; return d; })(),
       el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '덱에서 카드 1장을 영구 삭제합니다.'),
       el(
         'button',
@@ -160,10 +162,9 @@ function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>,
   // 포션 되팔기 — 보유 포션을 절반 이하 가격에 판매
   if (run.player.potions.length > 0) {
     const sellRow = el('div', { style: { marginBottom: '20px', width: '90%', maxWidth: '480px' } });
-    sellRow.appendChild(
-      el('div', { style: { color: 'var(--muted)', fontSize: '13px', marginBottom: '6px', textAlign: 'center' } },
-        `💰 물약 되팔기 (개당 ${POTION_SELL_PRICE}골드)`),
-    );
+    const sellLabel = el('div', { style: { color: 'var(--muted)', fontSize: '13px', marginBottom: '6px', textAlign: 'center' } });
+    sellLabel.innerHTML = `${ic('gold')} 물약 되팔기 (개당 ${POTION_SELL_PRICE}골드)`;
+    sellRow.appendChild(sellLabel);
     const potRow = el('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' } });
     run.player.potions.forEach((pid) => {
       const pdef = POTION_DEFS[pid];
@@ -225,11 +226,7 @@ function renderCardItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild:
       ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '판매 완료')
       : atMax
         ? el('div', { style: { color: 'var(--bad)', fontSize: '13px' } }, '최대 보유')
-        : el(
-          'div',
-          { style: { color: canAfford ? 'var(--accent)' : 'var(--bad)', fontWeight: 'bold' } },
-          `💰 ${item.price}`,
-        ),
+        : (() => { const d = el('div', { style: { color: canAfford ? 'var(--accent)' : 'var(--bad)', fontWeight: 'bold' } }); d.innerHTML = `${ic('gold')} ${item.price}`; return d; })(),
   );
 }
 
@@ -253,14 +250,12 @@ function renderRelicItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild
         opacity: item.sold || alreadyOwned ? '0.5' : '1',
       },
     },
-    (() => { const ri = el('div', { style: { width: '32px', height: '32px' } }); const rs = RELIC_SVG[item.id!]; if (rs) ri.innerHTML = rs; else ri.textContent = '💎'; return ri; })(),
+    (() => { const ri = el('div', { style: { width: '32px', height: '32px' } }); const rs = RELIC_SVG[item.id!]; ri.innerHTML = rs || ic('gem'); return ri; })(),
     el('div', { style: { fontWeight: 'bold' } }, def.name),
     el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, kwDesc(def.description)),
     item.sold || alreadyOwned
       ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, alreadyOwned ? '이미 보유' : '판매 완료')
-      : el(
-          'button',
-          {
+      : (() => { const b = el('button', {
             disabled: !canAfford ? true : undefined,
             onClick: () => {
               if (item.sold || run.player.gold < item.price) return;
@@ -270,9 +265,7 @@ function renderRelicItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild
               item.sold = true;
               rebuild();
             },
-          },
-          `💰 ${item.price}`,
-        ),
+          }); b.innerHTML = `${ic('gold')} ${item.price}`; return b; })(),
   );
 }
 
@@ -297,16 +290,14 @@ function renderPotionItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuil
         opacity: blocked ? '0.5' : '1',
       },
     },
-    (() => { const pi = el('div', { style: { width: '28px', height: '28px' } }); const ps = POTION_SVG[item.id!]; if (ps) pi.innerHTML = ps; else pi.textContent = '🧪'; return pi; })(),
+    (() => { const pi = el('div', { style: { width: '28px', height: '28px' } }); const ps = POTION_SVG[item.id!]; pi.innerHTML = ps || ic('potion_small'); return pi; })(),
     el('div', { style: { fontWeight: 'bold' } }, def.name),
     el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, kwDesc(def.description)),
     item.sold
       ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '판매 완료')
       : potionsFull
         ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '물약 가득 (최대 3)')
-        : el(
-            'button',
-            {
+        : (() => { const b = el('button', {
               disabled: !canAfford ? true : undefined,
               onClick: () => {
                 if (item.sold || run.player.potions.length >= 3 || run.player.gold < item.price) return;
@@ -316,9 +307,7 @@ function renderPotionItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuil
                 item.sold = true;
                 rebuild();
               },
-            },
-            `💰 ${item.price}`,
-          ),
+            }); b.innerHTML = `${ic('gold')} ${item.price}`; return b; })(),
   );
 }
 

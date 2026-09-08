@@ -1,4 +1,5 @@
 import type { StatusKey } from '../types';
+import { ic } from './art';
 
 interface KeywordDef {
   cls: string;
@@ -52,20 +53,20 @@ export function kwDesc(text: string): HTMLElement {
 }
 
 export const STATUS_ICON: Record<StatusKey, string> = {
-  strength: '⚔',
-  dexterity: '🛡',
-  vulnerable: '💔',
+  strength: ic('sword'),
+  dexterity: ic('shield'),
+  vulnerable: ic('heart_broken'),
   weak: '⬇',
-  poison: '☠',
-  thorns: '🌵',
-  regen: '💚',
-  frail: '🦴',
-  ritual: '🕯',
-  metallicize: '🔩',
-  burn: '🔥',
-  freeze: '❄',
-  on_exhaust_str: '💀',
-  on_exhaust_draw: '📤',
-  on_exhaust_block: '🛡',
-  on_exhaust_energy: '⚡',
+  poison: ic('poison'),
+  thorns: ic('star'),
+  regen: ic('heart'),
+  frail: ic('skull'),
+  ritual: ic('fire'),
+  metallicize: ic('shield'),
+  burn: ic('fire'),
+  freeze: ic('sparkle'),
+  on_exhaust_str: ic('skull'),
+  on_exhaust_draw: ic('card'),
+  on_exhaust_block: ic('shield'),
+  on_exhaust_energy: ic('lightning'),
 };

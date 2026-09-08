@@ -25,7 +25,7 @@ const STEPS: TutorialStep[] = [
   {
     target: '.hp-bar',
     title: '체력과 방어도',
-    text: '방어도(🛡)는 적의 공격을 먼저 흡수합니다. 단, 매 턴 시작 시 0으로 초기화됩니다.',
+    text: '방어도는 적의 공격을 먼저 흡수합니다. 단, 매 턴 시작 시 0으로 초기화됩니다.',
     position: 'bottom',
   },
   {

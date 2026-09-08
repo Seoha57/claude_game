@@ -1,5 +1,6 @@
 import { el } from './dom';
 import { setScreen } from '../state';
+import { ic } from './art';
 import {
   isLinked,
   getCredentials,
@@ -38,7 +39,7 @@ export function renderSync(): HTMLElement {
 
     if (errorText) {
       wrapper.appendChild(
-        el('div', { style: { color: 'var(--bad)', marginBottom: '8px' } }, `⚠️ ${errorText}`),
+        (() => { const d = el('div', { style: { color: 'var(--bad)', marginBottom: '8px' } }); d.innerHTML = `${ic('warning')} ${errorText}`; return d; })(),
       );
     }
     if (okText) {

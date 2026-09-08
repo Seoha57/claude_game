@@ -26,7 +26,7 @@ import { ENEMY_DEFS } from '../content/enemies';
 import { ENEMY_ART, resetCombatUiState } from './combat-ui';
 import { showBossIntro } from './splash-overlay';
 import { bossIntroFlavor } from '../content/lore';
-import { MAP_NODE_SVG } from './art';
+import { MAP_NODE_SVG, ic } from './art';
 
 const markedNodes = new Set<string>();
 let markedChapter = -1;
@@ -53,13 +53,18 @@ export function renderMap(): HTMLElement {
       el('span', {}, `챕터 ${run.chapter}`),
       el('span', {}, `층: ${run.floor}`),
       run.dailyConfig
-        ? el('span', { style: { color: 'var(--accent)' }, title: '오늘의 도전' }, '🌅 데일리')
-        : el('span', {
-            style: { color: run.ascension > 0 ? 'var(--bad)' : 'var(--muted)' },
-            title: run.ascension > 0 ? `등반 난이도 A${run.ascension}` : '기본 난이도',
-          }, run.ascension > 0 ? `⛰ A${run.ascension}` : '기본'),
-      el('span', {}, `❤ ${run.player.hp}/${run.player.maxHp}`),
-      el('span', {}, `💰 ${run.player.gold}`),
+        ? (() => { const s = el('span', { style: { color: 'var(--accent)' }, title: '오늘의 도전' }); s.innerHTML = `${ic('daily')} 데일리`; return s; })()
+        : (() => {
+            const s = el('span', {
+              style: { color: run.ascension > 0 ? 'var(--bad)' : 'var(--muted)' },
+              title: run.ascension > 0 ? `등반 난이도 A${run.ascension}` : '기본 난이도',
+            });
+            if (run.ascension > 0) s.innerHTML = `${ic('mountain')} A${run.ascension}`;
+            else s.textContent = '기본';
+            return s;
+          })(),
+      (() => { const s = el('span', {}); s.innerHTML = `${ic('heart')} ${run.player.hp}/${run.player.maxHp}`; return s; })(),
+      (() => { const s = el('span', {}); s.innerHTML = `${ic('gold')} ${run.player.gold}`; return s; })(),
       el('span', {
         style: { cursor: 'pointer', textDecoration: 'underline', color: 'var(--accent)' },
         onClick: () => openDeckOverlay(run.player.deck),
@@ -75,16 +80,16 @@ export function renderMap(): HTMLElement {
       ),
       ...(run.player.keys.length > 0
         ? [
-            el(
-              'span',
-              {
+            (() => {
+              const s = el('span', {
                 style: { color: 'var(--accent)', fontWeight: 'bold' },
                 title: run.player.keys
                   .map((k) => k === 'will' ? '의지의 열쇠' : k === 'emotion' ? '감정의 열쇠' : '육체의 열쇠')
                   .join(', '),
-              },
-              `🗝️ ${run.player.keys.length}/3`,
-            ),
+              });
+              s.innerHTML = `${ic('key')} ${run.player.keys.length}/3`;
+              return s;
+            })(),
           ]
         : []),
     ),
@@ -163,7 +168,7 @@ export function renderMap(): HTMLElement {
           n.visited && !isCurrent ? 'visited' : ''
         } ${isCurrent ? 'current' : ''} ${marked ? 'marked' : ''} ${shopBlocked ? 'disabled' : ''}`,
         style: { left: `${x}px`, top: `${y}px` },
-        'data-tooltip': shopBlocked ? '🚫 상점 폐쇄\n오늘의 도전: 상점 이용 불가' : nodeLabel(n, run.chapter),
+        'data-tooltip': shopBlocked ? '상점 폐쇄\n오늘의 도전: 상점 이용 불가' : nodeLabel(n, run.chapter),
         onClick: () => { if (isAccessible && !shopBlocked) enterNode(n); },
         onContextmenu: (e: Event) => { e.preventDefault(); toggleMark(); },
       },
@@ -210,20 +215,20 @@ function nodePos(n: MapNode, totalHeight: number): [number, number] {
 function nodeLabel(n: MapNode, chapter?: number): string {
   switch (n.kind) {
     case 'start':   return '시작 지점';
-    case 'combat':  return '⚔ 전투\n몬스터와 싸워 골드와 카드 보상을 획득합니다.';
-    case 'elite':   return '💀 엘리트\n강력한 적. 쓰러뜨리면 희귀 유물을 얻습니다.';
-    case 'rest':    return '🔥 모닥불\nHP를 회복하거나 카드를 강화할 수 있습니다.';
-    case 'reward':  return '💰 보물\n골드와 카드 선택 보상을 받습니다.';
-    case 'shop':    return '🛒 상점\n카드·유물 구매 및 카드 제거 서비스.';
+    case 'combat':  return '전투\n몬스터와 싸워 골드와 카드 보상을 획득합니다.';
+    case 'elite':   return '엘리트\n강력한 적. 쓰러뜨리면 희귀 유물을 얻습니다.';
+    case 'rest':    return '모닥불\nHP를 회복하거나 카드를 강화할 수 있습니다.';
+    case 'reward':  return '보물\n골드와 카드 선택 보상을 받습니다.';
+    case 'shop':    return '상점\n카드·유물 구매 및 카드 제거 서비스.';
     case 'boss': {
       const table =
         chapter === 4 ? CH4_BOSS_ENCOUNTERS :
         chapter === 3 ? CH3_BOSS_ENCOUNTERS :
         chapter === 2 ? CH2_BOSS_ENCOUNTERS : BOSS_ENCOUNTERS;
       const names = table.map((ids) => ids.map((id) => ENEMY_DEFS[id]?.name ?? id).join(' & ')).join(' / ');
-      return `👑 보스\n후보: ${names}`;
+      return `보스\n후보: ${names}`;
     }
-    case 'event':   return '❓ 이벤트\n예상치 못한 만남. 선택에 따라 다른 결과가...';
+    case 'event':   return '이벤트\n예상치 못한 만남. 선택에 따라 다른 결과가...';
   }
 }
 

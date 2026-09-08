@@ -7,6 +7,7 @@ import { isCurseLike } from './deck-overlay';
 import type { CardDef, RelicDef } from '../types';
 import { isCardUnlocked, isRelicUnlocked, cardUnlockReq, relicUnlockReq, reqLabel } from '../unlocks';
 import { kwDesc } from './keywords';
+import { ic } from './art';
 
 type Tab = 'cards' | 'relics';
 type CardFilter = 'all' | 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner';
@@ -29,7 +30,9 @@ export function renderCodex(): HTMLElement {
   };
 
   const appendContent = () => {
-    wrapper.appendChild(el('h1', { style: { color: 'var(--accent)', margin: '0' } }, '📖 도감'));
+    const codexTitle = el('h1', { style: { color: 'var(--accent)', margin: '0' } });
+    codexTitle.innerHTML = `${ic('card')} 도감`;
+    wrapper.appendChild(codexTitle);
     wrapper.appendChild(
       el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '4px' } },
         '발견한 카드와 유물을 모두 모아보세요. 미발견 항목은 ???로 표시됩니다.'),
@@ -37,14 +40,18 @@ export function renderCodex(): HTMLElement {
 
     // Tabs
     const tabRow = el('div', { class: 'codex-tabs' });
-    tabRow.appendChild(el('button', {
+    const cardTab = el('button', {
       class: tab === 'cards' ? 'codex-tab active' : 'codex-tab',
       onClick: () => { tab = 'cards'; rebuild(); },
-    }, '🃏 카드'));
-    tabRow.appendChild(el('button', {
+    });
+    cardTab.innerHTML = `${ic('card')} 카드`;
+    tabRow.appendChild(cardTab);
+    const relicTab = el('button', {
       class: tab === 'relics' ? 'codex-tab active' : 'codex-tab',
       onClick: () => { tab = 'relics'; rebuild(); },
-    }, '💎 유물'));
+    });
+    relicTab.innerHTML = `${ic('gem')} 유물`;
+    tabRow.appendChild(relicTab);
     wrapper.appendChild(tabRow);
 
     if (tab === 'cards') {
@@ -105,8 +112,9 @@ export function renderCodex(): HTMLElement {
     const seenInFilter = filtered.filter((c) => seen.has(c.id)).length;
     const unlockedInFilter = filtered.filter((c) => isCardUnlocked(c)).length;
 
-    wrapper.appendChild(el('div', { class: 'codex-stats' },
-      `발견 ${seenInFilter} / ${filtered.length}  ·  🔓 ${unlockedInFilter} / ${filtered.length}`));
+    const cardStats = el('div', { class: 'codex-stats' });
+    cardStats.innerHTML = `발견 ${seenInFilter} / ${filtered.length}  ·  ${ic('unlock')} ${unlockedInFilter} / ${filtered.length}`;
+    wrapper.appendChild(cardStats);
 
     // Sort: by type (attack/skill/power), then rarity, then cost
     const rarityOrder: Record<string, number> = { starter: 0, common: 1, uncommon: 2, rare: 3 };
@@ -132,8 +140,9 @@ export function renderCodex(): HTMLElement {
     const seenCount = allRelics.filter((r) => seen.has(r.id)).length;
     const unlockedCount = allRelics.filter((r) => isRelicUnlocked(r)).length;
 
-    wrapper.appendChild(el('div', { class: 'codex-stats' },
-      `발견 ${seenCount} / ${allRelics.length}  ·  🔓 ${unlockedCount} / ${allRelics.length}`));
+    const relicStats = el('div', { class: 'codex-stats' });
+    relicStats.innerHTML = `발견 ${seenCount} / ${allRelics.length}  ·  ${ic('unlock')} ${unlockedCount} / ${allRelics.length}`;
+    wrapper.appendChild(relicStats);
 
     const rarityOrder: Record<string, number> = { starter: 0, common: 1, uncommon: 2, rare: 3, boss: 4 };
     const sorted = [...allRelics].sort((a, b) => {
@@ -162,14 +171,14 @@ function renderCardSlot(def: CardDef, isSeen: boolean): HTMLElement {
       el('div', { class: 'card-cost' }, '?'),
       el('div', { class: 'card-name' }, '???'),
       el('div', { class: 'card-desc' }, unlocked ? '미발견' : lockText),
-      el('div', { class: 'card-type' }, unlocked ? '???' : '🔒'),
+      (() => { const d = el('div', { class: 'card-type' }); d.innerHTML = unlocked ? '???' : ic('lock'); return d; })(),
     );
   }
   return el('div', { class: cls, style: { cursor: 'default' } },
     el('div', { class: 'card-cost' }, def.cost < 0 ? 'X' : String(def.cost)),
     el('div', { class: 'card-name' }, def.name),
     el('div', { class: 'card-desc' }, unlocked ? kwDesc(def.description) : lockText),
-    el('div', { class: 'card-type' }, unlocked ? typeLabel(def.type) : '🔒'),
+    (() => { const d = el('div', { class: 'card-type' }); d.innerHTML = unlocked ? typeLabel(def.type) : ic('lock'); return d; })(),
   );
 }
 
@@ -180,7 +189,7 @@ function renderRelicSlot(def: RelicDef, isSeen: boolean): HTMLElement {
   const cls = `codex-relic-slot ${isSeen ? '' : 'unseen'} ${unlocked ? '' : 'locked'}`;
   if (!isSeen) {
     return el('div', { class: cls },
-      el('div', { class: 'codex-relic-name' }, unlocked ? '???' : '🔒'),
+      (() => { const d = el('div', { class: 'codex-relic-name' }); d.innerHTML = unlocked ? '???' : ic('lock'); return d; })(),
       el('div', { class: 'codex-relic-desc' }, unlocked ? '미발견' : lockText),
       el('div', { class: 'codex-relic-rarity', style: { color: rarityColor } },
         RARITY_LABEL[def.rarity] ?? def.rarity),
@@ -190,14 +199,14 @@ function renderRelicSlot(def: RelicDef, isSeen: boolean): HTMLElement {
     .map((s) => {
       const partner = s.relics.find((r) => r !== def.id)!;
       const partnerDef = RELIC_DEFS[partner];
-      return `⚡ ${partnerDef?.name ?? partner} → ${s.name}`;
+      return `${ic('lightning')} ${partnerDef?.name ?? partner} → ${s.name}`;
     }).join('\n');
   const desc = unlocked
     ? (synInfo ? `${def.description}\n${synInfo}` : def.description)
     : lockText;
   return el('div', { class: cls },
-    el('div', { class: 'codex-relic-name' }, unlocked ? def.name : '🔒 ???'),
-    el('div', { class: 'codex-relic-desc', style: { whiteSpace: 'pre-line' } }, desc),
+    (() => { const d = el('div', { class: 'codex-relic-name' }); d.innerHTML = unlocked ? def.name : `${ic('lock')} ???`; return d; })(),
+    (() => { const d = el('div', { class: 'codex-relic-desc', style: { whiteSpace: 'pre-line' } }); d.innerHTML = desc; return d; })(),
     el('div', { class: 'codex-relic-rarity', style: { color: rarityColor } },
       RARITY_LABEL[def.rarity] ?? def.rarity),
   );

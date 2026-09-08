@@ -8,7 +8,7 @@ import { ENEMY_DEFS } from '../content/enemies';
 import { bossDefeatFlavor } from '../content/lore';
 import { STATUS_INFO, applyStatus, modifiedAttackDamage, getStatusValueLabel, getStatusTooltip } from '../combat/statuses';
 import { kwDesc, STATUS_ICON } from './keywords';
-import { ENEMY_SVG, POTION_SVG, RELIC_SVG } from './art';
+import { ENEMY_SVG, POTION_SVG, RELIC_SVG, ic } from './art';
 import { buildIntentDisplay } from '../combat/intent';
 import { endPlayerTurn } from '../combat/combat';
 import { playCard } from '../combat/effects';
@@ -238,7 +238,7 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
     'div',
     { class: `hp-bar ${enemyLowHp ? 'low-hp' : ''}` },
     hpFill,
-    el('div', { class: 'text' }, `${e.hp}/${e.maxHp}${e.block > 0 ? ` 🛡${e.block}` : ''}`),
+    (() => { const d = el('div', { class: 'text' }); d.innerHTML = `${e.hp}/${e.maxHp}${e.block > 0 ? ` ${ic('shield')}${e.block}` : ''}`; return d; })(),
   );
 
   const intent = e.intent;
@@ -260,7 +260,7 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
       class: `intent ${intent.kind === 'block' ? 'block' : ''} ${
         intent.kind === 'buff' ? 'buff' : ''
       } ${intent.kind === 'debuff' ? 'debuff' : ''} ${perfectGuard ? 'perfect-guard' : ''} ${dangerHit ? 'danger-hit' : ''}`,
-      'data-tooltip': perfectGuard ? '🛡 안전: 방어도로 모두 막힘' : dangerHit ? '⚠️ 큰 한방 — 대비하세요' : '',
+      'data-tooltip': perfectGuard ? '안전: 방어도로 모두 막힘' : dangerHit ? '큰 한방 — 대비하세요' : '',
     },
     isAttack
       ? el(
@@ -318,16 +318,15 @@ function renderStatuses(s: Record<string, number | undefined>, ownerId = '_playe
     const key = k as keyof typeof STATUS_INFO;
     const isNew = !prev.has(k);
     const icon = STATUS_ICON[key] ?? '';
-    row.appendChild(
-      el(
-        'div',
-        {
-          class: `status ${info.buff ? 'buff' : 'debuff'} st-${key} ${isNew ? 'status-new' : ''}`,
-          'data-tooltip': getStatusTooltip(key, v),
-        },
-        `${icon} ${info.name} ${getStatusValueLabel(key, v)}`,
-      ),
+    const statusEl = el(
+      'div',
+      {
+        class: `status ${info.buff ? 'buff' : 'debuff'} st-${key} ${isNew ? 'status-new' : ''}`,
+        'data-tooltip': getStatusTooltip(key, v),
+      },
     );
+    statusEl.innerHTML = `${icon} ${info.name} ${getStatusValueLabel(key, v)}`;
+    row.appendChild(statusEl);
   }
   prevStatusKeys.set(ownerId, cur);
   return row;
@@ -350,7 +349,7 @@ function renderMid(state: CombatState): HTMLElement {
     el('div', { class: 'text' }, `${p.hp}/${p.maxHp}`),
   );
 
-  const blockBadge = p.block > 0 ? el('span', { class: 'block-badge' }, `🛡 ${p.block}`) : el('span');
+  const blockBadge = p.block > 0 ? (() => { const d = el('span', { class: 'block-badge' }); d.innerHTML = `${ic('shield')} ${p.block}`; return d; })() : el('span');
 
   const playerStats = el(
     'div',
@@ -430,7 +429,8 @@ function renderMid(state: CombatState): HTMLElement {
       const panel = buildAudioPanel();
       document.getElementById('app')!.appendChild(panel);
     },
-  }, '⚙️');
+  });
+  gearBtn.innerHTML = ic('gear');
 
   return el('div', { class: 'combat-mid' }, playerStats, relicBar, potionBar, piles, endTurn, gearBtn);
 }
@@ -612,7 +612,7 @@ function renderRelicBar(relics: string[]): HTMLElement {
     const def = RELIC_DEFS[id];
     if (!def) continue;
     const synFor = activeSynergies.filter((s) => s.relics.includes(id));
-    const synText = synFor.map((s) => `⚡ ${s.name}: ${s.description}`).join('\n');
+    const synText = synFor.map((s) => `${s.name}: ${s.description}`).join('\n');
     const tooltip = synText ? `${def.name}\n${def.description}\n${synText}` : `${def.name}\n${def.description}`;
     const hasSynergy = synFor.length > 0;
     const chip = el('div', {
@@ -628,7 +628,7 @@ function renderRelicBar(relics: string[]): HTMLElement {
   if (activeSynergies.length > 0) {
     const synRow = el('div', { class: 'synergy-row' });
     for (const s of activeSynergies) {
-      synRow.appendChild(el('span', { class: 'synergy-tag' }, `⚡ ${s.name}`));
+      const synTag = el('span', { class: 'synergy-tag' }); synTag.innerHTML = `${ic('lightning')} ${s.name}`; synRow.appendChild(synTag);
     }
     wrapper.appendChild(synRow);
   }
@@ -1076,7 +1076,7 @@ function spawnAttackFx(target: HTMLElement, cc: string): void {
     // Central sparkle burst
     const burst = document.createElement('div');
     burst.className = 'magic-burst';
-    burst.textContent = '✨';
+    burst.innerHTML = ic('sparkle');
     wrap.appendChild(burst);
     // Expanding arcane ring
     const ring = document.createElement('div');
@@ -1112,7 +1112,7 @@ function spawnBlockFx(amount: number): void {
   // Floating +X text
   const float = document.createElement('div');
   float.className = 'block-float';
-  float.textContent = `🛡 +${amount}`;
+  float.innerHTML = `${ic('shield')} +${amount}`;
   stats.appendChild(float);
   setTimeout(() => float.remove(), 1100);
   // Pulse on badge
@@ -1212,7 +1212,7 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
     el(
       'div',
       { class: 'combat-top', style: { flexDirection: 'column', gap: '16px' } },
-      el('h2', { style: { color: 'var(--good)', margin: 0 } }, isBossNode ? '👑 보스 처치!' : '승리!'),
+      (() => { const h = el('h2', { style: { color: 'var(--good)', margin: 0 } }); h.innerHTML = isBossNode ? `${ic('crown')} 보스 처치!` : '승리!'; return h; })(),
       ...(defeatFlavor
         ? [el('div', {
             style: {
@@ -1231,7 +1231,7 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
         `HP ${run.player.hp}/${run.player.maxHp}`,
       ),
       ...(droppedKey
-        ? [el('div', { style: { color: 'var(--accent)', fontWeight: 'bold' } }, `🗝️ ${droppedKey} 획득!`)]
+        ? [(() => { const d = el('div', { style: { color: 'var(--accent)', fontWeight: 'bold' } }); d.innerHTML = `${ic('key')} ${droppedKey} 획득!`; return d; })()]
         : []),
       el(
         'button',

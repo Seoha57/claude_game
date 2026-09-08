@@ -3,7 +3,7 @@ import { setScreen } from '../state';
 import { getRunHistory, clearRunHistory } from '../run-history';
 import type { RunHistoryEntry } from '../run-history';
 import type { CharacterClass } from '../types';
-import { CHARACTER_SVG, artEl } from './art';
+import { CHARACTER_SVG, artEl, ic } from './art';
 
 const CHAR_INFO: Record<CharacterClass, { name: string }> = {
   swordmaster: { name: '검사' },
@@ -78,7 +78,7 @@ export function renderHistory(): HTMLElement {
 function renderEntry(e: RunHistoryEntry): HTMLElement {
   const info = CHAR_INFO[e.characterClass] ?? { name: e.characterClass, emoji: '?' };
   const isWin = e.outcome === 'won' || e.outcome === 'true_won';
-  const outcomeIcon = e.outcome === 'true_won' ? '🏆' : e.outcome === 'won' ? '✓' : '✗';
+  const outcomeIcon = e.outcome === 'true_won' ? ic('trophy') : e.outcome === 'won' ? '✓' : '✗';
   const outcomeColor = isWin ? 'var(--good)' : 'var(--bad)';
   const borderColor = e.outcome === 'true_won' ? 'var(--accent)' : isWin ? 'rgba(80,180,80,0.4)' : 'rgba(180,80,80,0.35)';
 
@@ -91,19 +91,19 @@ function renderEntry(e: RunHistoryEntry): HTMLElement {
     { style: { display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' } },
     artEl(CHARACTER_SVG[e.characterClass], 22),
     el('span', { style: { fontWeight: 'bold', minWidth: '54px' } }, info.name),
-    el('span', { style: { color: outcomeColor, fontWeight: 'bold' } }, outcomeIcon),
+    (() => { const s = el('span', { style: { color: outcomeColor, fontWeight: 'bold' } }); s.innerHTML = outcomeIcon; return s; })(),
     el('span', { style: { color: 'var(--fg)', fontSize: '13px' } }, locText),
     e.ascension > 0 ? el('span', { style: { color: 'var(--accent)', fontSize: '12px' } }, `A${e.ascension}`) : el('span'),
-    e.daily ? el('span', { style: { color: 'var(--accent)', fontSize: '11px' } }, '🌅') : el('span'),
+    e.daily ? (() => { const s = el('span', { style: { color: 'var(--accent)', fontSize: '11px' } }); s.innerHTML = ic('daily'); return s; })() : el('span'),
   );
 
   const sub = el(
     'div',
     { style: { color: 'var(--muted)', fontSize: '11px', marginTop: '3px', display: 'flex', gap: '10px', flexWrap: 'wrap' } },
     el('span', {}, formatTime(e.timestamp)),
-    el('span', {}, `🃏 ${e.deckSize}장`),
-    el('span', {}, `💰 ${e.gold}`),
-    ...(e.killerName ? [el('span', { style: { color: 'var(--bad)' } }, `☠ ${e.killerName}`)] : []),
+    (() => { const s = el('span', {}); s.innerHTML = `${ic('card')} ${e.deckSize}장`; return s; })(),
+    (() => { const s = el('span', {}); s.innerHTML = `${ic('gold')} ${e.gold}`; return s; })(),
+    ...(e.killerName ? [(() => { const s = el('span', { style: { color: 'var(--bad)' } }); s.innerHTML = `${ic('poison')} ${e.killerName}`; return s; })()] : []),
   );
 
   return el(

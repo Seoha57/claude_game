@@ -8,7 +8,7 @@ import { makeRng, pick, shuffle } from '../rng';
 import { PICKABLE_RELICS } from '../content/relics';
 import { playSfx } from '../audio';
 import { recordCard, recordRelic } from '../codex';
-import { EVENT_SVG } from './art';
+import { EVENT_SVG, ic } from './art';
 import {
   COMMON_CARDS,
   UNCOMMON_CARDS,
@@ -280,19 +280,21 @@ function effectChip(e: EventEffect): HTMLElement | null {
   let label = '';
   let cls = 'chip';
   switch (e.kind) {
-    case 'heal':           label = `❤ +${e.amount}`;        cls += ' gain'; break;
-    case 'lose_hp':        label = `💔 -${e.amount}`;       cls += ' cost'; break;
-    case 'gold':           label = `💰 +${e.amount}`;       cls += ' gain'; break;
-    case 'lose_gold':      label = `💰 -${e.amount}`;       cls += ' cost'; break;
-    case 'max_hp':         label = e.amount >= 0 ? `❤ 최대 +${e.amount}` : `💔 최대 ${e.amount}`;
+    case 'heal':           label = `${ic('heart')} +${e.amount}`;           cls += ' gain'; break;
+    case 'lose_hp':        label = `${ic('heart_broken')} -${e.amount}`;    cls += ' cost'; break;
+    case 'gold':           label = `${ic('gold')} +${e.amount}`;            cls += ' gain'; break;
+    case 'lose_gold':      label = `${ic('gold')} -${e.amount}`;            cls += ' cost'; break;
+    case 'max_hp':         label = e.amount >= 0 ? `${ic('heart')} 최대 +${e.amount}` : `${ic('heart_broken')} 최대 ${e.amount}`;
                            cls += e.amount >= 0 ? ' gain' : ' cost'; break;
-    case 'add_card':       label = `🃏 카드 (${e.rarity})`;  cls += ' gain'; break;
-    case 'add_potion':     label = `🧪 물약`;                cls += ' gain'; break;
-    case 'add_random_relic': label = `💎 유물`;              cls += ' gain'; break;
-    case 'upgrade_random': label = `✦ 강화 ×${e.count}`;    cls += ' gain'; break;
-    case 'add_curse':      label = `☠ 저주 ×${e.count}`;    cls += ' cost'; break;
-    case 'add_blessing':   label = `✨ 축복 ×${e.count}`;   cls += ' gain'; break;
+    case 'add_card':       label = `${ic('card')} 카드 (${e.rarity})`;      cls += ' gain'; break;
+    case 'add_potion':     label = `${ic('potion_small')} 물약`;            cls += ' gain'; break;
+    case 'add_random_relic': label = `${ic('gem')} 유물`;                   cls += ' gain'; break;
+    case 'upgrade_random': label = `${ic('star')} 강화 ×${e.count}`;        cls += ' gain'; break;
+    case 'add_curse':      label = `${ic('poison')} 저주 ×${e.count}`;      cls += ' cost'; break;
+    case 'add_blessing':   label = `${ic('sparkle')} 축복 ×${e.count}`;     cls += ' gain'; break;
     default: return null;
   }
-  return el('span', { class: cls }, label);
+  const chip = el('span', { class: cls });
+  chip.innerHTML = label;
+  return chip;
 }

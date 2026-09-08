@@ -1,6 +1,7 @@
 import { el } from './dom';
 import { setScreen } from '../state';
 import { getMuted, setMuted, getVolume, setVolume, playSfx, getBgmMuted, setBgmMuted, getBgmVolume, setBgmVolume } from '../audio';
+import { ic } from './art';
 
 export function renderSettings(): HTMLElement {
   const wrapper = el('div', { class: 'settings-screen' });
@@ -11,7 +12,9 @@ export function renderSettings(): HTMLElement {
   };
 
   const appendContent = () => {
-    wrapper.appendChild(el('h1', { style: { color: 'var(--accent)', margin: '0' } }, '⚙️ 설정'));
+    const settingsH1 = el('h1', { style: { color: 'var(--accent)', margin: '0' } });
+    settingsH1.innerHTML = `${ic('gear')} 설정`;
+    wrapper.appendChild(settingsH1);
 
     // SFX
     const muted = getMuted();

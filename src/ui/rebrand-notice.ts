@@ -1,4 +1,5 @@
 import { el } from './dom';
+import { ic } from './art';
 
 const NOTICE_KEY = 'dod_rebrand_seen';
 
@@ -32,7 +33,7 @@ export function showRebrandNotice(): void {
         boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 30px rgba(212,160,91,0.3)',
       },
     },
-    el('div', { style: { fontSize: '42px', marginBottom: '12px' } }, '⚔️✨'),
+    (() => { const d = el('div', { style: { fontSize: '42px', marginBottom: '12px' } }); d.innerHTML = `${ic('sword')}${ic('sparkle')}`; return d; })(),
     el('div', {
       style: { fontSize: '18px', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '8px' },
     }, '덱 오브 던전'),
@@ -50,7 +51,7 @@ export function showRebrandNotice(): void {
         marginBottom: '20px',
         lineHeight: '1.5',
       },
-    }, '📱 바로가기 이름이 예전 그대로라면,\n삭제 후 다시 추가해 주세요.\n(세이브는 유지됩니다)'),
+    }, '바로가기 이름이 예전 그대로라면,\n삭제 후 다시 추가해 주세요.\n(세이브는 유지됩니다)'),
     el('button', {
       style: {
         marginTop: '4px',

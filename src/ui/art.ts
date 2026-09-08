@@ -4856,3 +4856,50 @@ export const TITLE_SVG: Record<string, string> = {
     rc(10, 48, 44, 4, '#DAA520')
   ),
 };
+
+// ── Inline UI Icons (16×16, currentColor, for text-inline use) ──
+
+const I = (d: string) =>
+  `<svg viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg">${d}</svg>`;
+const Ic = (d: string, color: string) =>
+  `<svg viewBox="0 0 16 16" width="1em" height="1em" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="${d}" fill="${color}"/></svg>`;
+
+export const UI_ICON: Record<string, string> = {
+  heart: Ic('M8 14s-5.5-3.5-6-7C1.5 4 3 2 5 2c1.2 0 2.3.7 3 1.8C8.7 2.7 9.8 2 11 2c2 0 3.5 2 3 5-.5 3.5-6 7-6 7z', '#e05050'),
+  heart_broken: Ic('M8 14s-5.5-3.5-6-7C1.5 4 3 2 5 2c1.2 0 2.3.7 3 1.8C8.7 2.7 9.8 2 11 2c2 0 3.5 2 3 5-.5 3.5-6 7-6 7z', '#a04060'),
+  gold: Ic('M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2zm0 2a4 4 0 1 1 0 8A4 4 0 0 1 8 4zm-1 2v4h2V6z', '#f0c040'),
+  shield: Ic('M8 1L2 4v4c0 3.5 2.5 6 6 7 3.5-1 6-3.5 6-7V4z', '#5090d0'),
+  sword: Ic('M13 1l-1.5 1.5L8 6 6.5 4.5 5 6l1.5 1.5L3 11l-1 3 3-1 3.5-3.5L10 11l1.5-1.5L10 8l3.5-3.5L15 3z', '#d05060'),
+  skull: Ic('M8 1C5 1 3 3 3 6c0 2 1 3.5 2.5 4.5L5 12h2v1h2v-1h2l-.5-1.5C12 9.5 13 8 13 6c0-3-2-5-5-5zM6 6a1 1 0 1 1 0 2A1 1 0 0 1 6 6zm4 0a1 1 0 1 1 0 2A1 1 0 0 1 10 6zM7 9h2v1H7z', '#c0c0c0'),
+  fire: Ic('M8 1C6 4 4 5 4 8a4 4 0 0 0 8 0c0-1.5-.5-3-1-4-.5 1-1.5 2-3 2C9 4 8 1 8 1z', '#f08030'),
+  key: Ic('M10 0a4 4 0 0 0-3.8 5.2L1 10.5V14h2v-2h2v-2l3.2-.8A4 4 0 1 0 10 0zm1 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', '#e0b860'),
+  lock: I('<path d="M5 7V5a3 3 0 0 1 6 0v2h1a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1zm1 0h4V5a2 2 0 0 0-4 0zm2 2a1.5 1.5 0 0 0-.5 2.9V13h1v-1.1A1.5 1.5 0 0 0 8 9z"/>'),
+  unlock: Ic('M5 7h6V5a2 2 0 0 0-3.4-1.4L6.2 2.2A3 3 0 0 1 11 5v2h1a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z', '#80c060'),
+  trophy: Ic('M4 2h8v2h2c0 2-1 3.5-3 4l.5 3H11l-.5-2.5c-.8.3-1.6.5-2.5.5s-1.7-.2-2.5-.5L5 11H4.5L5 8C3 7 2 5.5 2 4h2zm0 2H3c0 1 .5 2 1.5 2.5L4 4zm8 0v2.5C13 5.5 13 5 13 4z', '#f0c040'),
+  medal: Ic('M8 0L6 4H2l3.5 3-1 4L8 9l3.5 2-1-4L14 4h-4z', '#f0c040'),
+  star: Ic('M8 1l2.2 4.5L15 6l-3.5 3.4.8 4.6L8 11.5 3.7 14l.8-4.6L1 6l4.8-.5z', '#f0c040'),
+  sparkle: Ic('M8 0l1 5 5 1-5 1-1 5-1-5-5-1 5-1z', '#f0d060'),
+  lightning: Ic('M9 0L4 9h4l-1 7 6-9H9z', '#f0c040'),
+  crown: Ic('M2 11l2-7 2 4 2-5 2 5 2-4 2 7H2zm0 1h12v2H2z', '#f0c040'),
+  card: I('<path d="M4 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zm1 2h6v2H5zm0 8h1v1H5zm5 0h1v1h-1z"/>'),
+  gem: Ic('M4 5l4-4 4 4-4 10z', '#60b0e0'),
+  potion_small: Ic('M6 1h4v2l1.5 3v6a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2V6L6 3z', '#80d080'),
+  cart: I('<path d="M1 1h2l1 2h10l-2 6H5L4 7 3 3H1zm4 10a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm6 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>'),
+  trash: I('<path d="M5 2V1h6v1h3v2H2V2zm1 4h1v6H6zm3 0h1v6H9zM3 4h10l-1 10H4z"/>'),
+  gear: I('<path d="M6.5 1l-.5 2-.8.3L3.5 2 2 3.5l1.3 1.7-.3.8-2 .5v2l2 .5.3.8L2 12.5 3.5 14l1.7-1.3.8.3.5 2h2l.5-2 .8-.3 1.7 1.3L14 12.5l-1.3-1.7.3-.8 2-.5v-2l-2-.5-.3-.8L14 3.5 12.5 2l-1.7 1.3-.8-.3L9.5 1zM8 5.5A2.5 2.5 0 1 1 8 10.5 2.5 2.5 0 0 1 8 5.5z"/>'),
+  mountain: Ic('M1 14L5 4l2 4 1-2 1 2 2-4 4 10z', '#8090a0'),
+  mask: I('<path d="M8 1C4.5 1 2 3.5 2 6c0 2 1 4 2.5 5L6 15l2-2 2 2 1.5-4C13 10 14 8 14 6c0-2.5-2.5-5-6-5zM5 6a1.5 1.5 0 1 1 0 3A1.5 1.5 0 0 1 5 6zm6 0a1.5 1.5 0 1 1 0 3A1.5 1.5 0 0 1 11 6z"/>'),
+  box: I('<path d="M1 4l7-3 7 3v8l-7 3-7-3zm1 1v6.5L7 14V7.5zm6 2.5V14l5-2.1V5zm-.5-3L3 6.3 8 8.5l5-2.2z"/>'),
+  sunrise: `<svg viewBox="0 0 16 16" width="1em" height="1em" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M8 3v2m4.2.8l-1.4 1.4M15 10h-2M3 10H1m3.2-3.8L5.6 7.6M8 7a3 3 0 0 0-3 3h6a3 3 0 0 0-3-3z" fill="none" stroke="#f0a030" stroke-width="1.5" stroke-linecap="round"/><rect x="1" y="12" width="14" height="2" rx="1" fill="#f0a030"/></svg>`,
+  warning: Ic('M8 1L1 14h14zM7 6h2v4H7zm0 5h2v2H7z', '#f0a030'),
+  ban: Ic('M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm-4 7a4 4 0 0 1 6.5-3.1L4.9 10.5A3.9 3.9 0 0 1 4 8zm4 4a3.9 3.9 0 0 1-2.5-.9l5.6-5.6A4 4 0 0 1 8 12z', '#e05050'),
+  tip: Ic('M8 1a4 4 0 0 0-2 7.5V11h4V8.5A4 4 0 0 0 8 1zm-1 11h4v1H7zm.5 2h3v1h-3z', '#f0c040'),
+  question: I('<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 2a3 3 0 0 1 2.4 4.8L9 9H7l-.3-1.5 1.8-1.3A1 1 0 0 0 8 5a1 1 0 0 0-1 1H5a3 3 0 0 1 3-3zm-1 8h2v2H7z"/>'),
+  poison: Ic('M8 1C6 1 5 2.5 5 4c0 1 .5 1.8 1 2.3-.8.4-2 1.5-2 3.2C4 12 6 14 8 14s4-2 4-4.5c0-1.7-1.2-2.8-2-3.2.5-.5 1-1.3 1-2.3 0-1.5-1-3-3-3zM6.5 7a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM7 10h2l-.3 2h-1.4z', '#80c060'),
+  daily: `<svg viewBox="0 0 16 16" width="1em" height="1em" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M8 2v2m4.2.8l-1.4 1.4M15 9h-2M3 9H1m3.2-3.8L5.6 7.6" fill="none" stroke="#f0a030" stroke-width="1.5" stroke-linecap="round"/><path d="M8 6a3 3 0 0 0-3 3h6a3 3 0 0 0-3-3z" fill="#f0a030"/><rect x="1" y="11" width="14" height="2" rx="1" fill="#f0a030"/></svg>`,
+  progress: Ic('M8 1l2.2 4.5L15 6l-3.5 3.4.8 4.6L8 11.5 3.7 14l.8-4.6L1 6l4.8-.5z', '#c0a0e0'),
+};
+
+export function ic(name: string): string {
+  return UI_ICON[name] ?? '';
+}

@@ -4,7 +4,7 @@ import { ACHIEVEMENTS, getUnlockedSet, resetAchievements, reconcileAchievements,
 import type { AchievementTitle } from '../achievements';
 import type { AchievementDef } from '../achievements';
 import type { CharacterClass } from '../types';
-import { CHARACTER_SVG, ACHIEVEMENT_SVG, TITLE_SVG, artEl } from './art';
+import { CHARACTER_SVG, ACHIEVEMENT_SVG, TITLE_SVG, artEl, ic } from './art';
 
 const CHAR_LABEL: Record<CharacterClass, string> = {
   swordmaster: '검사',
@@ -17,11 +17,11 @@ const CHAR_LABEL: Record<CharacterClass, string> = {
 };
 
 const CATEGORY_LABEL: Record<AchievementDef['category'], string> = {
-  progression: '🌟 진행',
-  character:   '🎭 캐릭터',
-  difficulty:  '⛰ 등반',
-  combat:      '⚔ 전투',
-  collection:  '📦 수집',
+  progression: `${ic('progress')} 진행`,
+  character:   `${ic('mask')} 캐릭터`,
+  difficulty:  `${ic('mountain')} 등반`,
+  combat:      `${ic('sword')} 전투`,
+  collection:  `${ic('box')} 수집`,
 };
 
 export function renderAchievements(): HTMLElement {
@@ -41,7 +41,9 @@ export function renderAchievements(): HTMLElement {
     const total = ACHIEVEMENTS.length;
     const done = ACHIEVEMENTS.filter((a) => unlocked.has(a.id)).length;
 
-    wrapper.appendChild(el('h1', { style: { color: 'var(--accent)', margin: '0' } }, '🏅 도전과제'));
+    const h1 = el('h1', { style: { color: 'var(--accent)', margin: '0' } });
+    h1.innerHTML = `${ic('medal')} 도전과제`;
+    wrapper.appendChild(h1);
     wrapper.appendChild(
       el('div', { class: 'achievements-progress' }, `${done} / ${total} 달성`),
     );
@@ -86,9 +88,9 @@ export function renderAchievements(): HTMLElement {
     for (const cat of categories) {
       const items = ACHIEVEMENTS.filter((a) => a.category === cat);
       if (items.length === 0) continue;
-      wrapper.appendChild(
-        el('h3', { class: 'ach-category' }, CATEGORY_LABEL[cat]),
-      );
+      const catH3 = el('h3', { class: 'ach-category' });
+      catH3.innerHTML = CATEGORY_LABEL[cat];
+      wrapper.appendChild(catH3);
       // 캐릭터 카테고리 위에 캐릭별 클리어/진엔딩 현황 칩
       if (cat === 'character') {
         const status = getCharClearStatus();
@@ -114,7 +116,9 @@ export function renderAchievements(): HTMLElement {
             title: trueCleared ? '진엔딩 클리어' : cleared ? '일반 클리어' : '미클리어',
           });
           chip.appendChild(artEl(CHARACTER_SVG[c], 14));
-          chip.appendChild(document.createTextNode(`${CHAR_LABEL[c]} ${trueCleared ? '🏆' : cleared ? '✓' : '—'}`));
+          const chipLabel = el('span', {});
+          chipLabel.innerHTML = `${CHAR_LABEL[c]} ${trueCleared ? ic('trophy') : cleared ? '✓' : '—'}`;
+          chip.appendChild(chipLabel);
           chips.appendChild(chip);
         }
         wrapper.appendChild(chips);
@@ -152,7 +156,7 @@ function renderAchievementCard(a: AchievementDef, unlocked: boolean): HTMLElemen
     if (svg) iconEl.innerHTML = svg;
     else iconEl.textContent = a.emoji;
   } else {
-    iconEl.textContent = '🔒';
+    iconEl.innerHTML = ic('lock');
   }
   return el(
     'div',

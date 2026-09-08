@@ -162,7 +162,7 @@ export function showBossIntro(info: BossIntroInfo, onDismiss: () => void): void 
   showSplash({
     variant: 'boss',
     title: info.name,
-    subtitle: `❤ HP ${info.hp}`,
+    subtitle: `HP ${info.hp}`,
     emoji: info.emoji,
     flavor: info.flavor ?? '강력한 적이 길을 막아선다...',
     duration: 2400,

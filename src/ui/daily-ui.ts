@@ -8,7 +8,7 @@ import {
   todayDateString,
 } from '../daily';
 import type { CharacterClass, Screen } from '../types';
-import { CHARACTER_SVG, artEl } from './art';
+import { CHARACTER_SVG, artEl, ic } from './art';
 
 const CHAR_INFO: Record<CharacterClass, { name: string }> = {
   swordmaster: { name: '검사' },
@@ -38,7 +38,9 @@ export function renderDaily(): HTMLElement {
   })();
   const hasActiveDaily = !!savedRun?.dailyConfig && savedRun.dailyConfig.date === today;
 
-  wrapper.appendChild(el('h2', { style: { color: 'var(--accent)' } }, '🌅 오늘의 도전'));
+  const dailyTitle = el('h2', { style: { color: 'var(--accent)' } });
+  dailyTitle.innerHTML = `${ic('daily')} 오늘의 도전`;
+  wrapper.appendChild(dailyTitle);
   wrapper.appendChild(
     el(
       'div',
@@ -77,7 +79,7 @@ export function renderDaily(): HTMLElement {
             color: '#ffd080',
           },
         },
-        el('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, `✦ ${setup.constraint.name}`),
+        (() => { const d = el('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }); d.innerHTML = `${ic('star')} ${setup.constraint.name}`; return d; })(),
         el('div', { style: { fontSize: '12px', color: 'var(--fg)' } }, setup.constraint.desc),
       ),
     ),
@@ -100,11 +102,7 @@ export function renderDaily(): HTMLElement {
             textAlign: 'center',
           },
         },
-        el(
-          'div',
-          { style: { fontWeight: 'bold', color: isWin ? 'var(--good)' : 'var(--bad)', marginBottom: '4px' } },
-          isWin ? (result.outcome === 'true_won' ? '🏆 진엔딩 클리어!' : '✓ 클리어!') : '✗ 실패',
-        ),
+        (() => { const d = el('div', { style: { fontWeight: 'bold', color: isWin ? 'var(--good)' : 'var(--bad)', marginBottom: '4px' } }); d.innerHTML = isWin ? (result.outcome === 'true_won' ? `${ic('trophy')} 진엔딩 클리어!` : '✓ 클리어!') : '✗ 실패'; return d; })(),
         el('div', { style: { fontSize: '12px', color: 'var(--muted)' } }, `챕터 ${result.chapter} · ${result.floor}층 도달`),
       ),
     );
@@ -128,7 +126,7 @@ export function renderDaily(): HTMLElement {
             if (loadRun()) setScreen('map');
           },
         },
-        '🗺 이어하기',
+        '이어하기',
       ),
     );
     wrapper.appendChild(
@@ -158,27 +156,22 @@ export function renderDaily(): HTMLElement {
   } else {
     // 진행 중인 다른 런이 있으면 경고
     const hasOtherRun = hasSave();
-    wrapper.appendChild(
-      el(
-        'button',
-        {
-          style: { fontSize: '16px', padding: '14px 28px', marginBottom: '8px' },
-          onClick: () => {
-            if (hasOtherRun) {
-              const ok = confirm('진행 중인 일반 런이 있습니다. 데일리를 시작하면 기존 진행이 삭제됩니다. 계속할까요?');
-              if (!ok) return;
-              try { localStorage.removeItem('dod_save'); } catch { /* ignore */ }
-            }
-            startNewRun(setup.seed, 0, setup.character, {
-              goToScreen: 'neow_blessing' as Screen,
-              daily: { date: today, constraint: setup.constraint },
-            });
-            // 시작 직후 결과는 in_progress로 일단 기록 안 함 — 끝났을 때만 기록
-          },
-        },
-        '⚔ 도전 시작',
-      ),
-    );
+    const startBtn = el('button', {
+      style: { fontSize: '16px', padding: '14px 28px', marginBottom: '8px' },
+      onClick: () => {
+        if (hasOtherRun) {
+          const ok = confirm('진행 중인 일반 런이 있습니다. 데일리를 시작하면 기존 진행이 삭제됩니다. 계속할까요?');
+          if (!ok) return;
+          try { localStorage.removeItem('dod_save'); } catch { /* ignore */ }
+        }
+        startNewRun(setup.seed, 0, setup.character, {
+          goToScreen: 'neow_blessing' as Screen,
+          daily: { date: today, constraint: setup.constraint },
+        });
+      },
+    });
+    startBtn.innerHTML = `${ic('sword')} 도전 시작`;
+    wrapper.appendChild(startBtn);
   }
 
   // 최근 결과 히스토리
@@ -188,7 +181,7 @@ export function renderDaily(): HTMLElement {
       el(
         'div',
         { style: { marginTop: '24px', width: '90%', maxWidth: '480px' } },
-        el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } }, '📜 최근 도전'),
+        (() => { const d = el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } }); d.innerHTML = `${ic('card')} 최근 도전`; return d; })(),
         ...history.map((r) =>
           el(
             'div',
@@ -203,21 +196,20 @@ export function renderDaily(): HTMLElement {
             },
             el('span', {}, r.date),
             (() => { const s = el('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } }); s.appendChild(artEl(CHARACTER_SVG[r.characterClass], 16)); s.appendChild(document.createTextNode(CHAR_INFO[r.characterClass]?.name ?? r.characterClass)); return s; })(),
-            el(
-              'span',
-              {
+            (() => {
+              const s = el('span', {
                 style: {
                   color:
                     r.outcome === 'won' || r.outcome === 'true_won' ? 'var(--good)' :
                     r.outcome === 'abandoned' ? 'var(--muted)' :
                     'var(--bad)',
                 },
-              },
-              r.outcome === 'true_won' ? '🏆' :
-              r.outcome === 'won' ? '✓' :
-              r.outcome === 'abandoned' ? '⊘' :
-              '✗',
-            ),
+              });
+              s.innerHTML = r.outcome === 'true_won' ? ic('trophy') :
+                r.outcome === 'won' ? '✓' :
+                r.outcome === 'abandoned' ? '⊘' : '✗';
+              return s;
+            })(),
           ),
         ),
       ),

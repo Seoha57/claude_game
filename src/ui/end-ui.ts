@@ -10,7 +10,7 @@ import { makeRng, shuffle } from '../rng';
 import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
 import type { RunState } from '../types';
-import { CHARACTER_SVG, CHAR_NAMES, artEl } from './art';
+import { CHARACTER_SVG, CHAR_NAMES, artEl, ic } from './art';
 
 export function renderChapterClear(): HTMLElement {
   const run = getRunOrNull();
@@ -52,9 +52,9 @@ export function renderChapterClear(): HTMLElement {
     const canConfirm = alreadyConfirmed || noChoices || tentativeId !== null;
 
     wrapper.appendChild(el('h1', { style: { color: 'var(--accent)' } }, `챕터 ${cleared} 클리어!`));
-    wrapper.appendChild(
-      el('div', { style: { color: 'var(--good)', marginBottom: '4px' } }, `❤ HP +${healAmt} 회복 (현재 ${run.player.hp}/${run.player.maxHp})`),
-    );
+    const healEl = el('div', { style: { color: 'var(--good)', marginBottom: '4px' } });
+    healEl.innerHTML = `${ic('heart')} HP +${healAmt} 회복 (현재 ${run.player.hp}/${run.player.maxHp})`;
+    wrapper.appendChild(healEl);
     wrapper.appendChild(
       el('div', { style: { color: 'var(--muted)', fontSize: '13px', marginBottom: '24px' } },
         alreadyConfirmed ? '보스 유물 선택 완료' : '보스 유물 1개를 선택하세요'),
@@ -174,7 +174,7 @@ export function renderWin(): HTMLElement {
     { class: 'end-screen' },
     el('h1', { class: 'win' }, '승리!'),
     ...(didUnlock && newMax > 0
-      ? [el('div', { style: { color: 'var(--good)', marginTop: '12px' } }, `🔓 등반 A${newMax} 해금!`)]
+      ? [(() => { const d = el('div', { style: { color: 'var(--good)', marginTop: '12px' } }); d.innerHTML = `${ic('unlock')} 등반 A${newMax} 해금!`; return d; })()]
       : []),
     ...(runAscension >= 10
       ? [el('div', { style: { color: 'var(--accent)', marginTop: '8px' } }, '최고 난이도 클리어! 진정한 승리!')]
@@ -187,7 +187,7 @@ export function renderWin(): HTMLElement {
     el('button', {
       style: { background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),
-    }, '♾️ 무한 던전 도전'),
+    }, '무한 던전 도전'),
     el('button', { onClick: () => endRun() }, '제목 화면으로'),
   );
 }
@@ -222,7 +222,7 @@ export function renderTrueEndingChoice(): HTMLElement {
             showChapterIntro(4);
           },
         },
-        '🌀 차원의 문으로 (진엔딩 도전)',
+        '차원의 문으로 (진엔딩 도전)',
       ),
       el(
         'button',
@@ -233,11 +233,7 @@ export function renderTrueEndingChoice(): HTMLElement {
         '여기서 멈춘다 (일반 엔딩)',
       ),
     ),
-    el(
-      'div',
-      { style: { color: 'var(--muted)', fontSize: '12px', marginTop: '20px' } },
-      `🗝️ ${run.player.keys.length}/3 획득`,
-    ),
+    (() => { const d = el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginTop: '20px' } }); d.innerHTML = `${ic('key')} ${run.player.keys.length}/3 획득`; return d; })(),
   );
 }
 
@@ -252,14 +248,14 @@ export function renderTrueWin(): HTMLElement {
   return el(
     'div',
     { class: 'end-screen' },
-    el('h1', { class: 'win', style: { color: 'var(--accent)', textShadow: '0 0 20px var(--accent)' } }, '✨ 진엔딩 ✨'),
+    (() => { const h = el('h1', { class: 'win', style: { color: 'var(--accent)', textShadow: '0 0 20px var(--accent)' } }); h.innerHTML = `${ic('sparkle')} 진엔딩 ${ic('sparkle')}`; return h; })(),
     el(
       'div',
       { style: { color: 'var(--accent)', fontSize: '15px', maxWidth: '500px', textAlign: 'center', lineHeight: '1.8' } },
       '차원의 지배자를 쓰러뜨렸다. 모든 균열이 닫히고, 세상은 평화를 되찾았다. 진정한 영웅으로서 그대의 이름이 영원히 기록될 것이다.',
     ),
     ...(didUnlock && newMax > 0
-      ? [el('div', { style: { color: 'var(--good)', marginTop: '12px' } }, `🔓 등반 A${newMax} 해금!`)]
+      ? [(() => { const d = el('div', { style: { color: 'var(--good)', marginTop: '12px' } }); d.innerHTML = `${ic('unlock')} 등반 A${newMax} 해금!`; return d; })()]
       : []),
     ...(run ? [renderRunSummary(run)] : []),
     ...(runAscension > 0
@@ -269,7 +265,7 @@ export function renderTrueWin(): HTMLElement {
     el('button', {
       style: { marginTop: '20px', background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),
-    }, '♾️ 무한 던전 도전'),
+    }, '무한 던전 도전'),
     el('button', { style: { marginTop: '8px' }, onClick: () => endRun() }, '제목 화면으로'),
   );
 }
@@ -321,11 +317,11 @@ export function renderLose(): HTMLElement {
       'div',
       { class: 'lose-summary' },
       (() => { const s = el('div', { class: 'lose-stat', style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } }); s.appendChild(artEl(CHARACTER_SVG[run.characterClass], 18)); s.appendChild(document.createTextNode(CHAR_NAMES[run.characterClass] ?? run.characterClass)); return s; })(),
-      el('div', { class: 'lose-stat' }, `💀 ${run.player.maxHp} max HP`),
-      el('div', { class: 'lose-stat' }, `🃏 ${run.player.deck.length}장`),
-      el('div', { class: 'lose-stat' }, `💰 ${run.player.gold}`),
-      el('div', { class: 'lose-stat' }, `💎 ${run.player.relics.length}유물`),
-      el('div', { class: 'lose-stat' }, `⚔ ${run.map.filter((n) => n.visited && (n.kind === 'combat' || n.kind === 'elite' || n.kind === 'boss')).length}전투`),
+      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('skull')} ${run.player.maxHp} max HP`; return d; })(),
+      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('card')} ${run.player.deck.length}장`; return d; })(),
+      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('gold')} ${run.player.gold}`; return d; })(),
+      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('gem')} ${run.player.relics.length}유물`; return d; })(),
+      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('sword')} ${run.map.filter((n) => n.visited && (n.kind === 'combat' || n.kind === 'elite' || n.kind === 'boss')).length}전투`; return d; })(),
       run.ascension > 0 ? el('div', { class: 'lose-stat' }, `A${run.ascension}`) : el('div'),
     ),
     renderRunSummary(run),

@@ -6,6 +6,7 @@ import { CARD_DEFS } from '../content/cards';
 import { RELIC_LIST } from '../content/relics';
 import { isCurseLike } from './deck-overlay';
 import { FRAMES, getCardFrame, setCardFrame } from '../card-frame';
+import { ic } from './art';
 
 let pendingSeed = 0;
 let pendingAscension = 0;
@@ -50,9 +51,10 @@ export function renderTitle(): HTMLElement {
               background: 'rgba(0,0,0,0.2)',
             },
           },
-          `🔓 컨텐츠 ${pct}% 해제 · 카드 ${prog.cards.unlocked}/${prog.cards.total} · 유물 ${prog.relics.unlocked}/${prog.relics.total}`,
+          '',
         ),
       );
+      wrapper.lastElementChild!.innerHTML = `${ic('unlock')} 컨텐츠 ${pct}% 해제 · 카드 ${prog.cards.unlocked}/${prog.cards.total} · 유물 ${prog.relics.unlocked}/${prog.relics.total}`;
     }
 
     if (unlockedMax > 0) {
@@ -104,7 +106,7 @@ export function renderTitle(): HTMLElement {
               }
             },
           },
-          '🗺  이어하기',
+          '이어하기',
         ),
       );
     }
@@ -129,14 +131,17 @@ export function renderTitle(): HTMLElement {
       ),
     );
 
-    const menuBtn = (label: string, screen: string) =>
-      el('button', {
+    const menuBtn = (label: string, screen: string) => {
+      const b = el('button', {
         class: 'hb-item',
         onClick: () => setScreen(screen as any),
-      }, label);
+      });
+      b.innerHTML = label;
+      return b;
+    };
 
-    const accentBtn = (label: string, screen: string) =>
-      el('button', {
+    const accentBtn = (label: string, screen: string) => {
+      const b = el('button', {
         style: {
           background: 'transparent',
           color: 'var(--accent)',
@@ -144,7 +149,10 @@ export function renderTitle(): HTMLElement {
           fontSize: '13px', padding: '8px 14px',
         },
         onClick: () => setScreen(screen as any),
-      }, label);
+      });
+      b.innerHTML = label;
+      return b;
+    };
 
     // Hamburger menu
     const hbWrap = el('div', { class: 'hb-wrap' });
@@ -155,19 +163,19 @@ export function renderTitle(): HTMLElement {
     wrapper.addEventListener('click', () => hbWrap.classList.remove('open'));
     hbWrap.appendChild(hbBtn);
     const hbPanel = el('div', { class: 'hb-panel' });
-    hbPanel.appendChild(menuBtn('❓ 도움말', 'help'));
-    hbPanel.appendChild(menuBtn('📖 도감', 'codex'));
-    hbPanel.appendChild(menuBtn('🏅 도전과제', 'achievements'));
-    hbPanel.appendChild(menuBtn('📊 통계', 'stats'));
-    hbPanel.appendChild(menuBtn('📜 기록', 'history'));
-    hbPanel.appendChild(menuBtn('☁️ 동기화', 'sync'));
-    hbPanel.appendChild(menuBtn('⚙️ 설정', 'settings'));
+    hbPanel.appendChild(menuBtn(`${ic('question')} 도움말`, 'help'));
+    hbPanel.appendChild(menuBtn(`${ic('card')} 도감`, 'codex'));
+    hbPanel.appendChild(menuBtn(`${ic('medal')} 도전과제`, 'achievements'));
+    hbPanel.appendChild(menuBtn(`${ic('progress')} 통계`, 'stats'));
+    hbPanel.appendChild(menuBtn(`${ic('card')} 기록`, 'history'));
+    hbPanel.appendChild(menuBtn(`${ic('box')} 동기화`, 'sync'));
+    hbPanel.appendChild(menuBtn(`${ic('gear')} 설정`, 'settings'));
     hbWrap.appendChild(hbPanel);
     wrapper.appendChild(hbWrap);
 
     const row2 = el('div', { style: { display: 'flex', gap: '8px', marginTop: '6px', justifyContent: 'center' } });
-    row2.appendChild(accentBtn('🌅 오늘의 도전', 'daily'));
-    row2.appendChild(accentBtn('🏆 리더보드', 'leaderboard'));
+    row2.appendChild(accentBtn(`${ic('daily')} 오늘의 도전`, 'daily'));
+    row2.appendChild(accentBtn(`${ic('trophy')} 리더보드`, 'leaderboard'));
     wrapper.appendChild(row2);
 
     // Card frame selector
@@ -191,7 +199,9 @@ export function renderTitle(): HTMLElement {
         },
         title: unlocked ? f.name : `해금: ${f.unlockLabel}`,
         onClick: () => { if (unlocked) { setCardFrame(f.id); rebuild(); } },
-      }, unlocked ? `${f.emoji} ${f.name}` : `🔒 ${f.unlockLabel || f.name}`));
+      }));
+      const frameBtn = frameRow.lastElementChild as HTMLElement;
+      frameBtn.innerHTML = unlocked ? `${f.emoji} ${f.name}` : `${ic('lock')} ${f.unlockLabel || f.name}`;
     }
     wrapper.appendChild(frameRow);
   };

@@ -1,7 +1,7 @@
 import { el } from './dom';
 import { startNewRun, setScreen } from '../state';
 import type { CharacterClass } from '../types';
-import { CHARACTER_SVG, CARD_TYPE_SVG } from './art';
+import { CHARACTER_SVG, CARD_TYPE_SVG, ic } from './art';
 
 interface CharacterInfo {
   id: CharacterClass;
@@ -163,7 +163,7 @@ const CHARACTERS: CharacterInfo[] = [
   },
 ];
 
-const CARD_TYPE_ICON: Record<string, string> = { attack: '⚔', skill: '🛡', power: '✦' };
+const CARD_TYPE_ICON: Record<string, string> = { attack: ic('sword'), skill: ic('shield'), power: ic('star') };
 const CARD_TYPE_COLOR: Record<string, string> = { attack: '#d05060', skill: '#5090d0', power: '#e0a030' };
 
 export function renderCharacterSelect(seed: number, ascension: number): HTMLElement {
@@ -242,9 +242,9 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
 
     // Stats row
     const stats = el('div', { class: 'cs-stats' });
-    stats.appendChild(makeStatBox('❤️', `${ch.hp}`, 'HP'));
-    stats.appendChild(makeStatBox('💎', ch.startRelic, '시작 유물'));
-    stats.appendChild(makeStatBox('⚡', '3', '에너지'));
+    stats.appendChild(makeStatBox(ic('heart'), `${ch.hp}`, 'HP'));
+    stats.appendChild(makeStatBox(ic('gem'), ch.startRelic, '시작 유물'));
+    stats.appendChild(makeStatBox(ic('lightning'), '3', '에너지'));
     detail.appendChild(stats);
 
     // Description
@@ -252,7 +252,9 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
 
     // Signature relic
     const sig = el('div', { class: 'cs-signature', style: { borderColor: `${ch.color}50`, background: `${ch.color}10` } });
-    sig.appendChild(el('div', { class: 'cs-sig-title', style: { color: ch.color } }, `✦ ${ch.signatureRelic}`));
+    const sigTitle = el('div', { class: 'cs-sig-title', style: { color: ch.color } });
+    sigTitle.innerHTML = `${ic('star')} ${ch.signatureRelic}`;
+    sig.appendChild(sigTitle);
     sig.appendChild(el('div', { class: 'cs-sig-desc' }, ch.signatureDesc));
     detail.appendChild(sig);
 
@@ -265,7 +267,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
       const cardIconEl = el('div', { class: 'cs-card-icon', style: { color: typeColor } });
       const csvg = CARD_TYPE_SVG[card.type];
       if (csvg) cardIconEl.innerHTML = csvg;
-      else cardIconEl.textContent = CARD_TYPE_ICON[card.type];
+      else cardIconEl.innerHTML = CARD_TYPE_ICON[card.type];
       const cardEl = el('div', { class: 'cs-card-preview', style: { borderColor: `${typeColor}60` } },
         cardIconEl,
         el('div', { class: 'cs-card-name' }, card.name),
@@ -277,7 +279,9 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     detail.appendChild(deckSection);
 
     // Difficulty note
-    detail.appendChild(el('div', { class: 'cs-diff-note' }, `💡 ${ch.diffLabel}`));
+    const diffNote = el('div', { class: 'cs-diff-note' });
+    diffNote.innerHTML = `${ic('tip')} ${ch.diffLabel}`;
+    detail.appendChild(diffNote);
 
     layout.appendChild(detail);
     wrapper.appendChild(layout);
@@ -304,8 +308,10 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
 }
 
 function makeStatBox(icon: string, value: string, label: string): HTMLElement {
+  const iconEl = el('span', { class: 'cs-stat-icon' });
+  iconEl.innerHTML = icon;
   return el('div', { class: 'cs-stat-box' },
-    el('span', { class: 'cs-stat-icon' }, icon),
+    iconEl,
     el('div', {},
       el('div', { class: 'cs-stat-value' }, value),
       el('div', { class: 'cs-stat-label' }, label),

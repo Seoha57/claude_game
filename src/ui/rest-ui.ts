@@ -6,6 +6,7 @@ import { isCurseLike } from './deck-overlay';
 import { playSfx } from '../audio';
 import type { CardInstance } from '../types';
 import { kwDesc } from './keywords';
+import { ic } from './art';
 
 type RestMode = 'choose' | 'purge' | 'smith' | 'dup';
 
@@ -42,10 +43,29 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
   const noUpgrade = !!run.dailyConfig?.disableUpgrade;
   const noRemove = !!run.dailyConfig?.disableRemove;
 
+  const smithBtn = el('button', {
+    ...(noUpgrade ? { disabled: 'true', title: '데일리 제약: 강화 봉인' } : {}),
+    style: noUpgrade ? { opacity: '0.45', cursor: 'not-allowed' } : {},
+    onClick: () => { if (!noUpgrade) goTo('smith'); },
+  });
+  if (noUpgrade) smithBtn.innerHTML = `${ic('lock')} 대장간 (강화 봉인)`;
+  else smithBtn.textContent = `대장간 (카드 강화 · 덱 ${run.player.deck.length}장)`;
+
+  const purgeBtn = el('button', {
+    ...(noRemove ? { disabled: 'true', title: '데일리 제약: 정화 봉인' } : {}),
+    style: noRemove ? { opacity: '0.45', cursor: 'not-allowed' } : {},
+    onClick: () => { if (!noRemove) goTo('purge'); },
+  });
+  if (noRemove) purgeBtn.innerHTML = `${ic('lock')} 정화 (정화 봉인)`;
+  else purgeBtn.textContent = `정화 (카드 제거 · 덱 ${run.player.deck.length}장)`;
+
+  const titleEl = el('h2', { style: { color: 'var(--accent)' } });
+  titleEl.innerHTML = `${ic('fire')} 모닥불`;
+
   return el(
     'div',
     { style: { display: 'contents' } },
-    el('h2', { style: { color: 'var(--accent)' } }, '🔥 모닥불'),
+    titleEl,
     el('div', { style: { color: 'var(--muted)' } }, '한 가지를 선택하세요'),
     el(
       'div',
@@ -56,16 +76,8 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
           setScreen('map');
         },
       }, `휴식 (HP +${healAmount})`),
-      el('button', {
-        ...(noUpgrade ? { disabled: 'true', title: '데일리 제약: 강화 봉인' } : {}),
-        style: noUpgrade ? { opacity: '0.45', cursor: 'not-allowed' } : {},
-        onClick: () => { if (!noUpgrade) goTo('smith'); },
-      }, noUpgrade ? '🔒 대장간 (강화 봉인)' : `대장간 (카드 강화 · 덱 ${run.player.deck.length}장)`),
-      el('button', {
-        ...(noRemove ? { disabled: 'true', title: '데일리 제약: 정화 봉인' } : {}),
-        style: noRemove ? { opacity: '0.45', cursor: 'not-allowed' } : {},
-        onClick: () => { if (!noRemove) goTo('purge'); },
-      }, noRemove ? '🔒 정화 (정화 봉인)' : `정화 (카드 제거 · 덱 ${run.player.deck.length}장)`),
+      smithBtn,
+      purgeBtn,
       el('button', {
         onClick: () => goTo('dup'),
       }, `복제 (카드 복제 · 덱 ${run.player.deck.length}장)`),
@@ -93,7 +105,7 @@ function buildDuplicate(onBack: () => void): HTMLElement {
   return el(
     'div',
     { style: { display: 'contents' } },
-    el('h2', { style: { color: 'var(--accent)' } }, '🔮 복제'),
+    (() => { const h = el('h2', { style: { color: 'var(--accent)' } }); h.innerHTML = `${ic('sparkle')} 복제`; return h; })(),
     el(
       'div',
       { style: { color: 'var(--muted)', marginBottom: '16px' } },
@@ -126,7 +138,7 @@ function buildPurge(onBack: () => void): HTMLElement {
   return el(
     'div',
     { style: { display: 'contents' } },
-    el('h2', { style: { color: 'var(--accent)' } }, '🔥 정화'),
+    (() => { const h = el('h2', { style: { color: 'var(--accent)' } }); h.innerHTML = `${ic('fire')} 정화`; return h; })(),
     el('div', { style: { color: 'var(--muted)', marginBottom: '16px' } },
       canRemove ? '제거할 카드 1장을 선택하세요' : '덱이 너무 작아 제거할 수 없습니다.'),
     cardRow,
@@ -146,7 +158,7 @@ function buildSmith(onBack: () => void): HTMLElement {
   return el(
     'div',
     { style: { display: 'contents' } },
-    el('h2', { style: { color: 'var(--accent)' } }, '🔨 대장간'),
+    (() => { const h = el('h2', { style: { color: 'var(--accent)' } }); h.innerHTML = `${ic('gear')} 대장간`; return h; })(),
     el(
       'div',
       { style: { color: 'var(--muted)', marginBottom: '16px' } },
@@ -189,8 +201,8 @@ function buildSmithCard(card: CardInstance): HTMLElement {
   const previewBadge = el(
     'div',
     { class: 'upgrade-preview-badge' },
-    isDouble ? '★★ 이중 강화 (탭하여 확정)' : '✦ 강화 미리보기 (탭하여 확정)',
   );
+  previewBadge.innerHTML = isDouble ? `${ic('star')}${ic('star')} 이중 강화 (탭하여 확정)` : `${ic('star')} 강화 미리보기 (탭하여 확정)`;
   previewBadge.style.display = 'none';
 
   let previewing = false;
