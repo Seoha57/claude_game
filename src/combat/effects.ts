@@ -345,8 +345,8 @@ export function playCard(
   // 효과 적용 끝난 후에야 lastPlayedType을 이 카드 타입으로 갱신
   state.flags.lastPlayedType = def.type;
 
-  // movement
-  if (def.exhaust) {
+  // movement — power cards are removed from play after use (like StS)
+  if (def.exhaust || def.type === 'power') {
     p.exhaust.push(card);
     triggerOnExhaust(state, log);
   } else {
