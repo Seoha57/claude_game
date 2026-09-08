@@ -2051,6 +2051,10 @@ button:disabled {
   filter: drop-shadow(0 0 16px rgba(212, 160, 91, 0.6));
   animation: neow-emoji-float 3s ease-in-out infinite;
 }
+.neow-emoji svg {
+  width: 72px;
+  height: 72px;
+}
 @keyframes neow-emoji-float {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-6px); }
@@ -2121,6 +2125,10 @@ button:disabled {
 .neow-card-emoji {
   font-size: 40px;
   margin-bottom: 4px;
+}
+.neow-card-emoji svg {
+  width: 48px;
+  height: 48px;
 }
 .neow-card-title {
   font-weight: bold;
