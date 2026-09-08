@@ -337,6 +337,15 @@ export function playCard(
     log(`일심 → 힘 +1`);
   }
 
+  // 탄창(사수): 공격 카드 3장마다 카드 1장 드로우
+  if (run?.player.relics.includes('gunner_magazine') && def.type === 'attack') {
+    state.flags.magazineCount = (state.flags.magazineCount ?? 0) + 1;
+    if (state.flags.magazineCount % 3 === 0) {
+      drawCards(state, 1);
+      log(`탄창 → 카드 +1`);
+    }
+  }
+
   // 효과를 적용하기 전에 lastPlayedType는 "직전 카드 타입" (이 카드 적용 전 상태) 유지.
   // 콤보 조건 (after_type)이 정확히 평가되도록 함.
   for (const e of def.effects) {
@@ -424,10 +433,6 @@ export function onAttackAfter(state: CombatState, log: (s: string) => void): voi
   const ac = state.flags.attackCount ?? 0;
   if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
     log('검혼 발동!');
-  }
-  if (run.player.relics.includes('gunner_magazine') && ac % 3 === 0) {
-    drawCards(state, 1);
-    log('탄창 → 카드 +1');
   }
   if (run.player.relics.includes('pen_nib') && ac % 10 === 0) {
     log('펜촉 → 데미지 2배!');
