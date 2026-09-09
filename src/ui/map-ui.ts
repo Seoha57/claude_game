@@ -269,13 +269,16 @@ function enterNode(n: MapNode): void {
     run.combatEnemyDefIds = enemyIds.slice();
 
     const startBattle = () => {
-      resetCombatUiState();
-      const cs = startCombat(run.player, enemyIds, run.seed + n.y * 17 + n.x * 7);
-
-      applyRelicCombatStart(run.player.relics, cs);
-
-      setCombat(cs);
-      setScreen('combat');
+      try {
+        resetCombatUiState();
+        const cs = startCombat(run.player, enemyIds, run.seed + n.y * 17 + n.x * 7);
+        applyRelicCombatStart(run.player.relics, cs);
+        setCombat(cs);
+        setScreen('combat');
+      } catch (e) {
+        console.error('startBattle failed', e);
+        setScreen('map');
+      }
     };
 
     // Show boss intro before battle

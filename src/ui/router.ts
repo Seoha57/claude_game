@@ -51,7 +51,11 @@ export function render(): void {
       view = renderMap();
       break;
     case 'combat':
-      view = getCombatOrNull() ? renderCombat() : renderTitle();
+      if (getCombatOrNull()) {
+        view = renderCombat();
+      } else {
+        view = renderMap();
+      }
       break;
     case 'reward':
       view = renderReward();

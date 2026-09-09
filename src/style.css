@@ -2604,7 +2604,8 @@ button:disabled {
   max-width: 900px;
   max-height: 420px;
   overflow-y: auto;
-  padding: 8px;
+  overflow-x: hidden;
+  padding: 16px;
 }
 
 /* ── End ── */
