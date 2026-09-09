@@ -1111,9 +1111,9 @@ button:disabled {
   -webkit-touch-callout: none;
   user-select: none;
 }
-.card.attack { border-color: #b06030; background: rgba(120,40,20,0.15); }
-.card.skill  { border-color: #6090b0; background: rgba(20,60,100,0.15); }
-.card.power  { border-color: #b06090; background: rgba(80,20,70,0.15); }
+.card.attack { border-color: #b06030; background: rgba(130,40,20,0.3); }
+.card.skill  { border-color: #6090b0; background: rgba(20,55,110,0.3); }
+.card.power  { border-color: #b06090; background: rgba(90,20,70,0.3); }
 
 /* Card type side stripe (left edge) */
 .card.attack .card-name { border-left: 3px solid #d06040; padding-left: 6px; }
