@@ -6,6 +6,7 @@ import type {
   Player,
 } from '../types';
 import { modifiedAttackDamage, modifiedBlockGain, applyStatus, getStatus, STATUS_INFO } from './statuses';
+import { fireDrones } from './combat';
 import { getEffectiveDef } from '../content/cards';
 import { ENEMY_DEFS } from '../content/enemies';
 import { getRunOrNull } from '../state';
@@ -207,6 +208,14 @@ export function applyEffect(
       const amount = effect.amount * count;
       if (amount <= 0) return;
       applyEffect(state, { kind: 'damage', amount }, source, targetEnemy, log);
+      return;
+    }
+    case 'fire_all_drones': {
+      const times = effect.times ?? 1;
+      for (let i = 0; i < times; i++) {
+        log('일제 발사!');
+        fireDrones(state);
+      }
       return;
     }
   }

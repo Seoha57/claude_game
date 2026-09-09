@@ -152,6 +152,20 @@ export const STATUS_INFO: Record<StatusKey, StatusInfo> = {
     decay: false,
     buff: true,
   },
+  drone_recon: {
+    key: 'drone_recon',
+    name: '정찰 드론',
+    description: '매턴 N장 드로우',
+    decay: false,
+    buff: true,
+  },
+  drone_shield: {
+    key: 'drone_shield',
+    name: '보호 드론',
+    description: '2턴마다 방어도 +N',
+    decay: false,
+    buff: true,
+  },
 };
 
 export function applyStatus(c: Combatant, key: StatusKey, amount: number): void {
@@ -210,6 +224,8 @@ export function getStatusValueLabel(key: StatusKey, value: number): string {
     case 'drone_aoe':
     case 'drone_ice':
     case 'drone_burn':
+    case 'drone_recon':
+    case 'drone_shield':
       return String(value);
     default:
       // strength / dexterity / thorns / metallicize / ritual / on_exhaust_* 등
@@ -264,6 +280,10 @@ export function getStatusTooltip(key: StatusKey, value: number): string {
       return `${name}: 2턴마다 랜덤 적에게 빙결 +${value}`;
     case 'drone_burn':
       return `${name}: 매턴 랜덤 적에게 화상 +${value}`;
+    case 'drone_recon':
+      return `${name}: 매턴 ${value}장 드로우`;
+    case 'drone_shield':
+      return `${name}: 2턴마다 방어도 +${value}`;
     default:
       return `${name}: ${info.description}`;
   }

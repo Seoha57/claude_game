@@ -146,7 +146,7 @@ export function beginPlayerTurn(state: CombatState): void {
   if (run?.player.relics.includes('eternal_hourglass')) drawCards(state, 2);
 }
 
-function fireDrones(state: CombatState): void {
+export function fireDrones(state: CombatState): void {
   const p = state.player;
   const str = getStatus(p.statuses, 'strength');
   const alive = () => state.enemies.filter((e) => e.hp > 0);
@@ -206,6 +206,18 @@ function fireDrones(state: CombatState): void {
       applyStatus(t, 'burn', droneBurn);
       state.log.push(`화염 드론 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 화상 +${droneBurn}`);
     }
+  }
+
+  const droneRecon = getStatus(p.statuses, 'drone_recon');
+  if (droneRecon > 0) {
+    drawCards(state, droneRecon);
+    state.log.push(`정찰 드론 → ${droneRecon}장 드로우`);
+  }
+
+  const droneShield = getStatus(p.statuses, 'drone_shield');
+  if (droneShield > 0 && state.turn % 2 === 0) {
+    p.block += droneShield;
+    state.log.push(`보호 드론 → 방어도 +${droneShield}`);
   }
 }
 

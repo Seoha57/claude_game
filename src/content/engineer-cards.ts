@@ -103,18 +103,15 @@ export const ENGINEER_CARD_DEFS: Record<string, CardDef> = {
       { kind: 'apply_enemy', status: 'freeze', amount: 1 },
     ],
   },
-  n_spark: {
-    id: 'n_spark',
-    name: '스파크',
-    type: 'attack',
+  n_recon_drone: {
+    id: 'n_recon_drone',
+    name: '정찰 드론',
+    type: 'power',
     rarity: 'common',
     cost: 1,
-    target: 'enemy',
-    description: '7 데미지. 1장 드로우.',
-    effects: [
-      { kind: 'damage', amount: 7 },
-      { kind: 'draw', amount: 1 },
-    ],
+    target: 'self',
+    description: '드론 배치: 매턴 1장 드로우.',
+    effects: [{ kind: 'apply_self', status: 'drone_recon', amount: 1 }],
   },
   n_plating: {
     id: 'n_plating',
@@ -231,15 +228,15 @@ export const ENGINEER_CARD_DEFS: Record<string, CardDef> = {
     description: '턴 종료 시 방어도 +3.',
     effects: [{ kind: 'apply_self', status: 'metallicize', amount: 3 }],
   },
-  n_power_surge: {
-    id: 'n_power_surge',
-    name: '동력 증폭',
+  n_evolve_drone: {
+    id: 'n_evolve_drone',
+    name: '진화형 드론',
     type: 'power',
     rarity: 'uncommon',
     cost: 1,
     target: 'self',
-    description: '힘 +2.',
-    effects: [{ kind: 'apply_self', status: 'strength', amount: 2 }],
+    description: '드론 배치: 매턴 힘 +1. (드론 데미지 강화)',
+    effects: [{ kind: 'apply_self', status: 'ritual', amount: 1 }],
   },
   n_chain_bomb: {
     id: 'n_chain_bomb',
@@ -251,6 +248,16 @@ export const ENGINEER_CARD_DEFS: Record<string, CardDef> = {
     description: '8 데미지. 사용할 때마다 영구 데미지 +2.',
     effects: [{ kind: 'damage', amount: 8 }],
     scaling: { kind: 'on_play', amount: 2 },
+  },
+  n_salvo: {
+    id: 'n_salvo',
+    name: '일제 발사',
+    type: 'skill',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'self',
+    description: '배치된 모든 드론 즉시 1회 발사.',
+    effects: [{ kind: 'fire_all_drones' }],
   },
 
   // ── Rare ──
@@ -342,12 +349,12 @@ export const ENGINEER_CARD_DEFS: Record<string, CardDef> = {
   },
 
   // ── 풀 확장 (공학자) ──────────────────────────────────────
-  n_bolt: {
-    id: 'n_bolt',
-    name: '볼트',
-    type: 'attack', rarity: 'common', cost: 0, target: 'enemy',
-    description: '4 데미지.',
-    effects: [{ kind: 'damage', amount: 4 }],
+  n_shield_drone: {
+    id: 'n_shield_drone',
+    name: '보호 드론',
+    type: 'power', rarity: 'common', cost: 1, target: 'self',
+    description: '드론 배치: 2턴마다 방어도 +6.',
+    effects: [{ kind: 'apply_self', status: 'drone_shield', amount: 6 }],
   },
   n_combo_strike: {
     id: 'n_combo_strike',
@@ -407,7 +414,7 @@ const ENGINEER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   n_repair:         { name: '수리 도구+',       description: '방어도 +11. 1장 드로우.',                effects: [{ kind: 'block', amount: 11 }, { kind: 'draw', amount: 1 }] },
   n_mag_field:      { name: '자기장 방벽+',     description: '방어도 +9. 무작위 카드 1장 소멸.',       effects: [{ kind: 'block', amount: 9 }, { kind: 'exhaust_random_hand' }] },
   n_emp:            { name: '전자기 충격+',     description: '14 데미지. 빙결 +1.',                    effects: [{ kind: 'damage', amount: 14 }, { kind: 'apply_enemy', status: 'freeze', amount: 1 }] },
-  n_spark:          { name: '스파크+',          description: '10 데미지. 2장 드로우.',                 effects: [{ kind: 'damage', amount: 10 }, { kind: 'draw', amount: 2 }] },
+  n_recon_drone:    { name: '정찰 드론+',       description: '드론 배치: 매턴 2장 드로우.',             effects: [{ kind: 'apply_self', status: 'drone_recon', amount: 2 }] },
   n_plating:        { name: '장갑 도금+',       description: '7 데미지. 방어도 +7.',                   effects: [{ kind: 'damage', amount: 7 }, { kind: 'block', amount: 7 }] },
   n_beam:           { name: '집속 빔+',         description: '모든 적에게 7 데미지. 취약 +1.',         effects: [{ kind: 'damage_all', amount: 7 }, { kind: 'apply_all', status: 'vulnerable', amount: 1 }] },
   n_heavy_drone:   { name: '중형 드론+',       description: '드론 배치: 2턴마다 랜덤 적에게 16 데미지.', effects: [{ kind: 'apply_self', status: 'drone_heavy', amount: 16 }] },
@@ -418,8 +425,9 @@ const ENGINEER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   n_acid:           { name: '산성탄+',          description: '7 데미지. 중독 +7.',                     effects: [{ kind: 'damage', amount: 7 }, { kind: 'apply_enemy', status: 'poison', amount: 7 }] },
   n_auto_repair:    { name: '자동 수리+',       description: '재생 +8.',                               effects: [{ kind: 'apply_self', status: 'regen', amount: 8 }] },
   n_reinforce:      { name: '강화 코팅+',       description: '턴 종료 시 방어도 +4.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
-  n_power_surge:    { name: '동력 증폭+',       description: '힘 +3.',                                 effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }] },
+  n_evolve_drone:   { name: '진화형 드론+',     description: '드론 배치: 매턴 힘 +2. (드론 데미지 강화)', effects: [{ kind: 'apply_self', status: 'ritual', amount: 2 }] },
   n_chain_bomb:     { name: '연쇄 폭탄+',       description: '10 데미지. 사용할 때마다 영구 데미지 +3.', effects: [{ kind: 'damage', amount: 10 }], scaling: { kind: 'on_play', amount: 3 } },
+  n_salvo:          { name: '일제 발사+',       description: '배치된 모든 드론 즉시 2회 발사.',         effects: [{ kind: 'fire_all_drones', times: 2 }] },
   n_siege_drone:   { name: '공성 드론+',       description: '드론 배치: 3턴마다 모든 적에게 14 데미지.', effects: [{ kind: 'apply_self', status: 'drone_aoe', amount: 14 }] },
   n_tesla:          { name: '테슬라 코일+',     description: '42 데미지. 취약 +3.',                    effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   n_meltdown:       { name: '노심 용해+',       description: 'HP -3. 24 데미지.',                      effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
@@ -432,7 +440,7 @@ const ENGINEER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   n_drone_fury:    { name: '총력 가동+',       description: '데미지 = 4 × 이번 전투 누적 공격 수.',
                       effects: [{ kind: 'damage_per_attack', amount: 4 }] },
   // 풀 확장
-  n_bolt:           { name: '볼트+',            description: '6 데미지.',                              effects: [{ kind: 'damage', amount: 6 }] },
+  n_shield_drone:   { name: '보호 드론+',       description: '드론 배치: 2턴마다 방어도 +9.',           effects: [{ kind: 'apply_self', status: 'drone_shield', amount: 9 }] },
   n_combo_strike:   { name: '연계 타격+',       description: '7 데미지 2회. 직전이 공격이면 +7 데미지.',
                       effects: [{ kind: 'damage', amount: 7, times: 2 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 7 }] }] },
   n_counter:        { name: '대응 사격+',       description: '11 데미지. 가시 +5.',                    effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },

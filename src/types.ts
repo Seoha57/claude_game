@@ -23,7 +23,9 @@ export type StatusKey =
   | 'drone_heavy'
   | 'drone_aoe'
   | 'drone_ice'
-  | 'drone_burn';
+  | 'drone_burn'
+  | 'drone_recon'
+  | 'drone_shield';
 
 export type EffectCondition =
   | { kind: 'nth_or_more'; n: number }           // 이번 턴 N번째 이상의 카드일 때 (cardsPlayedThisTurn >= n)
@@ -48,7 +50,8 @@ export type Effect =
   | { kind: 'conditional'; condition: EffectCondition; then: Effect[] }
   // 누적형 데미지: amount × 카운터
   | { kind: 'damage_per_attack'; amount: number }          // 이번 전투 누적 공격 수
-  | { kind: 'damage_per_card_this_turn'; amount: number };  // 이번 턴 사용 카드 수
+  | { kind: 'damage_per_card_this_turn'; amount: number }  // 이번 턴 사용 카드 수
+  | { kind: 'fire_all_drones'; times?: number };            // 배치된 드론 즉시 발사
 
 export interface CardDef {
   id: string;
