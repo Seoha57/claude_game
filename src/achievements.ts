@@ -22,7 +22,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
 
   // ── Character ──
   { id: 'sword_clear',  title: '검사 클리어',    description: '검사로 일반 엔딩 달성.',    emoji: '⚔️', category: 'character' },
-  { id: 'gun_clear',    title: '사수 클리어',    description: '사수로 일반 엔딩 달성.',    emoji: '🔫', category: 'character' },
+  { id: 'gun_clear',    title: '총잡이 클리어',    description: '총잡이로 일반 엔딩 달성.',    emoji: '🔫', category: 'character' },
   { id: 'fight_clear',  title: '격투가 클리어',  description: '격투가로 일반 엔딩 달성.',  emoji: '🥊', category: 'character' },
   { id: 'mage_clear',   title: '마법사 클리어',  description: '마법사로 일반 엔딩 달성.',  emoji: '🔮', category: 'character' },
   { id: 'priest_clear', title: '성직자 클리어',  description: '성직자로 일반 엔딩 달성.',  emoji: '⛪', category: 'character' },

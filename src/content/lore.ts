@@ -91,7 +91,7 @@ export const CARD_FLAVOR: Record<string, string> = {
   awakening: '잠들었던 힘이 깨어난다.',
   demon_one_slash: '한 칼에 귀신마저 갈라낸다.',
 
-  // ── 사수 ──
+  // ── 총잡이 ──
   g_rising_shot: '한 발. 그거면 충분하다.',
   g_reload: '재장전마저 공격이 된다.',
   g_headshot: '먼지 한 톨까지 조준한다.',

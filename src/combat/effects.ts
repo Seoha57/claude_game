@@ -345,7 +345,7 @@ export function playCard(
     if (run?.player.relics.includes('pen_nib') && ac % 10 === 0) log('펜촉 → 데미지 2배!');
   }
 
-  // 탄창(사수): 공격 카드 3장마다 카드 1장 드로우 (attackCount 공용)
+  // 탄창(총잡이): 공격 카드 3장마다 카드 1장 드로우 (attackCount 공용)
   if (run?.player.relics.includes('gunner_magazine') && def.type === 'attack') {
     if (state.flags.attackCount! % 3 === 0) {
       drawCards(state, 1);
@@ -420,7 +420,7 @@ export function modifyAttackAmount(state: CombatState, base: number): number {
   if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
     amount += 6;
   }
-  // 탄창(사수): 3번째 공격마다 +5 데미지
+  // 탄창(총잡이): 3번째 공격마다 +5 데미지
   if (run.player.relics.includes('gunner_magazine') && ac % 3 === 0) {
     amount += 5;
   }

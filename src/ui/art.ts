@@ -1784,7 +1784,7 @@ export const ENEMY_SVG: Record<string, string> = {
 
 export const CHAR_NAMES: Record<string, string> = {
   swordmaster: '검사',
-  gunner: '사수',
+  gunner: '총잡이',
   fighter: '격투가',
   magician: '마법사',
   priest: '성직자',
@@ -4405,7 +4405,7 @@ export const ACHIEVEMENT_SVG: Record<string, string> = {
     rc(42, 52, 8, 4, '#6B4914')
   ),
 
-  // 🔫 사수 클리어 — pistol/gun
+  // 🔫 총잡이 클리어 — pistol/gun
   gun_clear: C(
     rc(10, 24, 34, 10, '#555555') +
     rc(8, 22, 6, 14, '#666666') +

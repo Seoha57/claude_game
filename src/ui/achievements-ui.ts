@@ -8,7 +8,7 @@ import { CHARACTER_SVG, ACHIEVEMENT_SVG, TITLE_SVG, artEl, ic } from './art';
 
 const CHAR_LABEL: Record<CharacterClass, string> = {
   swordmaster: '검사',
-  gunner: '사수',
+  gunner: '총잡이',
   fighter: '격투가',
   magician: '마법사',
   priest: '성직자',

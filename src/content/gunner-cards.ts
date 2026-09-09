@@ -327,7 +327,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     exhaust: true,
   },
 
-  // ── 사수 콤보 시너지 ─────────────────────────────────────
+  // ── 총잡이 콤보 시너지 ─────────────────────────────────────
   g_rapid_fire: {
     id: 'g_rapid_fire',
     name: '연사',
@@ -365,7 +365,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_per_attack', amount: 3 }],
   },
 
-  // ── 풀 확장 (사수) ────────────────────────────────────────
+  // ── 풀 확장 (총잡이) ────────────────────────────────────────
   g_smoke_grenade: {
     id: 'g_smoke_grenade',
     name: '연막탄',

@@ -12,7 +12,7 @@ import { CHARACTER_SVG, artEl, ic } from './art';
 
 const CHAR_INFO: Record<CharacterClass, { name: string }> = {
   swordmaster: { name: '검사' },
-  gunner:      { name: '사수' },
+  gunner:      { name: '총잡이' },
   fighter:     { name: '격투가' },
   magician:    { name: '마법사' },
   priest:      { name: '성직자' },

@@ -43,7 +43,7 @@ const CHARACTERS: CharacterInfo[] = [
   },
   {
     id: 'gunner',
-    name: '사수',
+    name: '총잡이',
     subname: '저격·포격·기계·화약·돌격',
     hp: 70,
     startRelic: '구슬 주머니',

@@ -80,7 +80,7 @@ export function renderCodex(): HTMLElement {
     const filters: { key: CardFilter; label: string }[] = [
       { key: 'all', label: '전체' },
       { key: 'swordmaster', label: '검사' },
-      { key: 'gunner', label: '사수' },
+      { key: 'gunner', label: '총잡이' },
       { key: 'fighter', label: '격투가' },
       { key: 'magician', label: '마법사' },
       { key: 'priest', label: '성직자' },
