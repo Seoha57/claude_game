@@ -205,7 +205,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'uncommon',
     cost: 1,
     target: 'self',
-    description: '방어도 +10. (이번 턴 한정)',
+    description: '방어도 +10.',
     effects: [{ kind: 'block', amount: 10 }],
     ethereal: true,
   },

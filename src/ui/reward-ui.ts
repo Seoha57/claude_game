@@ -97,6 +97,7 @@ function ensureReward(): RewardChoiceUI {
     : cc === 'priest' ? PRIEST_COMMON_CARDS
     : cc === 'thief' ? THIEF_COMMON_CARDS
     : cc === 'summoner' ? SUMMONER_COMMON_CARDS
+    : cc === 'engineer' ? ENGINEER_COMMON_CARDS
     : COMMON_CARDS,
     ignoreLocks,
   );
@@ -107,6 +108,7 @@ function ensureReward(): RewardChoiceUI {
     : cc === 'priest' ? PRIEST_UNCOMMON_CARDS
     : cc === 'thief' ? THIEF_UNCOMMON_CARDS
     : cc === 'summoner' ? SUMMONER_UNCOMMON_CARDS
+    : cc === 'engineer' ? ENGINEER_UNCOMMON_CARDS
     : UNCOMMON_CARDS,
     ignoreLocks,
   );
@@ -117,6 +119,7 @@ function ensureReward(): RewardChoiceUI {
     : cc === 'priest' ? PRIEST_RARE_CARDS
     : cc === 'thief' ? THIEF_RARE_CARDS
     : cc === 'summoner' ? SUMMONER_RARE_CARDS
+    : cc === 'engineer' ? ENGINEER_RARE_CARDS
     : RARE_CARDS,
     ignoreLocks,
   );

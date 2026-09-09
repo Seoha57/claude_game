@@ -115,14 +115,14 @@ export function setScreen(s: Screen): void {
   if ((s === 'map' || s === 'endless_wave_clear') && runState) saveRun();
   // Stats — record run outcomes once on entry to terminal screens
   if (runState) {
-    if (s === 'win') {
-      // Snapshot wins BEFORE recording so unlock toast can compare
+    if (s === 'win' || s === 'true_ending_choice') {
+      // true_ending_choice = 챕터 3 보스 클리어 후 진엔딩 도전 진입 → 일반 win 먼저 기록
       const prev = snapshotWins();
       recordWin(runState.characterClass, runState.ascension);
       checkWin(runState.characterClass, runState.ascension);
       maybeRecordDaily(runState, 'won');
       maybeShowUnlockToast(prev);
-      recordHistory(runState, 'won');
+      if (s === 'win') recordHistory(runState, 'won');
     } else if (s === 'true_win') {
       const prev = snapshotWins();
       recordTrueWin(runState.characterClass, runState.ascension);
