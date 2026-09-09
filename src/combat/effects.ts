@@ -245,7 +245,7 @@ function statusName(key: string): string {
 
 // 적에게 상태이상 적용. 보스는 빙결 저항:
 // 1) 최대 1턴만 빙결  2) 해제 후 2턴간 면역
-function applyEnemyStatus(e: Enemy, status: any, amount: number, log: (s: string) => void): void {
+export function applyEnemyStatus(e: Enemy, status: any, amount: number, log: (s: string) => void): void {
   const def = ENEMY_DEFS[e.defId];
   if (status === 'freeze' && def?.isBoss && amount > 0) {
     if ((e.freezeImmuneTurns ?? 0) > 0) {

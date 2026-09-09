@@ -1,6 +1,6 @@
 import type { CombatState, Enemy, Player } from '../types';
 import { ENEMY_DEFS } from '../content/enemies';
-import { drawCards, shuffle, maybeTriggerPhase } from './effects';
+import { drawCards, shuffle, maybeTriggerPhase, applyEnemyStatus } from './effects';
 import { applyStatus, getStatus } from './statuses';
 import { makeRng, randInt, uid } from '../rng';
 import { getModifiers } from '../ascension';
@@ -194,8 +194,8 @@ export function fireDrones(state: CombatState): void {
   if (droneIce > 0 && state.turn % 2 === 0) {
     const t = pick();
     if (t) {
-      applyStatus(t, 'freeze', droneIce);
-      state.log.push(`냉각 드론 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 빙결 +${droneIce}`);
+      const log = (s: string) => state.log.push(s);
+      applyEnemyStatus(t, 'freeze', droneIce, log);
     }
   }
 
