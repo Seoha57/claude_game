@@ -5,12 +5,14 @@ import { MAGICIAN_CARD_DEFS, magicianGetEffectiveDef, canUpgradeMagician } from 
 import { PRIEST_CARD_DEFS, priestGetEffectiveDef, canUpgradePriest } from './priest-cards';
 import { THIEF_CARD_DEFS, thiefGetEffectiveDef, canUpgradeThief } from './thief-cards';
 import { SUMMONER_CARD_DEFS, summonerGetEffectiveDef, canUpgradeSummoner } from './summoner-cards';
+import { ENGINEER_CARD_DEFS, engineerGetEffectiveDef, canUpgradeEngineer } from './engineer-cards';
 export { GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS } from './gunner-cards';
 export { FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS } from './fighter-cards';
 export { MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS } from './magician-cards';
 export { PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS } from './priest-cards';
 export { THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS } from './thief-cards';
 export { SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS } from './summoner-cards';
+export { ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS } from './engineer-cards';
 
 export const CARD_DEFS: Record<string, CardDef> = {
   // ── Curse ──
@@ -497,10 +499,10 @@ export const CARD_DEFS: Record<string, CardDef> = {
 };
 
 // Merge all character cards into CARD_DEFS so getEffectiveDef works universally
-Object.assign(CARD_DEFS, GUNNER_CARD_DEFS, FIGHTER_CARD_DEFS, MAGICIAN_CARD_DEFS, PRIEST_CARD_DEFS, THIEF_CARD_DEFS, SUMMONER_CARD_DEFS);
+Object.assign(CARD_DEFS, GUNNER_CARD_DEFS, FIGHTER_CARD_DEFS, MAGICIAN_CARD_DEFS, PRIEST_CARD_DEFS, THIEF_CARD_DEFS, SUMMONER_CARD_DEFS, ENGINEER_CARD_DEFS);
 
 export const CARD_LIST = Object.values(CARD_DEFS).filter(
-  (c) => !c.id.startsWith('g_') && !c.id.startsWith('f_') && !c.id.startsWith('m_') && !c.id.startsWith('p_') && !c.id.startsWith('t_') && !c.id.startsWith('s_'),
+  (c) => !c.id.startsWith('g_') && !c.id.startsWith('f_') && !c.id.startsWith('m_') && !c.id.startsWith('p_') && !c.id.startsWith('t_') && !c.id.startsWith('s_') && !c.id.startsWith('n_'),
 );
 export const COMMON_CARDS   = CARD_LIST.filter((c) => c.rarity === 'common');
 export const UNCOMMON_CARDS = CARD_LIST.filter((c) => c.rarity === 'uncommon');
@@ -568,6 +570,8 @@ export function getEffectiveDef(card: CardInstance): CardDef {
     def = thiefGetEffectiveDef(card);
   } else if (card.defId.startsWith('s_')) {
     def = summonerGetEffectiveDef(card);
+  } else if (card.defId.startsWith('n_')) {
+    def = engineerGetEffectiveDef(card);
   } else {
     const base = CARD_DEFS[card.defId];
     if (!card.upgraded) {
@@ -657,5 +661,6 @@ export function canUpgrade(card: CardInstance): boolean {
   if (card.defId.startsWith('p_')) return canUpgradePriest(card);
   if (card.defId.startsWith('t_')) return canUpgradeThief(card);
   if (card.defId.startsWith('s_')) return canUpgradeSummoner(card);
+  if (card.defId.startsWith('n_')) return canUpgradeEngineer(card);
   return (card.upgraded ?? 0) < 2 && card.defId in UPGRADE_MAP;
 }

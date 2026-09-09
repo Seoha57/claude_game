@@ -18,6 +18,7 @@ const CHAR_INFO: Record<CharacterClass, { name: string }> = {
   priest:      { name: '성직자' },
   thief:       { name: '도적' },
   summoner:    { name: '정령술사' },
+  engineer:    { name: '공학자' },
 };
 
 export function renderDaily(): HTMLElement {

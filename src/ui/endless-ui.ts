@@ -459,6 +459,7 @@ const CLASS_LABEL: Record<string, string> = {
   swordmaster: '검사', gunner: '총잡이', fighter: '격투가',
   magician: '마법사', priest: '성직자', thief: '도적',
   summoner: '정령술사',
+  engineer: '공학자',
 };
 
 export function renderLeaderboard(): HTMLElement {

@@ -132,6 +132,9 @@ export function beginPlayerTurn(state: CombatState): void {
     if (run.player.relics.includes('storm_banner')) p.block += 4;
   }
 
+  // ── 드론 화력 ──
+  fireDrones(state);
+
   // Start-of-turn statuses for player
   applyStartOfTurnStatuses(p, state, '플레이어');
   if (p.hp <= 0) { state.phase = 'lost'; return; }
@@ -141,6 +144,69 @@ export function beginPlayerTurn(state: CombatState): void {
   drawCards(state, drawCount);
   if (run?.player.relics.includes('hourglass')) drawCards(state, 1);
   if (run?.player.relics.includes('eternal_hourglass')) drawCards(state, 2);
+}
+
+function fireDrones(state: CombatState): void {
+  const p = state.player;
+  const str = getStatus(p.statuses, 'strength');
+  const alive = () => state.enemies.filter((e) => e.hp > 0);
+  const pick = () => { const a = alive(); return a.length > 0 ? a[Math.floor(state.rng() * a.length)] : null; };
+
+  const droneBasic = getStatus(p.statuses, 'drone_basic');
+  if (droneBasic > 0) {
+    const t = pick();
+    if (t) {
+      const dmg = droneBasic + str;
+      const absorbed = Math.min(t.block, dmg);
+      t.block -= absorbed;
+      t.hp = Math.max(0, t.hp - (dmg - absorbed));
+      state.log.push(`경량 드론 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 ${dmg} 데미지`);
+      maybeTriggerPhase(state, t);
+    }
+  }
+
+  const droneHeavy = getStatus(p.statuses, 'drone_heavy');
+  if (droneHeavy > 0 && state.turn % 2 === 0) {
+    const t = pick();
+    if (t) {
+      const dmg = droneHeavy + str;
+      const absorbed = Math.min(t.block, dmg);
+      t.block -= absorbed;
+      t.hp = Math.max(0, t.hp - (dmg - absorbed));
+      state.log.push(`중형 드론 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 ${dmg} 데미지`);
+      maybeTriggerPhase(state, t);
+    }
+  }
+
+  const droneAoe = getStatus(p.statuses, 'drone_aoe');
+  if (droneAoe > 0 && state.turn % 3 === 0) {
+    for (const e of alive()) {
+      const dmg = droneAoe + str;
+      const absorbed = Math.min(e.block, dmg);
+      e.block -= absorbed;
+      e.hp = Math.max(0, e.hp - (dmg - absorbed));
+      state.log.push(`공성 드론 → ${ENEMY_DEFS[e.defId]?.name ?? e.defId}에게 ${dmg} 데미지`);
+      maybeTriggerPhase(state, e);
+    }
+  }
+
+  const droneIce = getStatus(p.statuses, 'drone_ice');
+  if (droneIce > 0 && state.turn % 2 === 0) {
+    const t = pick();
+    if (t) {
+      applyStatus(t, 'freeze', droneIce);
+      state.log.push(`냉각 드론 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 빙결 +${droneIce}`);
+    }
+  }
+
+  const droneBurn = getStatus(p.statuses, 'drone_burn');
+  if (droneBurn > 0) {
+    const t = pick();
+    if (t) {
+      applyStatus(t, 'burn', droneBurn);
+      state.log.push(`화염 드론 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 화상 +${droneBurn}`);
+    }
+  }
 }
 
 function applyStartOfTurnStatuses(c: any, state: CombatState, name: string): void {
@@ -315,6 +381,7 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
     applyStatus(cs.player, 'dexterity', 1);
   }
   if (relics.includes('holy_chalice')) applyStatus(cs.player, 'regen', 3);
+  if (relics.includes('prototype_chip')) applyStatus(cs.player, 'drone_basic', 6);
   if (relics.includes('war_drum')) {
     for (const e of cs.enemies) { applyStatus(e, 'weak', 1); applyStatus(e, 'vulnerable', 1); }
   }

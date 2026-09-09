@@ -327,6 +327,21 @@ export function playCard(
     log(`정령 계약서 → 방어도 +3`);
   }
 
+  // 드론 코어 (공학자) — power 카드 사용 시 랜덤 적에게 4 데미지 + 방어도 +4
+  if (run?.player.relics.includes('drone_core') && def.type === 'power') {
+    const alive = state.enemies.filter((e) => e.hp > 0);
+    if (alive.length > 0) {
+      const t = alive[Math.floor(state.rng() * alive.length)];
+      const absorbed = Math.min(t.block, 4);
+      t.block -= absorbed;
+      t.hp = Math.max(0, t.hp - (4 - absorbed));
+      log(`드론 코어 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 4 데미지`);
+      maybeTriggerPhase(state, t);
+    }
+    p.block += 4;
+    log(`드론 코어 → 방어도 +4`);
+  }
+
   // Track cards played this turn for 일심
   state.flags.cardsPlayedThisTurn = (state.flags.cardsPlayedThisTurn ?? 0) + 1;
   if (run?.player.relics.includes('one_mind_belt')

@@ -111,6 +111,18 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: 'power 카드 사용 시 방어도 +3.',
     rarity: 'starter',
   },
+  drone_core: {
+    id: 'drone_core',
+    name: '드론 코어',
+    description: 'power 카드 사용 시 랜덤 적에게 4 데미지, 방어도 +4.',
+    rarity: 'starter',
+  },
+  energy_battery: {
+    id: 'energy_battery',
+    name: '에너지 배터리',
+    description: '전투 종료 시 7 회복.',
+    rarity: 'starter',
+  },
 
   // ── Common ──
   frozen_dart: {
@@ -284,6 +296,13 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '전투 시작 시 카드 1장 드로우, 방어도 +6.',
     rarity: 'elite',
     forClass: 'summoner',
+  },
+  prototype_chip: {
+    id: 'prototype_chip',
+    name: '시제품 칩',
+    description: '전투 시작 시 경량 드론 배치 (6 데미지).',
+    rarity: 'elite',
+    forClass: 'engineer',
   },
 
   // ── Boss relics ──

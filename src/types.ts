@@ -18,7 +18,12 @@ export type StatusKey =
   | 'on_exhaust_str'
   | 'on_exhaust_draw'
   | 'on_exhaust_block'
-  | 'on_exhaust_energy';
+  | 'on_exhaust_energy'
+  | 'drone_basic'
+  | 'drone_heavy'
+  | 'drone_aoe'
+  | 'drone_ice'
+  | 'drone_burn';
 
 export type EffectCondition =
   | { kind: 'nth_or_more'; n: number }           // 이번 턴 N번째 이상의 카드일 때 (cardsPlayedThisTurn >= n)
@@ -163,7 +168,7 @@ export interface MapNode {
 
 export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync' | 'daily' | 'history' | 'endless_wave_clear' | 'endless_result' | 'leaderboard' | 'settings';
 
-export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner';
+export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner' | 'engineer';
 
 export interface RewardChoice {
   cards: string[]; // card def ids

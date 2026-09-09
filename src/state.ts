@@ -239,7 +239,7 @@ export function startNewRun(
   options: { goToScreen?: Screen; daily?: { date: string; constraint: DailyConstraint } } = {},
 ): void {
   const mods = getModifiers(ascension);
-  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82, thief: 68, summoner: 62 };
+  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82, thief: 68, summoner: 62, engineer: 68 };
   let baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
   // 데일리 제약: HP 배율
   if (options.daily?.constraint.hpMult !== undefined) {
@@ -252,6 +252,7 @@ export function startNewRun(
     characterClass === 'priest' ? makePriestStarterDeck() :
     characterClass === 'thief' ? makeThiefStarterDeck() :
     characterClass === 'summoner' ? makeSummonerStarterDeck() :
+    characterClass === 'engineer' ? makeEngineerStarterDeck() :
     makeStarterDeck();
   for (let i = 0; i < mods.cursesInDeck; i++) deck.push(makeCard('wound'));
   // 데일리 제약: 시작 저주
@@ -266,6 +267,7 @@ export function startNewRun(
     priest: 'holy_chalice',
     thief: 'oddly_smooth_stone',
     summoner: 'soul_lantern',
+    engineer: 'energy_battery',
   };
   // 시그니처 유물 — 캐릭터 정체성을 강화하는 두 번째 시작 유물
   const signatureMap: Record<CharacterClass, string> = {
@@ -276,6 +278,7 @@ export function startNewRun(
     priest: 'holy_seal',
     thief: 'venom_fang',
     summoner: 'spirit_contract',
+    engineer: 'drone_core',
   };
   const startingRelic = relicMap[characterClass];
   const signatureRelic = signatureMap[characterClass];
@@ -406,6 +409,13 @@ function makeSummonerStarterDeck(): CardInstance[] {
   for (let i = 0; i < 5; i++) deck.push(makeCard('s_spirit_bolt'));
   for (let i = 0; i < 4; i++) deck.push(makeCard('s_ward'));
   deck.push(makeCard('s_summon_earth'));
+  return deck;
+}
+
+function makeEngineerStarterDeck(): CardInstance[] {
+  const deck: CardInstance[] = [];
+  for (let i = 0; i < 5; i++) deck.push(makeCard('n_wrench'));
+  for (let i = 0; i < 5; i++) deck.push(makeCard('n_shield_gen'));
   return deck;
 }
 

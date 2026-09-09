@@ -69,4 +69,9 @@ export const STATUS_ICON: Record<StatusKey, string> = {
   on_exhaust_draw: ic('card'),
   on_exhaust_block: ic('shield'),
   on_exhaust_energy: ic('lightning'),
+  drone_basic: ic('gear'),
+  drone_heavy: ic('gear'),
+  drone_aoe: ic('gear'),
+  drone_ice: ic('sparkle'),
+  drone_burn: ic('fire'),
 };

@@ -117,6 +117,41 @@ export const STATUS_INFO: Record<StatusKey, StatusInfo> = {
     decay: false,
     buff: true,
   },
+  drone_basic: {
+    key: 'drone_basic',
+    name: '경량 드론',
+    description: '매턴 랜덤 적에게 N 데미지 (힘 적용)',
+    decay: false,
+    buff: true,
+  },
+  drone_heavy: {
+    key: 'drone_heavy',
+    name: '중형 드론',
+    description: '2턴마다 랜덤 적에게 N 데미지 (힘 적용)',
+    decay: false,
+    buff: true,
+  },
+  drone_aoe: {
+    key: 'drone_aoe',
+    name: '공성 드론',
+    description: '3턴마다 모든 적에게 N 데미지 (힘 적용)',
+    decay: false,
+    buff: true,
+  },
+  drone_ice: {
+    key: 'drone_ice',
+    name: '냉각 드론',
+    description: '2턴마다 랜덤 적에게 빙결 +N',
+    decay: false,
+    buff: true,
+  },
+  drone_burn: {
+    key: 'drone_burn',
+    name: '화염 드론',
+    description: '매턴 랜덤 적에게 화상 +N',
+    decay: false,
+    buff: true,
+  },
 };
 
 export function applyStatus(c: Combatant, key: StatusKey, amount: number): void {
@@ -170,6 +205,12 @@ export function getStatusValueLabel(key: StatusKey, value: number): string {
     case 'weak':
     case 'frail':
       return `${value}턴`;
+    case 'drone_basic':
+    case 'drone_heavy':
+    case 'drone_aoe':
+    case 'drone_ice':
+    case 'drone_burn':
+      return String(value);
     default:
       // strength / dexterity / thorns / metallicize / ritual / on_exhaust_* 등
       return String(value);
@@ -213,6 +254,16 @@ export function getStatusTooltip(key: StatusKey, value: number): string {
       return `${name}: 카드 소멸 시 방어도 +${value}`;
     case 'on_exhaust_energy':
       return `${name}: 카드 소멸 시 에너지 +${value}`;
+    case 'drone_basic':
+      return `${name}: 매턴 랜덤 적에게 ${value}+힘 데미지`;
+    case 'drone_heavy':
+      return `${name}: 2턴마다 랜덤 적에게 ${value}+힘 데미지`;
+    case 'drone_aoe':
+      return `${name}: 3턴마다 모든 적에게 ${value}+힘 데미지`;
+    case 'drone_ice':
+      return `${name}: 2턴마다 랜덤 적에게 빙결 +${value}`;
+    case 'drone_burn':
+      return `${name}: 매턴 랜덤 적에게 화상 +${value}`;
     default:
       return `${name}: ${info.description}`;
   }

@@ -71,9 +71,9 @@ const CHARACTERS: CharacterInfo[] = [
     signatureDesc: '한 턴 카드 3장 사용 시 힘 +1 (턴당 1회)',
     description: '전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.',
     starterCards: [
-      { name: '질풍 발차기', type: 'attack', count: 5 },
+      { name: '속공각', type: 'attack', count: 5 },
       { name: '강철 방어', type: 'skill', count: 4 },
-      { name: '올려차기', type: 'attack', count: 1 },
+      { name: '승천각', type: 'attack', count: 1 },
     ],
     emoji: '🥊',
     difficulty: 1,
@@ -160,6 +160,25 @@ const CHARACTERS: CharacterInfo[] = [
     diffLabel: '최저 체력, 파워 카드 스케일링에 의존',
     color: '#60b0c0',
     playstyle: '소환 스케일형',
+  },
+  {
+    id: 'engineer',
+    name: '공학자',
+    subname: '드론·기계·화력·자동화',
+    hp: 68,
+    startRelic: '에너지 배터리',
+    signatureRelic: '드론 코어',
+    signatureDesc: 'power 카드 사용 시 랜덤 적 4 데미지 + 방어도 +4',
+    description: '드론을 배치해 자동 화력을 구축하는 공학자. 드론 데미지는 힘에 비례해 후반 보스전에도 강력하다.',
+    starterCards: [
+      { name: '렌치 타격', type: 'attack', count: 5 },
+      { name: '에너지 실드', type: 'skill', count: 5 },
+    ],
+    emoji: '🔧',
+    difficulty: 2,
+    diffLabel: '드론 배치 후 자동 화력, 힘 스케일링 필수',
+    color: '#c0a040',
+    playstyle: '드론 자동화형',
   },
 ];
 

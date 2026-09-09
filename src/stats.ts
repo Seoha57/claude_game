@@ -44,6 +44,7 @@ function emptyStats(): AggregateStats {
       priest: { ...EMPTY_CHAR },
       thief: { ...EMPTY_CHAR },
       summoner: { ...EMPTY_CHAR },
+      engineer: { ...EMPTY_CHAR },
     },
   };
 }
