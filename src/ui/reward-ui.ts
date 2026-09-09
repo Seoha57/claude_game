@@ -229,17 +229,20 @@ export function renderReward(): HTMLElement {
     (() => {
       const cost = REROLL_COSTS[Math.min(reward.rerollCount, REROLL_COSTS.length - 1)];
       const canAfford = run.player.gold >= cost;
-      return el('button', {
-        style: {
-          background: 'transparent',
-          color: canAfford ? 'var(--accent)' : 'var(--muted)',
-          border: `1px solid ${canAfford ? 'var(--accent)' : 'var(--border)'}`,
-          fontSize: '13px', padding: '8px 16px',
-          cursor: canAfford ? 'pointer' : 'default',
-          opacity: canAfford ? '1' : '0.5',
-        },
-        onClick: () => { if (!reward.picked && canAfford) rerollCards(); },
-      }, `🔄 카드 리롤 (${cost}G)`);
+      return el('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center' } },
+        el('button', {
+          style: {
+            background: 'transparent',
+            color: canAfford ? 'var(--accent)' : 'var(--muted)',
+            border: `1px solid ${canAfford ? 'var(--accent)' : 'var(--border)'}`,
+            fontSize: '13px', padding: '8px 16px',
+            cursor: canAfford ? 'pointer' : 'default',
+            opacity: canAfford ? '1' : '0.5',
+          },
+          onClick: () => { if (!reward.picked && canAfford) rerollCards(); },
+        }, `🔄 카드 리롤 (${cost}G)`),
+        el('span', { style: { color: 'var(--muted)', fontSize: '12px' } }, `보유: ${run.player.gold}G`),
+      );
     })(),
     el(
       'button',
