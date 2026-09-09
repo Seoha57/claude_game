@@ -268,7 +268,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
       const csvg = CARD_TYPE_SVG[card.type];
       if (csvg) cardIconEl.innerHTML = csvg;
       else cardIconEl.innerHTML = CARD_TYPE_ICON[card.type];
-      const cardEl = el('div', { class: 'cs-card-preview', style: { borderColor: `${typeColor}60` } },
+      const cardEl = el('div', { class: `cs-card-preview ${card.type}` },
         cardIconEl,
         el('div', { class: 'cs-card-name' }, card.name),
         el('div', { class: 'cs-card-count', style: { background: `${typeColor}20`, color: typeColor } }, `×${card.count}`),
