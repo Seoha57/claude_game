@@ -345,10 +345,9 @@ export function playCard(
     if (run?.player.relics.includes('pen_nib') && ac % 10 === 0) log('펜촉 → 데미지 2배!');
   }
 
-  // 탄창(사수): 공격 카드 3장마다 카드 1장 드로우
+  // 탄창(사수): 공격 카드 3장마다 카드 1장 드로우 (attackCount 공용)
   if (run?.player.relics.includes('gunner_magazine') && def.type === 'attack') {
-    state.flags.magazineCount = (state.flags.magazineCount ?? 0) + 1;
-    if (state.flags.magazineCount % 3 === 0) {
+    if (state.flags.attackCount! % 3 === 0) {
       drawCards(state, 1);
       log(`탄창 → 카드 +1`);
     }

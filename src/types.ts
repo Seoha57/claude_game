@@ -147,7 +147,6 @@ export interface CombatState {
     lastPlayedType?: CardType;        // persists in combat
     resonanceUsedThisTurn?: boolean;  // 원소 공명 턴당 1회
     fighterProcThisTurn?: boolean;    // 일심 procced once this turn
-    magazineCount?: number;           // 탄창: 공격 카드 사용 횟수 (카드 단위)
   };
 }
 

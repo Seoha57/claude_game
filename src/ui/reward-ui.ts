@@ -179,19 +179,7 @@ export function renderReward(): HTMLElement {
     );
   }
 
-  const goldBtn = el(
-    'button',
-    {
-      onClick: () => {
-        if (!reward.picked) {
-          run.player.gold += reward.gold;
-        }
-      },
-      style: { fontSize: '14px' },
-    },
-    `골드 +${reward.gold} 받기`,
-  );
-  // gold is auto-added on entry — simpler: do it here
+  // gold is auto-added on entry
   if (!(reward as any)._goldGiven) {
     run.player.gold += reward.gold;
     (reward as any)._goldGiven = true;
@@ -254,8 +242,6 @@ export function renderReward(): HTMLElement {
       },
       '건너뛰기',
     ),
-    // Hidden — keep var used
-    el('div', { style: { display: 'none' } }, goldBtn),
   );
 }
 
