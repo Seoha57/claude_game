@@ -132,6 +132,18 @@ export function beginPlayerTurn(state: CombatState): void {
     if (run.player.relics.includes('storm_banner')) p.block += 4;
   }
 
+  // ── 갬블러 주사위 ──
+  if (run?.characterClass === 'gambler') {
+    if (state.flags.fixedDice) {
+      state.flags.diceRoll = state.flags.fixedDice;
+      state.flags.fixedDice = undefined;
+      state.log.push(`🎲 주사위 고정! → ${state.flags.diceRoll}`);
+    } else {
+      state.flags.diceRoll = 1 + Math.floor(state.rng() * 3); // 1~3
+      state.log.push(`🎲 주사위 → ${state.flags.diceRoll}`);
+    }
+  }
+
   // ── 드론 화력 ──
   fireDrones(state);
 
@@ -418,6 +430,12 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
   }
   if (relics.includes('soul_crystal')) {
     drawCards(cs, 1); cs.player.block += 6;
+  }
+  if (relics.includes('gamblers_instinct')) {
+    drawCards(cs, 1); applyStatus(cs.player, 'strength', 1);
+  }
+  if (relics.includes('loaded_die')) {
+    applyStatus(cs.player, 'strength', 2); cs.player.block += 4;
   }
   // Synergy sets
   for (const syn of getActiveSynergies(relics)) {

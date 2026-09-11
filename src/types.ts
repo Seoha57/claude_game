@@ -51,7 +51,14 @@ export type Effect =
   // 누적형 데미지: amount × 카운터
   | { kind: 'damage_per_attack'; amount: number }          // 이번 전투 누적 공격 수
   | { kind: 'damage_per_card_this_turn'; amount: number }  // 이번 턴 사용 카드 수
-  | { kind: 'fire_all_drones'; times?: number };            // 배치된 드론 즉시 발사
+  | { kind: 'fire_all_drones'; times?: number }            // 배치된 드론 즉시 발사
+  // ── 갬블러 주사위 ─────────────────────────────────────────────
+  | { kind: 'damage_dice'; base: number; times?: number }   // 데미지 = base × 주사위
+  | { kind: 'damage_all_dice'; base: number }               // 전체 데미지 = base × (주사위/2)
+  | { kind: 'block_dice'; base: number }                    // 방어도 = base × 주사위
+  | { kind: 'apply_enemy_dice'; status: StatusKey; base: number } // 상태이상 = base × 주사위
+  | { kind: 'apply_self_dice'; status: StatusKey; base: number }  // 자기 버프 = base × 주사위
+  | { kind: 'fix_dice'; value: number };                    // 다음 턴 주사위 고정
 
 export interface CardDef {
   id: string;
@@ -155,6 +162,8 @@ export interface CombatState {
     lastPlayedType?: CardType;        // persists in combat
     resonanceUsedThisTurn?: boolean;  // 원소 공명 턴당 1회
     fighterProcThisTurn?: boolean;    // 일심 procced once this turn
+    diceRoll?: number;                // 갬블러: 이번 턴 주사위 결과 (1~6)
+    fixedDice?: number;               // 갬블러: 다음 턴 고정 주사위 값
   };
 }
 
@@ -171,7 +180,7 @@ export interface MapNode {
 
 export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync' | 'daily' | 'history' | 'endless_wave_clear' | 'endless_result' | 'leaderboard' | 'settings';
 
-export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner' | 'engineer';
+export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner' | 'engineer' | 'gambler';
 
 export interface RewardChoice {
   cards: string[]; // card def ids

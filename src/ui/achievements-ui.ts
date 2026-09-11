@@ -15,6 +15,7 @@ const CHAR_LABEL: Record<CharacterClass, string> = {
   thief: '도적',
   summoner: '정령술사',
   engineer: '공학자',
+  gambler: '갬블러',
 };
 
 const CATEGORY_LABEL: Record<AchievementDef['category'], string> = {

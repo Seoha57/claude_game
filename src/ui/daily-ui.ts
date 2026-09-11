@@ -19,6 +19,7 @@ const CHAR_INFO: Record<CharacterClass, { name: string }> = {
   thief:       { name: '도적' },
   summoner:    { name: '정령술사' },
   engineer:    { name: '공학자' },
+  gambler:     { name: '갬블러' },
 };
 
 export function renderDaily(): HTMLElement {

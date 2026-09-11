@@ -460,6 +460,7 @@ const CLASS_LABEL: Record<string, string> = {
   magician: '마법사', priest: '성직자', thief: '도적',
   summoner: '정령술사',
   engineer: '공학자',
+  gambler: '갬블러',
 };
 
 export function renderLeaderboard(): HTMLElement {

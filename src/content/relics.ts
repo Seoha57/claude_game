@@ -123,6 +123,18 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '전투 종료 시 7 회복.',
     rarity: 'starter',
   },
+  lucky_coin: {
+    id: 'lucky_coin',
+    name: '행운의 동전',
+    description: '전투 종료 시 6 회복.',
+    rarity: 'starter',
+  },
+  gamblers_instinct: {
+    id: 'gamblers_instinct',
+    name: '갬블러의 직감',
+    description: '전투 시작 시 1장 드로우, 힘 +1.',
+    rarity: 'starter',
+  },
 
   // ── Common ──
   frozen_dart: {
@@ -303,6 +315,13 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '전투 시작 시 경량 드론 배치 (6 데미지).',
     rarity: 'elite',
     forClass: 'engineer',
+  },
+  loaded_die: {
+    id: 'loaded_die',
+    name: '세공된 다이스',
+    description: '전투 시작 시 힘 +2, 방어도 +4.',
+    rarity: 'elite',
+    forClass: 'gambler',
   },
 
   // ── Boss relics ──

@@ -29,6 +29,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'thief_clear',  title: '도적 클리어',    description: '도적으로 일반 엔딩 달성.',  emoji: '🗡️', category: 'character' },
   { id: 'summoner_clear', title: '정령술사 클리어', description: '정령술사로 일반 엔딩 달성.', emoji: '🪬', category: 'character' },
   { id: 'engineer_clear', title: '공학자 클리어', description: '공학자로 일반 엔딩 달성.', emoji: '🔧', category: 'character' },
+  { id: 'gambler_clear', title: '갬블러 클리어', description: '갬블러로 일반 엔딩 달성.', emoji: '🎲', category: 'character' },
 
   // ── Difficulty ──
   { id: 'asc5',  title: '등반자',  description: '등반 A5 이상에서 일반 엔딩 달성.',  emoji: '⛰', category: 'difficulty' },
@@ -174,7 +175,7 @@ export function checkTrueWin(cls: CharacterClass, ascension: number): void {
   if (ALL_CLASSES.every((c) => d.perCharTrue[c])) unlockId('all_classes_true');
 }
 
-const ALL_CLASSES: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief', 'summoner', 'engineer'];
+const ALL_CLASSES: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief', 'summoner', 'engineer', 'gambler'];
 
 // 이미 기록된 perCharClear/perCharTrue를 보고 도전과제를 소급 평가한다.
 // 과거 버그(charClearId가 마법사/성직자/도적을 모두 mage_clear로 반환,
@@ -257,6 +258,7 @@ function charClearId(cls: CharacterClass): string {
     case 'thief': return 'thief_clear';
     case 'summoner': return 'summoner_clear';
     case 'engineer': return 'engineer_clear';
+    case 'gambler': return 'gambler_clear';
   }
 }
 

@@ -180,6 +180,25 @@ const CHARACTERS: CharacterInfo[] = [
     color: '#c0a040',
     playstyle: '드론 자동화형',
   },
+  {
+    id: 'gambler',
+    name: '갬블러',
+    subname: '주사위·도박·행운·배팅',
+    hp: 70,
+    startRelic: '행운의 동전',
+    signatureRelic: '갬블러의 직감',
+    signatureDesc: '전투 시작 시 1장 드로우, 힘 +1',
+    description: '운에 모든 것을 건다. 카드 효과가 날카롭지만 일정하지 않아 매 전투가 도박이다.',
+    starterCards: [
+      { name: '주사위 투척', type: 'attack', count: 5 },
+      { name: '블러프', type: 'skill', count: 5 },
+    ],
+    emoji: '🎲',
+    difficulty: 3,
+    diffLabel: '랜덤 기반 고위험/고보상, 운이 곧 전략',
+    color: '#d0a060',
+    playstyle: '랜덤 배팅형',
+  },
 ];
 
 const CARD_TYPE_ICON: Record<string, string> = { attack: ic('sword'), skill: ic('shield'), power: ic('star') };

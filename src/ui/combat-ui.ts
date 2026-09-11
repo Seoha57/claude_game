@@ -360,10 +360,18 @@ function renderMid(state: CombatState): HTMLElement {
   const run = getRunOrNull();
   const goldBadge = (() => { const d = el('span', { class: 'gold-badge' }); d.innerHTML = `${ic('gold')} ${run?.player.gold ?? 0}`; return d; })();
 
+  const diceBadge = run?.characterClass === 'gambler' && state.flags.diceRoll
+    ? el('span', {
+        class: `dice-badge ${state.flags.diceRoll >= 5 ? 'dice-high' : state.flags.diceRoll <= 1 ? 'dice-low' : ''}`,
+        title: state.flags.fixedDice ? `다음 턴 고정: ${state.flags.fixedDice}` : '이번 턴 주사위',
+      }, `🎲 ${state.flags.diceRoll}`)
+    : null;
+
   const playerStats = el(
     'div',
     { class: 'player-stats' },
     energy,
+    ...(diceBadge ? [diceBadge] : []),
     hpBar,
     blockBadge,
     goldBadge,
@@ -1431,6 +1439,9 @@ function applyVictoryRelics(run: any, _state: any): void {
   }
   if (run.player.relics.includes('energy_battery')) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 7);
+  }
+  if (run.player.relics.includes('lucky_coin')) {
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 6);
   }
   if (meatEligible) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 12);
