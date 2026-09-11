@@ -268,7 +268,14 @@ button:disabled {
   margin-left: -36px;
   margin-top: -36px;
   font-size: 36px;
-  border-color: var(--bad);
+  border-color: #c03030;
+  border-width: 3px;
+  box-shadow: 0 0 16px rgba(200, 40, 40, 0.5), inset 0 0 12px rgba(200, 40, 40, 0.15);
+  animation: boss-pulse 2.4s ease-in-out infinite;
+}
+@keyframes boss-pulse {
+  0%, 100% { box-shadow: 0 0 16px rgba(200, 40, 40, 0.5), inset 0 0 12px rgba(200, 40, 40, 0.15); }
+  50% { box-shadow: 0 0 24px rgba(200, 40, 40, 0.7), inset 0 0 16px rgba(200, 40, 40, 0.25); }
 }
 .map-node.elite {
   border-color: var(--accent-2);
