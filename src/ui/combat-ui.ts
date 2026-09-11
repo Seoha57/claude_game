@@ -645,7 +645,13 @@ function renderRelicBar(relics: string[]): HTMLElement {
   if (activeSynergies.length > 0) {
     const synRow = el('div', { class: 'synergy-row' });
     for (const s of activeSynergies) {
-      const synTag = el('span', { class: 'synergy-tag' }); synTag.innerHTML = `${ic('lightning')} ${s.name}`; synRow.appendChild(synTag);
+      const relicNames = s.relics.map((rid: string) => RELIC_DEFS[rid]?.name ?? rid).join(' + ');
+      const synTag = el('span', {
+        class: 'synergy-tag',
+        'data-tooltip': `${s.name}\n${s.description}\n\n조합: ${relicNames}`,
+      });
+      synTag.innerHTML = `${ic('lightning')} ${s.name} <span class="synergy-relics">(${relicNames})</span>`;
+      synRow.appendChild(synTag);
     }
     wrapper.appendChild(synRow);
   }

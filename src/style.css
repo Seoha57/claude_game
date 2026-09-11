@@ -156,7 +156,18 @@ button:disabled {
 .cs-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .cs-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
 .cs-stats { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-.cs-stat-box { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); flex: 1; min-width: 80px; }
+.cs-stat-box { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); flex: 1; min-width: 80px; position: relative; }
+.cs-stat-box[data-tooltip] { cursor: help; }
+.cs-stat-box[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+  background: #1a1520; color: #e8ddd2; border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px; font-size: 11px; line-height: 1.4;
+  white-space: pre-line; width: max-content; max-width: 220px;
+  pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 10;
+  margin-bottom: 4px;
+}
+.cs-stat-box[data-tooltip]:hover::after { opacity: 1; }
 .cs-stat-icon { font-size: 18px; }
 .cs-stat-value { font-size: 14px; font-weight: bold; }
 .cs-stat-label { font-size: 10px; color: var(--muted); }
@@ -785,7 +796,23 @@ button:disabled {
   border: 1px solid rgba(255, 215, 0, 0.3);
   border-radius: 3px;
   padding: 1px 5px;
+  cursor: help;
 }
+.synergy-relics {
+  font-size: 9px;
+  opacity: 0.7;
+}
+.synergy-tag[data-tooltip] { position: relative; }
+.synergy-tag[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+  background: #1a1520; color: #e8ddd2; border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 6px; padding: 6px 10px; font-size: 11px; line-height: 1.4;
+  white-space: pre-line; width: max-content; max-width: 240px;
+  pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 10;
+  margin-bottom: 4px;
+}
+.synergy-tag[data-tooltip]:hover::after { opacity: 1; }
 
 .combat-mid {
   display: flex;

@@ -2,6 +2,7 @@ import { el } from './dom';
 import { startNewRun, setScreen } from '../state';
 import type { CharacterClass } from '../types';
 import { CHARACTER_SVG, CARD_TYPE_SVG, ic } from './art';
+import { RELIC_DEFS } from '../content/relics';
 
 interface CharacterInfo {
   id: CharacterClass;
@@ -9,6 +10,7 @@ interface CharacterInfo {
   subname: string;
   hp: number;
   startRelic: string;
+  startRelicId: string;
   signatureRelic: string;
   signatureDesc: string;
   description: string;
@@ -27,6 +29,7 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '검술사 계열',
     hp: 75,
     startRelic: '불타는 피',
+    startRelicId: 'burning_blood',
     signatureRelic: '검혼',
     signatureDesc: '5번째 공격마다 +6 데미지',
     description: '전투 승리 시 HP 6 회복. 강력한 근접 검술로 적을 압도한다.',
@@ -47,6 +50,7 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '저격·포격·기계·화약·돌격',
     hp: 70,
     startRelic: '구슬 주머니',
+    startRelicId: 'bag_of_marbles',
     signatureRelic: '탄창',
     signatureDesc: '3번째 공격마다 +5 데미지, 카드 1장 드로우',
     description: '전투 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.',
@@ -67,6 +71,7 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '타격·기공·유술·격투',
     hp: 80,
     startRelic: '투혼',
+    startRelicId: 'fighting_spirit',
     signatureRelic: '일심',
     signatureDesc: '한 턴 카드 3장 사용 시 힘 +1 (턴당 1회)',
     description: '전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.',
@@ -87,6 +92,7 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '원소·소환·전투마법·연금·부여',
     hp: 65,
     startRelic: '마탑의 결정',
+    startRelicId: 'mage_orb',
     signatureRelic: '원소 공명',
     signatureDesc: '방어 카드 사용 시 1장 드로우 (턴당 1회)',
     description: '매 턴 시작 시 무작위 적에게 3 데미지. 다양한 원소 마법으로 광역 전투에 강하다.',
@@ -107,6 +113,7 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '성기사·권성·퇴마·복수',
     hp: 78,
     startRelic: '성배',
+    startRelicId: 'holy_chalice',
     signatureRelic: '신성한 인장',
     signatureDesc: '회복/재생 발동 시 방어도 +2',
     description: '전투 시작 시 재생 +3. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.',
@@ -127,6 +134,7 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '암살·강령·인법·그림자',
     hp: 68,
     startRelic: '매끈한 돌',
+    startRelicId: 'oddly_smooth_stone',
     signatureRelic: '독니',
     signatureDesc: '매 턴 첫 공격이 적에게 중독 +2',
     description: '전투 시작 시 민첩 +1. 중독과 다단히트, 그림자를 다루는 날렵한 암살자.',
@@ -147,6 +155,7 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '정령·영혼·소환·계약',
     hp: 62,
     startRelic: '영혼의 등불',
+    startRelicId: 'soul_lantern',
     signatureRelic: '정령 계약서',
     signatureDesc: 'power 카드 사용 시 방어도 +3',
     description: '정령 소환과 영혼 마법으로 전투를 지배하는 정령술사. HP가 낮지만 다양한 power 스케일링이 강하다.',
@@ -167,6 +176,7 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '드론·기계·화력·자동화',
     hp: 68,
     startRelic: '에너지 배터리',
+    startRelicId: 'energy_battery',
     signatureRelic: '드론 코어',
     signatureDesc: 'power 카드 사용 시 랜덤 적 4 데미지 + 방어도 +4',
     description: '드론을 배치해 자동 화력을 구축하는 공학자. 드론 데미지는 힘에 비례해 후반 보스전에도 강력하다.',
@@ -186,6 +196,7 @@ const CHARACTERS: CharacterInfo[] = [
     subname: '주사위·도박·행운·배팅',
     hp: 70,
     startRelic: '행운의 동전',
+    startRelicId: 'lucky_coin',
     signatureRelic: '갬블러의 직감',
     signatureDesc: '전투 시작 시 1장 드로우, 힘 +1',
     description: '운에 모든 것을 건다. 카드 효과가 날카롭지만 일정하지 않아 매 전투가 도박이다.',
@@ -281,7 +292,10 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     // Stats row
     const stats = el('div', { class: 'cs-stats' });
     stats.appendChild(makeStatBox(ic('heart'), `${ch.hp}`, 'HP'));
-    stats.appendChild(makeStatBox(ic('gem'), ch.startRelic, '시작 유물'));
+    const relicDef = RELIC_DEFS[ch.startRelicId];
+    const relicBox = makeStatBox(ic('gem'), ch.startRelic, '시작 유물');
+    if (relicDef) relicBox.setAttribute('data-tooltip', `${relicDef.name}\n${relicDef.description}`);
+    stats.appendChild(relicBox);
     stats.appendChild(makeStatBox(ic('lightning'), '3', '에너지'));
     detail.appendChild(stats);
 
