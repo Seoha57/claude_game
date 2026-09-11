@@ -2,6 +2,8 @@
 
 const C = (parts: string) =>
   `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">${parts}</svg>`;
+const Cy = (dy: number, parts: string) =>
+  `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,${dy})">${parts}</g></svg>`;
 const p = (d: string, f: string) => `<path d="${d}" fill="${f}"/>`;
 const ci = (cx: number, cy: number, r: number, f: string) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${f}"/>`;
 const rc = (x: number, y: number, w: number, h: number, f: string) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}"/>`;
@@ -1945,7 +1947,7 @@ export const MAP_NODE_SVG: Record<string, string> = {
     rc(22, 50, 20, 2, '#555555')
   ),
 
-  combat: C(
+  combat: Cy(5,
     // Left sword blade
     p('M10 10 L28 32 L24 36 L6 14Z', '#b0c0d0') +
     // Left blade highlight
@@ -1970,7 +1972,7 @@ export const MAP_NODE_SVG: Record<string, string> = {
     ci(36, 24, 1.5, '#ffcc22')
   ),
 
-  elite: C(
+  elite: Cy(10,
     // Skull dome
     p('M20 18 Q20 6 32 4 Q44 6 44 18 Q44 28 40 32 L24 32 Q20 28 20 18Z', '#e0d8cc') +
     // Skull face
@@ -1997,7 +1999,7 @@ export const MAP_NODE_SVG: Record<string, string> = {
     p('M20 16 L44 16 L44 18 L20 18Z', '#d4af37')
   ),
 
-  rest: C(
+  rest: Cy(5,
     // Log left
     p('M8 48 L28 48 L26 42 L10 42Z', '#6b4226') +
     p('M10 42 L26 42 L24 38 L12 38Z', '#7a4e2e') +
@@ -2021,7 +2023,7 @@ export const MAP_NODE_SVG: Record<string, string> = {
     p('M34 12 Q36 6 34 2', '#88888844')
   ),
 
-  reward: C(
+  reward: Cy(3,
     // Chest body
     p('M12 30 L12 50 L52 50 L52 30Z', '#8b6914') +
     // Chest lid
@@ -2046,7 +2048,7 @@ export const MAP_NODE_SVG: Record<string, string> = {
     p('M34 42 L50 42', '#7a5c10')
   ),
 
-  shop: C(
+  shop: Cy(2,
     // Shop bag body
     p('M16 24 L14 52 L50 52 L48 24Z', '#c9a96e') +
     // Bag opening
@@ -2072,49 +2074,48 @@ export const MAP_NODE_SVG: Record<string, string> = {
     ci(32, 32, 28, '#40082020') +
     ci(32, 32, 22, '#60102030') +
     // Energy rays
-    p('M32 4 L34 14 L30 14Z', '#c0304060') +
+    p('M32 6 L34 18 L30 18Z', '#c0304060') +
     p('M32 60 L34 50 L30 50Z', '#c0304060') +
     p('M4 32 L14 34 L14 30Z', '#c0304060') +
     p('M60 32 L50 34 L50 30Z', '#c0304060') +
-    p('M12 12 L18 20 L16 22Z', '#c0304040') +
-    p('M52 12 L46 20 L48 22Z', '#c0304040') +
+    p('M12 14 L18 24 L16 26Z', '#c0304040') +
+    p('M52 14 L46 24 L48 26Z', '#c0304040') +
     p('M12 52 L18 44 L16 42Z', '#c0304040') +
     p('M52 52 L46 44 L48 42Z', '#c0304040') +
+    // Horns — large, sweeping (behind skull)
+    p('M20 28 Q12 20 6 10 Q14 16 22 24Z', '#881020') +
+    p('M44 28 Q52 20 58 10 Q50 16 42 24Z', '#881020') +
+    p('M20 26 Q14 20 8 12', '#aa2030') +
+    p('M44 26 Q50 20 56 12', '#aa2030') +
     // Demon skull
-    p('M20 22 Q20 12 32 10 Q44 12 44 22 Q44 32 40 36 L24 36 Q20 32 20 22Z', '#d8d0c0') +
+    p('M20 28 Q20 18 32 16 Q44 18 44 28 Q44 38 40 42 L24 42 Q20 38 20 28Z', '#d8d0c0') +
     // Jaw
-    p('M24 36 L24 42 Q28 48 32 48 Q36 48 40 42 L40 36Z', '#c8c0b0') +
+    p('M24 42 L24 48 Q28 54 32 54 Q36 54 40 48 L40 42Z', '#c8c0b0') +
     // Eye sockets
-    p('M24 22 Q27 19 30 23 Q28 28 24 26Z', '#0a0008') +
-    p('M40 22 Q37 19 34 23 Q36 28 40 26Z', '#0a0008') +
+    p('M24 28 Q27 25 30 29 Q28 34 24 32Z', '#0a0008') +
+    p('M40 28 Q37 25 34 29 Q36 34 40 32Z', '#0a0008') +
     // Burning eye glow
-    ci(27, 23, 2, '#ff2020') +
-    ci(37, 23, 2, '#ff2020') +
-    ci(27, 23, 1, '#ff8060') +
-    ci(37, 23, 1, '#ff8060') +
+    ci(27, 29, 2, '#ff2020') +
+    ci(37, 29, 2, '#ff2020') +
+    ci(27, 29, 1, '#ff8060') +
+    ci(37, 29, 1, '#ff8060') +
     // Nose
-    p('M30 32 L32 30 L34 32Z', '#b8b0a4') +
+    p('M30 38 L32 36 L34 38Z', '#b8b0a4') +
     // Fangs
-    p('M27 38 L29 44', '#f0e8dc') +
-    p('M37 38 L35 44', '#f0e8dc') +
+    p('M27 44 L29 50', '#f0e8dc') +
+    p('M37 44 L35 50', '#f0e8dc') +
     // Teeth
-    rc(30, 38, 2, 3, '#f0e8dc') +
-    rc(33, 38, 2, 3, '#f0e8dc') +
-    // Horns — large, sweeping
-    p('M20 22 Q12 14 6 4 Q14 10 22 18Z', '#881020') +
-    p('M44 22 Q52 14 58 4 Q50 10 42 18Z', '#881020') +
-    // Horn highlights
-    p('M20 20 Q14 14 8 6', '#aa2030') +
-    p('M44 20 Q50 14 56 6', '#aa2030') +
+    rc(30, 44, 2, 3, '#f0e8dc') +
+    rc(33, 44, 2, 3, '#f0e8dc') +
     // Crown on skull
-    p('M22 14 L24 6 L28 10 L32 4 L36 10 L40 6 L42 14Z', '#ffd700') +
-    p('M22 14 L42 14 L42 16 L22 16Z', '#d4a800') +
+    p('M22 20 L24 12 L28 16 L32 10 L36 16 L40 12 L42 20Z', '#ffd700') +
+    p('M22 20 L42 20 L42 22 L22 22Z', '#d4a800') +
     // Crown jewel
-    ci(32, 6, 1.5, '#ff1020') +
-    ci(32, 6, 0.7, '#ff6080')
+    ci(32, 12, 1.5, '#ff1020') +
+    ci(32, 12, 0.7, '#ff6080')
   ),
 
-  event: C(
+  event: Cy(6,
     // Glow background
     ci(32, 32, 22, '#2a1a4e') +
     ci(32, 32, 16, '#3a2a6e') +
