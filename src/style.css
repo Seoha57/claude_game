@@ -406,6 +406,11 @@ button:disabled {
   width: 100%;
   height: 100%;
 }
+.enemy.is-boss .enemy-art {
+  width: 96px;
+  height: 96px;
+  filter: drop-shadow(0 0 12px rgba(180, 40, 40, 0.6)) drop-shadow(0 0 24px rgba(120, 0, 60, 0.3));
+}
 .enemy.dead .enemy-art { animation: none; }
 @keyframes enemy-idle-bob {
   0%, 100% { transform: translateY(0); }
@@ -3009,6 +3014,7 @@ button:disabled {
   /* Enemies row may overflow horizontally */
   .enemies > div { gap: 12px !important; flex-wrap: wrap; justify-content: center; }
   .enemy-art { width: 44px !important; height: 44px !important; }
+  .enemy.is-boss .enemy-art { width: 72px !important; height: 72px !important; }
   .enemy-name { font-size: 12px; }
   /* Combat log: smaller and out of the way */
   .combat-log {

@@ -1169,31 +1169,75 @@ export const ENEMY_SVG: Record<string, string> = {
   ].join('')),
 
   isaris_overlord: C([
-    // Dark purple robes body
-    p('M24 16 L18 26 L14 48 L24 58 L40 58 L50 48 L46 26 L40 16Z', '#2a1030'),
-    // Robe front
-    p('M30 20 L34 20 L35 56 L29 56Z', '#3a1840'),
-    // Robe trim
-    p('M14 48 L24 58 L40 58 L50 48 L50 50 L40 60 L24 60 L14 50Z', '#e0c040'),
-    // Golden crown
-    p('M24 10 L26 2 L30 6 L32 0 L34 6 L38 2 L40 10Z', '#ffd700'),
-    p('M24 10 L40 10 L40 12 L24 12Z', '#e0b800'),
+    // Abyssal aura — outer glow
+    ci(32, 32, 30, '#40082010'),
+    ci(32, 32, 24, '#60102020'),
+    // Dark energy tendrils rising behind
+    p('M10 60 Q6 40 12 20 Q14 12 10 6', '#40103060'),
+    p('M54 60 Q58 40 52 20 Q50 12 54 6', '#40103060'),
+    p('M6 56 Q2 36 8 18', '#30082040'),
+    p('M58 56 Q62 36 56 18', '#30082040'),
+    // Massive cape/wings spread
+    p('M18 18 L4 10 L0 28 L2 54 L16 58 L22 42Z', '#1a0820'),
+    p('M46 18 L60 10 L64 28 L62 54 L48 58 L42 42Z', '#1a0820'),
+    // Cape inner lining — deep crimson
+    p('M18 20 L8 16 L4 44 L16 54Z', '#400818'),
+    p('M46 20 L56 16 L60 44 L48 54Z', '#400818'),
+    // Armored body
+    p('M22 18 L18 28 L14 50 L24 60 L40 60 L50 50 L46 28 L42 18Z', '#180820'),
+    // Chest armor plate
+    p('M26 24 L38 24 L37 44 L27 44Z', '#2a1030'),
+    // Chest emblem — glowing rune
+    p('M30 28 L34 28 L35 36 L32 40 L29 36Z', '#c01030'),
+    ci(32, 33, 3, '#ff204040'),
+    ci(32, 33, 1.5, '#ff4060'),
+    // Armor trim lines
+    p('M14 50 L24 60 L40 60 L50 50 L50 52 L40 62 L24 62 L14 52Z', '#c09020'),
+    p('M26 24 L38 24 L38 26 L26 26Z', '#c09020'),
+    // Massive spiked crown
+    p('M20 12 L22 0 L26 6 L29 -2 L32 4 L35 -2 L38 6 L42 0 L44 12Z', '#ffd700'),
+    p('M20 12 L44 12 L44 15 L20 15Z', '#d4a800'),
+    // Crown ornate band
+    p('M22 13 L42 13 L42 14 L22 14Z', '#fff0a0'),
     // Crown jewels
-    ci(32, 4, 1.2, '#ff2020'),
-    ci(27, 5, 0.8, '#4040ff'),
-    ci(37, 5, 0.8, '#4040ff'),
-    // Head
-    ci(32, 14, 6, '#e0c0a0'),
-    // Glowing red eyes
-    ci(29, 14, 1.5, '#ff2040'),
-    ci(35, 14, 1.5, '#ff2040'),
-    ci(29, 14, 0.7, '#ff8080'),
-    ci(35, 14, 0.7, '#ff8080'),
-    // Stern mouth
-    p('M30 18 L34 18', '#1a0810'),
-    // Shoulder pauldrons
-    p('M16 24 L22 20 L24 26 L18 30Z', '#3a1840'),
-    p('M48 24 L42 20 L40 26 L46 30Z', '#3a1840'),
+    ci(32, 2, 1.8, '#ff1020'),
+    ci(32, 2, 0.8, '#ff6080'),
+    ci(26, 4, 1.2, '#2040ff'),
+    ci(38, 4, 1.2, '#2040ff'),
+    ci(22, 6, 1, '#20c060'),
+    ci(42, 6, 1, '#20c060'),
+    // Head — dark complexion
+    ci(32, 18, 7, '#c0a080'),
+    // Glowing malevolent eyes
+    ci(29, 17, 2, '#ff1030'),
+    ci(35, 17, 2, '#ff1030'),
+    ci(29, 17, 1, '#ff6080'),
+    ci(35, 17, 1, '#ff6080'),
+    ci(29, 17, 0.4, '#ffffff'),
+    ci(35, 17, 0.4, '#ffffff'),
+    // Brow ridge
+    p('M26 15 L29 14 L31 15', '#806040'),
+    p('M33 15 L35 14 L38 15', '#806040'),
+    // Stern mouth with fangs
+    p('M29 21 Q32 23 35 21', '#401020'),
+    p('M30 21 L31 23', '#ffe0c0'),
+    p('M34 21 L33 23', '#ffe0c0'),
+    // Massive shoulder pauldrons with spikes
+    p('M14 24 L20 18 L24 28 L18 34Z', '#2a1030'),
+    p('M50 24 L44 18 L40 28 L46 34Z', '#2a1030'),
+    p('M14 24 L10 18 L12 22Z', '#c09020'),
+    p('M50 24 L54 18 L52 22Z', '#c09020'),
+    // Pauldron gold trim
+    p('M14 24 L24 28 L24 30 L14 26Z', '#c09020'),
+    p('M50 24 L40 28 L40 30 L50 26Z', '#c09020'),
+    // Scepter in right hand
+    p('M50 34 L52 30 L54 34 L53 54 L51 54Z', '#c09020'),
+    ci(52, 28, 3, '#8010a0'),
+    ci(52, 28, 1.5, '#c040ff'),
+    ci(52, 28, 0.6, '#e0a0ff'),
+    // Gauntlets
+    p('M14 40 L18 38 L20 44 L16 46Z', '#2a1030'),
+    p('M46 40 L50 38 L52 44 L48 46Z', '#2a1030'),
   ].join('')),
 
   dark_knight: C([

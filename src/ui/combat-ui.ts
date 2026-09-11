@@ -287,7 +287,7 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
   const enemyEl = el(
     'div',
     {
-      class: `enemy ${dead ? 'dead' : ''} ${targetable ? 'targetable' : ''} ${kbTargeted ? 'kb-targeted' : ''}`,
+      class: `enemy ${dead ? 'dead' : ''} ${targetable ? 'targetable' : ''} ${kbTargeted ? 'kb-targeted' : ''} ${ENEMY_DEFS[e.defId]?.isBoss ? 'is-boss' : ''}`,
       'data-enemy-uid': e.uid,
       onClick: () => {
         if (!targetable || dead) return;
