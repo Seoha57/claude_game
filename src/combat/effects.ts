@@ -255,6 +255,16 @@ export function applyEffect(
       log(`다음 턴 주사위 ${effect.value}로 고정!`);
       return;
     }
+    case 'set_dice_reroll': {
+      state.flags.diceReroll = true;
+      log('🎲 주사위가 1이면 다시 굴립니다!');
+      return;
+    }
+    case 'set_dice_minimum': {
+      state.flags.diceMinimum = Math.max(state.flags.diceMinimum ?? 0, effect.value);
+      log(`🎲 주사위 최솟값 ${effect.value}!`);
+      return;
+    }
   }
 }
 

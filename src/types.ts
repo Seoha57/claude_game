@@ -58,7 +58,9 @@ export type Effect =
   | { kind: 'block_dice'; base: number }                    // 방어도 = base × 주사위
   | { kind: 'apply_enemy_dice'; status: StatusKey; base: number } // 상태이상 = base × 주사위
   | { kind: 'apply_self_dice'; status: StatusKey; base: number }  // 자기 버프 = base × 주사위
-  | { kind: 'fix_dice'; value: number };                    // 다음 턴 주사위 고정
+  | { kind: 'fix_dice'; value: number }                     // 다음 턴 주사위 고정
+  | { kind: 'set_dice_reroll' }                              // 주사위 1이면 리롤 (영구)
+  | { kind: 'set_dice_minimum'; value: number };             // 주사위 최솟값 설정 (영구)
 
 export interface CardDef {
   id: string;
@@ -164,6 +166,8 @@ export interface CombatState {
     fighterProcThisTurn?: boolean;    // 일심 procced once this turn
     diceRoll?: number;                // 갬블러: 이번 턴 주사위 결과 (1~6)
     fixedDice?: number;               // 갬블러: 다음 턴 고정 주사위 값
+    diceReroll?: boolean;             // 갬블러: 주사위 1이면 리롤
+    diceMinimum?: number;             // 갬블러: 주사위 최솟값
   };
 }
 

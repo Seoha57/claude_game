@@ -139,7 +139,17 @@ export function beginPlayerTurn(state: CombatState): void {
       state.flags.fixedDice = undefined;
       state.log.push(`🎲 주사위 고정! → ${state.flags.diceRoll}`);
     } else {
-      state.flags.diceRoll = 1 + Math.floor(state.rng() * 3); // 1~3
+      let roll = 1 + Math.floor(state.rng() * 3); // 1~3
+      if (state.flags.diceReroll && roll === 1) {
+        const prev = roll;
+        roll = 1 + Math.floor(state.rng() * 3);
+        state.log.push(`🎲 리롤! ${prev} → ${roll}`);
+      }
+      if (state.flags.diceMinimum && roll < state.flags.diceMinimum) {
+        roll = state.flags.diceMinimum;
+        state.log.push(`🎲 최솟값 보정 → ${roll}`);
+      }
+      state.flags.diceRoll = roll;
       state.log.push(`🎲 주사위 → ${state.flags.diceRoll}`);
     }
   }
