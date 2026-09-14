@@ -504,7 +504,7 @@ export const CARD_DEFS: Record<string, CardDef> = {
 Object.assign(CARD_DEFS, GUNNER_CARD_DEFS, FIGHTER_CARD_DEFS, MAGICIAN_CARD_DEFS, PRIEST_CARD_DEFS, THIEF_CARD_DEFS, SUMMONER_CARD_DEFS, ENGINEER_CARD_DEFS, GAMBLER_CARD_DEFS);
 
 export const CARD_LIST = Object.values(CARD_DEFS).filter(
-  (c) => !c.id.startsWith('g_') && !c.id.startsWith('f_') && !c.id.startsWith('m_') && !c.id.startsWith('p_') && !c.id.startsWith('t_') && !c.id.startsWith('s_') && !c.id.startsWith('n_'),
+  (c) => !c.id.startsWith('g_') && !c.id.startsWith('f_') && !c.id.startsWith('m_') && !c.id.startsWith('p_') && !c.id.startsWith('t_') && !c.id.startsWith('s_') && !c.id.startsWith('n_') && !c.id.startsWith('b_'),
 );
 export const COMMON_CARDS   = CARD_LIST.filter((c) => c.rarity === 'common');
 export const UNCOMMON_CARDS = CARD_LIST.filter((c) => c.rarity === 'uncommon');
@@ -603,16 +603,24 @@ export function applyPlusPlus(def: CardDef): CardDef {
     if (e.kind === 'damage' || e.kind === 'damage_all') {
       return { ...e, amount: e.amount + PLUSPLUS_DAMAGE_BONUS };
     }
+    if (e.kind === 'damage_dice' || e.kind === 'damage_all_dice') {
+      return { ...e, base: e.base + PLUSPLUS_DAMAGE_BONUS };
+    }
     if (e.kind === 'block') {
       return { ...e, amount: e.amount + PLUSPLUS_BLOCK_BONUS };
+    }
+    if (e.kind === 'block_dice') {
+      return { ...e, base: e.base + PLUSPLUS_BLOCK_BONUS };
     }
     if (e.kind === 'heal') {
       return { ...e, amount: e.amount + PLUSPLUS_HEAL_BONUS };
     }
     if (e.kind === 'apply_self' || e.kind === 'apply_enemy' || e.kind === 'apply_all') {
-      // negative deltas (e.g. weak -1) shouldn't grow in magnitude
       if (e.amount <= 0) return e;
       return { ...e, amount: e.amount + PLUSPLUS_STATUS_BONUS };
+    }
+    if (e.kind === 'apply_enemy_dice' || e.kind === 'apply_self_dice') {
+      return { ...e, base: e.base + PLUSPLUS_STATUS_BONUS };
     }
     if (e.kind === 'draw') return { ...e, amount: e.amount + PLUSPLUS_DRAW_BONUS };
     if (e.kind === 'energy') return { ...e, amount: e.amount + PLUSPLUS_ENERGY_BONUS };

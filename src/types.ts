@@ -54,7 +54,7 @@ export type Effect =
   | { kind: 'fire_all_drones'; times?: number }            // 배치된 드론 즉시 발사
   // ── 갬블러 주사위 ─────────────────────────────────────────────
   | { kind: 'damage_dice'; base: number; times?: number }   // 데미지 = base × 주사위
-  | { kind: 'damage_all_dice'; base: number }               // 전체 데미지 = base × (주사위/2)
+  | { kind: 'damage_all_dice'; base: number }               // 전체 데미지 = base × 주사위
   | { kind: 'block_dice'; base: number }                    // 방어도 = base × 주사위
   | { kind: 'apply_enemy_dice'; status: StatusKey; base: number } // 상태이상 = base × 주사위
   | { kind: 'apply_self_dice'; status: StatusKey; base: number }  // 자기 버프 = base × 주사위
@@ -164,7 +164,7 @@ export interface CombatState {
     lastPlayedType?: CardType;        // persists in combat
     resonanceUsedThisTurn?: boolean;  // 원소 공명 턴당 1회
     fighterProcThisTurn?: boolean;    // 일심 procced once this turn
-    diceRoll?: number;                // 갬블러: 이번 턴 주사위 결과 (1~6)
+    diceRoll?: number;                // 갬블러: 이번 턴 주사위 결과 (자연 1~3, 고정 시 5~6)
     fixedDice?: number;               // 갬블러: 다음 턴 고정 주사위 값
     diceReroll?: boolean;             // 갬블러: 주사위 1이면 리롤
     diceMinimum?: number;             // 갬블러: 주사위 최솟값

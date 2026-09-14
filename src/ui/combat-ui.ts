@@ -53,20 +53,26 @@ function computeCardDamageVsEnemy(card: CardInstance, state: CombatState, enemy:
   const addDamage = (amount: number, times = 1) => {
     total += modifiedAttackDamage(amount, player as any, enemy) * times;
   };
+  const dice = state.flags.diceRoll ?? 1;
   for (const eff of def.effects) {
     if (eff.kind === 'damage') {
       addDamage(eff.amount, eff.times ?? 1);
     } else if (eff.kind === 'damage_all') {
       addDamage(eff.amount);
+    } else if (eff.kind === 'damage_dice') {
+      addDamage(eff.base * dice, eff.times ?? 1);
+    } else if (eff.kind === 'damage_all_dice') {
+      addDamage(eff.base * dice);
     } else if (eff.kind === 'damage_per_attack') {
       addDamage(eff.amount * (state.flags.attackCount ?? 0));
     } else if (eff.kind === 'damage_per_card_this_turn') {
-      // 이 카드 자신도 카운트되므로 +1
       addDamage(eff.amount * ((state.flags.cardsPlayedThisTurn ?? 0) + 1));
     } else if (eff.kind === 'conditional' && previewConditionMet(state, eff.condition)) {
       for (const sub of eff.then) {
         if (sub.kind === 'damage') addDamage(sub.amount, sub.times ?? 1);
         else if (sub.kind === 'damage_all') addDamage(sub.amount);
+        else if (sub.kind === 'damage_dice') addDamage(sub.base * dice, sub.times ?? 1);
+        else if (sub.kind === 'damage_all_dice') addDamage(sub.base * dice);
       }
     }
   }

@@ -31,6 +31,12 @@ import {
   SUMMONER_COMMON_CARDS,
   SUMMONER_UNCOMMON_CARDS,
   SUMMONER_RARE_CARDS,
+  ENGINEER_COMMON_CARDS,
+  ENGINEER_UNCOMMON_CARDS,
+  ENGINEER_RARE_CARDS,
+  GAMBLER_COMMON_CARDS,
+  GAMBLER_UNCOMMON_CARDS,
+  GAMBLER_RARE_CARDS,
   canUpgrade,
 } from '../content/cards';
 
@@ -232,6 +238,10 @@ export function renderEvent(): HTMLElement {
       pool = rarity === 'common' ? THIEF_COMMON_CARDS : rarity === 'uncommon' ? THIEF_UNCOMMON_CARDS : THIEF_RARE_CARDS;
     } else if (cls === 'summoner') {
       pool = rarity === 'common' ? SUMMONER_COMMON_CARDS : rarity === 'uncommon' ? SUMMONER_UNCOMMON_CARDS : SUMMONER_RARE_CARDS;
+    } else if (cls === 'engineer') {
+      pool = rarity === 'common' ? ENGINEER_COMMON_CARDS : rarity === 'uncommon' ? ENGINEER_UNCOMMON_CARDS : ENGINEER_RARE_CARDS;
+    } else if (cls === 'gambler') {
+      pool = rarity === 'common' ? GAMBLER_COMMON_CARDS : rarity === 'uncommon' ? GAMBLER_UNCOMMON_CARDS : GAMBLER_RARE_CARDS;
     } else {
       pool = rarity === 'common' ? COMMON_CARDS : rarity === 'uncommon' ? UNCOMMON_CARDS : RARE_CARDS;
     }
