@@ -425,7 +425,8 @@ function makeEngineerStarterDeck(): CardInstance[] {
 function makeGamblerStarterDeck(): CardInstance[] {
   const deck: CardInstance[] = [];
   for (let i = 0; i < 5; i++) deck.push(makeCard('b_dice_throw'));
-  for (let i = 0; i < 5; i++) deck.push(makeCard('b_bluff'));
+  for (let i = 0; i < 4; i++) deck.push(makeCard('b_bluff'));
+  deck.push(makeCard('b_gambit'));
   return deck;
 }
 

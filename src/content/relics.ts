@@ -156,6 +156,12 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     rarity: 'common',
   },
 
+  lucky_die: {
+    id: 'lucky_die',
+    name: '행운의 주사위',
+    description: '전투 시작 시 에너지 +1.',
+    rarity: 'common',
+  },
   spiked_armor: {
     id: 'spiked_armor',
     name: '가시 갑옷',
@@ -204,6 +210,12 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     id: 'phoenix_feather',
     name: '불사조 깃털',
     description: '전투 시작 시 재생 +5.',
+    rarity: 'uncommon',
+  },
+  golden_chip: {
+    id: 'golden_chip',
+    name: '황금 칩',
+    description: '전투 시작 시 방어도 +8.',
     rarity: 'uncommon',
   },
   storm_banner: {
@@ -420,6 +432,13 @@ export const SYNERGY_SETS: SynergySet[] = [
     name: '정령의 유대',
     relics: ['soul_lantern', 'soul_crystal'],
     description: '전투 시작 시 카드 1장 드로우, 방어도 +4.',
+    timing: 'combat_start',
+  },
+  {
+    id: 'gamblers_fortune',
+    name: '도박꾼의 행운',
+    relics: ['lucky_die', 'golden_chip'],
+    description: '전투 시작 시 주사위 최솟값 2 (첫 전투 턴).',
     timing: 'combat_start',
   },
 ];

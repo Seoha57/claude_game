@@ -441,6 +441,8 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
   if (relics.includes('soul_crystal')) {
     drawCards(cs, 1); cs.player.block += 6;
   }
+  if (relics.includes('lucky_die')) cs.player.energy += 1;
+  if (relics.includes('golden_chip')) cs.player.block += 8;
   if (relics.includes('gamblers_instinct')) {
     drawCards(cs, 1); applyStatus(cs.player, 'strength', 1);
   }
@@ -469,6 +471,9 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
         break;
       case 'spirit_bond':
         drawCards(cs, 1); cs.player.block += 4;
+        break;
+      case 'gamblers_fortune':
+        cs.flags.diceMinimum = Math.max(cs.flags.diceMinimum ?? 0, 2);
         break;
     }
   }

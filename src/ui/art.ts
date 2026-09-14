@@ -3202,7 +3202,27 @@ export const RELIC_SVG: Record<string, string> = {
     ci(40, 32, 5, '#88ff8844')
   ),
 
+  lucky_die: C(
+    rc(18, 18, 28, 28, '#e8d8c0') +
+    rc(20, 20, 24, 24, '#f0e8d8') +
+    ci(26, 26, 2, '#d4af37') +
+    ci(38, 26, 2, '#d4af37') +
+    ci(26, 38, 2, '#d4af37') +
+    ci(38, 38, 2, '#d4af37') +
+    ci(32, 32, 2, '#d4af37') +
+    ci(32, 32, 8, '#ffd70033')
+  ),
+
   // ── UNCOMMON RELICS ──
+
+  golden_chip: C(
+    ci(32, 32, 18, '#c8a020') +
+    ci(32, 32, 15, '#d4b030') +
+    ci(32, 32, 12, '#e0c040') +
+    rc(26, 26, 12, 12, '#f0d860') +
+    p('M28 28 L36 28 L36 36 L28 36Z', '#c8a020') +
+    ci(32, 32, 3, '#f0d860')
+  ),
 
   rich_seal: C(
     // Seal body

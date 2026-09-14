@@ -449,4 +449,32 @@ export const EVENT_DEFS: EventDef[] = [
       { label: '거절한다', result: '악마가 씩 웃으며 어둠 속으로 사라졌다.', effects: [] },
     ],
   },
+
+  // ── 갬블러 전용 이벤트 ──────────────────────────────────────
+  {
+    id: 'back_alley_poker',
+    title: '뒷골목 포커',
+    emoji: '🃏',
+    mood: 'gold',
+    forClass: 'gambler',
+    description: '어두운 뒷골목에서 노련한 도박꾼들이 포커판을 벌이고 있다. "한 판 어떤가?"',
+    choices: [
+      { label: '30골드로 참가한다', result: '역전의 한 수! 판돈과 카드 기술을 챙겼다.', condition: { kind: 'min_gold', amount: 30 }, effects: [{ kind: 'lose_gold', amount: 30 }, { kind: 'gold', amount: 80 }, { kind: 'add_card', rarity: 'uncommon' }] },
+      { label: 'HP를 걸고 참가한다 (HP -8)', result: '목숨을 건 도박의 보상은 달콤했다.', effects: [{ kind: 'lose_hp', amount: 8 }, { kind: 'add_card', rarity: 'rare' }] },
+      { label: '구경만 한다', result: '다른 도박꾼의 기술을 관찰했다. 카드 1장이 강화되었다.', effects: [{ kind: 'upgrade_random', count: 1 }] },
+    ],
+  },
+  {
+    id: 'lucky_fountain',
+    title: '행운의 분수',
+    emoji: '⛲',
+    mood: 'mystic',
+    forClass: 'gambler',
+    description: '동전이 가득한 분수를 발견했다. 동전을 던지면 소원이 이루어진다는 전설이 있다.',
+    choices: [
+      { label: '동전을 던진다 (20골드)', result: '분수가 빛나며 행운이 깃들었다!', condition: { kind: 'min_gold', amount: 20 }, effects: [{ kind: 'lose_gold', amount: 20 }, { kind: 'add_random_relic' }] },
+      { label: '동전을 줍는다', result: '분수에서 금화를 건졌지만 저주가 따라왔다.', effects: [{ kind: 'gold', amount: 60 }, { kind: 'add_curse', count: 1 }] },
+      { label: '그냥 쉰다', result: '분수 옆에서 잠시 쉬니 기분이 좋아졌다.', effects: [{ kind: 'heal', amount: 15 }] },
+    ],
+  },
 ];

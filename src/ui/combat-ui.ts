@@ -367,10 +367,15 @@ function renderMid(state: CombatState): HTMLElement {
   const goldBadge = (() => { const d = el('span', { class: 'gold-badge' }); d.innerHTML = `${ic('gold')} ${run?.player.gold ?? 0}`; return d; })();
 
   const diceBadge = run?.characterClass === 'gambler' && state.flags.diceRoll
-    ? el('span', {
-        class: `dice-badge ${state.flags.diceRoll >= 5 ? 'dice-high' : state.flags.diceRoll <= 1 ? 'dice-low' : ''}`,
-        title: state.flags.fixedDice ? `다음 턴 고정: ${state.flags.fixedDice}` : '이번 턴 주사위',
-      }, `🎲 ${state.flags.diceRoll}`)
+    ? (() => {
+        const cls = state.flags.diceRoll! >= 5 ? 'dice-high' : state.flags.diceRoll! <= 1 ? 'dice-low' : '';
+        const badge = el('span', {
+          class: `dice-badge ${cls}`,
+          'data-tooltip': `이번 턴 주사위: ${state.flags.diceRoll}${state.flags.fixedDice ? `\n다음 턴 고정: ${state.flags.fixedDice}` : ''}${state.flags.diceReroll ? '\n리롤 활성' : ''}${state.flags.diceMinimum ? `\n최솟값: ${state.flags.diceMinimum}` : ''}`,
+        });
+        badge.innerHTML = `🎲 ${state.flags.diceRoll}${state.flags.fixedDice ? ` <span class="dice-next">→${state.flags.fixedDice}</span>` : ''}`;
+        return badge;
+      })()
     : null;
 
   const playerStats = el(

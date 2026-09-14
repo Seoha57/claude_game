@@ -23,6 +23,17 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'block_dice', base: 2 }],
   },
 
+  b_gambit: {
+    id: 'b_gambit',
+    name: '갬빗',
+    type: 'attack',
+    rarity: 'starter',
+    cost: 1,
+    target: 'enemy',
+    description: '3 × 🎲 데미지. 1장 드로우.',
+    effects: [{ kind: 'damage_dice', base: 3 }, { kind: 'draw', amount: 1 }],
+  },
+
   // ── Common ──
   b_coin_toss: {
     id: 'b_coin_toss',
@@ -125,6 +136,54 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
       { kind: 'damage_dice', base: 3 },
       { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'damage_dice', base: 3 }] },
     ],
+  },
+
+  b_quick_bet: {
+    id: 'b_quick_bet',
+    name: '속공 베팅',
+    type: 'attack',
+    rarity: 'common',
+    cost: 0,
+    target: 'enemy',
+    description: '1 × 🎲 데미지 2회.',
+    effects: [{ kind: 'damage_dice', base: 1, times: 2 }],
+  },
+  b_feint: {
+    id: 'b_feint',
+    name: '페인트',
+    type: 'skill',
+    rarity: 'common',
+    cost: 1,
+    target: 'self',
+    description: '3 × 🎲 방어도. 약화 +1.',
+    effects: [
+      { kind: 'block_dice', base: 3 },
+      { kind: 'apply_enemy', status: 'weak', amount: 1 },
+    ],
+  },
+  b_risky_play: {
+    id: 'b_risky_play',
+    name: '위험한 한 수',
+    type: 'attack',
+    rarity: 'common',
+    cost: 1,
+    target: 'enemy',
+    description: 'HP -2. 5 × 🎲 데미지.',
+    effects: [
+      { kind: 'lose_hp', amount: 2 },
+      { kind: 'damage_dice', base: 5 },
+    ],
+  },
+  b_card_shark: {
+    id: 'b_card_shark',
+    name: '카드 샤크',
+    type: 'skill',
+    rarity: 'common',
+    cost: 1,
+    target: 'self',
+    description: '3장 드로우. 소멸.',
+    effects: [{ kind: 'draw', amount: 3 }],
+    exhaust: true,
   },
 
   // ── Uncommon ──
@@ -255,6 +314,41 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
     ],
   },
 
+  b_roulette: {
+    id: 'b_roulette',
+    name: '룰렛',
+    type: 'attack',
+    rarity: 'uncommon',
+    cost: 2,
+    target: 'all_enemies',
+    description: '모든 적에게 4 × 🎲 데미지.',
+    effects: [{ kind: 'damage_all_dice', base: 4 }],
+  },
+  b_hedge_bet: {
+    id: 'b_hedge_bet',
+    name: '헤지 베팅',
+    type: 'skill',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'self',
+    description: '2 × 🎲 방어도. 2 × 🎲 재생.',
+    effects: [
+      { kind: 'block_dice', base: 2 },
+      { kind: 'apply_self_dice', status: 'regen', base: 2 },
+    ],
+  },
+  b_double_or_nothing: {
+    id: 'b_double_or_nothing',
+    name: '더블 오어 낫씽',
+    type: 'attack',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'enemy',
+    description: '6 × 🎲 데미지. 소멸.',
+    effects: [{ kind: 'damage_dice', base: 6 }],
+    exhaust: true,
+  },
+
   // ── Rare ──
   b_all_in: {
     id: 'b_all_in',
@@ -302,12 +396,23 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 2,
     target: 'enemy',
-    description: 'HP -4. 8 × 🎲 데미지.',
+    description: 'HP -4. 10 × 🎲 데미지.',
     effects: [
       { kind: 'lose_hp', amount: 4 },
-      { kind: 'damage_dice', base: 8 },
+      { kind: 'damage_dice', base: 10 },
     ],
     exhaust: true,
+  },
+  b_ace_up_sleeve: {
+    id: 'b_ace_up_sleeve',
+    name: '에이스 업 슬리브',
+    type: 'attack',
+    rarity: 'rare',
+    cost: 1,
+    target: 'enemy',
+    description: '4 × 🎲 데미지 2회. 유지.',
+    effects: [{ kind: 'damage_dice', base: 4, times: 2 }],
+    retain: true,
   },
   b_last_stand: {
     id: 'b_last_stand',
@@ -325,6 +430,7 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
 const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   b_dice_throw:   { name: '주사위 투척+',     description: '3 × 🎲 데미지.',                                            effects: [{ kind: 'damage_dice', base: 3 }] },
   b_bluff:        { name: '블러프+',          description: '3 × 🎲 방어도.',                                            effects: [{ kind: 'block_dice', base: 3 }] },
+  b_gambit:       { name: '갬빗+',            description: '4 × 🎲 데미지. 1장 드로우.',                                effects: [{ kind: 'damage_dice', base: 4 }, { kind: 'draw', amount: 1 }] },
   b_coin_toss:    { name: '동전 던지기+',     description: '3 × 🎲 데미지를 두 번.',                                    effects: [{ kind: 'damage_dice', base: 3, times: 2 }] },
   b_wild_card:    { name: '와일드 카드+',     description: '5 × 🎲 데미지.',                                            effects: [{ kind: 'damage_dice', base: 5 }] },
   b_poker_face:   { name: '포커 페이스+',     description: '4 × 🎲 방어도. 1장 드로우.',                                effects: [{ kind: 'block_dice', base: 4 }, { kind: 'draw', amount: 1 }] },
@@ -334,6 +440,10 @@ const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   b_hustle:       { name: '허슬+',            description: '3 × 🎲 데미지. 약화 +2.',                                  effects: [{ kind: 'damage_dice', base: 3 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   b_card_trick:   { name: '카드 트릭+',       description: '4 × 🎲 방어도. 무작위 카드 1장 소멸.',                      effects: [{ kind: 'block_dice', base: 4 }, { kind: 'exhaust_random_hand' }] },
   b_snake_eyes:   { name: '스네이크 아이즈+', description: '4 × 🎲 데미지. 이번 턴 첫 카드면 +4 × 🎲.',               effects: [{ kind: 'damage_dice', base: 4 }, { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'damage_dice', base: 4 }] }] },
+  b_quick_bet:    { name: '속공 베팅+',       description: '2 × 🎲 데미지 2회.',                                       effects: [{ kind: 'damage_dice', base: 2, times: 2 }] },
+  b_feint:        { name: '페인트+',          description: '4 × 🎲 방어도. 약화 +2.',                                  effects: [{ kind: 'block_dice', base: 4 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
+  b_risky_play:   { name: '위험한 한 수+',    description: 'HP -2. 6 × 🎲 데미지.',                                    effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'damage_dice', base: 6 }] },
+  b_card_shark:   { name: '카드 샤크+',       description: '4장 드로우. 소멸.',                                        effects: [{ kind: 'draw', amount: 4 }] },
   b_double_down:  { name: '더블 다운+',       description: '4 × 🎲 데미지 3회.',                                       effects: [{ kind: 'damage_dice', base: 4, times: 3 }] },
   b_loaded_dice:  { name: '세공 주사위+',     description: '주사위 최솟값 2.',                                           effects: [{ kind: 'set_dice_minimum', value: 2 }] },
   b_sleight:      { name: '슬라이트 오브 핸드+', description: 'HP -2. 에너지 +3.',                                      effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
@@ -345,10 +455,14 @@ const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   b_poison_bet:   { name: '독배 내기+',       description: '4 × 🎲 데미지. 3 × 🎲 중독.',                              effects: [{ kind: 'damage_dice', base: 4 }, { kind: 'apply_enemy_dice', status: 'poison', base: 3 }] },
   b_cold_bluff:   { name: '콜드 블러프+',     description: '6 × 🎲 데미지. 빙결 +1.',                                  effects: [{ kind: 'damage_dice', base: 6 }, { kind: 'apply_enemy', status: 'freeze', amount: 1 }] },
   b_follow_up:    { name: '후속 베팅+',       description: '4 × 🎲 데미지. 직전이 공격이면 +4 × 🎲.',                  effects: [{ kind: 'damage_dice', base: 4 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage_dice', base: 4 }] }] },
+  b_roulette:     { name: '룰렛+',            description: '모든 적에게 5 × 🎲 데미지.',                                effects: [{ kind: 'damage_all_dice', base: 5 }] },
+  b_hedge_bet:    { name: '헤지 베팅+',       description: '3 × 🎲 방어도. 3 × 🎲 재생.',                              effects: [{ kind: 'block_dice', base: 3 }, { kind: 'apply_self_dice', status: 'regen', base: 3 }] },
+  b_double_or_nothing: { name: '더블 오어 낫씽+', description: '8 × 🎲 데미지. 소멸.',                                  effects: [{ kind: 'damage_dice', base: 8 }] },
   b_all_in:       { name: '올인+',            description: '12 × 🎲 데미지. 취약 +3. 다음 턴 🎲 → 6.',                effects: [{ kind: 'damage_dice', base: 12 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }, { kind: 'fix_dice', value: 6 }] },
   b_royal_flush:  { name: '로열 플러시+',     description: '9 × 🎲 데미지 2회. 다음 턴 🎲 → 6. 소멸.',                effects: [{ kind: 'damage_dice', base: 9, times: 2 }, { kind: 'fix_dice', value: 6 }] },
   b_fortune:      { name: '포춘+',            description: '턴 시작 시 힘 +3. 선천.',                                   effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
-  b_death_match:  { name: '데스 매치+',       description: 'HP -3. 10 × 🎲 데미지.',                                   effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_dice', base: 10 }] },
+  b_ace_up_sleeve: { name: '에이스 업 슬리브+', description: '5 × 🎲 데미지 2회. 유지.',                                 effects: [{ kind: 'damage_dice', base: 5, times: 2 }] },
+  b_death_match:  { name: '데스 매치+',       description: 'HP -3. 12 × 🎲 데미지.',                                   effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_dice', base: 12 }] },
   b_last_stand:   { name: '라스트 스탠드+',   description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.',                effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
 };
 
