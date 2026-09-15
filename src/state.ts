@@ -418,7 +418,8 @@ function makeSummonerStarterDeck(): CardInstance[] {
 function makeEngineerStarterDeck(): CardInstance[] {
   const deck: CardInstance[] = [];
   for (let i = 0; i < 5; i++) deck.push(makeCard('n_wrench'));
-  for (let i = 0; i < 5; i++) deck.push(makeCard('n_shield_gen'));
+  for (let i = 0; i < 4; i++) deck.push(makeCard('n_shield_gen'));
+  deck.push(makeCard('n_micro_drone'));
   return deck;
 }
 

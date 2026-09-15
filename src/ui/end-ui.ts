@@ -11,6 +11,7 @@ import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
 import type { RunState } from '../types';
 import { CHARACTER_SVG, CHAR_NAMES, artEl, ic } from './art';
+import { shareRun } from './share-run';
 
 export function renderChapterClear(): HTMLElement {
   const run = getRunOrNull();
@@ -184,6 +185,10 @@ export function renderWin(): HTMLElement {
       ? [el('div', { style: { color: 'var(--accent)', fontSize: '13px', marginTop: '4px' } },
           `무한 던전 점수 ×${(1 + runAscension * 0.1).toFixed(1)} (A${runAscension} 보너스)`)]
       : []),
+    ...(run ? [el('button', {
+      style: { background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', fontSize: '13px', padding: '8px 16px' },
+      onClick: () => shareRun(run, true),
+    }, '결과 공유')] : []),
     el('button', {
       style: { background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),
@@ -325,6 +330,10 @@ export function renderLose(): HTMLElement {
       run.ascension > 0 ? el('div', { class: 'lose-stat' }, `A${run.ascension}`) : el('div'),
     ),
     renderRunSummary(run),
+    el('button', {
+      style: { background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', fontSize: '13px', padding: '8px 16px' },
+      onClick: () => shareRun(run, false),
+    }, '결과 공유'),
     el('button', { onClick: () => endRun() }, '제목 화면으로'),
   );
 }

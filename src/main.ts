@@ -7,6 +7,7 @@ import { setAchievementNotifier, reconcileAchievements } from './achievements';
 import { showAchievementToast } from './ui/achievement-toast';
 import { initializeSync } from './sync/sync';
 import { showRebrandNotice } from './ui/rebrand-notice';
+import { initPwaInstall } from './ui/pwa-install';
 
 setAchievementNotifier(showAchievementToast);
 setRenderer(render);
@@ -14,6 +15,7 @@ reconcileAchievements();
 initializeSync();
 render();
 showRebrandNotice();
+initPwaInstall();
 
 // Re-render when sync pulls in remote changes
 window.addEventListener('dod:sync-applied', () => {

@@ -450,6 +450,111 @@ export const EVENT_DEFS: EventDef[] = [
     ],
   },
 
+  // ── 검사 전용 이벤트 ──────────────────────────────────────
+  {
+    id: 'ancient_dojo',
+    title: '고대 도장',
+    emoji: '⚔️',
+    mood: 'mystic',
+    forClass: 'swordmaster',
+    description: '폐허 속에 옛 검술 도장이 남아 있다. 벽에 걸린 검결서가 눈에 띈다.',
+    choices: [
+      { label: '검결서를 익힌다 (HP -6)', result: '고대 검술의 정수를 체득했다!', effects: [{ kind: 'lose_hp', amount: 6 }, { kind: 'upgrade_random', count: 2 }] },
+      { label: '수련한다', result: '잠시 수련하니 몸이 가벼워졌다.', effects: [{ kind: 'max_hp', amount: 5 }, { kind: 'heal', amount: 10 }] },
+      { label: '그냥 지나친다', result: '조용히 자리를 떴다.', effects: [] },
+    ],
+  },
+
+  // ── 거너 전용 이벤트 ──────────────────────────────────────
+  {
+    id: 'arms_dealer',
+    title: '무기 상인',
+    emoji: '🔫',
+    mood: 'gold',
+    forClass: 'gunner',
+    description: '은밀한 무기 상인이 최신 화기를 보여준다. "특별 가격이야, 친구."',
+    choices: [
+      { label: '최신 무기를 산다 (50골드)', result: '강력한 화기를 입수했다!', condition: { kind: 'min_gold', amount: 50 }, effects: [{ kind: 'lose_gold', amount: 50 }, { kind: 'add_card', rarity: 'rare' }] },
+      { label: '탄약만 보충한다 (20골드)', result: '탄약과 함께 실전 노하우를 얻었다.', condition: { kind: 'min_gold', amount: 20 }, effects: [{ kind: 'lose_gold', amount: 20 }, { kind: 'upgrade_random', count: 1 }, { kind: 'add_card', rarity: 'common' }] },
+      { label: '거절한다', result: '필요 없다고 손을 저었다.', effects: [] },
+    ],
+  },
+
+  // ── 격투가 전용 이벤트 ──────────────────────────────────────
+  {
+    id: 'fighting_ring',
+    title: '지하 투기장',
+    emoji: '🥊',
+    mood: 'danger',
+    forClass: 'fighter',
+    description: '지하 투기장에서 거친 환호가 울려 퍼진다. 챔피언에게 도전할 수 있다.',
+    choices: [
+      { label: '챔피언에 도전한다 (HP -12)', result: '피투성이 승리! 챔피언의 비급과 상금을 손에 넣었다.', effects: [{ kind: 'lose_hp', amount: 12 }, { kind: 'gold', amount: 60 }, { kind: 'add_card', rarity: 'uncommon' }] },
+      { label: '하급 시합에 참가한다 (HP -5)', result: '가벼운 시합으로 몸을 풀었다.', effects: [{ kind: 'lose_hp', amount: 5 }, { kind: 'gold', amount: 30 }] },
+      { label: '구경만 한다', result: '다른 격투가의 기술을 눈여겨봤다.', effects: [{ kind: 'upgrade_random', count: 1 }] },
+    ],
+  },
+
+  // ── 마법사 전용 이벤트 ──────────────────────────────────────
+  {
+    id: 'arcane_library',
+    title: '마법 서재',
+    emoji: '📖',
+    mood: 'mystic',
+    forClass: 'magician',
+    description: '고대 마법사의 서재를 발견했다. 금빛으로 빛나는 마도서들이 가득하다.',
+    choices: [
+      { label: '금서를 읽는다 (HP -10)', result: '금단의 지식이 머릿속에 새겨졌다!', effects: [{ kind: 'lose_hp', amount: 10 }, { kind: 'add_card', rarity: 'rare' }] },
+      { label: '기초서를 탐독한다', result: '마법의 기초를 다시 다졌다.', effects: [{ kind: 'upgrade_random', count: 2 }] },
+      { label: '서재를 뒤진다', result: '책 사이에서 물약을 발견했다.', effects: [{ kind: 'add_potion' }, { kind: 'add_potion' }] },
+    ],
+  },
+
+  // ── 성직자 전용 이벤트 ──────────────────────────────────────
+  {
+    id: 'ruined_shrine',
+    title: '폐허의 성소',
+    emoji: '⛪',
+    mood: 'warm',
+    forClass: 'priest',
+    description: '무너진 성소에서 희미한 신성이 느껴진다. 기도를 올리면 응답이 올지도 모른다.',
+    choices: [
+      { label: '기도를 올린다', result: '신의 은총이 내렸다. 축복이 덱에 깃들었다.', effects: [{ kind: 'add_blessing', count: 1 }, { kind: 'heal', amount: 15 }] },
+      { label: '성소를 복원한다 (30골드)', result: '성소가 빛을 되찾았다. 최대 HP가 증가했다.', condition: { kind: 'min_gold', amount: 30 }, effects: [{ kind: 'lose_gold', amount: 30 }, { kind: 'max_hp', amount: 8 }] },
+      { label: '묵념만 한다', result: '잠시 고요 속에서 마음을 다잡았다.', effects: [{ kind: 'heal', amount: 20 }] },
+    ],
+  },
+
+  // ── 도적 전용 이벤트 ──────────────────────────────────────
+  {
+    id: 'black_market',
+    title: '암시장',
+    emoji: '🗝️',
+    mood: 'dark',
+    forClass: 'thief',
+    description: '은밀한 암시장을 발견했다. 수상한 물건들이 거래되고 있다.',
+    choices: [
+      { label: '귀중품을 훔친다 (HP -5)', result: '눈 깜짝할 사이에 유물을 손에 넣었다!', effects: [{ kind: 'lose_hp', amount: 5 }, { kind: 'add_random_relic' }] },
+      { label: '정보를 산다 (25골드)', result: '유용한 정보와 함께 카드 기술을 얻었다.', condition: { kind: 'min_gold', amount: 25 }, effects: [{ kind: 'lose_gold', amount: 25 }, { kind: 'add_card', rarity: 'uncommon' }, { kind: 'upgrade_random', count: 1 }] },
+      { label: '몰래 빠져나온다', result: '위험한 곳은 빨리 벗어나는 게 상책이다.', effects: [{ kind: 'gold', amount: 15 }] },
+    ],
+  },
+
+  // ── 공학자 전용 이벤트 ──────────────────────────────────────
+  {
+    id: 'abandoned_lab',
+    title: '폐연구소',
+    emoji: '🔬',
+    mood: 'mystic',
+    forClass: 'engineer',
+    description: '버려진 연구소에 아직 작동하는 장비들이 있다. 부품을 회수할 수 있을 것 같다.',
+    choices: [
+      { label: '장비를 분해한다', result: '유용한 부품을 확보했다!', effects: [{ kind: 'add_card', rarity: 'uncommon' }, { kind: 'add_card', rarity: 'common' }] },
+      { label: '프로토타입을 완성한다 (HP -8)', result: '위험했지만 시제품이 완성되었다!', effects: [{ kind: 'lose_hp', amount: 8 }, { kind: 'add_card', rarity: 'rare' }] },
+      { label: '설계도만 가져간다', result: '설계도를 참고해 기존 장비를 개량했다.', effects: [{ kind: 'upgrade_random', count: 2 }] },
+    ],
+  },
+
   // ── 갬블러 전용 이벤트 ──────────────────────────────────────
   {
     id: 'back_alley_poker',

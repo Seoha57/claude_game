@@ -23,6 +23,17 @@ export const ENGINEER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'block', amount: 5 }],
   },
 
+  n_micro_drone: {
+    id: 'n_micro_drone',
+    name: '소형 드론',
+    type: 'power',
+    rarity: 'starter',
+    cost: 1,
+    target: 'self',
+    description: '드론 배치: 매턴 랜덤 적에게 3 데미지.',
+    effects: [{ kind: 'apply_self', status: 'drone_basic', amount: 3 }],
+  },
+
   // ── Common ──
   n_light_drone: {
     id: 'n_light_drone',
@@ -407,6 +418,7 @@ export const ENGINEER_CARD_DEFS: Record<string, CardDef> = {
 const ENGINEER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   n_wrench:         { name: '렌치 타격+',       description: '9 데미지.',                              effects: [{ kind: 'damage', amount: 9 }] },
   n_shield_gen:     { name: '에너지 실드+',     description: '방어도 +8.',                             effects: [{ kind: 'block', amount: 8 }] },
+  n_micro_drone:   { name: '소형 드론+',       description: '드론 배치: 매턴 랜덤 적에게 5 데미지.', effects: [{ kind: 'apply_self', status: 'drone_basic', amount: 5 }] },
   n_light_drone:   { name: '경량 드론+',       description: '드론 배치: 매턴 랜덤 적에게 9 데미지.', effects: [{ kind: 'apply_self', status: 'drone_basic', amount: 9 }] },
   n_shrapnel:       { name: '파편 투사+',       description: '모든 적에게 11 데미지.',                 effects: [{ kind: 'damage_all', amount: 11 }] },
   n_rivet:          { name: '리벳건+',          description: '7 데미지를 두 번.',                      effects: [{ kind: 'damage', amount: 7, times: 2 }] },
