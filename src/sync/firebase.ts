@@ -20,12 +20,12 @@ import type { SyncSnapshot } from './sync';
 // ── Firebase 설정 ──────────────────────────────────────────────
 // Firebase Console → 프로젝트 설정 → 내 앱 → 웹앱 설정값 입력
 const firebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
+  apiKey: 'AIzaSyDFt1VlcQDQtgcxDBw81x5CcNvqp77ZGOI',
+  authDomain: 'deck-of-dungeon.firebaseapp.com',
+  projectId: 'deck-of-dungeon',
+  storageBucket: 'deck-of-dungeon.firebasestorage.app',
+  messagingSenderId: '224075374203',
+  appId: '1:224075374203:web:432633ea22281345ab0cde',
 };
 
 let app: FirebaseApp | null = null;
