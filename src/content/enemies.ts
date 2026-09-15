@@ -1217,6 +1217,85 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     },
   },
 
+  // Ch4 — 추가 적
+  entropy_wraith: {
+    id: 'entropy_wraith',
+    name: '엔트로피 망령',
+    hpRange: [60, 68],
+    decideIntent(_state, _self, turn) {
+      const i = turn % 3;
+      if (i === 0) return { kind: 'attack', damage: 9, hits: 2, label: '9×2' };
+      if (i === 1) return { kind: 'debuff', label: '쇠약+2' };
+      return { kind: 'attack', damage: 16, hits: 1, label: '16 + 화상 3' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      const i = self.turn % 3;
+      if (it.kind === 'debuff') {
+        applyStatus(state.player, 'frail', 2);
+      } else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) {
+          dealDamage(state, self, state.player, it.damage, true);
+        }
+        if (i === 2) applyStatus(state.player, 'burn', 3);
+      }
+    },
+  },
+  null_sentinel: {
+    id: 'null_sentinel',
+    name: '무의 파수꾼',
+    hpRange: [80, 90],
+    decideIntent(_state, _self, turn) {
+      if (turn === 0) return { kind: 'buff', label: '가시+6' };
+      const i = (turn - 1) % 3;
+      if (i === 0) return { kind: 'attack_block', damage: 12, block: 14, label: '12 / 방어 14' };
+      if (i === 1) return { kind: 'attack', damage: 10, hits: 2, label: '10×2' };
+      return { kind: 'buff', label: '금속화+3 방어+10' };
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'buff') {
+        if (self.turn === 0) {
+          applyStatus(self, 'thorns', 6);
+        } else {
+          applyStatus(self, 'metallicize', 3);
+          gainBlock(self, 10);
+        }
+      } else if (it.kind === 'attack_block' && it.damage) {
+        dealDamage(state, self, state.player, it.damage, true);
+        if (it.block) gainBlock(self, it.block);
+      } else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) {
+          dealDamage(state, self, state.player, it.damage, true);
+        }
+      }
+    },
+  },
+  paradox_shade: {
+    id: 'paradox_shade',
+    name: '역설의 그림자',
+    hpRange: [55, 64],
+    decideIntent(state, self, turn) {
+      return wPick(state.rng, [
+        [{ kind: 'attack', damage: 7, hits: 3, label: '7×3' }, 3],
+        [{ kind: 'debuff', label: '약화+1 취약+1 쇠약+1' }, turn > 0 ? 2 : 0],
+        [{ kind: 'attack', damage: 20, hits: 1, label: '20' }, self.hp < self.maxHp * 0.5 ? 4 : 2],
+      ]);
+    },
+    act(state, self) {
+      const it = self.intent;
+      if (it.kind === 'debuff') {
+        applyStatus(state.player, 'weak', 1);
+        applyStatus(state.player, 'vulnerable', 1);
+        applyStatus(state.player, 'frail', 1);
+      } else if (it.damage) {
+        for (let h = 0; h < (it.hits ?? 1); h++) {
+          dealDamage(state, self, state.player, it.damage, true);
+        }
+      }
+    },
+  },
+
   // Chapter 4 boss alternates (abyss_lord defined above)
   time_sovereign: {
     id: 'time_sovereign',
@@ -1492,14 +1571,21 @@ export const CH4_NORMAL_ENCOUNTERS: string[][] = [
   ['void_echo'],
   ['dimensional_warden'],
   ['whispering_madness'],
+  ['entropy_wraith'],
+  ['null_sentinel'],
+  ['paradox_shade'],
   ['void_echo', 'whispering_madness'],
   ['dimensional_warden', 'void_echo'],
+  ['entropy_wraith', 'paradox_shade'],
+  ['null_sentinel', 'entropy_wraith'],
 ];
 
 export const CH4_ELITE_ENCOUNTERS: string[][] = [
   ['rift_titan'],
   ['dimensional_warden', 'whispering_madness'],
   ['rift_titan', 'void_echo'],
+  ['null_sentinel', 'paradox_shade'],
+  ['rift_titan', 'entropy_wraith'],
 ];
 
 export const CH4_BOSS_ENCOUNTERS: string[][] = [

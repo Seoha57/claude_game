@@ -3,6 +3,7 @@ import { CHAR_NAMES } from './art';
 import { RELIC_DEFS } from '../content/relics';
 import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
+import { t } from '../i18n';
 
 function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
   const W = 600;
@@ -28,12 +29,12 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
   c.font = 'bold 28px system-ui, sans-serif';
   c.fillStyle = won ? '#d4a05b' : '#c84030';
   c.textAlign = 'center';
-  c.fillText(won ? 'VICTORY!' : 'DEFEAT...', W / 2, 48);
+  c.fillText(won ? t('승리!') : t('패배...'), W / 2, 48);
 
   // Game name
   c.font = '12px system-ui, sans-serif';
   c.fillStyle = '#8a7a82';
-  c.fillText('덱 오브 던전', W / 2, 68);
+  c.fillText(t('덱 오브 던전'), W / 2, 68);
 
   // Divider
   c.strokeStyle = '#50404a';
@@ -168,7 +169,7 @@ export async function shareRun(run: RunState, won: boolean): Promise<void> {
 
 function showCopyToast(): void {
   const toast = document.createElement('div');
-  toast.textContent = '결과 이미지가 클립보드에 복사되었습니다!';
+  toast.textContent = t('결과 이미지가 클립보드에 복사되었습니다!');
   Object.assign(toast.style, {
     position: 'fixed',
     bottom: '24px',

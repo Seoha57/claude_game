@@ -18,6 +18,7 @@ import { isCurseLike } from './deck-overlay';
 import { playSfx, getMuted, setMuted, getVolume, setVolume, getBgmMuted, setBgmMuted, getBgmVolume, setBgmVolume } from '../audio';
 import { makeRng, pick } from '../rng';
 import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison, checkGlassCannon, checkExhaust } from '../achievements';
+import { t } from '../i18n';
 import { getCardFrame } from '../card-frame';
 
 function playCost(baseCost: number): number {
@@ -398,13 +399,13 @@ function renderMid(state: CombatState): HTMLElement {
   const piles = el(
     'div',
     { class: 'pile-counts' },
-    pileLink('드로우', p.draw, { shuffleHint: true }),
-    pileLink('버림', p.discard),
-    pileLink('소멸', p.exhaust),
+    pileLink(t('덱'), p.draw, { shuffleHint: true }),
+    pileLink(t('버림'), p.discard),
+    pileLink(t('소멸'), p.exhaust),
     el('span', {
       class: 'pile-link',
-      onClick: () => openDeckOverlay(p.deck, { title: '전체 덱' }),
-    }, `전체 덱`),
+      onClick: () => openDeckOverlay(p.deck, { title: t('덱') }),
+    }, t('덱')),
   );
 
   // 낭비 경고: 사용 가능한 카드가 있는데 턴 끝내려 하면 한 번 흔들어 알림
@@ -441,7 +442,7 @@ function renderMid(state: CombatState): HTMLElement {
         flushEnemyTurnFx();
       },
     },
-    '턴 종료',
+    t('턴 종료'),
     el('span', { class: 'kbd-hint' }, '(E)'),
   );
 

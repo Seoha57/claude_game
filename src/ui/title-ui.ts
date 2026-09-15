@@ -7,6 +7,7 @@ import { RELIC_LIST } from '../content/relics';
 import { isCurseLike } from './deck-overlay';
 import { FRAMES, getCardFrame, setCardFrame } from '../card-frame';
 import { ic } from './art';
+import { t } from '../i18n';
 
 let pendingSeed = 0;
 let pendingAscension = 0;
@@ -27,8 +28,8 @@ export function renderTitle(): HTMLElement {
   };
 
   const append = () => {
-    wrapper.appendChild(el('h1', {}, '덱 오브 던전'));
-    wrapper.appendChild(el('div', { class: 'subtitle' }, '덱빌더 로그라이트'));
+    wrapper.appendChild(el('h1', {}, t('덱 오브 던전')));
+    wrapper.appendChild(el('div', { class: 'subtitle' }, t('덱빌더 로그라이트')));
 
     // 언락 진행도 표시 (전체 컨텐츠 X% 해제)
     const allCards = Object.values(CARD_DEFS).filter((c) => !isCurseLike(c.id));
@@ -61,7 +62,7 @@ export function renderTitle(): HTMLElement {
       const ascLabel = el(
         'div',
         { style: { color: 'var(--muted)', marginBottom: '8px', fontSize: '14px' } },
-        `등반 난이도: A${selectedAscension}`,
+        `${t('등반 난이도')}: A${selectedAscension}`,
       );
       wrapper.appendChild(ascLabel);
 
@@ -106,7 +107,7 @@ export function renderTitle(): HTMLElement {
               }
             },
           },
-          '이어하기',
+          t('이어하기'),
         ),
       );
     }
@@ -127,7 +128,7 @@ export function renderTitle(): HTMLElement {
             setScreen('character_select');
           },
         },
-        selectedAscension > 0 ? `새 게임 시작 (A${selectedAscension})` : '새 게임 시작',
+        selectedAscension > 0 ? `${t('새 게임 시작')} (A${selectedAscension})` : t('새 게임 시작'),
       ),
     );
 
@@ -163,19 +164,19 @@ export function renderTitle(): HTMLElement {
     wrapper.addEventListener('click', () => hbWrap.classList.remove('open'));
     hbWrap.appendChild(hbBtn);
     const hbPanel = el('div', { class: 'hb-panel' });
-    hbPanel.appendChild(menuBtn(`${ic('question')} 도움말`, 'help'));
-    hbPanel.appendChild(menuBtn(`${ic('card')} 도감`, 'codex'));
-    hbPanel.appendChild(menuBtn(`${ic('medal')} 도전과제`, 'achievements'));
-    hbPanel.appendChild(menuBtn(`${ic('progress')} 통계`, 'stats'));
-    hbPanel.appendChild(menuBtn(`${ic('card')} 기록`, 'history'));
-    hbPanel.appendChild(menuBtn(`${ic('box')} 동기화`, 'sync'));
-    hbPanel.appendChild(menuBtn(`${ic('gear')} 설정`, 'settings'));
+    hbPanel.appendChild(menuBtn(`${ic('question')} ${t('도움말')}`, 'help'));
+    hbPanel.appendChild(menuBtn(`${ic('card')} ${t('도감')}`, 'codex'));
+    hbPanel.appendChild(menuBtn(`${ic('medal')} ${t('도전과제')}`, 'achievements'));
+    hbPanel.appendChild(menuBtn(`${ic('progress')} ${t('통계')}`, 'stats'));
+    hbPanel.appendChild(menuBtn(`${ic('card')} ${t('기록')}`, 'history'));
+    hbPanel.appendChild(menuBtn(`${ic('box')} ${t('동기화')}`, 'sync'));
+    hbPanel.appendChild(menuBtn(`${ic('gear')} ${t('설정')}`, 'settings'));
     hbWrap.appendChild(hbPanel);
     wrapper.appendChild(hbWrap);
 
     const row2 = el('div', { style: { display: 'flex', gap: '8px', marginTop: '6px', justifyContent: 'center' } });
-    row2.appendChild(accentBtn(`${ic('daily')} 오늘의 도전`, 'daily'));
-    row2.appendChild(accentBtn(`${ic('trophy')} 리더보드`, 'leaderboard'));
+    row2.appendChild(accentBtn(`${ic('daily')} ${t('오늘의 도전')}`, 'daily'));
+    row2.appendChild(accentBtn(`${ic('trophy')} ${t('리더보드')}`, 'leaderboard'));
     wrapper.appendChild(row2);
 
     // Card frame selector
@@ -183,7 +184,7 @@ export function renderTitle(): HTMLElement {
     const frameRow = el('div', {
       style: { display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '8px' },
     });
-    frameRow.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px', alignSelf: 'center', width: '100%', textAlign: 'center' } }, '카드 프레임'));
+    frameRow.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px', alignSelf: 'center', width: '100%', textAlign: 'center' } }, t('카드 프레임')));
     for (const f of FRAMES) {
       const unlocked = f.check();
       const active = currentFrame === f.id;

@@ -12,6 +12,7 @@ import { isCurseLike } from './deck-overlay';
 import type { RunState } from '../types';
 import { CHARACTER_SVG, CHAR_NAMES, artEl, ic } from './art';
 import { shareRun } from './share-run';
+import { t } from '../i18n';
 
 export function renderChapterClear(): HTMLElement {
   const run = getRunOrNull();
@@ -173,7 +174,7 @@ export function renderWin(): HTMLElement {
   return el(
     'div',
     { class: 'end-screen' },
-    el('h1', { class: 'win' }, '승리!'),
+    el('h1', { class: 'win' }, t('승리!')),
     ...(didUnlock && newMax > 0
       ? [(() => { const d = el('div', { style: { color: 'var(--good)', marginTop: '12px' } }); d.innerHTML = `${ic('unlock')} 등반 A${newMax} 해금!`; return d; })()]
       : []),
@@ -188,12 +189,12 @@ export function renderWin(): HTMLElement {
     ...(run ? [el('button', {
       style: { background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', fontSize: '13px', padding: '8px 16px' },
       onClick: () => shareRun(run, true),
-    }, '결과 공유')] : []),
+    }, t('결과 공유'))] : []),
     el('button', {
       style: { background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),
-    }, '무한 던전 도전'),
-    el('button', { onClick: () => endRun() }, '제목 화면으로'),
+    }, t('무한 던전 도전')),
+    el('button', { onClick: () => endRun() }, t('제목 화면으로')),
   );
 }
 
@@ -270,8 +271,8 @@ export function renderTrueWin(): HTMLElement {
     el('button', {
       style: { marginTop: '20px', background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),
-    }, '무한 던전 도전'),
-    el('button', { style: { marginTop: '8px' }, onClick: () => endRun() }, '제목 화면으로'),
+    }, t('무한 던전 도전')),
+    el('button', { style: { marginTop: '8px' }, onClick: () => endRun() }, t('제목 화면으로')),
   );
 }
 
@@ -281,8 +282,8 @@ export function renderLose(): HTMLElement {
     return el(
       'div',
       { class: 'end-screen' },
-      el('h1', { class: 'lose' }, '패배...'),
-      el('button', { onClick: () => endRun() }, '제목 화면으로'),
+      el('h1', { class: 'lose' }, t('패배...')),
+      el('button', { onClick: () => endRun() }, t('제목 화면으로')),
     );
   }
 
@@ -312,7 +313,7 @@ export function renderLose(): HTMLElement {
   return el(
     'div',
     { class: 'end-screen' },
-    el('h1', { class: 'lose' }, '패배...'),
+    el('h1', { class: 'lose' }, t('패배...')),
     el('div', { class: 'lose-loc' }, locLabel),
     enemyNames.length > 0
       ? el('div', { class: 'lose-killer' }, `${enemyNames.join(' · ')} 에게 쓰러졌다`)
@@ -333,8 +334,8 @@ export function renderLose(): HTMLElement {
     el('button', {
       style: { background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', fontSize: '13px', padding: '8px 16px' },
       onClick: () => shareRun(run, false),
-    }, '결과 공유'),
-    el('button', { onClick: () => endRun() }, '제목 화면으로'),
+    }, t('결과 공유')),
+    el('button', { onClick: () => endRun() }, t('제목 화면으로')),
   );
 }
 
