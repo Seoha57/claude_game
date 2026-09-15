@@ -386,17 +386,54 @@ export async function pushSync(): Promise<{ version?: number; error?: string }> 
   }
 }
 
+// ── Firebase integration ──────────────────────────────────────────
+import {
+  isFirebaseConfigured,
+  isFirebaseLinked,
+  firebasePull,
+  firebasePush,
+  waitForAuth,
+} from './firebase';
+
+export async function pullFirebase(): Promise<{ changed: boolean } | { error: string }> {
+  try {
+    const remote = await firebasePull();
+    if (!remote) return { changed: false };
+    const local = captureLocal();
+    const merged = mergeSnapshots(local, remote);
+    applySnapshot(merged);
+    return { changed: true };
+  } catch (e) {
+    return { error: String(e) };
+  }
+}
+
+export async function pushFirebase(): Promise<{ error?: string }> {
+  try {
+    const local = captureLocal();
+    await firebasePush(local);
+    return {};
+  } catch (e) {
+    return { error: String(e) };
+  }
+}
+
 // ── Auto-sync ─────────────────────────────────────────────────────
 let pushTimer: number | null = null;
 let initialized = false;
 
+function isAnyLinked(): boolean {
+  return isLinked() || isFirebaseLinked();
+}
+
 // Mark that local state changed; debounce a push.
 export function markDirty(): void {
-  if (!isLinked()) return;
+  if (!isAnyLinked()) return;
   if (pushTimer != null) clearTimeout(pushTimer);
   pushTimer = window.setTimeout(() => {
     pushTimer = null;
-    void pushSync();
+    if (isFirebaseLinked()) void pushFirebase();
+    else if (isLinked()) void pushSync();
   }, 3000);
 }
 
@@ -406,22 +443,32 @@ export async function flushDirty(): Promise<void> {
     clearTimeout(pushTimer);
     pushTimer = null;
   }
-  if (isLinked()) {
-    await pushSync();
-  }
+  if (isFirebaseLinked()) await pushFirebase();
+  else if (isLinked()) await pushSync();
 }
 
 // Initialize at app startup
 export function initializeSync(): void {
   if (initialized) return;
   initialized = true;
-  if (!isLinked()) return;
-  // Pull on startup
-  void pullSync();
+
+  // Firebase auth: wait for ready, then pull if logged in
+  if (isFirebaseConfigured()) {
+    void waitForAuth().then(() => {
+      if (isFirebaseLinked()) void pullFirebase();
+    });
+    window.addEventListener('dod:auth-changed', () => {
+      if (isFirebaseLinked()) void pullFirebase();
+    });
+  }
+
+  if (isLinked()) void pullSync();
+
   // Pull when tab becomes visible again
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && isLinked()) {
-      void pullSync();
+    if (document.visibilityState === 'visible') {
+      if (isFirebaseLinked()) void pullFirebase();
+      else if (isLinked()) void pullSync();
     }
   });
   // Flush on page hide (best-effort)
