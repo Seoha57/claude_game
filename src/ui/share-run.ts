@@ -60,14 +60,14 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
   // Chapter/Floor
   c.font = '14px system-ui, sans-serif';
   c.fillStyle = '#8a7a82';
-  c.fillText(`챕터 ${run.chapter} · ${run.floor}층`, 40, 134);
+  c.fillText(`${t('챕터')} ${run.chapter} · ${run.floor}${t('층')}`, 40, 134);
 
   // Stats grid
   const stats = [
     ['HP', `${run.player.hp}/${run.player.maxHp}`],
-    ['덱', `${run.player.deck.length}장`],
-    ['골드', `${run.player.gold}`],
-    ['유물', `${run.player.relics.length}개`],
+    [t('덱'), `${run.player.deck.length}${t('장')}`],
+    ['Gold', `${run.player.gold}`],
+    [t('유물'), `${run.player.relics.length}${t('개')}`],
   ];
 
   const attacks = run.player.deck.filter(cd => { const d = getEffectiveDef(cd); return !isCurseLike(d.id) && d.type === 'attack'; }).length;
@@ -90,7 +90,7 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
   // Deck composition + combats
   c.font = '13px system-ui, sans-serif';
   c.fillStyle = '#8a7a82';
-  c.fillText(`공격 ${attacks} · 방어 ${skills} · 효과 ${powers} · ${combats}전투`, 40, sy + 52);
+  c.fillText(`${t('공격')} ${attacks} · ${t('방어')} ${skills} · ${t('효과')} ${powers} · ${combats} ${t('전투')}`, 40, sy + 52);
 
   // Relics
   c.strokeStyle = '#50404a';
@@ -101,7 +101,7 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
 
   c.font = 'bold 13px system-ui, sans-serif';
   c.fillStyle = '#d4a05b';
-  c.fillText(`유물 (${run.player.relics.length})`, 40, sy + 90);
+  c.fillText(`${t('유물')} (${run.player.relics.length})`, 40, sy + 90);
 
   c.font = '12px system-ui, sans-serif';
   c.fillStyle = '#e8dac8';
@@ -144,7 +144,7 @@ export async function shareRun(run: RunState, won: boolean): Promise<void> {
 
   const charName = CHAR_NAMES[run.characterClass] ?? run.characterClass;
   const title = won ? '승리!' : '패배...';
-  const text = `${title} ${charName} · 챕터${run.chapter} ${run.floor}층 · 덱 오브 던전`;
+  const text = `${title} ${charName} · ${t('챕터')}${run.chapter} ${run.floor}${t('층')} · ${t('덱 오브 던전')}`;
 
   if (navigator.share && navigator.canShare) {
     const file = new File([blob], 'run-result.png', { type: 'image/png' });

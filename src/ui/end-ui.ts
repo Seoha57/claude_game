@@ -53,13 +53,13 @@ export function renderChapterClear(): HTMLElement {
     const noChoices = choices.length === 0;
     const canConfirm = alreadyConfirmed || noChoices || tentativeId !== null;
 
-    wrapper.appendChild(el('h1', { style: { color: 'var(--accent)' } }, `챕터 ${cleared} 클리어!`));
+    wrapper.appendChild(el('h1', { style: { color: 'var(--accent)' } }, `${t('챕터')} ${cleared} ${t('클리어!')}`));
     const healEl = el('div', { style: { color: 'var(--good)', marginBottom: '4px' } });
-    healEl.innerHTML = `${ic('heart')} HP +${healAmt} 회복 (현재 ${run.player.hp}/${run.player.maxHp})`;
+    healEl.innerHTML = `${ic('heart')} HP +${healAmt} ${t('회복')} (${t('현재')} ${run.player.hp}/${run.player.maxHp})`;
     wrapper.appendChild(healEl);
     wrapper.appendChild(
       el('div', { style: { color: 'var(--muted)', fontSize: '13px', marginBottom: '24px' } },
-        alreadyConfirmed ? '보스 유물 선택 완료' : '보스 유물 1개를 선택하세요'),
+        alreadyConfirmed ? t('보스 유물 선택 완료') : t('보스 유물 1개를 선택하세요')),
     );
 
     const relicRow = el('div', {
@@ -92,16 +92,16 @@ export function renderChapterClear(): HTMLElement {
         el('div', { style: { fontWeight: 'bold', marginBottom: '8px' } }, relic.name),
         el('div', { style: { fontSize: '12px', color: 'var(--muted)', lineHeight: '1.5' } }, relic.description),
         isOwned
-          ? el('div', { style: { color: 'var(--good)', fontSize: '12px', marginTop: '8px' } }, '✓ 획득')
+          ? el('div', { style: { color: 'var(--good)', fontSize: '12px', marginTop: '8px' } }, `✓ ${t('획득')}`)
           : isTentative
-          ? el('div', { style: { color: 'var(--good)', fontSize: '12px', marginTop: '8px' } }, '◉ 선택중')
+          ? el('div', { style: { color: 'var(--good)', fontSize: '12px', marginTop: '8px' } }, `◉ ${t('선택중')}`)
           : el('div'),
       );
       relicRow.appendChild(card);
     }
 
     if (noChoices) {
-      relicRow.appendChild(el('div', { style: { color: 'var(--muted)' } }, '보스 유물을 모두 보유 중입니다.'));
+      relicRow.appendChild(el('div', { style: { color: 'var(--muted)' } }, t('보스 유물을 모두 보유 중입니다.')));
     }
 
     wrapper.appendChild(relicRow);
@@ -131,11 +131,11 @@ export function renderChapterClear(): HTMLElement {
             showChapterIntro(next);
           },
         },
-        alreadyConfirmed ? `챕터 ${next} 시작` : (tentativeId ? `${next}챕터 시작 (확정)` : `챕터 ${next} 시작`),
+        alreadyConfirmed ? `${t('챕터')} ${next} ${t('시작')}` : (tentativeId ? `${t('챕터')} ${next} ${t('시작')} (${t('확정')})` : `${t('챕터')} ${next} ${t('시작')}`),
       ),
     );
     wrapper.appendChild(
-      el('button', { style: { marginTop: '8px', background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' }, onClick: () => endRun() }, '포기하고 나가기'),
+      el('button', { style: { marginTop: '8px', background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' }, onClick: () => endRun() }, t('포기하고 나가기')),
     );
   };
 
@@ -289,14 +289,14 @@ export function renderLose(): HTMLElement {
 
   const curNode = run.currentNodeId ? run.map.find((n) => n.id === run.currentNodeId) : null;
   const nodeKindLabel: Record<string, string> = {
-    combat: '일반 전투',
-    elite: '엘리트',
-    boss: '보스',
-    rest: '모닥불',
-    event: '이벤트',
-    shop: '상점',
-    reward: '보물',
-    start: '시작',
+    combat: t('일반 전투'),
+    elite: t('엘리트'),
+    boss: t('보스'),
+    rest: t('모닥불'),
+    event: t('이벤트'),
+    shop: t('상점'),
+    reward: t('보물'),
+    start: t('시작'),
   };
 
   // Try to identify the enemy that killed them
@@ -307,8 +307,8 @@ export function renderLose(): HTMLElement {
 
   // Death location
   const locLabel = curNode
-    ? `챕터 ${run.chapter} · ${run.floor}층 (${nodeKindLabel[curNode.kind] ?? curNode.kind})`
-    : `챕터 ${run.chapter} · ${run.floor}층`;
+    ? `${t('챕터')} ${run.chapter} · ${run.floor}${t('층')} (${nodeKindLabel[curNode.kind] ?? curNode.kind})`
+    : `${t('챕터')} ${run.chapter} · ${run.floor}${t('층')}`;
 
   return el(
     'div',
@@ -316,7 +316,7 @@ export function renderLose(): HTMLElement {
     el('h1', { class: 'lose' }, t('패배...')),
     el('div', { class: 'lose-loc' }, locLabel),
     enemyNames.length > 0
-      ? el('div', { class: 'lose-killer' }, `${enemyNames.join(' · ')} 에게 쓰러졌다`)
+      ? el('div', { class: 'lose-killer' }, `${enemyNames.join(' · ')} ${t('에게 쓰러졌다')}`)
       : el('div'),
     // Run summary
     el(
@@ -324,10 +324,10 @@ export function renderLose(): HTMLElement {
       { class: 'lose-summary' },
       (() => { const s = el('div', { class: 'lose-stat', style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } }); s.appendChild(artEl(CHARACTER_SVG[run.characterClass], 18)); s.appendChild(document.createTextNode(CHAR_NAMES[run.characterClass] ?? run.characterClass)); return s; })(),
       (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('skull')} ${run.player.maxHp} max HP`; return d; })(),
-      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('card')} ${run.player.deck.length}장`; return d; })(),
+      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('card')} ${run.player.deck.length}${t('장')}`; return d; })(),
       (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('gold')} ${run.player.gold}`; return d; })(),
-      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('gem')} ${run.player.relics.length}유물`; return d; })(),
-      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('sword')} ${run.map.filter((n) => n.visited && (n.kind === 'combat' || n.kind === 'elite' || n.kind === 'boss')).length}전투`; return d; })(),
+      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('gem')} ${run.player.relics.length} ${t('유물')}`; return d; })(),
+      (() => { const d = el('div', { class: 'lose-stat' }); d.innerHTML = `${ic('sword')} ${run.map.filter((n) => n.visited && (n.kind === 'combat' || n.kind === 'elite' || n.kind === 'boss')).length} ${t('전투')}`; return d; })(),
       run.ascension > 0 ? el('div', { class: 'lose-stat' }, `A${run.ascension}`) : el('div'),
     ),
     renderRunSummary(run),
@@ -345,7 +345,7 @@ function renderRunSummary(run: RunState): HTMLElement {
   // Relics
   if (run.player.relics.length > 0) {
     const relicSection = el('div', { class: 'run-summary-section' });
-    relicSection.appendChild(el('div', { class: 'run-summary-label' }, `유물 (${run.player.relics.length})`));
+    relicSection.appendChild(el('div', { class: 'run-summary-label' }, `${t('유물')} (${run.player.relics.length})`));
     const relicGrid = el('div', { class: 'run-summary-relics' });
     for (const id of run.player.relics) {
       const def = RELIC_DEFS[id];
@@ -371,15 +371,15 @@ function renderRunSummary(run: RunState): HTMLElement {
     },
   });
   deckHeader.appendChild(toggle);
-  deckHeader.appendChild(document.createTextNode(` 최종 덱 (${run.player.deck.length}장)`));
+  deckHeader.appendChild(document.createTextNode(` ${t('최종 덱')} (${run.player.deck.length}${t('장')})`));
   deckSection.appendChild(deckHeader);
 
   const attacks = run.player.deck.filter((c) => { const d = getEffectiveDef(c); return !isCurseLike(d.id) && d.type === 'attack'; }).length;
   const skills = run.player.deck.filter((c) => { const d = getEffectiveDef(c); return !isCurseLike(d.id) && d.type === 'skill'; }).length;
   const powers = run.player.deck.filter((c) => { const d = getEffectiveDef(c); return !isCurseLike(d.id) && d.type === 'power'; }).length;
   const curses = run.player.deck.filter((c) => isCurseLike(getEffectiveDef(c).id)).length;
-  const typeSummary = [`공격 ${attacks}`, `방어 ${skills}`, `효과 ${powers}`];
-  if (curses > 0) typeSummary.push(`저주 ${curses}`);
+  const typeSummary = [`${t('공격')} ${attacks}`, `${t('방어')} ${skills}`, `${t('효과')} ${powers}`];
+  if (curses > 0) typeSummary.push(`${t('저주')} ${curses}`);
   deckSection.appendChild(el('div', { class: 'run-summary-type-counts' }, typeSummary.join(' · ')));
 
   const sorted = [...run.player.deck].sort((a, b) => {

@@ -137,6 +137,31 @@ const EN: Record<string, string> = {
 
   // ── 공유 ──
   '결과 이미지가 클립보드에 복사되었습니다!': 'Result image copied to clipboard!',
+
+  // ── 챕터/층 ──
+  '챕터': 'Ch.',
+  '층': 'F',
+  '장': '',
+  '개': '',
+  '클리어!': 'Clear!',
+  '최종 클리어!': 'Final Clear!',
+  '챕터 클리어!': 'Chapter Clear!',
+  '회복': 'healed',
+  '현재': 'now',
+
+  // ── 보스 유물 ──
+  '보스 유물 선택 완료': 'Boss Relic Selected',
+  '보스 유물 1개를 선택하세요': 'Choose a Boss Relic',
+  '보스 유물을 모두 보유 중입니다.': 'All boss relics owned.',
+  '획득': 'Owned',
+  '선택중': 'Selected',
+  '확정': 'Confirm',
+  '포기하고 나가기': 'Give Up',
+
+  // ── 패배 화면 ──
+  '에게 쓰러졌다': 'defeated you',
+  '유물': 'Relics',
+  '최종 덱': 'Final Deck',
 };
 
 export function t(korean: string): string {

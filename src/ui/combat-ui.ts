@@ -767,10 +767,10 @@ function applyPotionEnemy(state: CombatState, potionId: string, enemy: Enemy): v
   }
 }
 
-function typeLabel(t: string): string {
-  if (t === 'attack') return '공격';
-  if (t === 'skill') return '방어';
-  return '효과';
+function typeLabel(ty: string): string {
+  if (ty === 'attack') return t('공격');
+  if (ty === 'skill') return t('방어');
+  return t('효과');
 }
 
 function isCardEnemyTargeted(c: CardInstance | null): boolean {
@@ -1209,11 +1209,11 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
       nextLabel = '계속...';
     } else {
       nextScreen = 'win';
-      nextLabel = '최종 클리어!';
+      nextLabel = t('최종 클리어!');
     }
   } else if (isChapterBoss) {
     nextScreen = 'chapter_clear';
-    nextLabel = '챕터 클리어!';
+    nextLabel = t('챕터 클리어!');
   }
 
   // Key drops — first elite of each chapter
