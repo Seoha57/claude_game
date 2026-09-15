@@ -527,7 +527,7 @@ export const EVENT_DEFS: EventDef[] = [
 
   // ── 도적 전용 이벤트 ──────────────────────────────────────
   {
-    id: 'black_market',
+    id: 'thief_fence',
     title: '암시장',
     emoji: '🗝️',
     mood: 'dark',

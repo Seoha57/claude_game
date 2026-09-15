@@ -117,7 +117,11 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
     }
     c.fillStyle = '#362a30';
     c.beginPath();
-    c.roundRect(rx, ry - 14, tw, 20, 4);
+    if (c.roundRect) {
+      c.roundRect(rx, ry - 14, tw, 20, 4);
+    } else {
+      c.rect(rx, ry - 14, tw, 20);
+    }
     c.fill();
     c.fillStyle = '#e8dac8';
     c.fillText(def.name, rx + 8, ry);
