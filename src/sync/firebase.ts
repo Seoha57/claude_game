@@ -20,7 +20,7 @@ import type { SyncSnapshot } from './sync';
 // ── Firebase 설정 ──────────────────────────────────────────────
 // Firebase Console → 프로젝트 설정 → 내 앱 → 웹앱 설정값 입력
 const firebaseConfig = {
-  apiKey: 'AIzaSyDFt1VlcQDQtgcxDBw81x5CcNvqp77ZGOI',
+  apiKey: 'AIzaSyDFt1VlcQDQtgcxDBw81x5CcNvqp77ZG0I',
   authDomain: 'deck-of-dungeon.firebaseapp.com',
   projectId: 'deck-of-dungeon',
   storageBucket: 'deck-of-dungeon.firebasestorage.app',
