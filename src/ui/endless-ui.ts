@@ -2,7 +2,7 @@ import { el } from './dom';
 import { ic } from './art';
 import { getRun, getRunOrNull, setScreen, setCombat, endRun } from '../state';
 import { getAchievementTitle } from '../achievements';
-import { startCombat, applyRelicCombatStart } from '../combat/combat';
+import { startCombat } from '../combat/combat';
 import { applyStatus } from '../combat/statuses';
 import {
   NORMAL_ENCOUNTERS, ELITE_ENCOUNTERS, BOSS_ENCOUNTERS,
@@ -76,8 +76,6 @@ export function startNextWave(): void {
   const bDex = run.endless.bonusDex ?? 0;
   if (bStr > 0) applyStatus(cs.player, 'strength', bStr);
   if (bDex > 0) applyStatus(cs.player, 'dexterity', bDex);
-
-  applyRelicCombatStart(run.player.relics, cs);
 
   setCombat(cs);
   setScreen('combat');

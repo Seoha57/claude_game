@@ -2,7 +2,7 @@ import { el } from './dom';
 import { getRun, setScreen, setCombat, getScreen } from '../state';
 import { openDeckOverlay } from './deck-overlay';
 import { nodeById } from '../map/map';
-import { startCombat, applyRelicCombatStart } from '../combat/combat';
+import { startCombat } from '../combat/combat';
 import {
   EASY_ENCOUNTERS,
   ELITE_ENCOUNTERS,
@@ -272,7 +272,6 @@ function enterNode(n: MapNode): void {
       try {
         resetCombatUiState();
         const cs = startCombat(run.player, enemyIds, run.seed + n.y * 17 + n.x * 7);
-        applyRelicCombatStart(run.player.relics, cs);
         setCombat(cs);
         setScreen('combat');
       } catch (e) {

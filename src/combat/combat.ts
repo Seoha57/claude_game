@@ -39,7 +39,10 @@ export function startCombat(player: Player, enemyDefIds: string[], seed: number)
     e.intent = ENEMY_DEFS[e.defId].decideIntent(state, e, 0);
   }
 
-  // Apply relic-driven combat-start hooks (kept simple — handled elsewhere if added)
+  // Apply relic effects BEFORE first turn so diceMinimum etc. are set
+  const run = getRunOrNull();
+  if (run) applyRelicCombatStart(run.player.relics, state);
+
   beginPlayerTurn(state);
   return state;
 }
