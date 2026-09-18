@@ -507,7 +507,11 @@ export function gamblerGetEffectiveDef(card: CardInstance): CardDef {
 }
 
 export function canUpgradeGambler(card: CardInstance): boolean {
-  return (card.upgraded ?? 0) < 2 && card.defId in GAMBLER_UPGRADE_MAP;
+  const level = card.upgraded ?? 0;
+  if (level >= 2) return false;
+  if (!(card.defId in GAMBLER_UPGRADE_MAP)) return false;
+  if (level >= 1 && !(card.defId in GAMBLER_UPGRADE_PP_MAP)) return false;
+  return true;
 }
 
 const GAMBLER_CARD_LIST = Object.values(GAMBLER_CARD_DEFS);
