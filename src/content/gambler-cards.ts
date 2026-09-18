@@ -185,6 +185,16 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'draw', amount: 3 }],
     exhaust: true,
   },
+  b_lucky_heal: {
+    id: 'b_lucky_heal',
+    name: '행운의 치유',
+    type: 'skill',
+    rarity: 'common',
+    cost: 1,
+    target: 'self',
+    description: '2 × 🎲 회복.',
+    effects: [{ kind: 'heal_dice', base: 2 }],
+  },
 
   // ── Uncommon ──
   b_double_down: {
@@ -348,6 +358,32 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_dice', base: 6 }],
     exhaust: true,
   },
+  b_lifeline: {
+    id: 'b_lifeline',
+    name: '라이프라인',
+    type: 'skill',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'self',
+    description: '3 × 🎲 회복. 2 × 🎲 방어도.',
+    effects: [
+      { kind: 'heal_dice', base: 3 },
+      { kind: 'block_dice', base: 2 },
+    ],
+  },
+  b_frost_bet: {
+    id: 'b_frost_bet',
+    name: '프로스트 벳',
+    type: 'attack',
+    rarity: 'uncommon',
+    cost: 1,
+    target: 'enemy',
+    description: '3 × 🎲 데미지. 빙결 +🎲.',
+    effects: [
+      { kind: 'damage_dice', base: 3 },
+      { kind: 'apply_enemy_dice', status: 'freeze', base: 1 },
+    ],
+  },
 
   // ── Rare ──
   b_all_in: {
@@ -444,6 +480,7 @@ const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   b_feint:        { name: '페인트+',          description: '4 × 🎲 방어도. 약화 +2.',                                  effects: [{ kind: 'block_dice', base: 4 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   b_risky_play:   { name: '위험한 한 수+',    description: 'HP -2. 6 × 🎲 데미지.',                                    effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'damage_dice', base: 6 }] },
   b_card_shark:   { name: '카드 샤크+',       description: '4장 드로우. 소멸.',                                        effects: [{ kind: 'draw', amount: 4 }] },
+  b_lucky_heal:   { name: '행운의 치유+',     description: '3 × 🎲 회복.',                                            effects: [{ kind: 'heal_dice', base: 3 }] },
   b_double_down:  { name: '더블 다운+',       description: '4 × 🎲 데미지 3회.',                                       effects: [{ kind: 'damage_dice', base: 4, times: 3 }] },
   b_loaded_dice:  { name: '세공 주사위+',     description: '주사위 최솟값 2.',                                           effects: [{ kind: 'set_dice_minimum', value: 2 }] },
   b_sleight:      { name: '슬라이트 오브 핸드+', description: 'HP -2. 에너지 +3.',                                      effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'energy', amount: 3 }] },
@@ -458,6 +495,8 @@ const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   b_roulette:     { name: '룰렛+',            description: '모든 적에게 5 × 🎲 데미지.',                                effects: [{ kind: 'damage_all_dice', base: 5 }] },
   b_hedge_bet:    { name: '헤지 베팅+',       description: '3 × 🎲 방어도. 3 × 🎲 재생.',                              effects: [{ kind: 'block_dice', base: 3 }, { kind: 'apply_self_dice', status: 'regen', base: 3 }] },
   b_double_or_nothing: { name: '더블 오어 낫씽+', description: '8 × 🎲 데미지. 소멸.',                                  effects: [{ kind: 'damage_dice', base: 8 }] },
+  b_lifeline:     { name: '라이프라인+',       description: '4 × 🎲 회복. 3 × 🎲 방어도.',                            effects: [{ kind: 'heal_dice', base: 4 }, { kind: 'block_dice', base: 3 }] },
+  b_frost_bet:    { name: '프로스트 벳+',      description: '4 × 🎲 데미지. 빙결 +🎲. 약화 +1.',                      effects: [{ kind: 'damage_dice', base: 4 }, { kind: 'apply_enemy_dice', status: 'freeze', base: 1 }, { kind: 'apply_enemy', status: 'weak', amount: 1 }] },
   b_all_in:       { name: '올인+',            description: '12 × 🎲 데미지. 취약 +3. 다음 턴 🎲 → 6.',                effects: [{ kind: 'damage_dice', base: 12 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }, { kind: 'fix_dice', value: 6 }] },
   b_royal_flush:  { name: '로열 플러시+',     description: '9 × 🎲 데미지 2회. 다음 턴 🎲 → 6. 소멸.',                effects: [{ kind: 'damage_dice', base: 9, times: 2 }, { kind: 'fix_dice', value: 6 }] },
   b_fortune:      { name: '포춘+',            description: '턴 시작 시 힘 +3. 선천.',                                   effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },

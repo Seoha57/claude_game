@@ -244,6 +244,11 @@ export function applyEffect(
       applyEffect(state, { kind: 'apply_self', status: effect.status, amount: total }, source, targetEnemy, log);
       return;
     }
+    case 'heal_dice': {
+      const total = effect.base * (state.flags.diceRoll ?? 1);
+      applyEffect(state, { kind: 'heal', amount: total }, source, targetEnemy, log);
+      return;
+    }
     case 'fix_dice': {
       state.flags.fixedDice = effect.value;
       log(`다음 턴 주사위 ${effect.value}로 고정!`);

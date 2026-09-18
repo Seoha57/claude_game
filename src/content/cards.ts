@@ -615,6 +615,9 @@ export function applyPlusPlus(def: CardDef): CardDef {
     if (e.kind === 'heal') {
       return { ...e, amount: e.amount + PLUSPLUS_HEAL_BONUS };
     }
+    if (e.kind === 'heal_dice') {
+      return { ...e, base: e.base + PLUSPLUS_HEAL_BONUS };
+    }
     if (e.kind === 'apply_self' || e.kind === 'apply_enemy' || e.kind === 'apply_all') {
       if (e.amount <= 0) return e;
       return { ...e, amount: e.amount + PLUSPLUS_STATUS_BONUS };
