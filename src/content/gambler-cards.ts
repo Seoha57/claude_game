@@ -297,19 +297,6 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
       { kind: 'apply_enemy_dice', status: 'poison', base: 2 },
     ],
   },
-  b_cold_bluff: {
-    id: 'b_cold_bluff',
-    name: '콜드 블러프',
-    type: 'attack',
-    rarity: 'uncommon',
-    cost: 2,
-    target: 'enemy',
-    description: '5 × 🎲 데미지. 빙결 +1.',
-    effects: [
-      { kind: 'damage_dice', base: 5 },
-      { kind: 'apply_enemy', status: 'freeze', amount: 1 },
-    ],
-  },
   b_follow_up: {
     id: 'b_follow_up',
     name: '후속 베팅',
@@ -490,7 +477,6 @@ const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   b_marked_card:  { name: '마킹된 카드+',     description: '10 데미지. 사용할 때마다 영구 데미지 +3.',                  effects: [{ kind: 'damage', amount: 10 }], scaling: { kind: 'on_play', amount: 3 } },
   b_card_count:   { name: '카드 카운팅+',     description: '3 × 🎲 재생.',                                             effects: [{ kind: 'apply_self_dice', status: 'regen', base: 3 }] },
   b_poison_bet:   { name: '독배 내기+',       description: '4 × 🎲 데미지. 3 × 🎲 중독.',                              effects: [{ kind: 'damage_dice', base: 4 }, { kind: 'apply_enemy_dice', status: 'poison', base: 3 }] },
-  b_cold_bluff:   { name: '콜드 블러프+',     description: '6 × 🎲 데미지. 빙결 +1.',                                  effects: [{ kind: 'damage_dice', base: 6 }, { kind: 'apply_enemy', status: 'freeze', amount: 1 }] },
   b_follow_up:    { name: '후속 베팅+',       description: '4 × 🎲 데미지. 직전이 공격이면 +4 × 🎲.',                  effects: [{ kind: 'damage_dice', base: 4 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage_dice', base: 4 }] }] },
   b_roulette:     { name: '룰렛+',            description: '모든 적에게 5 × 🎲 데미지.',                                effects: [{ kind: 'damage_all_dice', base: 5 }] },
   b_hedge_bet:    { name: '헤지 베팅+',       description: '3 × 🎲 방어도. 3 × 🎲 재생.',                              effects: [{ kind: 'block_dice', base: 3 }, { kind: 'apply_self_dice', status: 'regen', base: 3 }] },
