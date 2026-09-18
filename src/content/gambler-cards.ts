@@ -1,4 +1,5 @@
 import type { CardDef, CardInstance } from '../types';
+import { applyPlusPlus } from './cards';
 
 export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
   // ── Starter ──
@@ -498,20 +499,18 @@ const GAMBLER_UPGRADE_PP_MAP: Record<string, Partial<CardDef>> = {
 export function gamblerGetEffectiveDef(card: CardInstance): CardDef {
   const base = GAMBLER_CARD_DEFS[card.defId];
   if (!card.upgraded) return base;
+  const up = GAMBLER_UPGRADE_MAP[card.defId];
+  const plusDef = up ? { ...base, ...up } : base;
   if ((card.upgraded ?? 0) >= 2) {
     const pp = GAMBLER_UPGRADE_PP_MAP[card.defId];
     if (pp) return { ...base, ...pp };
+    return applyPlusPlus(plusDef);
   }
-  const up = GAMBLER_UPGRADE_MAP[card.defId];
-  return up ? { ...base, ...up } : base;
+  return plusDef;
 }
 
 export function canUpgradeGambler(card: CardInstance): boolean {
-  const level = card.upgraded ?? 0;
-  if (level >= 2) return false;
-  if (!(card.defId in GAMBLER_UPGRADE_MAP)) return false;
-  if (level >= 1 && !(card.defId in GAMBLER_UPGRADE_PP_MAP)) return false;
-  return true;
+  return (card.upgraded ?? 0) < 2 && card.defId in GAMBLER_UPGRADE_MAP;
 }
 
 const GAMBLER_CARD_LIST = Object.values(GAMBLER_CARD_DEFS);
