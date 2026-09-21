@@ -1,5 +1,5 @@
 import type { CardDef, CardInstance } from '../types';
-import { applyPlusPlus } from './cards';
+import { applyPlusPlus } from './plusplus';
 
 export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
   // ── Starter ──
@@ -498,6 +498,7 @@ const GAMBLER_UPGRADE_PP_MAP: Record<string, Partial<CardDef>> = {
 
 export function gamblerGetEffectiveDef(card: CardInstance): CardDef {
   const base = GAMBLER_CARD_DEFS[card.defId];
+  if (!base) return { id: card.defId, name: '???', type: 'skill', rarity: 'common', cost: 0, target: 'none', description: '삭제된 카드', effects: [] };
   if (!card.upgraded) return base;
   const up = GAMBLER_UPGRADE_MAP[card.defId];
   const plusDef = up ? { ...base, ...up } : base;

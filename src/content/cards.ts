@@ -1,4 +1,5 @@
 import type { CardDef } from '../types';
+import { applyPlusPlus } from './plusplus';
 import { GUNNER_CARD_DEFS, gunnerGetEffectiveDef, canUpgradeGunner } from './gunner-cards';
 import { FIGHTER_CARD_DEFS, fighterGetEffectiveDef, canUpgradeFighter } from './fighter-cards';
 import { MAGICIAN_CARD_DEFS, magicianGetEffectiveDef, canUpgradeMagician } from './magician-cards';
@@ -585,75 +586,12 @@ export function getEffectiveDef(card: CardInstance): CardDef {
       def = up ? { ...base, ...up } : base;
     }
   }
-  if ((card.upgraded ?? 0) >= 2) def = applyPlusPlus(def);
+  if ((card.upgraded ?? 0) >= 2 && !card.defId.startsWith('b_')) def = applyPlusPlus(def);
   return applyScaling(card, def);
 }
 
 // ── 이중 강화 (++) 일괄 적용 ─────────────────────────────────────
-// + 강화 위에 추가 보너스: 데미지/방어도/회복 +3, 상태이상 +1, 드로우/에너지 +1
-const PLUSPLUS_DAMAGE_BONUS = 3;
-const PLUSPLUS_BLOCK_BONUS = 3;
-const PLUSPLUS_HEAL_BONUS = 3;
-const PLUSPLUS_STATUS_BONUS = 1;
-const PLUSPLUS_DRAW_BONUS = 1;
-const PLUSPLUS_ENERGY_BONUS = 1;
-
-export function applyPlusPlus(def: CardDef): CardDef {
-  const effects = def.effects.map((e) => {
-    if (e.kind === 'damage' || e.kind === 'damage_all') {
-      return { ...e, amount: e.amount + PLUSPLUS_DAMAGE_BONUS };
-    }
-    if (e.kind === 'damage_dice' || e.kind === 'damage_all_dice') {
-      return { ...e, base: e.base + PLUSPLUS_DAMAGE_BONUS };
-    }
-    if (e.kind === 'block') {
-      return { ...e, amount: e.amount + PLUSPLUS_BLOCK_BONUS };
-    }
-    if (e.kind === 'block_dice') {
-      return { ...e, base: e.base + PLUSPLUS_BLOCK_BONUS };
-    }
-    if (e.kind === 'heal') {
-      return { ...e, amount: e.amount + PLUSPLUS_HEAL_BONUS };
-    }
-    if (e.kind === 'heal_dice') {
-      return { ...e, base: e.base + PLUSPLUS_HEAL_BONUS };
-    }
-    if (e.kind === 'apply_self' || e.kind === 'apply_enemy' || e.kind === 'apply_all') {
-      if (e.amount <= 0) return e;
-      return { ...e, amount: e.amount + PLUSPLUS_STATUS_BONUS };
-    }
-    if (e.kind === 'apply_enemy_dice' || e.kind === 'apply_self_dice') {
-      return { ...e, base: e.base + PLUSPLUS_STATUS_BONUS };
-    }
-    if (e.kind === 'draw') return { ...e, amount: e.amount + PLUSPLUS_DRAW_BONUS };
-    if (e.kind === 'energy') return { ...e, amount: e.amount + PLUSPLUS_ENERGY_BONUS };
-    return e;
-  });
-  const name = def.name.endsWith('++') ? def.name : def.name.endsWith('+') ? def.name + '+' : def.name + '++';
-  return { ...def, effects, name, description: bumpNumbersForPlusPlus(def.description) };
-}
-
-// 설명 텍스트의 숫자를 ++ 보너스만큼 증가시킨다.
-// 한국어 패턴: "N 데미지", "방어도 +N", "힘 +N" 등
-function bumpNumbersForPlusPlus(desc: string): string {
-  const damageRe = /(\d+)( 데미지)/g;
-  const healRe = /(\d+)( 회복)/g;
-  const blockRe = /(방어도 \+)(\d+)/g;
-  const drawRe = /(\d+)(장 드로우)/g;
-  const energyRe = /(에너지 \+)(\d+)/g;
-  const statusLabels = ['힘', '민첩', '취약', '약화', '재생', '중독', '화상', '빙결', '의식', '가시', '금속화', '연약'];
-  let out = desc
-    .replace(damageRe, (_m, n, t) => `${parseInt(n, 10) + PLUSPLUS_DAMAGE_BONUS}${t}`)
-    .replace(healRe, (_m, n, t) => `${parseInt(n, 10) + PLUSPLUS_HEAL_BONUS}${t}`)
-    .replace(blockRe, (_m, p, n) => `${p}${parseInt(n, 10) + PLUSPLUS_BLOCK_BONUS}`)
-    .replace(drawRe, (_m, n, t) => `${parseInt(n, 10) + PLUSPLUS_DRAW_BONUS}${t}`)
-    .replace(energyRe, (_m, p, n) => `${p}${parseInt(n, 10) + PLUSPLUS_ENERGY_BONUS}`);
-  for (const label of statusLabels) {
-    const re = new RegExp(`(${label} \\+)(\\d+)`, 'g');
-    out = out.replace(re, (_m, p, n) => `${p}${parseInt(n, 10) + PLUSPLUS_STATUS_BONUS}`);
-  }
-  return out;
-}
+export { applyPlusPlus } from './plusplus';
 
 function applyScaling(card: CardInstance, def: CardDef): CardDef {
   const bonus = card.bonusDamage ?? 0;
