@@ -2429,6 +2429,9 @@ button:disabled {
   padding: 28px 16px;
   max-width: 920px;
   margin: 0 auto;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .stats-summary {
   display: flex;
@@ -2487,6 +2490,104 @@ button:disabled {
   font-size: 13px;
 }
 .stats-label { color: var(--muted); }
+
+/* ── Stats timeline ── */
+.stats-timeline {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+.stats-timeline-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.stats-timeline-dots .dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.stats-timeline-dots .dot.win { background: var(--good); }
+.stats-timeline-dots .dot.true-win { background: var(--accent); }
+.stats-timeline-dots .dot.loss { background: var(--bad); opacity: 0.7; }
+.stats-timeline-label {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+/* ── Stats bar chart ── */
+.stats-bars, .stats-killers {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stats-bar-row, .stats-killer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stats-bar-label {
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.stats-bar-bg {
+  flex: 1;
+  height: 18px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  overflow: hidden;
+}
+.stats-bar-fill {
+  height: 100%;
+  transition: width 0.3s;
+}
+.stats-bar-fill.win { background: var(--good); }
+.stats-bar-fill.true-win { background: var(--accent); }
+.stats-bar-fill.loss { background: var(--bad); opacity: 0.7; }
+.stats-bar-rate {
+  min-width: 36px;
+  text-align: right;
+  font-weight: bold;
+  font-size: 13px;
+}
+.stats-bar-detail {
+  min-width: 50px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ── Stats killer chart ── */
+.stats-killer-name {
+  min-width: 100px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.stats-killer-count {
+  min-width: 36px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--bad);
+}
 
 /* ── Event screen ── */
 .event-screen {
