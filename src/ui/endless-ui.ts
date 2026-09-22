@@ -15,6 +15,7 @@ import { resetCombatUiState } from './combat-ui';
 import { playSfx } from '../audio';
 import { canUpgrade } from '../content/cards';
 import { POTION_LIST } from '../content/potions';
+import { shareRun } from './share-run';
 import type { RunState } from '../types';
 
 function saveEndlessBest(wave: number): void {
@@ -437,6 +438,13 @@ export function renderEndlessResult(): HTMLElement {
   inputRow.appendChild(submitBtn);
   wrapper.appendChild(inputRow);
   wrapper.appendChild(statusEl);
+
+  if (run) {
+    wrapper.appendChild(el('button', {
+      style: { background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', fontSize: '13px', padding: '8px 16px', marginTop: '12px' },
+      onClick: () => shareRun(run, false),
+    }, '결과 공유'));
+  }
 
   const lbBtn = el('button', {
     style: { marginTop: '12px' },

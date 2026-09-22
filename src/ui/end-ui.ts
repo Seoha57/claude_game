@@ -268,6 +268,10 @@ export function renderTrueWin(): HTMLElement {
       ? [el('div', { style: { color: 'var(--accent)', fontSize: '13px', marginTop: '4px' } },
           `무한 던전 점수 ×${(1 + runAscension * 0.1).toFixed(1)} (A${runAscension} 보너스)`)]
       : []),
+    ...(run ? [el('button', {
+      style: { background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', fontSize: '13px', padding: '8px 16px' },
+      onClick: () => shareRun(run, true),
+    }, t('결과 공유'))] : []),
     el('button', {
       style: { marginTop: '20px', background: 'var(--accent-2)', color: 'white' },
       onClick: () => startEndless(),

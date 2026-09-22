@@ -3,6 +3,7 @@ import { CHAR_NAMES } from './art';
 import { RELIC_DEFS } from '../content/relics';
 import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
+import { calcEndlessScore } from './endless-ui';
 import { t } from '../i18n';
 
 function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
@@ -12,6 +13,8 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
   canvas.width = W;
   canvas.height = H;
   const c = canvas.getContext('2d')!;
+
+  const isEndless = !!run.endless;
 
   // Background
   const grad = c.createLinearGradient(0, 0, W, H);
@@ -29,7 +32,10 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
   c.font = 'bold 28px system-ui, sans-serif';
   c.fillStyle = won ? '#d4a05b' : '#c84030';
   c.textAlign = 'center';
-  c.fillText(won ? t('승리!') : t('패배...'), W / 2, 48);
+  const title = isEndless
+    ? `무한 던전 · 웨이브 ${run.endless!.wave}`
+    : (won ? t('승리!') : t('패배...'));
+  c.fillText(title, W / 2, 48);
 
   // Game name
   c.font = '12px system-ui, sans-serif';
@@ -57,10 +63,15 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
     c.fillText(`A${run.ascension}`, 40 + c.measureText(charName).width + 12, 110);
   }
 
-  // Chapter/Floor
+  // Chapter/Floor or Endless score
   c.font = '14px system-ui, sans-serif';
   c.fillStyle = '#8a7a82';
-  c.fillText(`${t('챕터')} ${run.chapter} · ${run.floor}${t('층')}`, 40, 134);
+  if (isEndless) {
+    const score = calcEndlessScore(run);
+    c.fillText(`점수 ${score}`, 40, 134);
+  } else {
+    c.fillText(`${t('챕터')} ${run.chapter} · ${run.floor}${t('층')}`, 40, 134);
+  }
 
   // Stats grid
   const stats = [
@@ -143,8 +154,12 @@ export async function shareRun(run: RunState, won: boolean): Promise<void> {
   if (!blob) return;
 
   const charName = CHAR_NAMES[run.characterClass] ?? run.characterClass;
-  const title = won ? '승리!' : '패배...';
-  const text = `${title} ${charName} · ${t('챕터')}${run.chapter} ${run.floor}${t('층')} · ${t('덱 오브 던전')}`;
+  const isEndless = !!run.endless;
+  const title = isEndless
+    ? `무한 던전 웨이브 ${run.endless!.wave} · 점수 ${calcEndlessScore(run)}`
+    : (won ? '승리!' : '패배...');
+  const loc = isEndless ? '' : ` · ${t('챕터')}${run.chapter} ${run.floor}${t('층')}`;
+  const text = `${title} ${charName}${loc} · ${t('덱 오브 던전')}`;
 
   if (navigator.share && navigator.canShare) {
     const file = new File([blob], 'run-result.png', { type: 'image/png' });
