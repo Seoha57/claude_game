@@ -8,6 +8,7 @@ import { showAchievementToast } from './ui/achievement-toast';
 import { initializeSync } from './sync/sync';
 import { showRebrandNotice } from './ui/rebrand-notice';
 import { initPwaInstall } from './ui/pwa-install';
+import { initTouchTooltip } from './ui/touch-tooltip';
 
 setAchievementNotifier(showAchievementToast);
 setRenderer(render);
@@ -16,6 +17,7 @@ initializeSync();
 render();
 showRebrandNotice();
 initPwaInstall();
+initTouchTooltip();
 
 // Re-render when sync pulls in remote changes
 window.addEventListener('dod:sync-applied', () => {

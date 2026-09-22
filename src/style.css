@@ -3551,3 +3551,6 @@ button:disabled {
   0%, 100% { box-shadow: 0 0 0 4px var(--accent), 0 0 16px rgba(217,178,111,0.3); }
   50% { box-shadow: 0 0 0 6px var(--accent), 0 0 24px rgba(217,178,111,0.6); }
 }
+
+/* ── Touch tooltip (mobile) ── */
+[data-tooltip].tooltip-active::after { opacity: 1 !important; }
