@@ -218,6 +218,48 @@ button:disabled {
   justify-content: center;
   align-items: flex-start;
 }
+.map-guide {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 14px 18px;
+  max-width: 400px;
+  width: calc(100vw - 32px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  animation: pwa-slide-up 0.3s ease;
+  text-align: center;
+}
+.map-guide-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.map-guide-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text);
+}
+.map-guide-icon { width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; }
+.map-guide-icon svg { width: 18px; height: 18px; }
+.map-guide-close {
+  font-size: 12px;
+  padding: 5px 20px;
+  background: var(--accent);
+  color: #1a1416;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
 .map-canvas {
   position: relative;
   margin: 0 auto;
@@ -1840,6 +1882,26 @@ button:disabled {
 .hb-item:hover, .hb-item:active { background: var(--panel-2); }
 
 /* ── Combat gear / audio panel ── */
+.combat-help {
+  position: absolute;
+  top: 8px;
+  right: 42px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--accent);
+  cursor: pointer;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  min-height: 0;
+}
 .combat-gear {
   position: absolute;
   top: 8px;

@@ -23,6 +23,18 @@ const STEPS: TutorialStep[] = [
     position: 'top',
   },
   {
+    target: '.hand-cards',
+    title: '카드 타게팅',
+    text: '공격 카드를 클릭하면 카드가 위로 떠오릅니다. 그 다음 공격할 적을 클릭하세요! 적이 1마리면 자동 발동됩니다.',
+    position: 'top',
+  },
+  {
+    target: '.enemies',
+    title: '적 의도 & 데미지 미리보기',
+    text: '적 머리 위의 아이콘이 다음 행동 예고입니다. 카드 선택 시 적에게 들어갈 데미지가 숫자로 표시됩니다!',
+    position: 'bottom',
+  },
+  {
     target: '.hp-bar',
     title: '체력과 방어도',
     text: '방어도는 적의 공격을 먼저 흡수합니다. 단, 매 턴 시작 시 0으로 초기화됩니다.',

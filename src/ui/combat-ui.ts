@@ -461,7 +461,16 @@ function renderMid(state: CombatState): HTMLElement {
   });
   gearBtn.innerHTML = ic('gear');
 
-  return el('div', { class: 'combat-mid' }, playerStats, relicBar, potionBar, piles, endTurn, gearBtn);
+  const helpBtn = el('button', {
+    class: 'combat-help',
+    title: '도움말',
+    onClick: (e: Event) => {
+      e.stopPropagation();
+      setScreen('help');
+    },
+  }, '?');
+
+  return el('div', { class: 'combat-mid' }, playerStats, relicBar, potionBar, piles, endTurn, helpBtn, gearBtn);
 }
 
 function buildAudioPanel(): HTMLElement {

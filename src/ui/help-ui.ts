@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { setScreen } from '../state';
+import { setScreen, getRunOrNull, getCombatOrNull } from '../state';
 import { ic } from './art';
 
 type HelpLine = string | { text: string; highlight?: boolean };
@@ -134,8 +134,10 @@ export function renderHelp(): HTMLElement {
     '칭호는 리더보드에 표시됩니다.',
   ]));
 
+  const backScreen = getCombatOrNull() ? 'combat' as const : getRunOrNull() ? 'map' as const : 'title' as const;
+  const backLabel = backScreen === 'combat' ? '← 전투로' : backScreen === 'map' ? '← 맵으로' : '← 제목으로';
   wrapper.appendChild(
-    el('button', { style: { marginTop: '20px' }, onClick: () => setScreen('title') }, '← 제목으로'),
+    el('button', { style: { marginTop: '20px' }, onClick: () => setScreen(backScreen) }, backLabel),
   );
 
   return wrapper;

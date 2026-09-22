@@ -92,6 +92,11 @@ export function renderMap(): HTMLElement {
             })(),
           ]
         : []),
+      el('span', {
+        style: { cursor: 'pointer', color: 'var(--accent)', fontWeight: 'bold' },
+        onClick: () => setScreen('help'),
+        title: '도움말',
+      }, '?'),
     ),
   );
 
@@ -202,7 +207,44 @@ export function renderMap(): HTMLElement {
     });
   }
 
-  return el('div', { class: 'map-screen' }, header, board);
+  const wrapper = el('div', { class: 'map-screen' }, header, board);
+
+  if (!isMapGuideDismissed()) {
+    const guide = el('div', { class: 'map-guide' });
+    const legendItems = [
+      [MAP_NODE_SVG.combat, '전투'],
+      [MAP_NODE_SVG.elite, '엘리트'],
+      [MAP_NODE_SVG.rest, '모닥불'],
+      [MAP_NODE_SVG.reward, '보물'],
+      [MAP_NODE_SVG.shop, '상점'],
+      [MAP_NODE_SVG.event, '이벤트'],
+      [MAP_NODE_SVG.boss, '보스'],
+    ];
+    const legend = el('div', { class: 'map-guide-legend' });
+    for (const [svg, label] of legendItems) {
+      const item = el('span', { class: 'map-guide-item' });
+      item.innerHTML = `<span class="map-guide-icon">${svg}</span>${label}`;
+      legend.appendChild(item);
+    }
+    guide.appendChild(el('div', { style: { fontWeight: 'bold', color: 'var(--accent)', marginBottom: '6px' } }, '노드를 클릭해서 이동하세요'));
+    guide.appendChild(legend);
+    const dismiss = el('button', {
+      class: 'map-guide-close',
+      onClick: () => { dismissMapGuide(); guide.remove(); },
+    }, '확인');
+    guide.appendChild(dismiss);
+    wrapper.appendChild(guide);
+  }
+
+  return wrapper;
+}
+
+const MAP_GUIDE_KEY = 'dod_map_guide_done';
+function isMapGuideDismissed(): boolean {
+  try { return localStorage.getItem(MAP_GUIDE_KEY) === '1'; } catch { return true; }
+}
+function dismissMapGuide(): void {
+  try { localStorage.setItem(MAP_GUIDE_KEY, '1'); } catch { /* noop */ }
 }
 
 function nodePos(n: MapNode, totalHeight: number): [number, number] {
