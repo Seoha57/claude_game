@@ -1456,7 +1456,7 @@ function applyVictoryRelics(run: any, _state: any): void {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 6);
   }
   if (run.player.relics.includes('blood_vial')) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 2);
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 4);
   }
   if (run.player.relics.includes('herb_pouch')) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 5);

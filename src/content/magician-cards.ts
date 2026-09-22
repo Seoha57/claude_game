@@ -263,8 +263,8 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 3,
     target: 'enemy',
-    description: '32 데미지.',
-    effects: [{ kind: 'damage', amount: 32 }],
+    description: '32 데미지. 약화 +1.',
+    effects: [{ kind: 'damage', amount: 32 }, { kind: 'apply_enemy', status: 'weak', amount: 1 }],
   },
   m_kasiyas: {
     id: 'm_kasiyas',
@@ -437,7 +437,7 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_goblin_charge:  { name: '소환: 돌격 정령+',   description: '턴 종료 시 방어도 +4.',                  effects: [{ kind: 'apply_self', status: 'metallicize', amount: 4 }] },
   m_ouroboros:      { name: '자기 재생+',                description: '15 데미지. 처치 시 영구 데미지 +6. 소멸.', effects: [{ kind: 'damage', amount: 15 }], scaling: { kind: 'on_kill', amount: 6 } },
   m_doll_forest:    { name: '인형의 숲+',                 description: '카드 소멸 시 에너지 +1, 카드 1장 드로우.', effects: [{ kind: 'apply_self', status: 'on_exhaust_energy', amount: 1 }, { kind: 'apply_self', status: 'on_exhaust_draw', amount: 1 }] },
-  m_astral_storm:   { name: '별빛 폭풍+',              description: '42 데미지.',                             effects: [{ kind: 'damage', amount: 42 }] },
+  m_astral_storm:   { name: '별빛 폭풍+',              description: '42 데미지. 약화 +2.',                    effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   m_kasiyas:        { name: '금단의 마술+',              description: 'HP -3. 24 데미지. 유지. 소멸.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
   // 콤보 시너지
   m_amplify:        { name: '마력 증폭+',  description: '9 데미지. 직전이 방어카드면 +10 데미지.',
@@ -451,7 +451,7 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_marionette:     { name: '인형 조종+',                 description: '모든 적에게 14 데미지. 사용할 때마다 영구 데미지 +4.', effects: [{ kind: 'damage_all', amount: 14 }], scaling: { kind: 'on_play', amount: 4 } },
   // 풀 확장
   m_frost_bolt:     { name: '냉기 화살+',   description: '8 데미지. 빙결 +2.',                     effects: [{ kind: 'damage', amount: 8 }, { kind: 'apply_enemy', status: 'freeze', amount: 2 }] },
-  m_mana_charge:    { name: '마나 충전+',   description: '에너지 +2. 2장 드로우. 소멸.',           effects: [{ kind: 'energy', amount: 2 }, { kind: 'draw', amount: 2 }] },
+  m_mana_charge:    { name: '마나 충전+',   description: '에너지 +1. 2장 드로우. 소멸.',           effects: [{ kind: 'energy', amount: 1 }, { kind: 'draw', amount: 2 }] },
   m_fire_burst:     { name: '불꽃 폭발+',   description: '모든 적에게 12 데미지. 화상 +4.',         effects: [{ kind: 'damage_all', amount: 12 }, { kind: 'apply_all', status: 'burn', amount: 4 }] },
   m_energy_circuit: { name: '에너지 회로+', description: '턴 종료 시 방어도 +6.',                   effects: [{ kind: 'apply_self', status: 'metallicize', amount: 6 }] },
   m_time_warp:      { name: '타임 워프+',   description: '카드 5장 드로우. 에너지 +3. 소멸.',       effects: [{ kind: 'draw', amount: 5 }, { kind: 'energy', amount: 3 }] },

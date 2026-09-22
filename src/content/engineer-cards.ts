@@ -329,10 +329,10 @@ export const ENGINEER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'common',
     cost: 1,
     target: 'enemy',
-    description: '8 데미지. 이번 턴 첫 카드면 +8 데미지.',
+    description: '6 데미지. 이번 턴 첫 카드면 +6 데미지.',
     effects: [
-      { kind: 'damage', amount: 8 },
-      { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'damage', amount: 8 }] },
+      { kind: 'damage', amount: 6 },
+      { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'damage', amount: 6 }] },
     ],
   },
   n_chain_reaction: {
@@ -445,8 +445,8 @@ const ENGINEER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   n_meltdown:       { name: '노심 용해+',       description: 'HP -3. 24 데미지.',                      effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
   n_perpetual:      { name: '영구 기관+',       description: '턴 시작 시 힘 +3. 선천.',                effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   // 콤보 시너지
-  n_precise:        { name: '정밀 타격+',       description: '11 데미지. 이번 턴 첫 카드면 +11 데미지.',
-                      effects: [{ kind: 'damage', amount: 11 }, { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'damage', amount: 11 }] }] },
+  n_precise:        { name: '정밀 타격+',       description: '8 데미지. 이번 턴 첫 카드면 +8 데미지.',
+                      effects: [{ kind: 'damage', amount: 8 }, { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'damage', amount: 8 }] }] },
   n_chain_reaction: { name: '연쇄 반응+',       description: '10 데미지. 직전이 효과카드면 +9 데미지.',
                       effects: [{ kind: 'damage', amount: 10 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'power' }, then: [{ kind: 'damage', amount: 9 }] }] },
   n_drone_fury:    { name: '총력 가동+',       description: '데미지 = 4 × 이번 전투 누적 공격 수.',

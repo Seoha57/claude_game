@@ -34,7 +34,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   blood_vial: {
     id: 'blood_vial',
     name: '피의 약병',
-    description: '전투 종료 시 추가로 2 회복.',
+    description: '전투 종료 시 추가로 4 회복.',
     rarity: 'common',
   },
   oddly_smooth_stone: {
@@ -171,7 +171,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   sturdy_boots: {
     id: 'sturdy_boots',
     name: '견고한 장화',
-    description: '전투 시작 시 방어도 +6.',
+    description: '전투 시작 시 방어도 +8.',
     rarity: 'common',
   },
   kinetic_belt: {

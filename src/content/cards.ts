@@ -414,8 +414,8 @@ export const CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 2,
     target: 'all_enemies',
-    description: '모든 적에게 4 데미지.',
-    effects: [{ kind: 'damage_all', amount: 4 }],
+    description: '모든 적에게 12 데미지. 8 회복. 소멸.',
+    effects: [{ kind: 'damage_all', amount: 12 }, { kind: 'heal', amount: 8 }],
     exhaust: true,
   },
 
@@ -539,7 +539,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   demon_form:       { name: '전투의 눈+',                   description: '턴 시작 시 힘 +3. 선천.',         effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
   feed:             { name: '과잉 학살+',             description: 'HP -3. 24 데미지.',                effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
   immolate:         { name: '지옥의 화염+', description: '모든 적에게 28 데미지.',           effects: [{ kind: 'damage_all', amount: 28 }] },
-  reaper:           { name: '사신의 낫+',                      description: '모든 적에게 6 데미지.',            effects: [{ kind: 'damage_all', amount: 6 }] },
+  reaper:           { name: '사신의 낫+',                      description: '모든 적에게 16 데미지. 12 회복.',  effects: [{ kind: 'damage_all', amount: 16 }, { kind: 'heal', amount: 12 }] },
   // 콤보 시너지
   chain_slash:      { name: '연계 베기+',     description: '7 데미지. 이번 턴 2번째 이후 카드면 +9 데미지.',
                       effects: [{ kind: 'damage', amount: 7 }, { kind: 'conditional', condition: { kind: 'nth_or_more', n: 2 }, then: [{ kind: 'damage', amount: 9 }] }] },

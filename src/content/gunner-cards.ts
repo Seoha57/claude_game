@@ -324,7 +324,6 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     target: 'all_enemies',
     description: '모든 적에게 18 데미지.',
     effects: [{ kind: 'damage_all', amount: 18 }],
-    exhaust: true,
   },
 
   // ── 총잡이 콤보 시너지 ─────────────────────────────────────

@@ -1308,7 +1308,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
       return '시간이 가속한다! (힘 +6, 의식 +2)';
     },
     decideIntent(_state, _self, turn) {
-      if (turn === 0) return { kind: 'buff', label: '의식 +4 (매 턴 힘 누적)' };
+      if (turn === 0) return { kind: 'buff', label: '의식 +2 (매 턴 힘 누적)' };
       const cycle = (turn - 1) % 5;
       if (cycle === 0) return { kind: 'attack', damage: 12, hits: 2, label: '12×2' };
       if (cycle === 1) return { kind: 'attack', damage: 22, hits: 1, label: '22' };
@@ -1319,7 +1319,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     act(state, self) {
       const it = self.intent;
       if (it.kind === 'buff') {
-        applyStatus(self, 'ritual', 4);
+        applyStatus(self, 'ritual', 2);
       } else if (it.kind === 'debuff') {
         applyStatus(state.player, 'weak', 2);
         applyStatus(state.player, 'vulnerable', 2);

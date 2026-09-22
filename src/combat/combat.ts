@@ -409,7 +409,7 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
     drawCards(cs, 1);
   }
   if (relics.includes('spiked_armor')) applyStatus(cs.player, 'thorns', 3);
-  if (relics.includes('sturdy_boots')) cs.player.block += 6;
+  if (relics.includes('sturdy_boots')) cs.player.block += 8;
   if (relics.includes('kinetic_belt')) applyStatus(cs.player, 'dexterity', 2);
   if (relics.includes('fury_banner')) applyStatus(cs.player, 'strength', 3);
   if (relics.includes('phoenix_feather')) applyStatus(cs.player, 'regen', 5);
