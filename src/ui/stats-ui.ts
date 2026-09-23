@@ -6,6 +6,7 @@ import type { RunHistoryEntry } from '../run-history';
 import { getUnlockedMax } from '../ascension';
 import type { CharacterClass } from '../types';
 import { CHARACTER_SVG, artEl } from './art';
+import { t } from '../i18n';
 
 const CHAR_INFO: Record<CharacterClass, { name: string }> = {
   swordmaster: { name: '검사' },
@@ -38,21 +39,21 @@ export function renderStats(): HTMLElement {
       ? Math.round(((stats.totalWins + stats.totalTrueWins) / totalEnded) * 100)
       : 0;
 
-    wrapper.appendChild(el('h1', { style: { color: 'var(--accent)', margin: '0' } }, '📊 통계 대시보드'));
+    wrapper.appendChild(el('h1', { style: { color: 'var(--accent)', margin: '0' } }, `📊 ${t('통계 대시보드')}`));
 
     // ── 1. Aggregate summary ──
     const summary = el('div', { class: 'stats-summary' });
-    summary.appendChild(statBox('총 런', stats.totalRuns));
-    summary.appendChild(statBox('승리', stats.totalWins + stats.totalTrueWins, 'good'));
-    summary.appendChild(statBox('진엔딩', stats.totalTrueWins, 'accent'));
-    summary.appendChild(statBox('패배', stats.totalLosses, 'bad'));
-    summary.appendChild(statBox('승률', `${winRate}%`));
-    summary.appendChild(statBox('최고 등반', unlocked > 0 ? `A${unlocked}` : '-'));
+    summary.appendChild(statBox(t('총 런'), stats.totalRuns));
+    summary.appendChild(statBox(t('승리'), stats.totalWins + stats.totalTrueWins, 'good'));
+    summary.appendChild(statBox(t('진엔딩'), stats.totalTrueWins, 'accent'));
+    summary.appendChild(statBox(t('패배'), stats.totalLosses, 'bad'));
+    summary.appendChild(statBox(t('승률'), `${winRate}%`));
+    summary.appendChild(statBox(t('최고 등반'), unlocked > 0 ? `A${unlocked}` : '-'));
     wrapper.appendChild(summary);
 
     // ── 2. Recent run timeline (dot streak) ──
     if (history.length > 0) {
-      wrapper.appendChild(sectionTitle('최근 런 타임라인'));
+      wrapper.appendChild(sectionTitle(t('최근 런 타임라인')));
       wrapper.appendChild(renderTimeline(history));
     }
 
@@ -60,27 +61,27 @@ export function renderStats(): HTMLElement {
     if (history.length > 0) {
       const streaks = calcStreaks(history);
       const streakRow = el('div', { class: 'stats-summary' });
-      streakRow.appendChild(statBox('현재 연승', streaks.current > 0 ? `${streaks.current}연승` : '-', streaks.current > 0 ? 'good' : undefined));
-      streakRow.appendChild(statBox('최고 연승', streaks.best > 0 ? `${streaks.best}연승` : '-', streaks.best > 0 ? 'accent' : undefined));
-      streakRow.appendChild(statBox('현재 연패', streaks.currentLoss > 0 ? `${streaks.currentLoss}연패` : '-', streaks.currentLoss > 0 ? 'bad' : undefined));
+      streakRow.appendChild(statBox(t('현재 연승'), streaks.current > 0 ? `${streaks.current}${t('연승')}` : '-', streaks.current > 0 ? 'good' : undefined));
+      streakRow.appendChild(statBox(t('최고 연승'), streaks.best > 0 ? `${streaks.best}${t('연승')}` : '-', streaks.best > 0 ? 'accent' : undefined));
+      streakRow.appendChild(statBox(t('현재 연패'), streaks.currentLoss > 0 ? `${streaks.currentLoss}${t('연패')}` : '-', streaks.currentLoss > 0 ? 'bad' : undefined));
       wrapper.appendChild(streakRow);
     }
 
     // ── 4. Win rate bar chart ──
-    wrapper.appendChild(sectionTitle('캐릭터별 승률'));
+    wrapper.appendChild(sectionTitle(t('캐릭터별 승률')));
     wrapper.appendChild(renderWinRateBars(stats));
 
     // ── 5. Death stats ──
     if (history.length > 0) {
       const killers = calcKillerStats(history);
       if (killers.length > 0) {
-        wrapper.appendChild(sectionTitle('사망 원인 TOP 5'));
+        wrapper.appendChild(sectionTitle(t('사망 원인 TOP 5')));
         wrapper.appendChild(renderKillerChart(killers));
       }
     }
 
     // ── 6. Per character detail (collapsible) ──
-    wrapper.appendChild(sectionTitle('캐릭터별 상세'));
+    wrapper.appendChild(sectionTitle(t('캐릭터별 상세')));
     const charGrid = el('div', { class: 'stats-char-grid' });
     for (const cls of ALL_CLASSES) {
       const cs = stats.perCharacter[cls];
@@ -91,15 +92,15 @@ export function renderStats(): HTMLElement {
       const card = el('div', { class: 'stats-char-card' });
       card.appendChild(el('div', { class: 'stats-char-header' },
         artEl(CHARACTER_SVG[cls], 22),
-        el('span', { class: 'stats-char-name' }, info.name),
+        el('span', { class: 'stats-char-name' }, t(info.name)),
       ));
-      card.appendChild(charRow('런', String(cs.runs)));
-      card.appendChild(charRow('승리', String(cs.wins + cs.trueWins), 'var(--good)'));
-      card.appendChild(charRow('진엔딩', String(cs.trueWins), 'var(--accent)'));
-      card.appendChild(charRow('패배', String(cs.losses), 'var(--bad)'));
-      card.appendChild(charRow('승률', ended > 0 ? `${rate}%` : '-'));
-      card.appendChild(charRow('최고 등반',
-        cs.bestAscension >= 0 ? (cs.bestAscension === 0 ? '기본' : `A${cs.bestAscension}`) : '-',
+      card.appendChild(charRow(t('런'), String(cs.runs)));
+      card.appendChild(charRow(t('승리'), String(cs.wins + cs.trueWins), 'var(--good)'));
+      card.appendChild(charRow(t('진엔딩'), String(cs.trueWins), 'var(--accent)'));
+      card.appendChild(charRow(t('패배'), String(cs.losses), 'var(--bad)'));
+      card.appendChild(charRow(t('승률'), ended > 0 ? `${rate}%` : '-'));
+      card.appendChild(charRow(t('최고 등반'),
+        cs.bestAscension >= 0 ? (cs.bestAscension === 0 ? t('기본') : `A${cs.bestAscension}`) : '-',
         'var(--accent)'));
       charGrid.appendChild(card);
     }
@@ -107,16 +108,16 @@ export function renderStats(): HTMLElement {
 
     // ── Footer ──
     const footer = el('div', { style: { display: 'flex', gap: '10px', marginTop: '24px' } });
-    footer.appendChild(el('button', { onClick: () => setScreen('title') }, '← 제목으로'));
+    footer.appendChild(el('button', { onClick: () => setScreen('title') }, t('← 제목으로')));
     footer.appendChild(el('button', {
       style: { background: 'transparent', color: 'var(--bad)', border: '1px solid var(--bad)' },
       onClick: () => {
-        if (confirm('통계를 모두 초기화합니다. 계속할까요?\n(등반 해금은 유지됩니다)')) {
+        if (confirm(t('통계를 모두 초기화합니다. 계속할까요?\n(등반 해금은 유지됩니다)'))) {
           resetStats();
           rebuild();
         }
       },
-    }, '통계 초기화'));
+    }, t('통계 초기화')));
     wrapper.appendChild(footer);
   };
 
@@ -160,7 +161,7 @@ function renderTimeline(history: RunHistoryEntry[]): HTMLElement {
     const info = CHAR_INFO[entry.characterClass];
     const d = new Date(entry.timestamp);
     const dateStr = `${d.getMonth() + 1}/${d.getDate()}`;
-    const tooltip = `${info.name} · ${isTrueWin ? '진엔딩' : isWin ? '승리' : '패배'} · ${dateStr}`;
+    const tooltip = `${t(info.name)} · ${isTrueWin ? t('진엔딩') : isWin ? t('승리') : t('패배')} · ${dateStr}`;
     const dot = el('div', { class: cls, 'data-tooltip': tooltip });
     dot.appendChild(artEl(CHARACTER_SVG[entry.characterClass], 14));
     dots.appendChild(dot);
@@ -168,7 +169,7 @@ function renderTimeline(history: RunHistoryEntry[]): HTMLElement {
 
   container.appendChild(dots);
   const label = el('div', { class: 'stats-timeline-label' });
-  label.textContent = `← 과거                                 최근 →`;
+  label.textContent = `← ${t('과거')}                                 ${t('최근')} →`;
   container.appendChild(label);
   return container;
 }
@@ -193,7 +194,7 @@ function renderWinRateBars(stats: ReturnType<typeof loadStats>): HTMLElement {
 
     const label = el('div', { class: 'stats-bar-label' });
     label.appendChild(artEl(CHARACTER_SVG[cls], 18));
-    label.appendChild(el('span', {}, info.name));
+    label.appendChild(el('span', {}, t(info.name)));
     row.appendChild(label);
 
     const barBg = el('div', { class: 'stats-bar-bg' });
@@ -245,7 +246,7 @@ function renderKillerChart(killers: { name: string; count: number }[]): HTMLElem
     const pct = Math.round((k.count / maxCount) * 100);
     barBg.appendChild(el('div', { class: 'stats-bar-fill loss', style: { width: `${pct}%` } }));
     row.appendChild(barBg);
-    row.appendChild(el('div', { class: 'stats-killer-count' }, `${k.count}회`));
+    row.appendChild(el('div', { class: 'stats-killer-count' }, `${k.count}${t('회')}`));
     container.appendChild(row);
   }
 

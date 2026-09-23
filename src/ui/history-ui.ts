@@ -4,6 +4,7 @@ import { getRunHistory, clearRunHistory } from '../run-history';
 import type { RunHistoryEntry } from '../run-history';
 import type { CharacterClass } from '../types';
 import { CHARACTER_SVG, artEl, ic } from './art';
+import { t } from '../i18n';
 
 const CHAR_INFO: Record<CharacterClass, { name: string }> = {
   swordmaster: { name: '검사' },
@@ -26,12 +27,12 @@ export function renderHistory(): HTMLElement {
   };
 
   const append = () => {
-    wrapper.appendChild(el('h2', { style: { color: 'var(--accent)' } }, '📜 런 기록'));
+    wrapper.appendChild(el('h2', { style: { color: 'var(--accent)' } }, `📜 ${t('런 기록')}`));
 
     const entries = getRunHistory();
     if (entries.length === 0) {
       wrapper.appendChild(
-        el('div', { style: { color: 'var(--muted)', marginTop: '20px' } }, '아직 기록된 런이 없습니다.'),
+        el('div', { style: { color: 'var(--muted)', marginTop: '20px' } }, t('아직 기록된 런이 없습니다.')),
       );
     } else {
       // 간단 요약 (승률)
@@ -41,7 +42,7 @@ export function renderHistory(): HTMLElement {
         el(
           'div',
           { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '12px' } },
-          `최근 ${entries.length}판 · ${wins}승 ${entries.length - wins}패${trueWins > 0 ? ` · 진엔딩 ${trueWins}회` : ''}`,
+          `${t('최근')} ${entries.length}${t('판')} · ${wins}${t('승')} ${entries.length - wins}${t('패')}${trueWins > 0 ? ` · ${t('진엔딩')} ${trueWins}${t('회')}` : ''}`,
         ),
       );
 
@@ -55,19 +56,19 @@ export function renderHistory(): HTMLElement {
       el('button', {
         style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
         onClick: () => setScreen('title'),
-      }, '← 제목으로'),
+      }, t('← 제목으로')),
     );
     if (entries.length > 0) {
       footer.appendChild(
         el('button', {
           style: { background: 'transparent', color: 'var(--bad)', border: '1px solid var(--bad)' },
           onClick: () => {
-            if (confirm('런 기록을 모두 삭제합니다. 계속할까요?')) {
+            if (confirm(t('런 기록을 모두 삭제합니다. 계속할까요?'))) {
               clearRunHistory();
               rebuild();
             }
           },
-        }, '기록 삭제'),
+        }, t('기록 삭제')),
       );
     }
     wrapper.appendChild(footer);
@@ -84,15 +85,15 @@ function renderEntry(e: RunHistoryEntry): HTMLElement {
   const outcomeColor = isWin ? 'var(--good)' : 'var(--bad)';
   const borderColor = e.outcome === 'true_won' ? 'var(--accent)' : isWin ? 'rgba(80,180,80,0.4)' : 'rgba(180,80,80,0.35)';
 
-  const locText = e.outcome === 'true_won' ? '챕터 4 클리어'
-    : e.outcome === 'won' ? '챕터 3 보스 클리어'
-    : `챕터 ${e.chapter} · ${e.floor}층`;
+  const locText = e.outcome === 'true_won' ? t('챕터 4 클리어')
+    : e.outcome === 'won' ? t('챕터 3 보스 클리어')
+    : `${t('챕터')} ${e.chapter} · ${e.floor}${t('층')}`;
 
   const main = el(
     'div',
     { style: { display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' } },
     artEl(CHARACTER_SVG[e.characterClass], 22),
-    el('span', { style: { fontWeight: 'bold', minWidth: '54px' } }, info.name),
+    el('span', { style: { fontWeight: 'bold', minWidth: '54px' } }, t(info.name)),
     (() => { const s = el('span', { style: { color: outcomeColor, fontWeight: 'bold' } }); s.innerHTML = outcomeIcon; return s; })(),
     el('span', { style: { color: 'var(--fg)', fontSize: '13px' } }, locText),
     e.ascension > 0 ? el('span', { style: { color: 'var(--accent)', fontSize: '12px' } }, `A${e.ascension}`) : el('span'),
@@ -103,7 +104,7 @@ function renderEntry(e: RunHistoryEntry): HTMLElement {
     'div',
     { style: { color: 'var(--muted)', fontSize: '11px', marginTop: '3px', display: 'flex', gap: '10px', flexWrap: 'wrap' } },
     el('span', {}, formatTime(e.timestamp)),
-    (() => { const s = el('span', {}); s.innerHTML = `${ic('card')} ${e.deckSize}장`; return s; })(),
+    (() => { const s = el('span', {}); s.innerHTML = `${ic('card')} ${e.deckSize}${t('장')}`; return s; })(),
     (() => { const s = el('span', {}); s.innerHTML = `${ic('gold')} ${e.gold}`; return s; })(),
     ...(e.killerName ? [(() => { const s = el('span', { style: { color: 'var(--bad)' } }); s.innerHTML = `${ic('poison')} ${e.killerName}`; return s; })()] : []),
   );
@@ -129,7 +130,7 @@ function formatTime(ts: number): string {
   const sameDay = d.toDateString() === now.toDateString();
   const yesterday = new Date(now.getTime() - 86400000).toDateString() === d.toDateString();
   const hm = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-  if (sameDay) return `오늘 ${hm}`;
-  if (yesterday) return `어제 ${hm}`;
+  if (sameDay) return `${t('오늘')} ${hm}`;
+  if (yesterday) return `${t('어제')} ${hm}`;
   return `${d.getMonth() + 1}/${d.getDate()} ${hm}`;
 }

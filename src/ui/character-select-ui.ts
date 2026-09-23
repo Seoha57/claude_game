@@ -3,6 +3,7 @@ import { startNewRun, setScreen } from '../state';
 import type { CharacterClass } from '../types';
 import { CHARACTER_SVG, CARD_TYPE_SVG, ic } from './art';
 import { RELIC_DEFS } from '../content/relics';
+import { t } from '../i18n';
 
 interface CharacterInfo {
   id: CharacterClass;
@@ -226,8 +227,8 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
   };
 
   const append = () => {
-    wrapper.appendChild(el('h2', { style: { color: 'var(--accent)', marginBottom: '4px' } }, '캐릭터 선택'));
-    wrapper.appendChild(el('div', { style: { color: 'var(--muted)', marginBottom: '20px', fontSize: '13px' } }, '플레이할 직업을 선택하세요'));
+    wrapper.appendChild(el('h2', { style: { color: 'var(--accent)', marginBottom: '4px' } }, t('캐릭터 선택')));
+    wrapper.appendChild(el('div', { style: { color: 'var(--muted)', marginBottom: '20px', fontSize: '13px' } }, t('플레이할 직업을 선택하세요')));
 
     const layout = el('div', { class: 'cs-layout' });
 
@@ -248,8 +249,8 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
         },
         (() => { const s = el('span', { class: 'cs-item-emoji' }); s.innerHTML = CHARACTER_SVG[ch.id] ?? ch.emoji; return s; })(),
         el('div', { class: 'cs-item-info' },
-          el('div', { class: 'cs-item-name' }, ch.name),
-          el('div', { class: 'cs-item-sub' }, ch.playstyle),
+          el('div', { class: 'cs-item-name' }, t(ch.name)),
+          el('div', { class: 'cs-item-sub' }, t(ch.playstyle)),
         ),
         el('div', {
           class: 'cs-item-diff',
@@ -273,10 +274,10 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     bigEmoji.innerHTML = CHARACTER_SVG[ch.id] ?? ch.emoji;
     header.appendChild(bigEmoji);
     const headerText = el('div', { class: 'cs-header-text' });
-    headerText.appendChild(el('div', { class: 'cs-char-name' }, ch.name));
-    headerText.appendChild(el('div', { class: 'cs-char-sub' }, ch.subname));
+    headerText.appendChild(el('div', { class: 'cs-char-name' }, t(ch.name)));
+    headerText.appendChild(el('div', { class: 'cs-char-sub' }, t(ch.subname)));
     const tags = el('div', { class: 'cs-tags' });
-    tags.appendChild(el('span', { class: 'cs-tag', style: { background: `${ch.color}25`, color: ch.color, border: `1px solid ${ch.color}50` } }, ch.playstyle));
+    tags.appendChild(el('span', { class: 'cs-tag', style: { background: `${ch.color}25`, color: ch.color, border: `1px solid ${ch.color}50` } }, t(ch.playstyle)));
     tags.appendChild(el('span', {
       class: 'cs-tag',
       style: {
@@ -284,7 +285,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
         color: ch.difficulty === 1 ? 'var(--good)' : ch.difficulty === 2 ? 'var(--accent)' : 'var(--bad)',
         border: `1px solid ${ch.difficulty === 1 ? 'rgba(128,192,96,0.4)' : ch.difficulty === 2 ? 'rgba(212,160,91,0.4)' : 'rgba(208,80,96,0.4)'}`,
       },
-    }, ch.difficulty === 1 ? '쉬움' : ch.difficulty === 2 ? '보통' : '어려움'));
+    }, ch.difficulty === 1 ? t('쉬움') : ch.difficulty === 2 ? t('보통') : t('어려움')));
     headerText.appendChild(tags);
     header.appendChild(headerText);
     detail.appendChild(header);
@@ -293,26 +294,26 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     const stats = el('div', { class: 'cs-stats' });
     stats.appendChild(makeStatBox(ic('heart'), `${ch.hp}`, 'HP'));
     const relicDef = RELIC_DEFS[ch.startRelicId];
-    const relicBox = makeStatBox(ic('gem'), ch.startRelic, '시작 유물');
+    const relicBox = makeStatBox(ic('gem'), t(ch.startRelic), t('시작 유물'));
     if (relicDef) relicBox.setAttribute('data-tooltip', `${relicDef.name}\n${relicDef.description}`);
     stats.appendChild(relicBox);
-    stats.appendChild(makeStatBox(ic('lightning'), '3', '에너지'));
+    stats.appendChild(makeStatBox(ic('lightning'), '3', t('에너지')));
     detail.appendChild(stats);
 
     // Description
-    detail.appendChild(el('div', { class: 'cs-desc' }, ch.description));
+    detail.appendChild(el('div', { class: 'cs-desc' }, t(ch.description)));
 
     // Signature relic
     const sig = el('div', { class: 'cs-signature', style: { borderColor: `${ch.color}50`, background: `${ch.color}10` } });
     const sigTitle = el('div', { class: 'cs-sig-title', style: { color: ch.color } });
-    sigTitle.innerHTML = `${ic('star')} ${ch.signatureRelic}`;
+    sigTitle.innerHTML = `${ic('star')} ${t(ch.signatureRelic)}`;
     sig.appendChild(sigTitle);
-    sig.appendChild(el('div', { class: 'cs-sig-desc' }, ch.signatureDesc));
+    sig.appendChild(el('div', { class: 'cs-sig-desc' }, t(ch.signatureDesc)));
     detail.appendChild(sig);
 
     // Starter deck preview
     const deckSection = el('div', { class: 'cs-deck-section' });
-    deckSection.appendChild(el('div', { class: 'cs-deck-title' }, '시작 덱 (10장)'));
+    deckSection.appendChild(el('div', { class: 'cs-deck-title' }, t('시작 덱 (10장)')));
     const deckRow = el('div', { class: 'cs-deck-row' });
     for (const card of ch.starterCards) {
       const typeColor = CARD_TYPE_COLOR[card.type];
@@ -332,7 +333,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
 
     // Difficulty note
     const diffNote = el('div', { class: 'cs-diff-note' });
-    diffNote.innerHTML = `${ic('tip')} ${ch.diffLabel}`;
+    diffNote.innerHTML = `${ic('tip')} ${t(ch.diffLabel)}`;
     detail.appendChild(diffNote);
 
     layout.appendChild(detail);
@@ -344,14 +345,14 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
         class: 'cs-start-btn',
         style: { background: ch.color, borderColor: ch.color },
         onClick: () => startNewRun(seed, ascension, selected, { goToScreen: 'neow_blessing' }),
-      }, `${ch.name} 시작`),
+      }, `${t(ch.name)} ${t('시작')}`),
     );
 
     wrapper.appendChild(
       el('button', {
         style: { marginTop: '8px', background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
         onClick: () => setScreen('title'),
-      }, '← 뒤로'),
+      }, t('← 뒤로')),
     );
   };
 

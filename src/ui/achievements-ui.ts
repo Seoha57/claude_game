@@ -5,6 +5,7 @@ import type { AchievementTitle } from '../achievements';
 import type { AchievementDef } from '../achievements';
 import type { CharacterClass } from '../types';
 import { CHARACTER_SVG, ACHIEVEMENT_SVG, TITLE_SVG, artEl, ic } from './art';
+import { t } from '../i18n';
 
 const CHAR_LABEL: Record<CharacterClass, string> = {
   swordmaster: '검사',
@@ -18,12 +19,11 @@ const CHAR_LABEL: Record<CharacterClass, string> = {
   gambler: '갬블러',
 };
 
-const CATEGORY_LABEL: Record<AchievementDef['category'], string> = {
-  progression: `${ic('progress')} 진행`,
-  character:   `${ic('mask')} 캐릭터`,
-  difficulty:  `${ic('mountain')} 등반`,
-  combat:      `${ic('sword')} 전투`,
-  collection:  `${ic('box')} 수집`,
+const CATEGORY_ICON: Record<AchievementDef['category'], string> = {
+  progression: 'progress', character: 'mask', difficulty: 'mountain', combat: 'sword', collection: 'box',
+};
+const CATEGORY_TEXT: Record<AchievementDef['category'], string> = {
+  progression: '진행', character: '캐릭터', difficulty: '등반', combat: '전투', collection: '수집',
 };
 
 export function renderAchievements(): HTMLElement {
@@ -44,10 +44,10 @@ export function renderAchievements(): HTMLElement {
     const done = ACHIEVEMENTS.filter((a) => unlocked.has(a.id)).length;
 
     const h1 = el('h1', { style: { color: 'var(--accent)', margin: '0' } });
-    h1.innerHTML = `${ic('medal')} 도전과제`;
+    h1.innerHTML = `${ic('medal')} ${t('도전과제')}`;
     wrapper.appendChild(h1);
     wrapper.appendChild(
-      el('div', { class: 'achievements-progress' }, `${done} / ${total} 달성`),
+      el('div', { class: 'achievements-progress' }, `${done} / ${total} ${t('달성')}`),
     );
 
     // Progress bar
@@ -71,17 +71,17 @@ export function renderAchievements(): HTMLElement {
     });
     if (title && titleIdx >= 0) {
       titleRow.appendChild(artEl(TITLE_SVG[TITLE_KEYS[titleIdx]], 20));
-      titleRow.appendChild(document.createTextNode(`칭호: ${title.name}`));
+      titleRow.appendChild(document.createTextNode(`${t('칭호')}: ${t(title.name)}`));
     } else {
-      titleRow.textContent = '칭호 없음';
+      titleRow.textContent = t('칭호 없음');
     }
     wrapper.appendChild(titleRow);
     if (nextTitle) {
       const nextIdx = TITLES.indexOf(nextTitle);
       const nextRow = el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' } });
-      nextRow.appendChild(document.createTextNode('다음 칭호: '));
+      nextRow.appendChild(document.createTextNode(`${t('다음 칭호')}: `));
       if (nextIdx >= 0) nextRow.appendChild(artEl(TITLE_SVG[TITLE_KEYS[nextIdx]], 14));
-      nextRow.appendChild(document.createTextNode(`${nextTitle.name} (${nextTitle.threshold - done}개 더 달성)`));
+      nextRow.appendChild(document.createTextNode(`${t(nextTitle.name)} (${nextTitle.threshold - done}${t('개 더 달성')})`));
       wrapper.appendChild(nextRow);
     }
 
@@ -91,7 +91,7 @@ export function renderAchievements(): HTMLElement {
       const items = ACHIEVEMENTS.filter((a) => a.category === cat);
       if (items.length === 0) continue;
       const catH3 = el('h3', { class: 'ach-category' });
-      catH3.innerHTML = CATEGORY_LABEL[cat];
+      catH3.innerHTML = `${ic(CATEGORY_ICON[cat])} ${t(CATEGORY_TEXT[cat])}`;
       wrapper.appendChild(catH3);
       // 캐릭터 카테고리 위에 캐릭별 클리어/진엔딩 현황 칩
       if (cat === 'character') {
@@ -100,7 +100,7 @@ export function renderAchievements(): HTMLElement {
         const trueCount = (Object.values(status.trueClear) as boolean[]).filter(Boolean).length;
         wrapper.appendChild(
           el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } },
-            `클리어 ${clearCount}/6 · 진엔딩 ${trueCount}/6`),
+            `${t('클리어')} ${clearCount}/6 · ${t('진엔딩')} ${trueCount}/6`),
         );
         const chips = el('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' } });
         for (const c of Object.keys(CHAR_LABEL) as (keyof typeof CHAR_LABEL)[]) {
@@ -115,11 +115,11 @@ export function renderAchievements(): HTMLElement {
               color: cleared ? 'var(--fg)' : 'var(--muted)',
               opacity: cleared ? '1' : '0.55',
             },
-            title: trueCleared ? '진엔딩 클리어' : cleared ? '일반 클리어' : '미클리어',
+            title: trueCleared ? t('진엔딩 클리어') : cleared ? t('일반 클리어') : t('미클리어'),
           });
           chip.appendChild(artEl(CHARACTER_SVG[c], 14));
           const chipLabel = el('span', {});
-          chipLabel.innerHTML = `${CHAR_LABEL[c]} ${trueCleared ? ic('trophy') : cleared ? '✓' : '—'}`;
+          chipLabel.innerHTML = `${t(CHAR_LABEL[c])} ${trueCleared ? ic('trophy') : cleared ? '✓' : '—'}`;
           chip.appendChild(chipLabel);
           chips.appendChild(chip);
         }
@@ -134,16 +134,16 @@ export function renderAchievements(): HTMLElement {
 
     // Footer
     const footer = el('div', { style: { display: 'flex', gap: '10px', marginTop: '20px' } });
-    footer.appendChild(el('button', { onClick: () => setScreen('title') }, '← 제목으로'));
+    footer.appendChild(el('button', { onClick: () => setScreen('title') }, t('← 제목으로')));
     footer.appendChild(el('button', {
       style: { background: 'transparent', color: 'var(--bad)', border: '1px solid var(--bad)' },
       onClick: () => {
-        if (confirm('도전과제 기록을 모두 초기화합니다. 계속할까요?')) {
+        if (confirm(t('도전과제 기록을 모두 초기화합니다. 계속할까요?'))) {
           resetAchievements();
           rebuild();
         }
       },
-    }, '도전과제 초기화'));
+    }, t('도전과제 초기화')));
     wrapper.appendChild(footer);
   };
 

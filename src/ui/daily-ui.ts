@@ -9,6 +9,7 @@ import {
 } from '../daily';
 import type { CharacterClass, Screen } from '../types';
 import { CHARACTER_SVG, artEl, ic } from './art';
+import { t } from '../i18n';
 
 const CHAR_INFO: Record<CharacterClass, { name: string }> = {
   swordmaster: { name: '검사' },
@@ -41,13 +42,13 @@ export function renderDaily(): HTMLElement {
   const hasActiveDaily = !!savedRun?.dailyConfig && savedRun.dailyConfig.date === today;
 
   const dailyTitle = el('h2', { style: { color: 'var(--accent)' } });
-  dailyTitle.innerHTML = `${ic('daily')} 오늘의 도전`;
+  dailyTitle.innerHTML = `${ic('daily')} ${t('오늘의 도전')}`;
   wrapper.appendChild(dailyTitle);
   wrapper.appendChild(
     el(
       'div',
       { style: { color: 'var(--muted)', fontSize: '13px', marginBottom: '16px', textAlign: 'center', maxWidth: '480px' } },
-      '매일 모두에게 같은 시드 / 캐릭터 / 제약. 동기화 켜져 있으면 결과도 클라우드에 저장.',
+      t('매일 모두에게 같은 시드 / 캐릭터 / 제약. 동기화 켜져 있으면 결과도 클라우드에 저장.'),
     ),
   );
 
@@ -68,7 +69,7 @@ export function renderDaily(): HTMLElement {
       },
       el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } }, today),
       artEl(CHARACTER_SVG[setup.character], 48),
-      el('div', { style: { fontSize: '20px', fontWeight: 'bold', marginBottom: '10px' } }, info.name),
+      el('div', { style: { fontSize: '20px', fontWeight: 'bold', marginBottom: '10px' } }, t(info.name)),
       el(
         'div',
         {
@@ -104,19 +105,19 @@ export function renderDaily(): HTMLElement {
             textAlign: 'center',
           },
         },
-        (() => { const d = el('div', { style: { fontWeight: 'bold', color: isWin ? 'var(--good)' : 'var(--bad)', marginBottom: '4px' } }); d.innerHTML = isWin ? (result.outcome === 'true_won' ? `${ic('trophy')} 진엔딩 클리어!` : '✓ 클리어!') : '✗ 실패'; return d; })(),
-        el('div', { style: { fontSize: '12px', color: 'var(--muted)' } }, `챕터 ${result.chapter} · ${result.floor}층 도달`),
+        (() => { const d = el('div', { style: { fontWeight: 'bold', color: isWin ? 'var(--good)' : 'var(--bad)', marginBottom: '4px' } }); d.innerHTML = isWin ? (result.outcome === 'true_won' ? `${ic('trophy')} ${t('진엔딩 클리어!')}` : `✓ ${t('클리어!')}`) : `✗ ${t('실패')}`; return d; })(),
+        el('div', { style: { fontSize: '12px', color: 'var(--muted)' } }, `${t('챕터')} ${result.chapter} · ${result.floor}${t('층')} ${t('도달')}`),
       ),
     );
     wrapper.appendChild(
-      el('div', { style: { color: 'var(--muted)', fontSize: '13px', marginTop: '8px' } }, '내일 새 도전이 열립니다.'),
+      el('div', { style: { color: 'var(--muted)', fontSize: '13px', marginTop: '8px' } }, t('내일 새 도전이 열립니다.')),
     );
   } else if (hasActiveDaily) {
     wrapper.appendChild(
       el(
         'div',
         { style: { color: 'var(--muted)', fontSize: '13px', marginBottom: '12px' } },
-        '진행 중인 오늘의 도전이 있습니다.',
+        t('진행 중인 오늘의 도전이 있습니다.'),
       ),
     );
     wrapper.appendChild(
@@ -128,7 +129,7 @@ export function renderDaily(): HTMLElement {
             if (loadRun()) setScreen('map');
           },
         },
-        '이어하기',
+        t('이어하기'),
       ),
     );
     wrapper.appendChild(
@@ -137,7 +138,7 @@ export function renderDaily(): HTMLElement {
         {
           style: { background: 'transparent', color: 'var(--bad)', border: '1px solid var(--bad)' },
           onClick: () => {
-            if (!confirm('오늘의 도전을 포기합니다. 실패로 기록되고 내일까지 재도전 불가능합니다.')) return;
+            if (!confirm(t('오늘의 도전을 포기합니다. 실패로 기록되고 내일까지 재도전 불가능합니다.'))) return;
             const run = savedRun;
             setDailyResult({
               date: today,
@@ -152,7 +153,7 @@ export function renderDaily(): HTMLElement {
             setScreen('title');
           },
         },
-        '포기',
+        t('포기'),
       ),
     );
   } else {
@@ -162,7 +163,7 @@ export function renderDaily(): HTMLElement {
       style: { fontSize: '16px', padding: '14px 28px', marginBottom: '8px' },
       onClick: () => {
         if (hasOtherRun) {
-          const ok = confirm('진행 중인 일반 런이 있습니다. 데일리를 시작하면 기존 진행이 삭제됩니다. 계속할까요?');
+          const ok = confirm(t('진행 중인 일반 런이 있습니다. 데일리를 시작하면 기존 진행이 삭제됩니다. 계속할까요?'));
           if (!ok) return;
           try { localStorage.removeItem('dod_save'); } catch { /* ignore */ }
         }
@@ -172,7 +173,7 @@ export function renderDaily(): HTMLElement {
         });
       },
     });
-    startBtn.innerHTML = `${ic('sword')} 도전 시작`;
+    startBtn.innerHTML = `${ic('sword')} ${t('도전 시작')}`;
     wrapper.appendChild(startBtn);
   }
 
@@ -183,7 +184,7 @@ export function renderDaily(): HTMLElement {
       el(
         'div',
         { style: { marginTop: '24px', width: '90%', maxWidth: '480px' } },
-        (() => { const d = el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } }); d.innerHTML = `${ic('card')} 최근 도전`; return d; })(),
+        (() => { const d = el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } }); d.innerHTML = `${ic('card')} ${t('최근 도전')}`; return d; })(),
         ...history.map((r) =>
           el(
             'div',
@@ -197,7 +198,7 @@ export function renderDaily(): HTMLElement {
               },
             },
             el('span', {}, r.date),
-            (() => { const s = el('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } }); s.appendChild(artEl(CHARACTER_SVG[r.characterClass], 16)); s.appendChild(document.createTextNode(CHAR_INFO[r.characterClass]?.name ?? r.characterClass)); return s; })(),
+            (() => { const s = el('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } }); s.appendChild(artEl(CHARACTER_SVG[r.characterClass], 16)); s.appendChild(document.createTextNode(t(CHAR_INFO[r.characterClass]?.name ?? r.characterClass))); return s; })(),
             (() => {
               const s = el('span', {
                 style: {
@@ -225,7 +226,7 @@ export function renderDaily(): HTMLElement {
         style: { marginTop: '24px', background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
         onClick: () => setScreen('title'),
       },
-      '← 제목으로',
+      t('← 제목으로'),
     ),
   );
 
