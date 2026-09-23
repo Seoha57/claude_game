@@ -1,4 +1,5 @@
 import { el } from './dom';
+import { t } from '../i18n';
 import { getRun, setScreen, makeCard, canAddCard } from '../state';
 import { getEffectiveDef, canUpgrade } from '../content/cards';
 import { getModifiers } from '../ascension';
@@ -44,29 +45,29 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
   const noRemove = !!run.dailyConfig?.disableRemove;
 
   const smithBtn = el('button', {
-    ...(noUpgrade ? { disabled: 'true', title: '데일리 제약: 강화 봉인' } : {}),
+    ...(noUpgrade ? { disabled: 'true', title: t('데일리 제약: 강화 봉인') } : {}),
     style: noUpgrade ? { opacity: '0.45', cursor: 'not-allowed' } : {},
     onClick: () => { if (!noUpgrade) goTo('smith'); },
   });
-  if (noUpgrade) smithBtn.innerHTML = `${ic('lock')} 대장간 (강화 봉인)`;
-  else smithBtn.textContent = `대장간 (카드 강화 · 덱 ${run.player.deck.length}장)`;
+  if (noUpgrade) smithBtn.innerHTML = `${ic('lock')} ${t('대장간')} (${t('강화 봉인')})`;
+  else smithBtn.textContent = `${t('대장간')} (${t('카드 강화')} · ${t('덱')} ${run.player.deck.length}${t('장')})`;
 
   const purgeBtn = el('button', {
-    ...(noRemove ? { disabled: 'true', title: '데일리 제약: 정화 봉인' } : {}),
+    ...(noRemove ? { disabled: 'true', title: t('데일리 제약: 정화 봉인') } : {}),
     style: noRemove ? { opacity: '0.45', cursor: 'not-allowed' } : {},
     onClick: () => { if (!noRemove) goTo('purge'); },
   });
-  if (noRemove) purgeBtn.innerHTML = `${ic('lock')} 정화 (정화 봉인)`;
-  else purgeBtn.textContent = `정화 (카드 제거 · 덱 ${run.player.deck.length}장)`;
+  if (noRemove) purgeBtn.innerHTML = `${ic('lock')} ${t('정화')} (${t('정화 봉인')})`;
+  else purgeBtn.textContent = `${t('정화')} (${t('카드 제거')} · ${t('덱')} ${run.player.deck.length}${t('장')})`;
 
   const titleEl = el('h2', { style: { color: 'var(--accent)' } });
-  titleEl.innerHTML = `${ic('fire')} 모닥불`;
+  titleEl.innerHTML = `${ic('fire')} ${t('모닥불')}`;
 
   return el(
     'div',
     { style: { display: 'contents' } },
     titleEl,
-    el('div', { style: { color: 'var(--muted)' } }, '한 가지를 선택하세요'),
+    el('div', { style: { color: 'var(--muted)' } }, t('한 가지를 선택하세요')),
     el(
       'div',
       { style: { display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' } },
@@ -75,12 +76,12 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
           run.player.hp = Math.min(run.player.maxHp, run.player.hp + healAmount);
           setScreen('map');
         },
-      }, `휴식 (HP +${healAmount})`),
+      }, `${t('휴식')} (HP +${healAmount})`),
       smithBtn,
       purgeBtn,
       el('button', {
         onClick: () => goTo('dup'),
-      }, `복제 (카드 복제 · 덱 ${run.player.deck.length}장)`),
+      }, `${t('복제')} (${t('카드 복제')} · ${t('덱')} ${run.player.deck.length}${t('장')})`),
     ),
   );
 }
@@ -105,16 +106,16 @@ function buildDuplicate(onBack: () => void): HTMLElement {
   return el(
     'div',
     { style: { display: 'contents' } },
-    (() => { const h = el('h2', { style: { color: 'var(--accent)' } }); h.innerHTML = `${ic('sparkle')} 복제`; return h; })(),
+    (() => { const h = el('h2', { style: { color: 'var(--accent)' } }); h.innerHTML = `${ic('sparkle')} ${t('복제')}`; return h; })(),
     el(
       'div',
       { style: { color: 'var(--muted)', marginBottom: '16px' } },
       dupable.length === 0
-        ? '복제할 카드가 없습니다.'
-        : '복제할 카드 1장을 선택하세요. 같은 카드 1장이 덱에 추가됩니다.',
+        ? t('복제할 카드가 없습니다.')
+        : t('복제할 카드 1장을 선택하세요. 같은 카드 1장이 덱에 추가됩니다.'),
     ),
     cardRow,
-    el('button', { style: { marginTop: '16px' }, onClick: onBack }, '← 뒤로'),
+    el('button', { style: { marginTop: '16px' }, onClick: onBack }, t('← 뒤로')),
   );
 }
 
@@ -138,11 +139,11 @@ function buildPurge(onBack: () => void): HTMLElement {
   return el(
     'div',
     { style: { display: 'contents' } },
-    (() => { const h = el('h2', { style: { color: 'var(--accent)' } }); h.innerHTML = `${ic('fire')} 정화`; return h; })(),
+    (() => { const h = el('h2', { style: { color: 'var(--accent)' } }); h.innerHTML = `${ic('fire')} ${t('정화')}`; return h; })(),
     el('div', { style: { color: 'var(--muted)', marginBottom: '16px' } },
-      canRemove ? '제거할 카드 1장을 선택하세요' : '덱이 너무 작아 제거할 수 없습니다.'),
+      canRemove ? t('제거할 카드 1장을 선택하세요') : t('덱이 너무 작아 제거할 수 없습니다.')),
     cardRow,
-    el('button', { style: { marginTop: '16px' }, onClick: onBack }, '← 뒤로'),
+    el('button', { style: { marginTop: '16px' }, onClick: onBack }, t('← 뒤로')),
   );
 }
 
@@ -158,16 +159,16 @@ function buildSmith(onBack: () => void): HTMLElement {
   return el(
     'div',
     { style: { display: 'contents' } },
-    (() => { const h = el('h2', { style: { color: 'var(--accent)' } }); h.innerHTML = `${ic('gear')} 대장간`; return h; })(),
+    (() => { const h = el('h2', { style: { color: 'var(--accent)' } }); h.innerHTML = `${ic('gear')} ${t('대장간')}`; return h; })(),
     el(
       'div',
       { style: { color: 'var(--muted)', marginBottom: '16px' } },
       upgradable.length === 0
-        ? '강화 가능한 카드가 없습니다.'
-        : '강화할 카드 1장을 선택하세요',
+        ? t('강화 가능한 카드가 없습니다.')
+        : t('강화할 카드 1장을 선택하세요'),
     ),
     cardRow,
-    el('button', { style: { marginTop: '16px' }, onClick: onBack }, '← 뒤로'),
+    el('button', { style: { marginTop: '16px' }, onClick: onBack }, t('← 뒤로')),
   );
 }
 
@@ -184,7 +185,7 @@ function renderCardChoice(card: CardInstance, onClick: () => void): HTMLElement 
     el('div', { class: 'card-cost' }, def.cost < 0 ? 'X' : String(def.cost)),
     el('div', { class: 'card-name' }, def.name),
     el('div', { class: 'card-desc' }, kwDesc(def.description)),
-    el('div', { class: 'card-type' }, curse ? '저주' : typeLabel(def.type)),
+    el('div', { class: 'card-type' }, curse ? t('저주') : typeLabel(def.type)),
   );
 }
 
@@ -202,7 +203,7 @@ function buildSmithCard(card: CardInstance): HTMLElement {
     'div',
     { class: 'upgrade-preview-badge' },
   );
-  previewBadge.innerHTML = isDouble ? `${ic('star')}${ic('star')} 이중 강화 (탭하여 확정)` : `${ic('star')} 강화 미리보기 (탭하여 확정)`;
+  previewBadge.innerHTML = isDouble ? `${ic('star')}${ic('star')} ${t('이중 강화 (탭하여 확정)')}` : `${ic('star')} ${t('강화 미리보기 (탭하여 확정)')}`;
   previewBadge.style.display = 'none';
 
   let previewing = false;
@@ -294,8 +295,8 @@ function sortForUpgrade(cards: CardInstance[]): CardInstance[] {
   });
 }
 
-function typeLabel(t: string): string {
-  if (t === 'attack') return '공격';
-  if (t === 'skill') return '방어';
-  return '효과';
+function typeLabel(tp: string): string {
+  if (tp === 'attack') return t('공격');
+  if (tp === 'skill') return t('방어');
+  return t('효과');
 }

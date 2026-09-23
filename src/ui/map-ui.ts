@@ -1,4 +1,5 @@
 import { el } from './dom';
+import { t } from '../i18n';
 import { getRun, setScreen, setCombat, getScreen } from '../state';
 import { openDeckOverlay } from './deck-overlay';
 import { nodeById } from '../map/map';
@@ -50,17 +51,17 @@ export function renderMap(): HTMLElement {
     el(
       'div',
       { class: 'info' },
-      el('span', {}, `챕터 ${run.chapter}`),
-      el('span', {}, `층: ${run.floor}`),
+      el('span', {}, `${t('챕터')} ${run.chapter}`),
+      el('span', {}, `${t('층')}: ${run.floor}`),
       run.dailyConfig
-        ? (() => { const s = el('span', { style: { color: 'var(--accent)' }, title: '오늘의 도전' }); s.innerHTML = `${ic('daily')} 데일리`; return s; })()
+        ? (() => { const s = el('span', { style: { color: 'var(--accent)' }, title: t('오늘의 도전') }); s.innerHTML = `${ic('daily')} ${t('데일리')}`; return s; })()
         : (() => {
             const s = el('span', {
               style: { color: run.ascension > 0 ? 'var(--bad)' : 'var(--muted)' },
-              title: run.ascension > 0 ? `등반 난이도 A${run.ascension}` : '기본 난이도',
+              title: run.ascension > 0 ? `${t('등반 난이도')} A${run.ascension}` : t('기본 난이도'),
             });
             if (run.ascension > 0) s.innerHTML = `${ic('mountain')} A${run.ascension}`;
-            else s.textContent = '기본';
+            else s.textContent = t('기본');
             return s;
           })(),
       (() => { const s = el('span', {}); s.innerHTML = `${ic('heart')} ${run.player.hp}/${run.player.maxHp}`; return s; })(),
@@ -68,7 +69,7 @@ export function renderMap(): HTMLElement {
       el('span', {
         style: { cursor: 'pointer', textDecoration: 'underline', color: 'var(--accent)' },
         onClick: () => openDeckOverlay(run.player.deck),
-      }, `덱 ${run.player.deck.length}장`),
+      }, `${t('덱')} ${run.player.deck.length}${t('장')}`),
       el(
         'span',
         {
@@ -76,7 +77,7 @@ export function renderMap(): HTMLElement {
             .map((id) => `${RELIC_DEFS[id]?.name ?? id}: ${RELIC_DEFS[id]?.description ?? ''}`)
             .join('\n'),
         },
-        `유물: ${run.player.relics.map((id) => RELIC_DEFS[id]?.name ?? id).join(', ')}`,
+        `${t('유물')}: ${run.player.relics.map((id) => RELIC_DEFS[id]?.name ?? id).join(', ')}`,
       ),
       ...(run.player.keys.length > 0
         ? [
@@ -84,7 +85,7 @@ export function renderMap(): HTMLElement {
               const s = el('span', {
                 style: { color: 'var(--accent)', fontWeight: 'bold' },
                 title: run.player.keys
-                  .map((k) => k === 'will' ? '의지의 열쇠' : k === 'emotion' ? '감정의 열쇠' : '육체의 열쇠')
+                  .map((k) => k === 'will' ? t('의지의 열쇠') : k === 'emotion' ? t('감정의 열쇠') : t('육체의 열쇠'))
                   .join(', '),
               });
               s.innerHTML = `${ic('key')} ${run.player.keys.length}/3`;
@@ -95,7 +96,7 @@ export function renderMap(): HTMLElement {
       el('span', {
         style: { cursor: 'pointer', color: 'var(--accent)', fontWeight: 'bold' },
         onClick: () => setScreen('help'),
-        title: '도움말',
+        title: t('도움말'),
       }, '?'),
     ),
   );
@@ -173,7 +174,7 @@ export function renderMap(): HTMLElement {
           n.visited && !isCurrent ? 'visited' : ''
         } ${isCurrent ? 'current' : ''} ${marked ? 'marked' : ''} ${shopBlocked ? 'disabled' : ''}`,
         style: { left: `${x}px`, top: `${y}px` },
-        'data-tooltip': shopBlocked ? '상점 폐쇄\n오늘의 도전: 상점 이용 불가' : nodeLabel(n, run.chapter),
+        'data-tooltip': shopBlocked ? `${t('상점 폐쇄')}\n${t('오늘의 도전')}: ${t('상점 이용 불가')}` : nodeLabel(n, run.chapter),
         onClick: () => { if (isAccessible && !shopBlocked) enterNode(n); },
         onContextmenu: (e: Event) => { e.preventDefault(); toggleMark(); },
       },
@@ -212,13 +213,13 @@ export function renderMap(): HTMLElement {
   if (!isMapGuideDismissed()) {
     const guide = el('div', { class: 'map-guide' });
     const legendItems = [
-      [MAP_NODE_SVG.combat, '전투'],
-      [MAP_NODE_SVG.elite, '엘리트'],
-      [MAP_NODE_SVG.rest, '모닥불'],
-      [MAP_NODE_SVG.reward, '보물'],
-      [MAP_NODE_SVG.shop, '상점'],
-      [MAP_NODE_SVG.event, '이벤트'],
-      [MAP_NODE_SVG.boss, '보스'],
+      [MAP_NODE_SVG.combat, t('전투')],
+      [MAP_NODE_SVG.elite, t('엘리트')],
+      [MAP_NODE_SVG.rest, t('모닥불')],
+      [MAP_NODE_SVG.reward, t('보물')],
+      [MAP_NODE_SVG.shop, t('상점')],
+      [MAP_NODE_SVG.event, t('이벤트')],
+      [MAP_NODE_SVG.boss, t('보스')],
     ];
     const legend = el('div', { class: 'map-guide-legend' });
     for (const [svg, label] of legendItems) {
@@ -226,12 +227,12 @@ export function renderMap(): HTMLElement {
       item.innerHTML = `<span class="map-guide-icon">${svg}</span>${label}`;
       legend.appendChild(item);
     }
-    guide.appendChild(el('div', { style: { fontWeight: 'bold', color: 'var(--accent)', marginBottom: '6px' } }, '노드를 클릭해서 이동하세요'));
+    guide.appendChild(el('div', { style: { fontWeight: 'bold', color: 'var(--accent)', marginBottom: '6px' } }, t('노드를 클릭해서 이동하세요')));
     guide.appendChild(legend);
     const dismiss = el('button', {
       class: 'map-guide-close',
       onClick: () => { dismissMapGuide(); guide.remove(); },
-    }, '확인');
+    }, t('확인'));
     guide.appendChild(dismiss);
     wrapper.appendChild(guide);
   }
@@ -256,21 +257,21 @@ function nodePos(n: MapNode, totalHeight: number): [number, number] {
 
 function nodeLabel(n: MapNode, chapter?: number): string {
   switch (n.kind) {
-    case 'start':   return '시작 지점';
-    case 'combat':  return '전투\n몬스터와 싸워 골드와 카드 보상을 획득합니다.';
-    case 'elite':   return '엘리트\n강력한 적. 쓰러뜨리면 희귀 유물을 얻습니다.';
-    case 'rest':    return '모닥불\nHP를 회복하거나 카드를 강화할 수 있습니다.';
-    case 'reward':  return '보물\n골드와 카드 선택 보상을 받습니다.';
-    case 'shop':    return '상점\n카드·유물 구매 및 카드 제거 서비스.';
+    case 'start':   return t('시작 지점');
+    case 'combat':  return `${t('전투')}\n${t('몬스터와 싸워 골드와 카드 보상을 획득합니다.')}`;
+    case 'elite':   return `${t('엘리트')}\n${t('강력한 적. 쓰러뜨리면 희귀 유물을 얻습니다.')}`;
+    case 'rest':    return `${t('모닥불')}\n${t('HP를 회복하거나 카드를 강화할 수 있습니다.')}`;
+    case 'reward':  return `${t('보물')}\n${t('골드와 카드 선택 보상을 받습니다.')}`;
+    case 'shop':    return `${t('상점')}\n${t('카드·유물 구매 및 카드 제거 서비스.')}`;
     case 'boss': {
       const table =
         chapter === 4 ? CH4_BOSS_ENCOUNTERS :
         chapter === 3 ? CH3_BOSS_ENCOUNTERS :
         chapter === 2 ? CH2_BOSS_ENCOUNTERS : BOSS_ENCOUNTERS;
       const names = table.map((ids) => ids.map((id) => ENEMY_DEFS[id]?.name ?? id).join(' & ')).join(' / ');
-      return `보스\n후보: ${names}`;
+      return `${t('보스')}\n${t('후보')}: ${names}`;
     }
-    case 'event':   return '이벤트\n예상치 못한 만남. 선택에 따라 다른 결과가...';
+    case 'event':   return `${t('이벤트')}\n${t('예상치 못한 만남. 선택에 따라 다른 결과가...')}`;
   }
 }
 

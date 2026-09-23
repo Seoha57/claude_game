@@ -1,4 +1,5 @@
 import { el } from './dom';
+import { t } from '../i18n';
 import { kwDesc } from './keywords';
 import { getRun, makeCard, setScreen, canAddCard } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS, ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS, GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS, GAMBLER_RARE_CARDS, getEffectiveDef } from '../content/cards';
@@ -113,10 +114,10 @@ export function renderShop(): HTMLElement {
 
 function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>, rebuild: () => void): void {
   const shopTitle = el('h2', {});
-  shopTitle.innerHTML = `${ic('cart')} 상점`;
+  shopTitle.innerHTML = `${ic('cart')} ${t('상점')}`;
   wrapper.appendChild(shopTitle);
   const goldLabel = el('div', { style: { color: 'var(--accent)', marginBottom: '8px' } });
-  goldLabel.innerHTML = `${ic('gold')} 보유 골드: ${run.player.gold}`;
+  goldLabel.innerHTML = `${ic('gold')} ${t('보유 골드')}: ${run.player.gold}`;
   wrapper.appendChild(goldLabel);
 
   if (removalState === 'picking') {
@@ -145,8 +146,8 @@ function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>,
     el(
       'div',
       { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', padding: '16px', border: '1px solid var(--border)', borderRadius: '8px', marginBottom: '24px' } },
-      (() => { const d = el('div', { style: { fontWeight: 'bold' } }); d.innerHTML = `${ic('trash')} 카드 제거 서비스`; return d; })(),
-      el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '덱에서 카드 1장을 영구 삭제합니다.'),
+      (() => { const d = el('div', { style: { fontWeight: 'bold' } }); d.innerHTML = `${ic('trash')} ${t('카드 제거 서비스')}`; return d; })(),
+      el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, t('덱에서 카드 1장을 영구 삭제합니다.')),
       el(
         'button',
         {
@@ -156,7 +157,7 @@ function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>,
             rebuild();
           },
         },
-        removalItem.sold ? '이용 완료' : `${removalItem.price} 골드`,
+        removalItem.sold ? t('이용 완료') : `${removalItem.price} ${t('골드')}`,
       ),
     ),
   );
@@ -165,7 +166,7 @@ function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>,
   if (run.player.potions.length > 0) {
     const sellRow = el('div', { style: { marginBottom: '20px', width: '90%', maxWidth: '480px' } });
     const sellLabel = el('div', { style: { color: 'var(--muted)', fontSize: '13px', marginBottom: '6px', textAlign: 'center' } });
-    sellLabel.innerHTML = `${ic('gold')} 물약 되팔기 (개당 ${POTION_SELL_PRICE}골드)`;
+    sellLabel.innerHTML = `${ic('gold')} ${t('물약 되팔기')} (${t('개당')} ${POTION_SELL_PRICE}${t('골드')})`;
     sellRow.appendChild(sellLabel);
     const potRow = el('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' } });
     run.player.potions.forEach((pid) => {
@@ -192,7 +193,7 @@ function appendShopContent(wrapper: HTMLElement, run: ReturnType<typeof getRun>,
   }
 
   wrapper.appendChild(
-    el('button', { onClick: () => { shopItems = null; setScreen('map'); } }, '상점 나가기'),
+    el('button', { onClick: () => { shopItems = null; setScreen('map'); } }, t('상점 나가기')),
   );
 }
 
@@ -225,9 +226,9 @@ function renderCardItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild:
       el('div', { class: 'card-type' }, typeLabel(def.type)),
     ),
     item.sold
-      ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '판매 완료')
+      ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, t('판매 완료'))
       : atMax
-        ? el('div', { style: { color: 'var(--bad)', fontSize: '13px' } }, '최대 보유')
+        ? el('div', { style: { color: 'var(--bad)', fontSize: '13px' } }, t('최대 보유'))
         : (() => { const d = el('div', { style: { color: canAfford ? 'var(--accent)' : 'var(--bad)', fontWeight: 'bold' } }); d.innerHTML = `${ic('gold')} ${item.price}`; return d; })(),
   );
 }
@@ -256,7 +257,7 @@ function renderRelicItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild
     el('div', { style: { fontWeight: 'bold' } }, def.name),
     el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, kwDesc(def.description)),
     item.sold || alreadyOwned
-      ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, alreadyOwned ? '이미 보유' : '판매 완료')
+      ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, alreadyOwned ? t('이미 보유') : t('판매 완료'))
       : (() => { const b = el('button', {
             disabled: !canAfford ? true : undefined,
             onClick: () => {
@@ -296,9 +297,9 @@ function renderPotionItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuil
     el('div', { style: { fontWeight: 'bold' } }, def.name),
     el('div', { style: { fontSize: '12px', color: 'var(--muted)', textAlign: 'center' } }, kwDesc(def.description)),
     item.sold
-      ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '판매 완료')
+      ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, t('판매 완료'))
       : potionsFull
-        ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '물약 가득 (최대 3)')
+        ? el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, t('물약 가득 (최대 3)'))
         : (() => { const b = el('button', {
               disabled: !canAfford ? true : undefined,
               onClick: () => {
@@ -315,7 +316,7 @@ function renderPotionItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuil
 
 function appendRemovalPicker(wrapper: HTMLElement, run: ReturnType<typeof getRun>, rebuild: () => void): void {
   wrapper.appendChild(
-    el('div', { style: { color: 'var(--muted)', marginBottom: '12px' } }, '제거할 카드를 선택하세요'),
+    el('div', { style: { color: 'var(--muted)', marginBottom: '12px' } }, t('제거할 카드를 선택하세요')),
   );
 
   const cardRow = el('div', {
@@ -355,12 +356,12 @@ function appendRemovalPicker(wrapper: HTMLElement, run: ReturnType<typeof getRun
 
   wrapper.appendChild(cardRow);
   wrapper.appendChild(
-    el('button', { style: { marginTop: '16px' }, onClick: () => { removalState = 'none'; rebuild(); } }, '← 취소'),
+    el('button', { style: { marginTop: '16px' }, onClick: () => { removalState = 'none'; rebuild(); } }, t('← 취소')),
   );
 }
 
-function typeLabel(t: string): string {
-  if (t === 'attack') return '공격';
-  if (t === 'skill') return '방어';
-  return '효과';
+function typeLabel(tp: string): string {
+  if (tp === 'attack') return t('공격');
+  if (tp === 'skill') return t('방어');
+  return t('효과');
 }

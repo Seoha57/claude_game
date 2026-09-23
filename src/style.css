@@ -1061,6 +1061,61 @@ button:disabled {
   100% { opacity: 0; transform: translate(-50%, -42px) scale(0.95); }
 }
 
+/* Heal float — green number rising from player */
+.heal-float {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+  font-weight: 900;
+  color: #40ff80;
+  text-shadow:
+    -1px -1px 0 #052,
+    1px -1px 0 #052,
+    -1px 1px 0 #052,
+    1px 1px 0 #052;
+  pointer-events: none;
+  z-index: 60;
+  animation: heal-float-anim 1s ease-out forwards;
+}
+@keyframes heal-float-anim {
+  0%   { opacity: 0; transform: translate(-50%, 8px) scale(0.6); }
+  18%  { opacity: 1; transform: translate(-50%, -2px) scale(1.3); }
+  35%  { opacity: 1; transform: translate(-50%, -12px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -44px) scale(0.95); }
+}
+
+/* Heal glow on player stats bar */
+.player-stats.heal-glow {
+  animation: player-heal-glow 0.6s ease-out;
+}
+@keyframes player-heal-glow {
+  0%   { box-shadow: 0 0 0 rgba(64, 255, 128, 0); }
+  30%  { box-shadow: 0 0 18px rgba(64, 255, 128, 0.5); }
+  100% { box-shadow: 0 0 0 rgba(64, 255, 128, 0); }
+}
+
+/* Energy pulse when gaining energy */
+.energy-orb.energy-pulse {
+  animation: energy-orb-pulse 0.45s ease-out;
+}
+@keyframes energy-orb-pulse {
+  0%   { transform: scale(1); box-shadow: 0 0 12px rgba(216, 160, 64, 0.5); }
+  40%  { transform: scale(1.2); box-shadow: 0 0 24px rgba(255, 220, 100, 0.8); }
+  100% { transform: scale(1); box-shadow: 0 0 12px rgba(216, 160, 64, 0.5); }
+}
+
+/* Status apply flash */
+.status.status-new {
+  animation: status-apply-pop 0.4s ease-out;
+}
+@keyframes status-apply-pop {
+  0%   { transform: scale(0.3); opacity: 0; }
+  50%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 /* Fighter: hit burst */
 .hit-fx .hit-burst {
   position: absolute;
@@ -1987,6 +2042,41 @@ button:disabled {
   margin-bottom: 12px;
 }
 .codex-screen h1 { text-align: center; }
+/* Search bar */
+.codex-search-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.codex-search {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--fg);
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+}
+.codex-search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(212, 170, 68, 0.2);
+}
+.codex-search::placeholder { color: var(--muted); }
+.codex-search-clear {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  min-width: auto;
+}
+
 .codex-tabs {
   display: flex;
   gap: 4px;

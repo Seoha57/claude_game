@@ -1,4 +1,5 @@
 import { el } from './dom';
+import { t } from '../i18n';
 import { getRun, makeCard, setScreen, rerender, canAddCard } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS, ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS, GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS, GAMBLER_RARE_CARDS } from '../content/cards';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
@@ -179,8 +180,8 @@ export function renderReward(): HTMLElement {
         el('div', { class: 'card-name' }, def.name),
         el('div', { class: 'card-desc' }, kwDesc(def.description)),
         el('div', { class: 'card-type' }, typeLabel(def.type)),
-        ...(atMax ? [el('div', { style: { color: 'var(--bad)', fontSize: '11px', marginTop: '4px' } }, '최대 보유')] : []),
-        ...(inDeck && !atMax ? [el('div', { style: { color: 'var(--muted)', fontSize: '11px', marginTop: '4px' } }, `덱에 ${deckCount}장 보유`)] : []),
+        ...(atMax ? [el('div', { style: { color: 'var(--bad)', fontSize: '11px', marginTop: '4px' } }, t('최대 보유'))] : []),
+        ...(inDeck && !atMax ? [el('div', { style: { color: 'var(--muted)', fontSize: '11px', marginTop: '4px' } }, `${t('덱에')} ${deckCount}${t('장 보유')}`)] : []),
       ),
     );
   }
@@ -207,7 +208,7 @@ export function renderReward(): HTMLElement {
             },
             disabled: (reward as any)._relicTaken ? true : undefined,
           },
-          `유물 획득: ${def.name} — ${def.description}`,
+          `${t('유물 획득')}: ${def.name} — ${def.description}`,
         );
       })()
     : null;
@@ -215,10 +216,10 @@ export function renderReward(): HTMLElement {
   return el(
     'div',
     { class: 'reward-screen' },
-    el('h2', {}, '보상'),
-    el('div', { style: { color: 'var(--accent)' } }, `골드 +${reward.gold} (자동 획득)`),
+    el('h2', {}, t('보상')),
+    el('div', { style: { color: 'var(--accent)' } }, `${t('골드')} +${reward.gold} (${t('자동 획득')})`),
     relicEl ?? el('div'),
-    el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, '카드 1장 선택 또는 건너뛰기'),
+    el('div', { style: { color: 'var(--muted)', fontSize: '13px' } }, t('카드 1장 선택 또는 건너뛰기')),
     cardsRow,
     (() => {
       const cost = REROLL_COSTS[Math.min(reward.rerollCount, REROLL_COSTS.length - 1)];
@@ -234,8 +235,8 @@ export function renderReward(): HTMLElement {
             opacity: canAfford ? '1' : '0.5',
           },
           onClick: () => { if (!reward.picked && canAfford) rerollCards(); },
-        }, `🔄 카드 리롤 (${cost}G)`),
-        el('span', { style: { color: 'var(--muted)', fontSize: '12px' } }, `보유: ${run.player.gold}G`),
+        }, `🔄 ${t('카드 리롤')} (${cost}G)`),
+        el('span', { style: { color: 'var(--muted)', fontSize: '12px' } }, `${t('보유')}: ${run.player.gold}G`),
       );
     })(),
     el(
@@ -246,7 +247,7 @@ export function renderReward(): HTMLElement {
           close();
         },
       },
-      '건너뛰기',
+      t('건너뛰기'),
     ),
   );
 }
@@ -257,8 +258,8 @@ function close(): void {
   setScreen('map');
 }
 
-function typeLabel(t: string): string {
-  if (t === 'attack') return '공격';
-  if (t === 'skill') return '방어';
-  return '효과';
+function typeLabel(tp: string): string {
+  if (tp === 'attack') return t('공격');
+  if (tp === 'skill') return t('방어');
+  return t('효과');
 }

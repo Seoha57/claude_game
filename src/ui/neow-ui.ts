@@ -1,4 +1,5 @@
 import { el } from './dom';
+import { t } from '../i18n';
 import { getRun, setScreen } from '../state';
 import { rollBlessings, type NeowBlessing } from '../content/neow';
 import { showChapterIntro } from './splash-overlay';
@@ -29,10 +30,10 @@ export function renderNeowBlessing(): HTMLElement {
   const neowIcon = el('div', { class: 'neow-emoji' });
   neowIcon.innerHTML = NEOW_SVG.neow;
   wrapper.appendChild(neowIcon);
-  wrapper.appendChild(el('h1', { class: 'neow-title' }, '네오의 축복'));
+  wrapper.appendChild(el('h1', { class: 'neow-title' }, t('네오의 축복')));
   wrapper.appendChild(
     el('div', { class: 'neow-flavor' },
-      '오랜 여정의 시작, 신비한 존재가 당신에게 한 가지 축복을 내린다.'),
+      t('오랜 여정의 시작, 신비한 존재가 당신에게 한 가지 축복을 내린다.')),
   );
 
   const grid = el('div', { class: 'neow-grid' });
@@ -49,7 +50,7 @@ export function renderNeowBlessing(): HTMLElement {
         playSfx('click');
         proceed();
       },
-    }, '거절한다 (보너스 없이 시작)'),
+    }, t('거절한다 (보너스 없이 시작)')),
   );
 
   return wrapper;

@@ -1,4 +1,5 @@
 import { el } from './dom';
+import { t } from '../i18n';
 import { getRun, setScreen, makeCard, canAddCard } from '../state';
 import { EVENT_DEFS } from '../content/events';
 import type { EventEffect, EventChoice } from '../content/events';
@@ -86,7 +87,7 @@ export function renderEvent(): HTMLElement {
         el('button', {
           class: 'event-continue',
           onClick: () => setScreen('map'),
-        }, '지도로 돌아가기'),
+        }, t('지도로 돌아가기')),
       );
       return;
     }
@@ -294,14 +295,14 @@ function effectChip(e: EventEffect): HTMLElement | null {
     case 'lose_hp':        label = `${ic('heart_broken')} -${e.amount}`;    cls += ' cost'; break;
     case 'gold':           label = `${ic('gold')} +${e.amount}`;            cls += ' gain'; break;
     case 'lose_gold':      label = `${ic('gold')} -${e.amount}`;            cls += ' cost'; break;
-    case 'max_hp':         label = e.amount >= 0 ? `${ic('heart')} 최대 +${e.amount}` : `${ic('heart_broken')} 최대 ${e.amount}`;
+    case 'max_hp':         label = e.amount >= 0 ? `${ic('heart')} ${t('최대')} +${e.amount}` : `${ic('heart_broken')} ${t('최대')} ${e.amount}`;
                            cls += e.amount >= 0 ? ' gain' : ' cost'; break;
-    case 'add_card':       label = `${ic('card')} 카드 (${e.rarity})`;      cls += ' gain'; break;
-    case 'add_potion':     label = `${ic('potion_small')} 물약`;            cls += ' gain'; break;
-    case 'add_random_relic': label = `${ic('gem')} 유물`;                   cls += ' gain'; break;
-    case 'upgrade_random': label = `${ic('star')} 강화 ×${e.count}`;        cls += ' gain'; break;
-    case 'add_curse':      label = `${ic('poison')} 저주 ×${e.count}`;      cls += ' cost'; break;
-    case 'add_blessing':   label = `${ic('sparkle')} 축복 ×${e.count}`;     cls += ' gain'; break;
+    case 'add_card':       label = `${ic('card')} ${t('카드')} (${e.rarity})`;      cls += ' gain'; break;
+    case 'add_potion':     label = `${ic('potion_small')} ${t('물약')}`;            cls += ' gain'; break;
+    case 'add_random_relic': label = `${ic('gem')} ${t('유물')}`;                   cls += ' gain'; break;
+    case 'upgrade_random': label = `${ic('star')} ${t('강화')} ×${e.count}`;        cls += ' gain'; break;
+    case 'add_curse':      label = `${ic('poison')} ${t('저주')} ×${e.count}`;      cls += ' cost'; break;
+    case 'add_blessing':   label = `${ic('sparkle')} ${t('축복')} ×${e.count}`;     cls += ' gain'; break;
     default: return null;
   }
   const chip = el('span', { class: cls });

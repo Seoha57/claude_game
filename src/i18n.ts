@@ -207,6 +207,20 @@ const EN: Record<string, string> = {
   '분': 'min',
   '시간': 'hr',
   '일': 'd',
+
+  // ── 도감 ──
+  '발견한 카드와 유물을 모두 모아보세요. 미발견 항목은 ???로 표시됩니다.': 'Collect all discovered cards and relics. Undiscovered items show as ???.',
+  '카드/유물 이름 검색...': 'Search cards/relics...',
+  '카드': 'Cards',
+  '← 제목으로': '← Title',
+  '도감 초기화': 'Reset Codex',
+  '도감을 초기화합니다. 발견 기록이 모두 사라집니다. 계속할까요?': 'Reset codex? All discovery records will be lost.',
+  '미발견': 'Undiscovered',
+  '발견': 'Found',
+  '스타터': 'Starter',
+  '커먼': 'Common',
+  '언커먼': 'Uncommon',
+  '레어': 'Rare',
 };
 
 export function t(korean: string): string {

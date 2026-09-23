@@ -838,7 +838,9 @@ type PendingFx =
   | { kind: 'attack'; enemyUid: string; damage: number }
   | { kind: 'block'; amount: number }
   | { kind: 'player_dmg'; amount: number }
+  | { kind: 'player_heal'; amount: number }
   | { kind: 'enemy_died'; enemyUid: string }
+  | { kind: 'energy_gain' }
   | { kind: 'enemy_lunge'; enemyUid: string; delay: number };
 let pendingFx: PendingFx[] = [];
 
@@ -847,6 +849,7 @@ function snapshotFx(state: CombatState) {
     enemies: state.enemies.map((e) => ({ uid: e.uid, total: e.hp + e.block, hp: e.hp })),
     playerBlock: state.player.block,
     playerHp: state.player.hp,
+    playerEnergy: state.player.energy,
   };
 }
 
@@ -870,6 +873,13 @@ function detectFx(state: CombatState, before: ReturnType<typeof snapshotFx>): vo
   const hpLost = before.playerHp - state.player.hp;
   if (hpLost > 0) {
     pendingFx.push({ kind: 'player_dmg', amount: hpLost });
+  }
+  const hpGained = state.player.hp - before.playerHp;
+  if (hpGained > 0) {
+    pendingFx.push({ kind: 'player_heal', amount: hpGained });
+  }
+  if (state.player.energy > before.playerEnergy) {
+    pendingFx.push({ kind: 'energy_gain' });
   }
 }
 
@@ -925,6 +935,11 @@ function flushFx(): void {
       triggerPlayerHitFlash();
       if (!playedPlayerDmg) { playSfx('enemy_attack'); playedPlayerDmg = true; }
       if (fx.amount > maxDamageThisFlush) maxDamageThisFlush = fx.amount;
+    } else if (fx.kind === 'player_heal') {
+      spawnHealNumber(fx.amount);
+      triggerHealGlow();
+    } else if (fx.kind === 'energy_gain') {
+      triggerEnergyPulse();
     } else if (fx.kind === 'enemy_died') {
       triggerEnemyDeath(fx.enemyUid);
     }
@@ -1029,6 +1044,35 @@ function spawnDamageNumber(target: HTMLElement, amount: number): void {
   float.style.left = `${42 + Math.random() * 16}%`;
   target.appendChild(float);
   setTimeout(() => float.remove(), 1000);
+}
+
+function spawnHealNumber(amount: number): void {
+  const stats = document.querySelector('.player-stats');
+  if (!stats) return;
+  const float = document.createElement('div');
+  float.className = 'heal-float';
+  float.textContent = `+${amount}`;
+  (stats as HTMLElement).style.position = 'relative';
+  stats.appendChild(float);
+  setTimeout(() => float.remove(), 1050);
+}
+
+function triggerHealGlow(): void {
+  const stats = document.querySelector('.player-stats') as HTMLElement | null;
+  if (!stats) return;
+  stats.classList.remove('heal-glow');
+  void stats.offsetWidth;
+  stats.classList.add('heal-glow');
+  setTimeout(() => stats.classList.remove('heal-glow'), 600);
+}
+
+function triggerEnergyPulse(): void {
+  const orb = document.querySelector('.energy-orb') as HTMLElement | null;
+  if (!orb) return;
+  orb.classList.remove('energy-pulse');
+  void orb.offsetWidth;
+  orb.classList.add('energy-pulse');
+  setTimeout(() => orb.classList.remove('energy-pulse'), 450);
 }
 
 function spawnCardPlayAnim(cardEl: HTMLElement, opts: { exhaust?: boolean } = {}): void {

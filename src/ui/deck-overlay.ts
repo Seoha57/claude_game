@@ -3,6 +3,7 @@ import { getEffectiveDef } from '../content/cards';
 import { cardFlavor } from '../content/lore';
 import type { CardInstance } from '../types';
 import { kwDesc } from './keywords';
+import { t } from '../i18n';
 
 export interface CardListOptions {
   title?: string;
@@ -15,7 +16,7 @@ type FilterType = 'all' | 'attack' | 'skill' | 'power' | 'curse';
 type SortType = 'type' | 'cost' | 'name';
 
 export function openDeckOverlay(deck: CardInstance[], options: CardListOptions = {}): void {
-  const title = options.title ?? '덱 보기';
+  const title = options.title ?? t('덱 보기');
   const showFilter = options.showFilter !== false;
 
   let currentFilter: FilterType = 'all';
@@ -35,14 +36,14 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
   const header = el('div', {
     style: { display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px', width: '100%', maxWidth: '900px' },
   });
-  header.appendChild(el('h2', { style: { margin: '0', color: 'var(--accent)' } }, `${title} (${deck.length}장)`));
-  header.appendChild(el('button', { onClick: () => overlay.remove() }, '닫기 (Esc)'));
+  header.appendChild(el('h2', { style: { margin: '0', color: 'var(--accent)' } }, `${title} (${deck.length}${t('장')})`));
+  header.appendChild(el('button', { onClick: () => overlay.remove() }, `${t('닫기')} (Esc)`));
   overlay.appendChild(header);
 
   if (options.shuffleHint) {
     overlay.appendChild(
       el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '12px' } },
-        '⚠ 드로우 순서는 매번 섞입니다. 어떤 카드가 들어있는지만 표시합니다.'),
+        t('⚠ 드로우 순서는 매번 섞입니다. 어떤 카드가 들어있는지만 표시합니다.')),
     );
   }
 
@@ -77,11 +78,11 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
     controlsEl.innerHTML = '';
 
     const filters: { key: FilterType; label: string }[] = [
-      { key: 'all', label: '전체' },
-      { key: 'attack', label: '공격' },
-      { key: 'skill', label: '방어' },
-      { key: 'power', label: '효과' },
-      { key: 'curse', label: '저주' },
+      { key: 'all', label: t('전체') },
+      { key: 'attack', label: t('공격') },
+      { key: 'skill', label: t('방어') },
+      { key: 'power', label: t('효과') },
+      { key: 'curse', label: t('저주') },
     ];
 
     for (const f of filters) {
@@ -103,9 +104,9 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
     controlsEl.appendChild(el('span', { style: { width: '1px', height: '16px', background: 'var(--border)', margin: '0 4px' } }));
 
     const sorts: { key: SortType; label: string }[] = [
-      { key: 'type', label: '타입순' },
-      { key: 'cost', label: '코스트순' },
-      { key: 'name', label: '이름순' },
+      { key: 'type', label: t('타입순') },
+      { key: 'cost', label: t('코스트순') },
+      { key: 'name', label: t('이름순') },
     ];
 
     for (const s of sorts) {
@@ -160,7 +161,7 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
     if (filtered.length === 0) {
       grid.appendChild(
         el('div', { style: { color: 'var(--muted)', marginTop: '32px' } },
-          options.emptyText ?? '비어있습니다.'),
+          options.emptyText ?? t('비어있습니다.')),
       );
       return;
     }
@@ -169,7 +170,7 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
       const def = getEffectiveDef(card);
       const curse = isCurseLike(def.id);
       const lvl = card.upgraded ?? 0;
-      const upgradeLabel = lvl >= 2 ? '★★ 이중 강화' : lvl === 1 ? '★ 강화됨' : null;
+      const upgradeLabel = lvl >= 2 ? t('★★ 이중 강화') : lvl === 1 ? t('★ 강화됨') : null;
       const outline = lvl >= 2 ? '2px solid var(--gold, #f5c542)' : lvl === 1 ? '2px solid var(--good)' : 'none';
       const flavor = cardFlavor(card.defId);
       grid.appendChild(
@@ -182,7 +183,7 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
           el('div', { class: 'card-name' }, def.name),
           el('div', { class: 'card-desc' }, kwDesc(def.description)),
           ...(flavor ? [el('div', { class: 'card-flavor' }, flavor)] : []),
-          el('div', { class: 'card-type' }, upgradeLabel ?? (curse ? '저주' : typeLabel(def.type))),
+          el('div', { class: 'card-type' }, upgradeLabel ?? (curse ? t('저주') : typeLabel(def.type))),
         ),
       );
     }
@@ -191,7 +192,7 @@ export function openDeckOverlay(deck: CardInstance[], options: CardListOptions =
   if (deck.length === 0) {
     grid.appendChild(
       el('div', { style: { color: 'var(--muted)', marginTop: '32px' } },
-        options.emptyText ?? '비어있습니다.'),
+        options.emptyText ?? t('비어있습니다.')),
     );
   } else {
     renderControls();
@@ -215,8 +216,8 @@ export function isCurseLike(id: string): boolean {
   return CURSE_IDS.has(id);
 }
 
-function typeLabel(t: string): string {
-  if (t === 'attack') return '공격';
-  if (t === 'skill') return '방어';
-  return '효과';
+function typeLabel(type: string): string {
+  if (type === 'attack') return t('공격');
+  if (type === 'skill') return t('방어');
+  return t('효과');
 }
