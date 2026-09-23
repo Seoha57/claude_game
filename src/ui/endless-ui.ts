@@ -1,5 +1,5 @@
 import { el } from './dom';
-import { ic } from './art';
+import { ic, CHARACTER_SVG, artEl } from './art';
 import { getRun, getRunOrNull, setScreen, setCombat, endRun } from '../state';
 import { getAchievementTitle } from '../achievements';
 import { startCombat } from '../combat/combat';
@@ -18,6 +18,8 @@ import { POTION_LIST } from '../content/potions';
 import { shareRun } from './share-run';
 import type { RunState } from '../types';
 import { t } from '../i18n';
+
+const LB_NICK_KEY = 'dod_lb_nickname';
 
 function saveEndlessBest(wave: number): void {
   try {
@@ -387,11 +389,13 @@ export function renderEndlessResult(): HTMLElement {
   wrapper.appendChild(multEl);
 
   // Nickname input + submit
+  const savedNick = (() => { try { return localStorage.getItem(LB_NICK_KEY) ?? ''; } catch { return ''; } })();
   const inputRow = el('div', { style: { display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '16px' } });
   const input = el('input', {
     type: 'text',
     placeholder: t('닉네임 (최대 12자)'),
     maxLength: 12,
+    value: savedNick,
     style: {
       background: 'var(--panel)', color: 'var(--fg)', border: '1px solid var(--accent)',
       borderRadius: '6px', padding: '8px 12px', fontSize: '14px', width: '160px',
@@ -406,6 +410,7 @@ export function renderEndlessResult(): HTMLElement {
     onClick: async () => {
       if (submitted) return;
       const nickname = input.value.trim() || t('익명 모험가');
+      try { localStorage.setItem(LB_NICK_KEY, input.value.trim()); } catch { /* */ }
       submitted = true;
       statusEl.textContent = t('제출 중...');
       try {
@@ -422,7 +427,13 @@ export function renderEndlessResult(): HTMLElement {
           }),
         });
         if (res.ok) {
-          statusEl.textContent = t('등록 완료!');
+          const data = await res.json() as { rank?: number };
+          lastSubmitNickname = nickname;
+          if (data.rank) {
+            statusEl.textContent = `${t('등록 완료!')} #${data.rank}`;
+          } else {
+            statusEl.textContent = t('등록 완료!');
+          }
           playSfx('upgrade');
         } else {
           statusEl.textContent = t('등록 실패');
@@ -462,13 +473,17 @@ export function renderEndlessResult(): HTMLElement {
   return wrapper;
 }
 
-const CLASS_LABEL: Record<string, string> = {
-  swordmaster: '검사', gunner: '총잡이', fighter: '격투가',
-  magician: '마법사', priest: '성직자', thief: '도적',
-  summoner: '정령술사',
-  engineer: '공학자',
-  gambler: '갬블러',
-};
+let lastSubmitNickname = '';
+
+const MEDAL = ['🥇', '🥈', '🥉'];
+
+function relativeTime(ts: number): string {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return t('방금');
+  if (diff < 3600) return `${Math.floor(diff / 60)}${t('분')} ${t('전')}`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}${t('시간')} ${t('전')}`;
+  return `${Math.floor(diff / 86400)}${t('일')} ${t('전')}`;
+}
 
 export function renderLeaderboard(): HTMLElement {
   const wrapper = el('div', { class: 'end-screen' });
@@ -476,7 +491,7 @@ export function renderLeaderboard(): HTMLElement {
   lbTitle.innerHTML = `${ic('trophy')} ${t('리더보드')}`;
   wrapper.appendChild(lbTitle);
 
-  const listEl = el('div', { style: { maxWidth: '500px', width: '100%' } });
+  const listEl = el('div', { class: 'lb-container' });
   wrapper.appendChild(listEl);
   listEl.textContent = t('로딩 중...');
 
@@ -486,30 +501,80 @@ export function renderLeaderboard(): HTMLElement {
       listEl.textContent = '';
       const entries: any[] = data.entries ?? [];
       if (entries.length === 0) {
-        listEl.appendChild(el('div', { style: { color: 'var(--muted)' } }, t('아직 기록이 없습니다.')));
+        listEl.appendChild(el('div', { style: { color: 'var(--muted)', textAlign: 'center', padding: '24px' } }, t('아직 기록이 없습니다.')));
         return;
       }
-      const table = el('div', { class: 'leaderboard-table' });
-      // Header
-      table.appendChild(el('div', { class: 'lb-row lb-header' },
-        el('span', { class: 'lb-rank' }, '#'),
-        el('span', { class: 'lb-name' }, t('닉네임')),
-        el('span', { class: 'lb-class' }, t('클래스')),
-        el('span', { class: 'lb-wave' }, t('웨이브')),
-        el('span', { class: 'lb-score' }, t('점수')),
-      ));
-      entries.forEach((e: any, i: number) => {
-        const medal = `${i + 1}`;
-        const ascLabel = e.ascension > 0 ? ` A${e.ascension}` : '';
-        table.appendChild(el('div', { class: `lb-row ${i < 3 ? 'lb-top' : ''}` },
-          el('span', { class: 'lb-rank' }, medal),
-          el('span', { class: 'lb-name' }, e.title ? `${e.nickname} · ${e.title}` : e.nickname),
-          el('span', { class: 'lb-class' }, `${t(CLASS_LABEL[e.characterClass] ?? e.characterClass)}${ascLabel}`),
-          el('span', { class: 'lb-wave' }, `${e.wave}`),
-          el('span', { class: 'lb-score' }, `${e.score}`),
-        ));
-      });
-      listEl.appendChild(table);
+
+      // Top 3 podium
+      if (entries.length >= 3) {
+        const podium = el('div', { class: 'lb-podium' });
+        const order = [1, 0, 2];
+        for (const idx of order) {
+          const e = entries[idx];
+          const card = el('div', { class: `lb-podium-card lb-podium-${idx + 1}` });
+          card.appendChild(el('div', { class: 'lb-podium-medal' }, MEDAL[idx]));
+          const charIcon = artEl(CHARACTER_SVG[e.characterClass], 28);
+          charIcon.classList.add('lb-podium-char');
+          card.appendChild(charIcon);
+          card.appendChild(el('div', { class: 'lb-podium-name' }, e.nickname));
+          if (e.title) {
+            card.appendChild(el('div', { class: 'lb-podium-title' }, e.title));
+          }
+          card.appendChild(el('div', { class: 'lb-podium-score' }, `${e.score}`));
+          const meta = `W${e.wave}${e.ascension > 0 ? ` · A${e.ascension}` : ''}`;
+          card.appendChild(el('div', { class: 'lb-podium-meta' }, meta));
+          if (e.timestamp) {
+            card.appendChild(el('div', { class: 'lb-podium-time' }, relativeTime(e.timestamp)));
+          }
+          if (lastSubmitNickname && e.nickname === lastSubmitNickname) {
+            card.classList.add('lb-me');
+          }
+          podium.appendChild(card);
+        }
+        listEl.appendChild(podium);
+      }
+
+      // Table for all entries (or 4+ if podium shown)
+      const startIdx = entries.length >= 3 ? 3 : 0;
+      if (startIdx < entries.length || entries.length < 3) {
+        const table = el('div', { class: 'leaderboard-table' });
+        if (entries.length < 3) {
+          table.appendChild(el('div', { class: 'lb-row lb-header' },
+            el('span', { class: 'lb-rank' }, '#'),
+            el('span', { class: 'lb-name' }, t('닉네임')),
+            el('span', { class: 'lb-class' }),
+            el('span', { class: 'lb-wave' }, t('웨이브')),
+            el('span', { class: 'lb-score' }, t('점수')),
+          ));
+        }
+        const tableStart = entries.length < 3 ? 0 : startIdx;
+        for (let i = tableStart; i < entries.length; i++) {
+          const e = entries[i];
+          const isMe = lastSubmitNickname && e.nickname === lastSubmitNickname;
+          const rowCls = `lb-row${i < 3 ? ' lb-top' : ''}${isMe ? ' lb-me' : ''}`;
+          const rankText = i < 3 ? MEDAL[i] : `${i + 1}`;
+          const ascLabel = e.ascension > 0 ? ` A${e.ascension}` : '';
+          const classCell = el('span', { class: 'lb-class' });
+          classCell.appendChild(artEl(CHARACTER_SVG[e.characterClass], 16));
+          const nameCell = el('span', { class: 'lb-name' });
+          nameCell.textContent = e.title ? `${e.nickname} · ${e.title}` : e.nickname;
+          if (e.timestamp) {
+            nameCell.appendChild(el('span', { class: 'lb-time' }, relativeTime(e.timestamp)));
+          }
+          const row = el('div', { class: rowCls },
+            el('span', { class: 'lb-rank' }, rankText),
+            nameCell,
+            classCell,
+            el('span', { class: 'lb-wave' }, `W${e.wave}${ascLabel}`),
+            el('span', { class: 'lb-score' }, `${e.score}`),
+          );
+          table.appendChild(row);
+        }
+        listEl.appendChild(table);
+      }
+
+      const countEl = el('div', { class: 'lb-count' }, `${entries.length} ${t('판')}`);
+      listEl.appendChild(countEl);
     })
     .catch(() => {
       listEl.textContent = t('리더보드를 불러올 수 없습니다.');
