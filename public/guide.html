@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="덱 오브 던전 초보자 가이드 — 9개 직업, 카드 시스템, 전투 팁, 유물 시너지, 진엔딩 공략까지 상세 안내" />
+  <meta name="keywords" content="덱 오브 던전 가이드, 공략, 초보자, 카드게임 팁, 덱빌더 전략" />
+  <meta property="og:title" content="덱 오브 던전 — 초보자 가이드" />
+  <meta property="og:description" content="9개 직업 소개, 카드 시스템, 전투 팁, 유물 시너지, 진엔딩 공략" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://deck-of-dungeon.pages.dev/guide.html" />
+  <title>초보자 가이드 — 덱 오브 던전</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    body { font-family: 'Pretendard', system-ui, -apple-system, sans-serif; background: #1a1416; color: #e8dac8; max-width: 780px; margin: 0 auto; padding: 24px 16px; line-height: 1.8; }
+    h1 { color: #d4aa44; font-size: 28px; border-bottom: 2px solid #3a2a1a; padding-bottom: 12px; text-align: center; }
+    h2 { color: #d4aa44; font-size: 20px; margin-top: 40px; border-left: 4px solid #d4aa44; padding-left: 12px; }
+    h3 { color: #e8dac8; font-size: 16px; margin-top: 24px; }
+    a { color: #5599dd; }
+    .back { display: inline-block; margin-bottom: 16px; color: #5599dd; text-decoration: none; }
+    .back:hover { text-decoration: underline; }
+    .intro { text-align: center; color: #a89878; font-size: 15px; margin-bottom: 32px; }
+    .toc { background: #241c1e; border-radius: 10px; padding: 16px 24px; margin-bottom: 32px; }
+    .toc h3 { margin-top: 0; color: #d4aa44; }
+    .toc ul { margin: 0; padding-left: 20px; }
+    .toc li { margin: 4px 0; }
+    .toc a { text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .card-type { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    .attack { background: #8b2020; color: #fff; }
+    .skill { background: #2060a0; color: #fff; }
+    .power { background: #607020; color: #fff; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { padding: 8px 12px; border: 1px solid #3a2a1a; text-align: left; font-size: 14px; }
+    th { background: #241c1e; color: #d4aa44; }
+    .tip { background: #1e2a1e; border-left: 3px solid #44aa44; padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 14px; }
+    .tip::before { content: '💡 '; }
+    .warn { background: #2a1e1e; border-left: 3px solid #aa4444; padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 14px; }
+    .warn::before { content: '⚠️ '; }
+    .cta { text-align: center; margin: 40px 0; }
+    .cta a { display: inline-block; background: #d4aa44; color: #1a1416; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; }
+    .cta a:hover { background: #e8c060; }
+    footer { text-align: center; color: #666; font-size: 13px; margin-top: 40px; padding-top: 16px; border-top: 1px solid #3a2a1a; }
+    footer a { color: #888; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/">← 게임으로 돌아가기</a>
+  <h1>🎴 덱 오브 던전 — 초보자 가이드</h1>
+  <p class="intro">9개 직업, 200장 이상의 카드, 4개 챕터의 던전을 정복하는 덱빌더 로그라이트 완벽 안내서</p>
+
+  <nav class="toc">
+    <h3>📋 목차</h3>
+    <ul>
+      <li><a href="#overview">게임 소개</a></li>
+      <li><a href="#classes">9개 직업 소개</a></li>
+      <li><a href="#cards">카드 시스템</a></li>
+      <li><a href="#combat">전투 기본 가이드</a></li>
+      <li><a href="#map">맵 노드와 탐험</a></li>
+      <li><a href="#relics">유물과 시너지</a></li>
+      <li><a href="#status">상태이상 총정리</a></li>
+      <li><a href="#true-ending">진엔딩 공략</a></li>
+      <li><a href="#ascension">등반 난이도</a></li>
+      <li><a href="#modes">게임 모드</a></li>
+      <li><a href="#tips">고급 전략 팁</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="overview">🎮 게임 소개</h2>
+  <p>「덱 오브 던전」은 브라우저에서 바로 플레이할 수 있는 무료 덱빌더 로그라이트 카드게임입니다. 「Slay the Spire」에서 영감을 받아 만들어졌으며, 9개의 고유한 직업, 200장 이상의 카드, 다양한 유물 시너지, 4개 챕터의 던전 탐험, 그리고 진엔딩 시스템까지 풍부한 콘텐츠를 제공합니다.</p>
+  <p>설치 없이 PC와 모바일 모두에서 플레이할 수 있으며, Google 계정 연동으로 여러 기기에서 진행 상황을 동기화할 수 있습니다.</p>
+
+  <div class="tip">처음 플레이한다면 <strong>검사</strong>를 추천합니다. 직관적인 공격 스타일로 게임의 기본 메커니즘을 배우기 좋습니다.</div>
+
+  <h2 id="classes">⚔️ 9개 직업 소개</h2>
+  <p>각 직업은 고유한 시작 유물, 전용 카드 풀, 그리고 독특한 플레이스타일을 가지고 있습니다.</p>
+
+  <table>
+    <tr><th>직업</th><th>플레이스타일</th><th>난이도</th><th>시작 유물 효과</th></tr>
+    <tr><td><strong>검사</strong></td><td>근접 공격형</td><td>⭐</td><td>전투 승리 시 HP 6 회복</td></tr>
+    <tr><td><strong>총잡이</strong></td><td>디버프 콤보형</td><td>⭐⭐</td><td>전투 시작 시 모든 적에게 취약 +1</td></tr>
+    <tr><td><strong>격투가</strong></td><td>힘 스케일링형</td><td>⭐⭐</td><td>전투 시작 시 힘 +2</td></tr>
+    <tr><td><strong>마법사</strong></td><td>광역 마법형</td><td>⭐⭐⭐</td><td>매 턴 무작위 적에게 3 데미지</td></tr>
+    <tr><td><strong>성직자</strong></td><td>회복 지속형</td><td>⭐⭐</td><td>전투 시작 시 재생 +3</td></tr>
+    <tr><td><strong>도적</strong></td><td>중독 암살형</td><td>⭐⭐⭐</td><td>전투 시작 시 민첩 +1</td></tr>
+    <tr><td><strong>정령술사</strong></td><td>소환 스케일형</td><td>⭐⭐⭐⭐</td><td>정령 소환과 power 카드 스케일링</td></tr>
+    <tr><td><strong>공학자</strong></td><td>드론 자동화형</td><td>⭐⭐⭐</td><td>드론 배치로 자동 화력 구축</td></tr>
+    <tr><td><strong>갬블러</strong></td><td>랜덤 배팅형</td><td>⭐⭐⭐⭐</td><td>전투 시작 시 1장 드로우, 힘 +1</td></tr>
+  </table>
+
+  <div class="tip">정령술사와 갬블러는 가장 높은 난이도의 직업입니다. 기본 메커니즘에 익숙해진 뒤 도전해 보세요.</div>
+
+  <h2 id="cards">🃏 카드 시스템</h2>
+  <p>카드는 크게 세 가지 유형으로 나뉩니다:</p>
+  <ul>
+    <li><span class="card-type attack">공격</span> — 적에게 데미지를 주는 카드. 빨간색 프레임.</li>
+    <li><span class="card-type skill">방어</span> — 방어도를 올리거나 유틸리티 효과를 발동하는 카드. 파란색 프레임.</li>
+    <li><span class="card-type power">효과</span> — 한 번 사용하면 전투가 끝날 때까지 영구 적용되는 카드. 녹색 프레임.</li>
+  </ul>
+
+  <h3>카드 레어리티</h3>
+  <ul>
+    <li><strong>스타터</strong> — 시작 덱에 포함되는 기본 카드</li>
+    <li><strong>커먼</strong> — 보상에서 자주 등장</li>
+    <li><strong>언커먼</strong> — 보상에서 가끔 등장, 더 강력한 효과</li>
+    <li><strong>레어</strong> — 드물게 등장하지만 매우 강력</li>
+  </ul>
+
+  <h3>카드 키워드</h3>
+  <table>
+    <tr><th>키워드</th><th>설명</th></tr>
+    <tr><td><strong>소멸</strong></td><td>사용 후 영구적으로 제거 (덱에서 완전히 사라짐)</td></tr>
+    <tr><td><strong>선천</strong></td><td>매 전투 시작 시 항상 첫 핸드에 포함</td></tr>
+    <tr><td><strong>유지</strong></td><td>턴이 끝나도 핸드에 남아있음</td></tr>
+    <tr><td><strong>영구 +N</strong></td><td>사용할 때마다 데미지가 영구히 증가 (런 전체에 누적)</td></tr>
+  </table>
+
+  <h3>카드 강화</h3>
+  <p>모닥불의 대장간에서 카드를 강화할 수 있습니다. 강화된 카드는 이름 뒤에 "+"가 붙고 수치가 상승합니다. <strong>이중 강화(++)</strong>는 한 번 더 강화한 것으로, 금색 테두리가 표시되며 더욱 강력해집니다.</p>
+
+  <h2 id="combat">⚡ 전투 기본 가이드</h2>
+  <p>전투는 턴 기반으로 진행됩니다. 매 턴 에너지 3을 받고, 카드를 사용해 에너지를 소모합니다.</p>
+
+  <h3>전투 흐름</h3>
+  <ol>
+    <li>턴 시작 → 에너지 3 충전, 카드 5장 드로우</li>
+    <li>카드 사용 → 에너지가 부족해질 때까지 원하는 만큼</li>
+    <li>턴 종료 → 적이 행동 (예고된 의도대로)</li>
+    <li>다음 턴 시작 → 방어도 초기화, 다시 에너지 충전</li>
+  </ol>
+
+  <h3>적의 의도</h3>
+  <p>적 머리 위에 표시되는 아이콘이 다음 턴 행동을 예고합니다:</p>
+  <ul>
+    <li>⚔️ <strong>숫자</strong> — 공격 (표시된 수치만큼 데미지)</li>
+    <li>🛡️ — 방어 (자신에게 방어도 부여)</li>
+    <li>↑ — 자기 강화 (힘 증가 등)</li>
+    <li>↓ — 디버프 (약화, 취약 등 부여)</li>
+  </ul>
+
+  <div class="tip"><strong>방어도가 적의 공격을 완전히 막으면</strong> 의도 아이콘이 파란색으로 변합니다. 안전한 상태라는 뜻입니다!</div>
+
+  <h3>카드 타게팅</h3>
+  <p>적을 직접 지정하는 카드(단일 대상 공격)는 두 번 탭이 필요합니다:</p>
+  <ol>
+    <li>카드를 한 번 탭 → 카드가 위로 떠오름 (선택됨)</li>
+    <li>공격할 적을 탭 → 카드 발동</li>
+  </ol>
+  <p>적이 1마리만 남아있으면 자동으로 타게팅됩니다. 전체 공격이나 자기 강화 카드는 한 번 탭으로 즉시 발동합니다.</p>
+
+  <h2 id="map">🗺️ 맵 노드와 탐험</h2>
+  <p>각 챕터는 여러 노드로 구성된 맵을 탐험하며 진행합니다. 갈래길에서 어떤 경로를 선택하느냐가 전략의 핵심입니다.</p>
+
+  <table>
+    <tr><th>노드</th><th>설명</th><th>보상</th></tr>
+    <tr><td>⚔️ <strong>전투</strong></td><td>일반 몬스터와 싸움</td><td>골드 + 카드 선택</td></tr>
+    <tr><td>💀 <strong>엘리트</strong></td><td>강한 적, 높은 보상</td><td>골드 + 카드 + 희귀 유물</td></tr>
+    <tr><td>🔥 <strong>모닥불</strong></td><td>휴식/강화/정화/복제</td><td>HP 회복 또는 카드 강화</td></tr>
+    <tr><td>💰 <strong>보물</strong></td><td>무료 보상</td><td>골드 + 카드 선택</td></tr>
+    <tr><td>🛒 <strong>상점</strong></td><td>카드·유물 구매</td><td>카드 제거 서비스 포함</td></tr>
+    <tr><td>❓ <strong>이벤트</strong></td><td>선택지에 따라 다른 결과</td><td>카드, 유물, 골드 등</td></tr>
+    <tr><td>👑 <strong>보스</strong></td><td>챕터 보스</td><td>보스 유물 1개 선택</td></tr>
+  </table>
+
+  <div class="warn">엘리트 전투는 강력하지만, 희귀 유물을 얻을 수 있는 유일한 방법입니다. 덱이 준비되면 적극적으로 도전하세요.</div>
+
+  <h2 id="relics">💎 유물과 시너지</h2>
+  <p>유물은 한 번 획득하면 런이 끝날 때까지 영구적으로 효과가 발동되는 아이템입니다.</p>
+  <ul>
+    <li><strong>일반 유물</strong> — 엘리트, 상점, 이벤트에서 획득</li>
+    <li><strong>클래스 전용 유물</strong> — 해당 직업으로 플레이할 때만 등장</li>
+    <li><strong>보스 유물</strong> — 챕터 클리어 시 3개 중 1개 선택, 매우 강력</li>
+  </ul>
+
+  <h3>유물 시너지</h3>
+  <p>특정 유물 2개를 동시에 보유하면 추가 보너스 효과가 발동됩니다! 시너지가 활성화된 유물은 금색 테두리로 표시됩니다. 도감에서 어떤 유물 조합이 시너지를 이루는지 확인할 수 있습니다.</p>
+
+  <h2 id="status">🌟 상태이상 총정리</h2>
+  <table>
+    <tr><th>상태이상</th><th>효과</th><th>지속</th></tr>
+    <tr><td>💪 <strong>힘</strong></td><td>공격 데미지 +N</td><td>영구</td></tr>
+    <tr><td>🏃 <strong>민첩</strong></td><td>획득 방어도 +N</td><td>영구</td></tr>
+    <tr><td>💔 <strong>취약</strong></td><td>받는 데미지 +50%</td><td>N턴</td></tr>
+    <tr><td>😵 <strong>약화</strong></td><td>주는 데미지 -25%</td><td>N턴</td></tr>
+    <tr><td>🦴 <strong>쇠약</strong></td><td>획득 방어도 -25%</td><td>N턴</td></tr>
+    <tr><td>☠️ <strong>중독</strong></td><td>턴 시작 시 N 데미지, 매 턴 1 감소</td><td>감소</td></tr>
+    <tr><td>🔥 <strong>화상</strong></td><td>턴 종료 시 N 데미지 (방어 무시)</td><td>감소</td></tr>
+    <tr><td>❄️ <strong>빙결</strong></td><td>N턴 행동 불가</td><td>N턴</td></tr>
+    <tr><td>💚 <strong>재생</strong></td><td>턴 종료 시 N 회복</td><td>감소</td></tr>
+    <tr><td>🌿 <strong>가시</strong></td><td>공격받을 때 N 반사</td><td>영구</td></tr>
+    <tr><td>🔩 <strong>금속화</strong></td><td>턴 종료 시 방어도 +N</td><td>영구</td></tr>
+    <tr><td>🔮 <strong>의식</strong></td><td>턴 종료 시 힘 +N</td><td>영구</td></tr>
+  </table>
+
+  <h2 id="true-ending">🔑 진엔딩 공략</h2>
+  <p>일반 클리어 외에 더 강력한 보스에게 도전하는 진엔딩 루트가 있습니다.</p>
+
+  <h3>키 시스템</h3>
+  <p>각 챕터의 첫 번째 엘리트 전투에서 키를 1개씩 획득합니다:</p>
+  <ul>
+    <li>챕터 1 엘리트 → <strong>의지의 열쇠</strong></li>
+    <li>챕터 2 엘리트 → <strong>감정의 열쇠</strong></li>
+    <li>챕터 3 엘리트 → <strong>육체의 열쇠</strong></li>
+  </ul>
+  <p>키 3개를 모두 모은 채로 챕터 3 보스를 클리어하면 <strong>챕터 4 — 진엔딩</strong>에 도전할 수 있습니다.</p>
+
+  <div class="warn">진엔딩 보스(차원의 지배자 / 시간의 군주 / 공허의 화신)는 매우 강력합니다. 빌드가 완성되지 않았다면 일반 클리어를 먼저 안정적으로 달성한 뒤 도전하세요.</div>
+
+  <h2 id="ascension">📈 등반 난이도</h2>
+  <p>기본 난이도로 클리어한 후 더 높은 난이도(등반 A1~A10)에 도전할 수 있습니다. 각 등반 레벨은 누적되어 적용됩니다:</p>
+  <ul>
+    <li>A1: 적 HP +5%</li>
+    <li>A2: 적 힘 +1</li>
+    <li>A3: 시작 덱에 상처 카드 +1</li>
+    <li>A4: 상점 가격 +10%</li>
+    <li>A5: 시작 HP -4</li>
+    <li>…이후 더 어려워집니다</li>
+  </ul>
+
+  <h2 id="modes">🎯 게임 모드</h2>
+  <h3>일반 모드</h3>
+  <p>4개 챕터의 던전을 탐험하며 보스를 처치하는 기본 게임 모드입니다.</p>
+
+  <h3>오늘의 도전 (데일리)</h3>
+  <p>매일 모든 플레이어에게 동일한 시드, 캐릭터, 제약 조건이 주어집니다. 하루에 한 번만 도전할 수 있으며, 결과는 리더보드에 기록됩니다.</p>
+
+  <h3>무한 던전</h3>
+  <p>끝없이 밀려오는 적의 물결을 상대하는 서바이벌 모드입니다. 웨이브가 올라갈수록 적이 강해지지만, 매 웨이브 보상으로 덱을 강화할 수 있습니다. 최종 점수를 리더보드에 등록해 다른 플레이어와 경쟁하세요.</p>
+
+  <h2 id="tips">💡 고급 전략 팁</h2>
+  <ol>
+    <li><strong>덱을 작게 유지하세요.</strong> 핵심 카드를 자주 뽑을 수 있도록 불필요한 카드는 제거하세요.</li>
+    <li><strong>방어를 무시하지 마세요.</strong> 공격 카드에만 집중하면 엘리트와 보스에서 막힙니다.</li>
+    <li><strong>카드 강화는 강력합니다.</strong> 모닥불에서 휴식 대신 강화를 선택하면 장기적으로 더 유리합니다.</li>
+    <li><strong>유물 시너지를 노리세요.</strong> 시너지가 발동되면 유물 2개가 3개 이상의 가치를 발휘합니다.</li>
+    <li><strong>Power 카드를 빨리 내세요.</strong> 전투 초반에 Power 카드를 사용하면 나머지 전투가 훨씬 쉬워집니다.</li>
+    <li><strong>포션은 아끼지 마세요.</strong> 엘리트나 보스 전에 사용하는 것이 가장 효율적입니다.</li>
+    <li><strong>맵 경로를 미리 계획하세요.</strong> 엘리트 → 모닥불 순서가 이상적입니다.</li>
+  </ol>
+
+  <div class="cta">
+    <a href="/">🎮 지금 플레이하기</a>
+  </div>
+
+  <footer>
+    <p>「덱 오브 던전」 — 무료 덱빌더 로그라이트 웹게임</p>
+    <p><a href="/privacy.html">개인정보처리방침</a> · <a href="/terms.html">이용약관</a></p>
+  </footer>
+</body>
+</html>

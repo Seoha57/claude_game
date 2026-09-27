@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://deck-of-dungeon.pages.dev/sitemap.xml

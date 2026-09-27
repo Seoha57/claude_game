@@ -205,6 +205,12 @@ export function renderTitle(): HTMLElement {
       frameBtn.innerHTML = unlocked ? `${f.emoji} ${f.name}` : `${ic('lock')} ${f.unlockLabel || f.name}`;
     }
     wrapper.appendChild(frameRow);
+
+    const footerLinks = el('div', {
+      style: { marginTop: '16px', fontSize: '11px', color: 'var(--muted)', textAlign: 'center' },
+    });
+    footerLinks.innerHTML = '<a href="/guide.html" style="color:var(--muted)">가이드</a> · <a href="/privacy.html" style="color:var(--muted)">개인정보처리방침</a> · <a href="/terms.html" style="color:var(--muted)">이용약관</a>';
+    wrapper.appendChild(footerLinks);
   };
 
   append();
