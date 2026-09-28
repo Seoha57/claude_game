@@ -55,7 +55,7 @@ export function renderTitle(): HTMLElement {
           '',
         ),
       );
-      wrapper.lastElementChild!.innerHTML = `${ic('unlock')} 컨텐츠 ${pct}% 해제 · 카드 ${prog.cards.unlocked}/${prog.cards.total} · 유물 ${prog.relics.unlocked}/${prog.relics.total}`;
+      wrapper.lastElementChild!.innerHTML = `${ic('unlock')} ${t('컨텐츠')} ${pct}% ${t('해제')} · ${t('카드')} ${prog.cards.unlocked}/${prog.cards.total} · ${t('유물')} ${prog.relics.unlocked}/${prog.relics.total}`;
     }
 
     if (unlockedMax > 0) {
@@ -84,7 +84,7 @@ export function renderTitle(): HTMLElement {
               rebuild();
             },
           },
-          lvl === 0 ? '기본' : `A${lvl}`,
+          lvl === 0 ? t('기본') : `A${lvl}`,
         );
         btnRow.appendChild(btn);
       }
@@ -119,7 +119,7 @@ export function renderTitle(): HTMLElement {
           style: { marginTop: saveExists ? '8px' : '16px' },
           onClick: () => {
             if (saveExists) {
-              const ok = confirm('진행 중인 런이 있습니다. 새 게임을 시작하면 기존 진행 상황이 삭제됩니다. 계속할까요?');
+              const ok = confirm(t('진행 중인 런이 있습니다. 새 게임을 시작하면 기존 진행 상황이 삭제됩니다. 계속할까요?'));
               if (!ok) return;
               clearSave();
             }
@@ -198,7 +198,7 @@ export function renderTitle(): HTMLElement {
           cursor: unlocked ? 'pointer' : 'default',
           opacity: unlocked ? '1' : '0.5',
         },
-        title: unlocked ? f.name : `해금: ${f.unlockLabel}`,
+        title: unlocked ? f.name : `${t('해금')}: ${f.unlockLabel}`,
         onClick: () => { if (unlocked) { setCardFrame(f.id); rebuild(); } },
       }));
       const frameBtn = frameRow.lastElementChild as HTMLElement;
@@ -209,7 +209,7 @@ export function renderTitle(): HTMLElement {
     const footerLinks = el('div', {
       style: { marginTop: '16px', fontSize: '11px', color: 'var(--muted)', textAlign: 'center' },
     });
-    footerLinks.innerHTML = '<a href="/guide.html" style="color:var(--muted)">가이드</a> · <a href="/privacy.html" style="color:var(--muted)">개인정보처리방침</a> · <a href="/terms.html" style="color:var(--muted)">이용약관</a>';
+    footerLinks.innerHTML = `<a href="/guide.html" style="color:var(--muted)">${t('가이드')}</a> · <a href="/privacy.html" style="color:var(--muted)">${t('개인정보처리방침')}</a> · <a href="/terms.html" style="color:var(--muted)">${t('이용약관')}</a>`;
     wrapper.appendChild(footerLinks);
   };
 
@@ -220,18 +220,18 @@ export function renderTitle(): HTMLElement {
 function renderModifierHints(level: number): HTMLElement {
   if (level === 0) return el('div', {});
   const hints: string[] = [];
-  if (level >= 1) hints.push('적 HP +5%');
-  if (level >= 2) hints.push('적 힘 +1');
-  if (level >= 3) hints.push('시작 덱에 상처 +1');
-  if (level >= 4) hints.push('상점 가격 +10%');
-  if (level >= 5) hints.push('시작 HP -4');
-  if (level >= 6) hints.push('적 HP +10% 추가');
-  if (level >= 7) hints.push('휴식 회복량 30%→20%');
-  if (level >= 8) hints.push('시작 덱에 상처 +1 추가');
-  if (level >= 9) hints.push('적 힘 +1 추가');
-  if (level >= 10) hints.push('적 HP +15% 추가');
+  if (level >= 1) hints.push(t('적 HP +5%'));
+  if (level >= 2) hints.push(t('적 힘 +1'));
+  if (level >= 3) hints.push(t('시작 덱에 상처 +1'));
+  if (level >= 4) hints.push(t('상점 가격 +10%'));
+  if (level >= 5) hints.push(t('시작 HP -4'));
+  if (level >= 6) hints.push(t('적 HP +10% 추가'));
+  if (level >= 7) hints.push(t('휴식 회복량 30%→20%'));
+  if (level >= 8) hints.push(t('시작 덱에 상처 +1 추가'));
+  if (level >= 9) hints.push(t('적 힘 +1 추가'));
+  if (level >= 10) hints.push(t('적 HP +15% 추가'));
 
-  const mult = `무한 던전 점수 ×${(1 + level * 0.1).toFixed(1)}`;
+  const mult = `${t('무한 던전 점수')} ×${(1 + level * 0.1).toFixed(1)}`;
   return el(
     'div',
     { style: { fontSize: '12px', maxWidth: '320px', textAlign: 'center', marginBottom: '4px' } },

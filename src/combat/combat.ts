@@ -8,6 +8,7 @@ import { getRunOrNull } from '../state';
 import { checkBurnKill } from '../achievements';
 import { getEffectiveDef } from '../content/cards';
 import { getActiveSynergies } from '../content/relics';
+import { t } from '../i18n';
 
 const PLAYER_DRAW = 5;
 
@@ -117,7 +118,7 @@ export function beginPlayerTurn(state: CombatState): void {
         const absorbed = Math.min(target.block, 3);
         target.block -= absorbed;
         target.hp = Math.max(0, target.hp - (3 - absorbed));
-        state.log.push(`마탑의 결정 → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}에게 3 데미지`);
+        state.log.push(`${t('마탑의 결정')} → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}${t('에게')} 3 ${t('데미지')}`);
         maybeTriggerPhase(state, target);
       }
     }
@@ -128,7 +129,7 @@ export function beginPlayerTurn(state: CombatState): void {
         const absorbed = Math.min(target.block, 6);
         target.block -= absorbed;
         target.hp = Math.max(0, target.hp - (6 - absorbed));
-        state.log.push(`폭풍의 핵 → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}에게 6 데미지`);
+        state.log.push(`${t('폭풍의 핵')} → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}${t('에게')} 6 ${t('데미지')}`);
         maybeTriggerPhase(state, target);
       }
     }
@@ -140,20 +141,20 @@ export function beginPlayerTurn(state: CombatState): void {
     if (state.flags.fixedDice) {
       state.flags.diceRoll = state.flags.fixedDice;
       state.flags.fixedDice = undefined;
-      state.log.push(`🎲 주사위 고정! → ${state.flags.diceRoll}`);
+      state.log.push(`🎲 ${t('주사위 고정!')} → ${state.flags.diceRoll}`);
     } else {
       let roll = 1 + Math.floor(state.rng() * 3); // 1~3
       if (state.flags.diceReroll && roll === 1) {
         const prev = roll;
         roll = 1 + Math.floor(state.rng() * 3);
-        state.log.push(`🎲 리롤! ${prev} → ${roll}`);
+        state.log.push(`🎲 ${t('리롤!')} ${prev} → ${roll}`);
       }
       if (state.flags.diceMinimum && roll < state.flags.diceMinimum) {
         roll = state.flags.diceMinimum;
-        state.log.push(`🎲 최솟값 보정 → ${roll}`);
+        state.log.push(`🎲 ${t('최솟값 보정')} → ${roll}`);
       }
       state.flags.diceRoll = roll;
-      state.log.push(`🎲 주사위 → ${state.flags.diceRoll}`);
+      state.log.push(`🎲 ${t('주사위')} → ${state.flags.diceRoll}`);
     }
   }
 
@@ -161,7 +162,7 @@ export function beginPlayerTurn(state: CombatState): void {
   fireDrones(state);
 
   // Start-of-turn statuses for player
-  applyStartOfTurnStatuses(p, state, '플레이어');
+  applyStartOfTurnStatuses(p, state, t('플레이어'));
   if (p.hp <= 0) { state.phase = 'lost'; return; }
 
   // 데일리 제약: 손패 ±N
@@ -179,27 +180,27 @@ export function fireDrones(state: CombatState): void {
 
   const droneBasic = getStatus(p.statuses, 'drone_basic');
   if (droneBasic > 0) {
-    const t = pick();
-    if (t) {
+    const tgt = pick();
+    if (tgt) {
       const dmg = droneBasic + str;
-      const absorbed = Math.min(t.block, dmg);
-      t.block -= absorbed;
-      t.hp = Math.max(0, t.hp - (dmg - absorbed));
-      state.log.push(`경량 드론 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 ${dmg} 데미지`);
-      maybeTriggerPhase(state, t);
+      const absorbed = Math.min(tgt.block, dmg);
+      tgt.block -= absorbed;
+      tgt.hp = Math.max(0, tgt.hp - (dmg - absorbed));
+      state.log.push(`${t('경량 드론')} → ${ENEMY_DEFS[tgt.defId]?.name ?? tgt.defId}${t('에게')} ${dmg} ${t('데미지')}`);
+      maybeTriggerPhase(state, tgt);
     }
   }
 
   const droneHeavy = getStatus(p.statuses, 'drone_heavy');
   if (droneHeavy > 0 && state.turn % 2 === 0) {
-    const t = pick();
-    if (t) {
+    const tgt = pick();
+    if (tgt) {
       const dmg = droneHeavy + str;
-      const absorbed = Math.min(t.block, dmg);
-      t.block -= absorbed;
-      t.hp = Math.max(0, t.hp - (dmg - absorbed));
-      state.log.push(`중형 드론 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 ${dmg} 데미지`);
-      maybeTriggerPhase(state, t);
+      const absorbed = Math.min(tgt.block, dmg);
+      tgt.block -= absorbed;
+      tgt.hp = Math.max(0, tgt.hp - (dmg - absorbed));
+      state.log.push(`${t('중형 드론')} → ${ENEMY_DEFS[tgt.defId]?.name ?? tgt.defId}${t('에게')} ${dmg} ${t('데미지')}`);
+      maybeTriggerPhase(state, tgt);
     }
   }
 
@@ -210,39 +211,39 @@ export function fireDrones(state: CombatState): void {
       const absorbed = Math.min(e.block, dmg);
       e.block -= absorbed;
       e.hp = Math.max(0, e.hp - (dmg - absorbed));
-      state.log.push(`공성 드론 → ${ENEMY_DEFS[e.defId]?.name ?? e.defId}에게 ${dmg} 데미지`);
+      state.log.push(`${t('공성 드론')} → ${ENEMY_DEFS[e.defId]?.name ?? e.defId}${t('에게')} ${dmg} ${t('데미지')}`);
       maybeTriggerPhase(state, e);
     }
   }
 
   const droneIce = getStatus(p.statuses, 'drone_ice');
   if (droneIce > 0 && state.turn % 2 === 0) {
-    const t = pick();
-    if (t) {
+    const tgt = pick();
+    if (tgt) {
       const log = (s: string) => state.log.push(s);
-      applyEnemyStatus(t, 'freeze', droneIce, log);
+      applyEnemyStatus(tgt, 'freeze', droneIce, log);
     }
   }
 
   const droneBurn = getStatus(p.statuses, 'drone_burn');
   if (droneBurn > 0) {
-    const t = pick();
-    if (t) {
-      applyStatus(t, 'burn', droneBurn);
-      state.log.push(`화염 드론 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 화상 +${droneBurn}`);
+    const tgt = pick();
+    if (tgt) {
+      applyStatus(tgt, 'burn', droneBurn);
+      state.log.push(`${t('화염 드론')} → ${ENEMY_DEFS[tgt.defId]?.name ?? tgt.defId}${t('에게')} ${t('화상')} +${droneBurn}`);
     }
   }
 
   const droneRecon = getStatus(p.statuses, 'drone_recon');
   if (droneRecon > 0) {
     drawCards(state, droneRecon);
-    state.log.push(`정찰 드론 → ${droneRecon}장 드로우`);
+    state.log.push(`${t('정찰 드론')} → ${droneRecon}${t('장 드로우')}`);
   }
 
   const droneShield = getStatus(p.statuses, 'drone_shield');
   if (droneShield > 0 && state.turn % 2 === 0) {
     p.block += droneShield;
-    state.log.push(`보호 드론 → 방어도 +${droneShield}`);
+    state.log.push(`${t('보호 드론')} → ${t('방어도')} +${droneShield}`);
   }
 }
 
@@ -251,7 +252,7 @@ function applyStartOfTurnStatuses(c: any, state: CombatState, name: string): voi
   if (poison > 0) {
     c.hp = Math.max(0, c.hp - poison);
     applyStatus(c, 'poison', -1);
-    state.log.push(`${name} 중독 ${poison} 데미지`);
+    state.log.push(`${name} ${t('중독')} ${poison} ${t('데미지')}`);
     // 도트로 보스가 절반 HP를 넘겼을 수 있으니 페이즈 전환 체크
     if (c !== state.player) maybeTriggerPhase(state, c);
   }
@@ -264,10 +265,10 @@ export function endPlayerTurn(state: CombatState): void {
   for (const c of p.hand) {
     if (c.defId === 'decay') {
       p.hp = Math.max(0, p.hp - 2);
-      state.log.push('부식 → HP -2');
+      state.log.push(`${t('부식')} → HP -2`);
     } else if (c.defId === 'doubt') {
       applyStatus(p, 'weak', 1);
-      state.log.push('의심 → 약화 +1');
+      state.log.push(`${t('의심')} → ${t('약화')} +1`);
     }
   }
   if (p.hp <= 0) { state.phase = 'lost'; return; }
@@ -287,14 +288,14 @@ export function endPlayerTurn(state: CombatState): void {
   p.hand = retained;
 
   // Player end-of-turn statuses
-  endOfTurnStatuses(p, state, '플레이어');
+  endOfTurnStatuses(p, state, t('플레이어'));
   if (p.hp <= 0) {
     state.phase = 'lost';
     return;
   }
 
   state.phase = 'enemy_act';
-  state.log.push(`── 턴 ${state.turn} 적 행동 ──`);
+  state.log.push(`── ${t('턴')} ${state.turn} ${t('적 행동')} ──`);
   for (const e of state.enemies) {
     if (e.hp <= 0) continue;
     e.block = 0;
@@ -304,12 +305,12 @@ export function endPlayerTurn(state: CombatState): void {
     // Freeze — skip enemy action, consume one stack
     const frozen = getStatus(e.statuses, 'freeze');
     if (frozen > 0) {
-      state.log.push(`${enemyName} 빙결 — 행동 불가`);
+      state.log.push(`${enemyName} ${t('빙결 — 행동 불가')}`);
       applyStatus(e, 'freeze', -1);
       // 빙결이 완전히 풀리면 보스에게 2턴 면역 부여
       if (getStatus(e.statuses, 'freeze') <= 0 && ENEMY_DEFS[e.defId]?.isBoss) {
         e.freezeImmuneTurns = 2;
-        state.log.push(`${enemyName} 빙결 저항 — 2턴간 면역`);
+        state.log.push(`${enemyName} ${t('빙결 저항 — 2턴간 면역')}`);
       }
     } else {
       ENEMY_DEFS[e.defId].act(state, e);
@@ -344,13 +345,13 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
   if (regen > 0 && c.hp > 0) {
     if (c.maxHp !== undefined) {
       c.hp = Math.min(c.maxHp, c.hp + regen);
-      state.log.push(`${name} 재생 ${regen} 회복`);
+      state.log.push(`${name} ${t('재생')} ${regen} ${t('회복')}`);
       // 성직자 신성한 인장: 재생이 발동할 때마다 방어도 +3
       if (c === state.player) {
         const run = getRunOrNull();
         if (run?.player.relics.includes('holy_seal')) {
           c.block += 2;
-          state.log.push('신성한 인장 → 방어도 +2');
+          state.log.push(`${t('신성한 인장')} → ${t('방어도')} +2`);
         }
       }
     }
@@ -359,7 +360,7 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
   const ritual = getStatus(c.statuses, 'ritual');
   if (ritual > 0) {
     applyStatus(c, 'strength', ritual);
-    state.log.push(`${name} 의식: 힘 +${ritual}`);
+    state.log.push(`${name} ${t('의식')}: ${t('힘')} +${ritual}`);
   }
   const metal = getStatus(c.statuses, 'metallicize');
   if (metal > 0) {
@@ -370,7 +371,7 @@ function endOfTurnStatuses(c: any, state: CombatState, name: string): void {
   if (burn > 0) {
     const wasAlive = c.hp > 0;
     c.hp = Math.max(0, c.hp - burn);
-    state.log.push(`${name} 화상 ${burn} 데미지`);
+    state.log.push(`${name} ${t('화상')} ${burn} ${t('데미지')}`);
     applyStatus(c, 'burn', -1);
     // Achievement: enemy killed by burn (c is enemy if it's not the player object)
     if (wasAlive && c.hp <= 0 && c !== state.player) {
@@ -455,7 +456,7 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
   // Synergy sets
   for (const syn of getActiveSynergies(relics)) {
     if (syn.timing !== 'combat_start') continue;
-    cs.log.push(`⚡ 시너지: ${syn.name}`);
+    cs.log.push(`⚡ ${t('시너지')}: ${syn.name}`);
     switch (syn.id) {
       case 'eye_of_storm':
         for (const e of cs.enemies) applyStatus(e, 'vulnerable', 1);

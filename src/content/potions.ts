@@ -1,3 +1,5 @@
+import { t } from '../i18n';
+
 export interface PotionDef {
   id: string;
   name: string;
@@ -6,16 +8,16 @@ export interface PotionDef {
 }
 
 export const POTION_DEFS: Record<string, PotionDef> = {
-  health_potion:   { id: 'health_potion',   name: '체력 물약',  description: 'HP +20 회복',           target: 'self' },
-  strength_potion: { id: 'strength_potion', name: '힘의 물약',  description: '이번 전투 힘 +5',        target: 'self' },
-  block_potion:    { id: 'block_potion',    name: '방어 물약',  description: '방어도 +15',             target: 'self' },
-  energy_potion:   { id: 'energy_potion',   name: '에너지 물약',description: '에너지 +2',              target: 'self' },
-  poison_potion:   { id: 'poison_potion',   name: '독 물약',    description: '적에게 중독 +8',         target: 'enemy' },
-  fire_potion:     { id: 'fire_potion',     name: '화염 물약',  description: '적에게 20 데미지',        target: 'enemy' },
-  weak_potion:     { id: 'weak_potion',     name: '약화 물약',  description: '모든 적에게 약화 +3',     target: 'self' },
-  vulnerable_potion:{id: 'vulnerable_potion',name: '취약 물약',  description: '모든 적에게 취약 +3',     target: 'self' },
-  burn_potion:     { id: 'burn_potion',     name: '화상 물약',  description: '적에게 화상 +5',         target: 'enemy' },
-  freeze_potion:   { id: 'freeze_potion',   name: '빙결 물약',  description: '적에게 빙결 +1, 약화 +2', target: 'enemy' },
+  health_potion:   { id: 'health_potion',   name: t('체력 물약'),  description: t('HP +20 회복'),           target: 'self' },
+  strength_potion: { id: 'strength_potion', name: t('힘의 물약'),  description: t('이번 전투 힘 +5'),        target: 'self' },
+  block_potion:    { id: 'block_potion',    name: t('방어 물약'),  description: t('방어도 +15'),             target: 'self' },
+  energy_potion:   { id: 'energy_potion',   name: t('에너지 물약'),description: t('에너지 +2'),              target: 'self' },
+  poison_potion:   { id: 'poison_potion',   name: t('독 물약'),    description: t('적에게 중독 +8'),         target: 'enemy' },
+  fire_potion:     { id: 'fire_potion',     name: t('화염 물약'),  description: t('적에게 20 데미지'),        target: 'enemy' },
+  weak_potion:     { id: 'weak_potion',     name: t('약화 물약'),  description: t('모든 적에게 약화 +3'),     target: 'self' },
+  vulnerable_potion:{id: 'vulnerable_potion',name: t('취약 물약'),  description: t('모든 적에게 취약 +3'),     target: 'self' },
+  burn_potion:     { id: 'burn_potion',     name: t('화상 물약'),  description: t('적에게 화상 +5'),         target: 'enemy' },
+  freeze_potion:   { id: 'freeze_potion',   name: t('빙결 물약'),  description: t('적에게 빙결 +1, 약화 +2'), target: 'enemy' },
 };
 
 export const POTION_LIST = Object.values(POTION_DEFS);

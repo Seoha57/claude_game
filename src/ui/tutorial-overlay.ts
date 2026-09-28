@@ -1,4 +1,5 @@
 import { el } from './dom';
+import { t } from '../i18n';
 
 const STORAGE_KEY = 'dod_tutorial_done';
 
@@ -12,38 +13,38 @@ interface TutorialStep {
 const STEPS: TutorialStep[] = [
   {
     target: '.energy-orb',
-    title: '에너지',
-    text: '카드를 사용하려면 에너지가 필요합니다. 매 턴 시작 시 회복됩니다.',
+    title: t('에너지'),
+    text: t('카드를 사용하려면 에너지가 필요합니다. 매 턴 시작 시 회복됩니다.'),
     position: 'bottom',
   },
   {
     target: '.hand-cards',
-    title: '카드 사용',
-    text: '카드를 클릭하면 사용합니다. 빨간색은 공격, 파란색은 방어, 보라색은 특수 효과입니다.',
+    title: t('카드 사용'),
+    text: t('카드를 클릭하면 사용합니다. 빨간색은 공격, 파란색은 방어, 보라색은 특수 효과입니다.'),
     position: 'top',
   },
   {
     target: '.hand-cards',
-    title: '카드 타게팅',
-    text: '공격 카드를 클릭하면 카드가 위로 떠오릅니다. 그 다음 공격할 적을 클릭하세요! 적이 1마리면 자동 발동됩니다.',
+    title: t('카드 타게팅'),
+    text: t('공격 카드를 클릭하면 카드가 위로 떠오릅니다. 그 다음 공격할 적을 클릭하세요! 적이 1마리면 자동 발동됩니다.'),
     position: 'top',
   },
   {
     target: '.enemies',
-    title: '적 의도 & 데미지 미리보기',
-    text: '적 머리 위의 아이콘이 다음 행동 예고입니다. 카드 선택 시 적에게 들어갈 데미지가 숫자로 표시됩니다!',
+    title: t('적 의도 & 데미지 미리보기'),
+    text: t('적 머리 위의 아이콘이 다음 행동 예고입니다. 카드 선택 시 적에게 들어갈 데미지가 숫자로 표시됩니다!'),
     position: 'bottom',
   },
   {
     target: '.hp-bar',
-    title: '체력과 방어도',
-    text: '방어도는 적의 공격을 먼저 흡수합니다. 단, 매 턴 시작 시 0으로 초기화됩니다.',
+    title: t('체력과 방어도'),
+    text: t('방어도는 적의 공격을 먼저 흡수합니다. 단, 매 턴 시작 시 0으로 초기화됩니다.'),
     position: 'bottom',
   },
   {
     target: '.end-turn-btn',
-    title: '턴 종료',
-    text: '카드를 다 사용했으면 턴 종료를 누르세요. 적이 행동한 뒤 새 턴이 시작됩니다.',
+    title: t('턴 종료'),
+    text: t('카드를 다 사용했으면 턴 종료를 누르세요. 적이 행동한 뒤 새 턴이 시작됩니다.'),
     position: 'top',
   },
 ];
@@ -69,7 +70,7 @@ export function showTutorialOverlay(): void {
   const skipBtn = el('button', {
     class: 'tutorial-skip',
     onClick: () => { markDone(); overlay.remove(); },
-  }, '건너뛰기');
+  }, t('건너뛰기'));
 
   tooltip.appendChild(titleEl);
   tooltip.appendChild(textEl);
@@ -83,7 +84,7 @@ export function showTutorialOverlay(): void {
     titleEl.textContent = s.title;
     textEl.textContent = s.text;
     progress.textContent = `${step + 1} / ${STEPS.length}`;
-    nextBtn.textContent = step < STEPS.length - 1 ? '다음' : '시작하기';
+    nextBtn.textContent = step < STEPS.length - 1 ? t('다음') : t('시작하기');
     nextBtn.onclick = () => {
       if (step < STEPS.length - 1) { step++; render(); }
       else { markDone(); overlay.remove(); }

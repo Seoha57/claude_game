@@ -1,4 +1,5 @@
 import type { Combatant, StatusKey, Statuses } from '../types';
+import { t } from '../i18n';
 
 export interface StatusInfo {
   key: StatusKey;
@@ -11,158 +12,158 @@ export interface StatusInfo {
 }
 
 export const STATUS_INFO: Record<StatusKey, StatusInfo> = {
-  strength: { key: 'strength', name: '힘', description: '공격 데미지 +N', decay: false, buff: true },
+  strength: { key: 'strength', name: t('힘'), description: t('공격 데미지 +N'), decay: false, buff: true },
   dexterity: {
     key: 'dexterity',
-    name: '민첩',
-    description: '획득 방어도 +N',
+    name: t('민첩'),
+    description: t('획득 방어도 +N'),
     decay: false,
     buff: true,
   },
   vulnerable: {
     key: 'vulnerable',
-    name: '취약',
-    description: '받는 공격 데미지 50% 증가',
+    name: t('취약'),
+    description: t('받는 공격 데미지 50% 증가'),
     decay: true,
     buff: false,
   },
   weak: {
     key: 'weak',
-    name: '약화',
-    description: '주는 공격 데미지 25% 감소',
+    name: t('약화'),
+    description: t('주는 공격 데미지 25% 감소'),
     decay: true,
     buff: false,
   },
   poison: {
     key: 'poison',
-    name: '중독',
-    description: '턴 시작마다 N 데미지, 이후 1 감소',
+    name: t('중독'),
+    description: t('턴 시작마다 N 데미지, 이후 1 감소'),
     decay: false,
     buff: false,
   },
   thorns: {
     key: 'thorns',
-    name: '가시',
-    description: '공격받으면 N 반사',
+    name: t('가시'),
+    description: t('공격받으면 N 반사'),
     decay: false,
     buff: true,
   },
   regen: {
     key: 'regen',
-    name: '재생',
-    description: '턴 종료 시 N 회복, 이후 1 감소',
+    name: t('재생'),
+    description: t('턴 종료 시 N 회복, 이후 1 감소'),
     decay: false,
     buff: true,
   },
   frail: {
     key: 'frail',
-    name: '쇠약',
-    description: '획득 방어도 25% 감소',
+    name: t('쇠약'),
+    description: t('획득 방어도 25% 감소'),
     decay: true,
     buff: false,
   },
   ritual: {
     key: 'ritual',
-    name: '의식',
-    description: '턴 종료 시 힘 +N',
+    name: t('의식'),
+    description: t('턴 종료 시 힘 +N'),
     decay: false,
     buff: true,
   },
   metallicize: {
     key: 'metallicize',
-    name: '금속화',
-    description: '턴 종료 시 방어도 +N',
+    name: t('금속화'),
+    description: t('턴 종료 시 방어도 +N'),
     decay: false,
     buff: true,
   },
   burn: {
     key: 'burn',
-    name: '화상',
-    description: '턴 종료 시 N 데미지. 이후 1 감소',
+    name: t('화상'),
+    description: t('턴 종료 시 N 데미지. 이후 1 감소'),
     decay: true,
     buff: false,
   },
   freeze: {
     key: 'freeze',
-    name: '빙결',
-    description: '다음 N턴 행동 불가',
+    name: t('빙결'),
+    description: t('다음 N턴 행동 불가'),
     decay: true,
     buff: false,
   },
   on_exhaust_str: {
     key: 'on_exhaust_str',
-    name: '소멸의 힘',
-    description: '카드 소멸 시 힘 +N',
+    name: t('소멸의 힘'),
+    description: t('카드 소멸 시 힘 +N'),
     decay: false,
     buff: true,
   },
   on_exhaust_draw: {
     key: 'on_exhaust_draw',
-    name: '소멸 드로우',
-    description: '카드 소멸 시 N장 드로우',
+    name: t('소멸 드로우'),
+    description: t('카드 소멸 시 N장 드로우'),
     decay: false,
     buff: true,
   },
   on_exhaust_block: {
     key: 'on_exhaust_block',
-    name: '소멸 방어',
-    description: '카드 소멸 시 방어도 +N',
+    name: t('소멸 방어'),
+    description: t('카드 소멸 시 방어도 +N'),
     decay: false,
     buff: true,
   },
   on_exhaust_energy: {
     key: 'on_exhaust_energy',
-    name: '소멸 에너지',
-    description: '카드 소멸 시 에너지 +N',
+    name: t('소멸 에너지'),
+    description: t('카드 소멸 시 에너지 +N'),
     decay: false,
     buff: true,
   },
   drone_basic: {
     key: 'drone_basic',
-    name: '경량 드론',
-    description: '매턴 랜덤 적에게 N 데미지 (힘 적용)',
+    name: t('경량 드론'),
+    description: t('매턴 랜덤 적에게 N 데미지 (힘 적용)'),
     decay: false,
     buff: true,
   },
   drone_heavy: {
     key: 'drone_heavy',
-    name: '중형 드론',
-    description: '2턴마다 랜덤 적에게 N 데미지 (힘 적용)',
+    name: t('중형 드론'),
+    description: t('2턴마다 랜덤 적에게 N 데미지 (힘 적용)'),
     decay: false,
     buff: true,
   },
   drone_aoe: {
     key: 'drone_aoe',
-    name: '공성 드론',
-    description: '3턴마다 모든 적에게 N 데미지 (힘 적용)',
+    name: t('공성 드론'),
+    description: t('3턴마다 모든 적에게 N 데미지 (힘 적용)'),
     decay: false,
     buff: true,
   },
   drone_ice: {
     key: 'drone_ice',
-    name: '냉각 드론',
-    description: '2턴마다 랜덤 적에게 빙결 +N',
+    name: t('냉각 드론'),
+    description: t('2턴마다 랜덤 적에게 빙결 +N'),
     decay: false,
     buff: true,
   },
   drone_burn: {
     key: 'drone_burn',
-    name: '화염 드론',
-    description: '매턴 랜덤 적에게 화상 +N',
+    name: t('화염 드론'),
+    description: t('매턴 랜덤 적에게 화상 +N'),
     decay: false,
     buff: true,
   },
   drone_recon: {
     key: 'drone_recon',
-    name: '정찰 드론',
-    description: '매턴 N장 드로우',
+    name: t('정찰 드론'),
+    description: t('매턴 N장 드로우'),
     decay: false,
     buff: true,
   },
   drone_shield: {
     key: 'drone_shield',
-    name: '보호 드론',
-    description: '2턴마다 방어도 +N',
+    name: t('보호 드론'),
+    description: t('2턴마다 방어도 +N'),
     decay: false,
     buff: true,
   },
@@ -210,15 +211,15 @@ function triangularSum(n: number): number {
 export function getStatusValueLabel(key: StatusKey, value: number): string {
   switch (key) {
     case 'regen':
-      return `${value} (총 ${triangularSum(value)}HP)`;
+      return `${value} (${t('총')} ${triangularSum(value)}HP)`;
     case 'poison':
     case 'burn':
-      return `${value} (총 ${triangularSum(value)})`;
+      return `${value} (${t('총')} ${triangularSum(value)})`;
     case 'freeze':
     case 'vulnerable':
     case 'weak':
     case 'frail':
-      return `${value}턴`;
+      return `${value}${t('턴')}`;
     case 'drone_basic':
     case 'drone_heavy':
     case 'drone_aoe':
@@ -239,51 +240,51 @@ export function getStatusTooltip(key: StatusKey, value: number): string {
   const name = info.name;
   switch (key) {
     case 'strength':
-      return `${name}: 공격 카드 데미지 +${value} (영구)`;
+      return `${name}: ${t('공격 카드 데미지')} +${value} (${t('영구')})`;
     case 'dexterity':
-      return `${name}: 방어도 카드에 +${value} (영구)`;
+      return `${name}: ${t('방어도 카드에')} +${value} (${t('영구')})`;
     case 'thorns':
-      return `${name}: 공격받을 때마다 ${value} 데미지 반사 (영구)`;
+      return `${name}: ${t('공격받을 때마다')} ${value} ${t('데미지 반사')} (${t('영구')})`;
     case 'metallicize':
-      return `${name}: 매 턴 종료 시 방어도 +${value} (영구)`;
+      return `${name}: ${t('매 턴 종료 시 방어도')} +${value} (${t('영구')})`;
     case 'ritual':
-      return `${name}: 매 턴 종료 시 힘 +${value} (영구)`;
+      return `${name}: ${t('매 턴 종료 시 힘')} +${value} (${t('영구')})`;
     case 'regen':
-      return `${name}: 턴 종료 시 ${value} HP 회복. 이후 1씩 감소.\n총 회복 예상: ${triangularSum(value)} HP`;
+      return `${name}: ${t('턴 종료 시')} ${value} ${t('HP 회복. 이후 1씩 감소.')}\n${t('총 회복 예상:')} ${triangularSum(value)} HP`;
     case 'poison':
-      return `${name}: 턴 시작 시 ${value} 데미지. 이후 1씩 감소.\n총 데미지 예상: ${triangularSum(value)}`;
+      return `${name}: ${t('턴 시작 시')} ${value} ${t('데미지. 이후 1씩 감소.')}\n${t('총 데미지 예상:')} ${triangularSum(value)}`;
     case 'burn':
-      return `${name}: 턴 종료 시 ${value} 데미지 (방어도 무시). 이후 1씩 감소.\n총 데미지 예상: ${triangularSum(value)}`;
+      return `${name}: ${t('턴 종료 시')} ${value} ${t('데미지 (방어도 무시). 이후 1씩 감소.')}\n${t('총 데미지 예상:')} ${triangularSum(value)}`;
     case 'vulnerable':
-      return `${name}: 받는 공격 +50%. ${value}턴 동안.`;
+      return `${name}: ${t('받는 공격')} +50%. ${value}${t('턴 동안.')}`;
     case 'weak':
-      return `${name}: 주는 공격 -25%. ${value}턴 동안.`;
+      return `${name}: ${t('주는 공격')} -25%. ${value}${t('턴 동안.')}`;
     case 'frail':
-      return `${name}: 획득 방어도 -25%. ${value}턴 동안.`;
+      return `${name}: ${t('획득 방어도')} -25%. ${value}${t('턴 동안.')}`;
     case 'freeze':
-      return `${name}: 다음 ${value}턴 동안 행동 불가.`;
+      return `${name}: ${t('다음')} ${value}${t('턴 동안 행동 불가.')}`;
     case 'on_exhaust_str':
-      return `${name}: 카드 소멸 시 힘 +${value} (영구)`;
+      return `${name}: ${t('카드 소멸 시 힘')} +${value} (${t('영구')})`;
     case 'on_exhaust_draw':
-      return `${name}: 카드 소멸 시 ${value}장 드로우`;
+      return `${name}: ${t('카드 소멸 시')} ${value}${t('장 드로우')}`;
     case 'on_exhaust_block':
-      return `${name}: 카드 소멸 시 방어도 +${value}`;
+      return `${name}: ${t('카드 소멸 시 방어도')} +${value}`;
     case 'on_exhaust_energy':
-      return `${name}: 카드 소멸 시 에너지 +${value}`;
+      return `${name}: ${t('카드 소멸 시 에너지')} +${value}`;
     case 'drone_basic':
-      return `${name}: 매턴 랜덤 적에게 ${value}+힘 데미지`;
+      return `${name}: ${t('매턴 랜덤 적에게')} ${value}+${t('힘')} ${t('데미지')}`;
     case 'drone_heavy':
-      return `${name}: 2턴마다 랜덤 적에게 ${value}+힘 데미지`;
+      return `${name}: ${t('2턴마다 랜덤 적에게')} ${value}+${t('힘')} ${t('데미지')}`;
     case 'drone_aoe':
-      return `${name}: 3턴마다 모든 적에게 ${value}+힘 데미지`;
+      return `${name}: ${t('3턴마다 모든 적에게')} ${value}+${t('힘')} ${t('데미지')}`;
     case 'drone_ice':
-      return `${name}: 2턴마다 랜덤 적에게 빙결 +${value}`;
+      return `${name}: ${t('2턴마다 랜덤 적에게 빙결')} +${value}`;
     case 'drone_burn':
-      return `${name}: 매턴 랜덤 적에게 화상 +${value}`;
+      return `${name}: ${t('매턴 랜덤 적에게 화상')} +${value}`;
     case 'drone_recon':
-      return `${name}: 매턴 ${value}장 드로우`;
+      return `${name}: ${t('매턴')} ${value}${t('장 드로우')}`;
     case 'drone_shield':
-      return `${name}: 2턴마다 방어도 +${value}`;
+      return `${name}: ${t('2턴마다 방어도')} +${value}`;
     default:
       return `${name}: ${info.description}`;
   }

@@ -1,3 +1,5 @@
+import { t } from './i18n';
+
 const STORAGE_KEY = 'dod_card_frame';
 
 export type CardFrame = 'default' | 'silver' | 'gold' | 'diamond' | 'ruby' | 'sapphire' | 'emerald' | 'amethyst' | 'obsidian' | 'crimson' | 'celestial';
@@ -27,17 +29,17 @@ function readEndless(): number {
 }
 
 export const FRAMES: FrameDef[] = [
-  { id: 'default', name: '기본', emoji: '🃏', unlockLabel: '', check: () => true },
-  { id: 'silver', name: '은빛', emoji: '🥈', unlockLabel: '5승 달성', check: () => { const s = readStats(); return (s.totalWins ?? 0) + (s.totalTrueWins ?? 0) >= 5; } },
-  { id: 'gold', name: '황금', emoji: '🥇', unlockLabel: '도감 50%', check: () => { const c = readCodex(); return ((c.cards?.length ?? 0) + (c.relics?.length ?? 0)) >= 62; } },
-  { id: 'diamond', name: '다이아', emoji: '💎', unlockLabel: '업적 15개', check: () => (readAch().unlocked?.length ?? 0) >= 15 },
-  { id: 'ruby', name: '루비', emoji: '🔴', unlockLabel: '진엔딩 달성', check: () => (readStats().totalTrueWins ?? 0) >= 1 },
-  { id: 'sapphire', name: '사파이어', emoji: '🔵', unlockLabel: '무한 웨이브 20', check: () => readEndless() >= 20 },
-  { id: 'emerald', name: '에메랄드', emoji: '🟢', unlockLabel: '7캐릭 클리어', check: () => { const a = readAch(); return (a.unlocked ?? []).includes('all_classes_win'); } },
-  { id: 'amethyst', name: '자수정', emoji: '🟣', unlockLabel: '등반 A5 클리어', check: () => { const a = readAch(); return (a.unlocked ?? []).includes('asc5'); } },
-  { id: 'obsidian', name: '흑요석', emoji: '⚫', unlockLabel: '업적 22개', check: () => (readAch().unlocked?.length ?? 0) >= 22 },
-  { id: 'crimson', name: '진홍', emoji: '🩸', unlockLabel: '등반 A7 클리어', check: () => { try { return parseInt(localStorage.getItem('dod_ascension') ?? '0', 10) >= 7; } catch { return false; } } },
-  { id: 'celestial', name: '천상', emoji: '✨', unlockLabel: '등반 A10 클리어', check: () => { const a = readAch(); return (a.unlocked ?? []).includes('asc10'); } },
+  { id: 'default', name: t('기본'), emoji: '🃏', unlockLabel: '', check: () => true },
+  { id: 'silver', name: t('은빛'), emoji: '🥈', unlockLabel: t('5승 달성'), check: () => { const s = readStats(); return (s.totalWins ?? 0) + (s.totalTrueWins ?? 0) >= 5; } },
+  { id: 'gold', name: t('황금'), emoji: '🥇', unlockLabel: t('도감 50%'), check: () => { const c = readCodex(); return ((c.cards?.length ?? 0) + (c.relics?.length ?? 0)) >= 62; } },
+  { id: 'diamond', name: t('다이아'), emoji: '💎', unlockLabel: t('업적 15개'), check: () => (readAch().unlocked?.length ?? 0) >= 15 },
+  { id: 'ruby', name: t('루비'), emoji: '🔴', unlockLabel: t('진엔딩 달성'), check: () => (readStats().totalTrueWins ?? 0) >= 1 },
+  { id: 'sapphire', name: t('사파이어'), emoji: '🔵', unlockLabel: t('무한 웨이브 20'), check: () => readEndless() >= 20 },
+  { id: 'emerald', name: t('에메랄드'), emoji: '🟢', unlockLabel: t('7캐릭 클리어'), check: () => { const a = readAch(); return (a.unlocked ?? []).includes('all_classes_win'); } },
+  { id: 'amethyst', name: t('자수정'), emoji: '🟣', unlockLabel: t('등반 A5 클리어'), check: () => { const a = readAch(); return (a.unlocked ?? []).includes('asc5'); } },
+  { id: 'obsidian', name: t('흑요석'), emoji: '⚫', unlockLabel: t('업적 22개'), check: () => (readAch().unlocked?.length ?? 0) >= 22 },
+  { id: 'crimson', name: t('진홍'), emoji: '🩸', unlockLabel: t('등반 A7 클리어'), check: () => { try { return parseInt(localStorage.getItem('dod_ascension') ?? '0', 10) >= 7; } catch { return false; } } },
+  { id: 'celestial', name: t('천상'), emoji: '✨', unlockLabel: t('등반 A10 클리어'), check: () => { const a = readAch(); return (a.unlocked ?? []).includes('asc10'); } },
 ];
 
 export function getCardFrame(): CardFrame {

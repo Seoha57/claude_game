@@ -9,6 +9,7 @@
 import type { CardRarity, CardDef, RelicDef } from './types';
 import { loadStats } from './stats';
 import { isUnlocked as isAchUnlocked, ACHIEVEMENTS } from './achievements';
+import { t } from './i18n';
 
 export type UnlockReq = 'always' | 'any_win' | 'wins_3' | 'true_win' | `ach:${string}`;
 
@@ -75,12 +76,12 @@ export function isRelicUnlocked(def: RelicDef): boolean {
 // UI 라벨용 한국어 요구사항 텍스트
 export function reqLabel(req: UnlockReq): string {
   if (req === 'always') return '';
-  if (req === 'any_win') return '🔒 첫 승리 시 해제';
-  if (req === 'wins_3') return '🔒 3회 승리 시 해제';
-  if (req === 'true_win') return '🔒 진엔딩 클리어 시 해제';
+  if (req === 'any_win') return `🔒 ${t('첫 승리 시 해제')}`;
+  if (req === 'wins_3') return `🔒 ${t('3회 승리 시 해제')}`;
+  if (req === 'true_win') return `🔒 ${t('진엔딩 클리어 시 해제')}`;
   if (req.startsWith('ach:')) {
     const ach = ACHIEVEMENTS.find((a) => a.id === req.slice(4));
-    return ach ? `🔒 '${ach.title}' 업적 달성 시 해제` : '🔒 업적 달성 시 해제';
+    return ach ? `🔒 '${ach.title}' ${t('업적 달성 시 해제')}` : `🔒 ${t('업적 달성 시 해제')}`;
   }
   return '';
 }
@@ -142,5 +143,5 @@ export function newUnlocksAfterWin(
     const req = relicUnlockReq(r);
     if (wasLocked(req) && nowMet(req)) { relicCount++; tier = req; }
   }
-  return { cardCount, relicCount, tierLabel: tier ? reqLabel(tier).replace('🔒 ', '🔓 ').replace(' 해제', ' 달성') : null };
+  return { cardCount, relicCount, tierLabel: tier ? reqLabel(tier).replace('🔒 ', '🔓 ').replace(` ${t('해제')}`, ` ${t('달성')}`) : null };
 }

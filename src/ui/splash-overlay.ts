@@ -1,6 +1,7 @@
 import { el } from './dom';
 import { makeRng } from '../rng';
 import { getRunOrNull } from '../state';
+import { t } from '../i18n';
 import {
   BOSS_ENCOUNTERS,
   CH2_BOSS_ENCOUNTERS,
@@ -61,13 +62,13 @@ export function showSplash(opts: SplashOptions): void {
       el(
         'div',
         { class: 'splash-next-boss' },
-        el('span', { class: 'splash-next-boss-label' }, '이번 챕터 보스: '),
+        el('span', { class: 'splash-next-boss-label' }, `${t('이번 챕터 보스')}: `),
         (() => { const s = el('span', { class: 'splash-next-boss-emoji' }); if (boss.emoji.startsWith('<svg')) s.innerHTML = boss.emoji; else s.textContent = boss.emoji; return s; })(),
         el('span', { class: 'splash-next-boss-name' }, boss.name),
       ),
     );
   }
-  inner.appendChild(el('div', { class: 'splash-skip' }, '클릭 또는 키 입력으로 건너뛰기'));
+  inner.appendChild(el('div', { class: 'splash-skip' }, t('클릭 또는 키 입력으로 건너뛰기')));
   overlay.appendChild(inner);
 
   let dismissed = false;
@@ -103,10 +104,10 @@ export function dismissSplash(): void {
 
 // ── Chapter info presets ──
 const CHAPTER_INFO: Record<number, { title: string; subtitle: string; emoji: string; flavor?: string }> = {
-  1: { title: '잿빛 사원', subtitle: 'Chapter 1', emoji: CHAPTER_SVG[1], flavor: CHAPTER_LORE[1] },
-  2: { title: '기계 혁명의 폐허', subtitle: 'Chapter 2', emoji: CHAPTER_SVG[2], flavor: CHAPTER_LORE[2] },
-  3: { title: '심연의 균열', subtitle: 'Chapter 3', emoji: CHAPTER_SVG[3], flavor: CHAPTER_LORE[3] },
-  4: { title: '차원의 문 너머', subtitle: '✦ Chapter 4 — 진엔딩 ✦', emoji: CHAPTER_SVG[4], flavor: CHAPTER_LORE[4] },
+  1: { title: t('잿빛 사원'), subtitle: 'Chapter 1', emoji: CHAPTER_SVG[1], flavor: CHAPTER_LORE[1] },
+  2: { title: t('기계 혁명의 폐허'), subtitle: 'Chapter 2', emoji: CHAPTER_SVG[2], flavor: CHAPTER_LORE[2] },
+  3: { title: t('심연의 균열'), subtitle: 'Chapter 3', emoji: CHAPTER_SVG[3], flavor: CHAPTER_LORE[3] },
+  4: { title: t('차원의 문 너머'), subtitle: `✦ Chapter 4 — ${t('진엔딩')} ✦`, emoji: CHAPTER_SVG[4], flavor: CHAPTER_LORE[4] },
 };
 
 // Compute which boss the player will face for the given chapter.
@@ -164,7 +165,7 @@ export function showBossIntro(info: BossIntroInfo, onDismiss: () => void): void 
     title: info.name,
     subtitle: `HP ${info.hp}`,
     emoji: info.emoji,
-    flavor: info.flavor ?? '강력한 적이 길을 막아선다...',
+    flavor: info.flavor ?? t('강력한 적이 길을 막아선다...'),
     duration: 2400,
     onDismiss,
   });

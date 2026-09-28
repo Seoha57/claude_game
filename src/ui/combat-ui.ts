@@ -267,7 +267,7 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
       class: `intent ${intent.kind === 'block' ? 'block' : ''} ${
         intent.kind === 'buff' ? 'buff' : ''
       } ${intent.kind === 'debuff' ? 'debuff' : ''} ${perfectGuard ? 'perfect-guard' : ''} ${dangerHit ? 'danger-hit' : ''}`,
-      'data-tooltip': perfectGuard ? '안전: 방어도로 모두 막힘' : dangerHit ? '큰 한방 — 대비하세요' : '',
+      'data-tooltip': perfectGuard ? t('안전: 방어도로 모두 막힘') : dangerHit ? t('큰 한방 — 대비하세요') : '',
     },
     isAttack
       ? el(
@@ -285,8 +285,8 @@ function renderEnemy(state: CombatState, e: Enemy): HTMLElement {
   const statuses = renderStatuses(e.statuses, e.uid);
   const freezeImm = e.freezeImmuneTurns ?? 0;
   if (freezeImm > 0) {
-    const badge = el('div', { class: 'status buff st-freeze-immune', 'data-tooltip': `빙결 면역: ${freezeImm}턴 남음\n빙결 해제 후 일정 턴 동안 빙결에 걸리지 않습니다.` });
-    badge.innerHTML = `${ic('shield')} 빙결 면역 ${freezeImm}`;
+    const badge = el('div', { class: 'status buff st-freeze-immune', 'data-tooltip': `${t('빙결 면역')}: ${freezeImm}${t('턴 남음')}\n${t('빙결 해제 후 일정 턴 동안 빙결에 걸리지 않습니다.')}` });
+    badge.innerHTML = `${ic('shield')} ${t('빙결 면역')} ${freezeImm}`;
     statuses.appendChild(badge);
   }
 
@@ -372,7 +372,7 @@ function renderMid(state: CombatState): HTMLElement {
         const cls = state.flags.diceRoll! >= 5 ? 'dice-high' : state.flags.diceRoll! <= 1 ? 'dice-low' : '';
         const badge = el('span', {
           class: `dice-badge ${cls}`,
-          'data-tooltip': `이번 턴 주사위: ${state.flags.diceRoll}${state.flags.fixedDice ? `\n다음 턴 고정: ${state.flags.fixedDice}` : ''}${state.flags.diceReroll ? '\n리롤 활성' : ''}${state.flags.diceMinimum ? `\n최솟값: ${state.flags.diceMinimum}` : ''}`,
+          'data-tooltip': `${t('이번 턴 주사위')}: ${state.flags.diceRoll}${state.flags.fixedDice ? `\n${t('다음 턴 고정')}: ${state.flags.fixedDice}` : ''}${state.flags.diceReroll ? `\n${t('리롤 활성')}` : ''}${state.flags.diceMinimum ? `\n${t('최솟값')}: ${state.flags.diceMinimum}` : ''}`,
         });
         badge.innerHTML = `🎲 ${state.flags.diceRoll}${state.flags.fixedDice ? ` <span class="dice-next">→${state.flags.fixedDice}</span>` : ''}`;
         return badge;
@@ -393,7 +393,7 @@ function renderMid(state: CombatState): HTMLElement {
   const pileLink = (label: string, cards: typeof p.draw, opts: { shuffleHint?: boolean } = {}) =>
     el('span', {
       class: 'pile-link',
-      onClick: () => openDeckOverlay(cards, { title: label, shuffleHint: opts.shuffleHint, emptyText: '비어있습니다.' }),
+      onClick: () => openDeckOverlay(cards, { title: label, shuffleHint: opts.shuffleHint, emptyText: t('비어있습니다.') }),
     }, `${label}: ${cards.length}`);
 
   const piles = el(
@@ -425,7 +425,7 @@ function renderMid(state: CombatState): HTMLElement {
           void btn.offsetWidth;
           btn.classList.add('shake');
           btn.dataset.armed = '1';
-          btn.title = '에너지가 남았어요. 한 번 더 누르면 턴이 끝납니다.';
+          btn.title = t('에너지가 남았어요. 한 번 더 누르면 턴이 끝납니다.');
           setTimeout(() => {
             btn.classList.remove('shake');
             delete btn.dataset.armed;
@@ -463,7 +463,7 @@ function renderMid(state: CombatState): HTMLElement {
 
   const helpBtn = el('button', {
     class: 'combat-help',
-    title: '도움말',
+    title: t('도움말'),
     onClick: (e: Event) => {
       e.stopPropagation();
       setScreen('help');
@@ -485,7 +485,7 @@ function buildAudioPanel(): HTMLElement {
     box.appendChild(el('button', {
       class: 'audio-toggle',
       onClick: () => { setMuted(!getMuted()); if (!getMuted()) playSfx('click'); rebuild(); },
-    }, muted ? '🔇 음소거' : '🔊 음향 ON'));
+    }, muted ? `🔇 ${t('음소거')}` : `🔊 ${t('음향 ON')}`));
     if (!muted) {
       box.appendChild(el('input', {
         type: 'range', min: '0', max: '100',
@@ -510,7 +510,7 @@ function buildAudioPanel(): HTMLElement {
     box.appendChild(el('button', {
       style: { fontSize: '12px', padding: '6px 16px', marginTop: '4px' },
       onClick: () => overlay.remove(),
-    }, '닫기'));
+    }, t('닫기')));
   };
 
   rebuild();
@@ -552,8 +552,8 @@ function renderDeckPile(state: CombatState): HTMLElement {
   const frame = getCardFrame();
   const pile = el('div', {
     class: `deck-pile frame-${frame}`,
-    'data-tooltip': `드로우 더미: ${count}장`,
-    onClick: () => openDeckOverlay(state.player.draw, { title: '드로우', shuffleHint: true, emptyText: '비어있습니다.' }),
+    'data-tooltip': `${t('드로우 더미')}: ${count}${t('장')}`,
+    onClick: () => openDeckOverlay(state.player.draw, { title: t('드로우'), shuffleHint: true, emptyText: t('비어있습니다.') }),
   });
   const stackCount = Math.min(count, 5);
   for (let i = 0; i < stackCount; i++) {
@@ -669,7 +669,7 @@ function renderRelicBar(relics: string[]): HTMLElement {
       const relicNames = s.relics.map((rid: string) => RELIC_DEFS[rid]?.name ?? rid).join(' + ');
       const synTag = el('span', {
         class: 'synergy-tag',
-        'data-tooltip': `${s.name}\n${s.description}\n\n조합: ${relicNames}`,
+        'data-tooltip': `${s.name}\n${s.description}\n\n${t('조합')}: ${relicNames}`,
       });
       synTag.innerHTML = `${ic('lightning')} ${s.name} <span class="synergy-relics">(${relicNames})</span>`;
       synRow.appendChild(synTag);
@@ -709,7 +709,7 @@ function renderPotionBar(state: CombatState): HTMLElement {
         }, (() => { const ps = POTION_SVG[potionId]; if (ps) { const d = document.createElement('span'); d.innerHTML = ps; return d; } return document.createTextNode(def.name[0]); })()),
       );
     } else {
-      bar.appendChild(el('div', { class: 'potion-slot empty', 'data-tooltip': `물약 슬롯 ${i + 1} (비어있음)` }, ''));
+      bar.appendChild(el('div', { class: 'potion-slot empty', 'data-tooltip': `${t('물약 슬롯')} ${i + 1} (${t('비어있음')})` }, ''));
     }
   }
   const filledCount = run.player.potions.filter(Boolean).length;
@@ -1238,28 +1238,28 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
     const wave = run.endless.wave;
     return el('div', { class: `combat-screen ch-${run.chapter}` },
       el('div', { class: 'combat-top', style: { flexDirection: 'column', gap: '16px' } },
-        el('h2', { style: { color: 'var(--good)', margin: 0 } }, `웨이브 ${wave} 클리어!`),
-        el('div', { style: { color: 'var(--muted)' } }, `HP ${run.player.hp}/${run.player.maxHp} · 점수 ${run.endless.score + wave * 100 + run.player.hp + run.player.gold + run.player.relics.length * 25}`),
+        el('h2', { style: { color: 'var(--good)', margin: 0 } }, `${t('웨이브')} ${wave} ${t('클리어!')}`),
+        el('div', { style: { color: 'var(--muted)' } }, `HP ${run.player.hp}/${run.player.maxHp} · ${t('점수')} ${run.endless.score + wave * 100 + run.player.hp + run.player.gold + run.player.relics.length * 25}`),
         el('button', {
           onClick: () => {
             setCombat(null);
             setScreen('endless_wave_clear');
           },
-        }, '다음 웨이브'),
+        }, t('다음 웨이브')),
       ),
     );
   }
 
   // Determine next-screen routing
   let nextScreen: 'reward' | 'chapter_clear' | 'win' | 'true_win' | 'true_ending_choice' = 'reward';
-  let nextLabel = '보상 받기';
+  let nextLabel = t('보상 받기');
   if (isCh4Boss) {
     nextScreen = 'true_win';
-    nextLabel = '진엔딩 클리어!';
+    nextLabel = t('진엔딩 클리어!');
   } else if (isCh3Boss) {
     if (hasAllKeys) {
       nextScreen = 'true_ending_choice';
-      nextLabel = '계속...';
+      nextLabel = t('계속...');
     } else {
       nextScreen = 'win';
       nextLabel = t('최종 클리어!');
@@ -1273,7 +1273,7 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
   let droppedKey: string | null = null;
   if (cur?.kind === 'elite') {
     const keyMap: Record<number, string> = { 1: 'will', 2: 'emotion', 3: 'body' };
-    const keyName: Record<string, string> = { will: '의지의 열쇠', emotion: '감정의 열쇠', body: '육체의 열쇠' };
+    const keyName: Record<string, string> = { will: t('의지의 열쇠'), emotion: t('감정의 열쇠'), body: t('육체의 열쇠') };
     const keyToGive = keyMap[run.chapter];
     if (keyToGive && !run.player.keys.includes(keyToGive)) {
       if (!(_state as any)._keyDropped) {
@@ -1300,7 +1300,7 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
     el(
       'div',
       { class: 'combat-top', style: { flexDirection: 'column', gap: '16px' } },
-      (() => { const h = el('h2', { style: { color: 'var(--good)', margin: 0 } }); h.innerHTML = isBossNode ? `${ic('crown')} 보스 처치!` : '승리!'; return h; })(),
+      (() => { const h = el('h2', { style: { color: 'var(--good)', margin: 0 } }); h.innerHTML = isBossNode ? `${ic('crown')} ${t('보스 처치!')}` : t('승리!'); return h; })(),
       ...(defeatFlavor
         ? [el('div', {
             style: {
@@ -1319,7 +1319,7 @@ function renderCombatVictory(_state: CombatState): HTMLElement {
         `HP ${run.player.hp}/${run.player.maxHp}`,
       ),
       ...(droppedKey
-        ? [(() => { const d = el('div', { style: { color: 'var(--accent)', fontWeight: 'bold' } }); d.innerHTML = `${ic('key')} ${droppedKey} 획득!`; return d; })()]
+        ? [(() => { const d = el('div', { style: { color: 'var(--accent)', fontWeight: 'bold' } }); d.innerHTML = `${ic('key')} ${droppedKey} ${t('획득!')}`; return d; })()]
         : []),
       el(
         'button',

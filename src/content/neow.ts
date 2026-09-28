@@ -2,6 +2,7 @@ import type { Player } from '../types';
 import { PICKABLE_RELICS, BOSS_RELICS } from './relics';
 import { POTION_LIST } from './potions';
 import { canUpgrade } from './cards';
+import { t } from '../i18n';
 
 export type NeowTone = 'positive' | 'risky';
 
@@ -23,9 +24,9 @@ function pickFrom<T>(rng: () => number, arr: T[]): T | undefined {
 export const NEOW_BLESSINGS: NeowBlessing[] = [
   {
     id: 'health_blessing',
-    title: '체력의 축복',
+    title: t('체력의 축복'),
     emoji: '❤',
-    description: '최대 HP +10. 즉시 10 회복.',
+    description: t('최대 HP +10. 즉시 10 회복.'),
     tone: 'positive',
     apply: (p) => {
       p.maxHp += 10;
@@ -34,9 +35,9 @@ export const NEOW_BLESSINGS: NeowBlessing[] = [
   },
   {
     id: 'wealth_blessing',
-    title: '부의 축복',
+    title: t('부의 축복'),
     emoji: '💰',
-    description: '시작 골드 +100.',
+    description: t('시작 골드 +100.'),
     tone: 'positive',
     apply: (p) => {
       p.gold += 100;
@@ -44,9 +45,9 @@ export const NEOW_BLESSINGS: NeowBlessing[] = [
   },
   {
     id: 'relic_blessing',
-    title: '유물의 축복',
+    title: t('유물의 축복'),
     emoji: '💎',
-    description: '무작위 일반 유물 1개 획득.',
+    description: t('무작위 일반 유물 1개 획득.'),
     tone: 'positive',
     apply: (p, rng) => {
       const owned = new Set(p.relics);
@@ -57,9 +58,9 @@ export const NEOW_BLESSINGS: NeowBlessing[] = [
   },
   {
     id: 'upgrade_blessing',
-    title: '연마의 축복',
+    title: t('연마의 축복'),
     emoji: '✦',
-    description: '시작 덱의 카드 1장이 무작위로 강화됨.',
+    description: t('시작 덱의 카드 1장이 무작위로 강화됨.'),
     tone: 'positive',
     apply: (p, rng) => {
       const upgradable = p.deck.filter((c) => canUpgrade(c));
@@ -69,9 +70,9 @@ export const NEOW_BLESSINGS: NeowBlessing[] = [
   },
   {
     id: 'potion_blessing',
-    title: '약병의 축복',
+    title: t('약병의 축복'),
     emoji: '🧪',
-    description: '무작위 물약 2개를 들고 시작.',
+    description: t('무작위 물약 2개를 들고 시작.'),
     tone: 'positive',
     apply: (p, rng) => {
       for (let i = 0; i < 2; i++) {
@@ -83,9 +84,9 @@ export const NEOW_BLESSINGS: NeowBlessing[] = [
   },
   {
     id: 'energy_blessing',
-    title: '에너지의 축복',
+    title: t('에너지의 축복'),
     emoji: '⚡',
-    description: '최대 에너지 +1. (대가: HP -8)',
+    description: t('최대 에너지 +1. (대가: HP -8)'),
     tone: 'risky',
     apply: (p) => {
       p.maxEnergy += 1;
@@ -94,9 +95,9 @@ export const NEOW_BLESSINGS: NeowBlessing[] = [
   },
   {
     id: 'dark_pact',
-    title: '사악한 거래',
+    title: t('사악한 거래'),
     emoji: '💀',
-    description: '강력한 보스 유물 1개. (대가: 최대 HP -10)',
+    description: t('강력한 보스 유물 1개. (대가: 최대 HP -10)'),
     tone: 'risky',
     apply: (p, rng) => {
       const owned = new Set(p.relics);

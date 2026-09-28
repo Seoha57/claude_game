@@ -1,6 +1,7 @@
 import type { CharacterClass } from './types';
 import { markDirty } from './sync/sync';
 import { loadStats } from './stats';
+import { t } from './i18n';
 
 const STORAGE_KEY = 'dod_achievements';
 const STORAGE_VERSION = 1;
@@ -15,46 +16,46 @@ export interface AchievementDef {
 
 export const ACHIEVEMENTS: AchievementDef[] = [
   // ── Progression ──
-  { id: 'first_win',    title: '첫 영웅',   description: '일반 엔딩(챕터 3 클리어)을 한 번 달성.',     emoji: '🏆', category: 'progression' },
-  { id: 'true_win',     title: '진정한 영웅', description: '진엔딩(차원의 지배자 처치)을 달성.',        emoji: '✨', category: 'progression' },
-  { id: 'all_classes_win',  title: '만능 모험가',  description: '7 캐릭터 모두로 일반 엔딩 달성.',     emoji: '🎭', category: 'progression' },
-  { id: 'all_classes_true', title: '경지에 오르다', description: '7 캐릭터 모두로 진엔딩 달성.',         emoji: '👑', category: 'progression' },
+  { id: 'first_win',    title: t('첫 영웅'),   description: t('일반 엔딩(챕터 3 클리어)을 한 번 달성.'),     emoji: '🏆', category: 'progression' },
+  { id: 'true_win',     title: t('진정한 영웅'), description: t('진엔딩(차원의 지배자 처치)을 달성.'),        emoji: '✨', category: 'progression' },
+  { id: 'all_classes_win',  title: t('만능 모험가'),  description: t('7 캐릭터 모두로 일반 엔딩 달성.'),     emoji: '🎭', category: 'progression' },
+  { id: 'all_classes_true', title: t('경지에 오르다'), description: t('7 캐릭터 모두로 진엔딩 달성.'),         emoji: '👑', category: 'progression' },
 
   // ── Character ──
-  { id: 'sword_clear',  title: '검사 클리어',    description: '검사로 일반 엔딩 달성.',    emoji: '⚔️', category: 'character' },
-  { id: 'gun_clear',    title: '총잡이 클리어',    description: '총잡이로 일반 엔딩 달성.',    emoji: '🔫', category: 'character' },
-  { id: 'fight_clear',  title: '격투가 클리어',  description: '격투가로 일반 엔딩 달성.',  emoji: '🥊', category: 'character' },
-  { id: 'mage_clear',   title: '마법사 클리어',  description: '마법사로 일반 엔딩 달성.',  emoji: '🔮', category: 'character' },
-  { id: 'priest_clear', title: '성직자 클리어',  description: '성직자로 일반 엔딩 달성.',  emoji: '⛪', category: 'character' },
-  { id: 'thief_clear',  title: '도적 클리어',    description: '도적으로 일반 엔딩 달성.',  emoji: '🗡️', category: 'character' },
-  { id: 'summoner_clear', title: '정령술사 클리어', description: '정령술사로 일반 엔딩 달성.', emoji: '🪬', category: 'character' },
-  { id: 'engineer_clear', title: '공학자 클리어', description: '공학자로 일반 엔딩 달성.', emoji: '🔧', category: 'character' },
-  { id: 'gambler_clear', title: '갬블러 클리어', description: '갬블러로 일반 엔딩 달성.', emoji: '🎲', category: 'character' },
+  { id: 'sword_clear',  title: t('검사 클리어'),    description: t('검사로 일반 엔딩 달성.'),    emoji: '⚔️', category: 'character' },
+  { id: 'gun_clear',    title: t('총잡이 클리어'),    description: t('총잡이로 일반 엔딩 달성.'),    emoji: '🔫', category: 'character' },
+  { id: 'fight_clear',  title: t('격투가 클리어'),  description: t('격투가로 일반 엔딩 달성.'),  emoji: '🥊', category: 'character' },
+  { id: 'mage_clear',   title: t('마법사 클리어'),  description: t('마법사로 일반 엔딩 달성.'),  emoji: '🔮', category: 'character' },
+  { id: 'priest_clear', title: t('성직자 클리어'),  description: t('성직자로 일반 엔딩 달성.'),  emoji: '⛪', category: 'character' },
+  { id: 'thief_clear',  title: t('도적 클리어'),    description: t('도적으로 일반 엔딩 달성.'),  emoji: '🗡️', category: 'character' },
+  { id: 'summoner_clear', title: t('정령술사 클리어'), description: t('정령술사로 일반 엔딩 달성.'), emoji: '🪬', category: 'character' },
+  { id: 'engineer_clear', title: t('공학자 클리어'), description: t('공학자로 일반 엔딩 달성.'), emoji: '🔧', category: 'character' },
+  { id: 'gambler_clear', title: t('갬블러 클리어'), description: t('갬블러로 일반 엔딩 달성.'), emoji: '🎲', category: 'character' },
 
   // ── Difficulty ──
-  { id: 'asc5',  title: '등반자',  description: '등반 A5 이상에서 일반 엔딩 달성.',  emoji: '⛰', category: 'difficulty' },
-  { id: 'asc10', title: '정상 정복', description: '등반 A10에서 일반 엔딩 달성.',     emoji: '🏔', category: 'difficulty' },
+  { id: 'asc5',  title: t('등반자'),  description: t('등반 A5 이상에서 일반 엔딩 달성.'),  emoji: '⛰', category: 'difficulty' },
+  { id: 'asc10', title: t('정상 정복'), description: t('등반 A10에서 일반 엔딩 달성.'),     emoji: '🏔', category: 'difficulty' },
 
   // ── Combat ──
-  { id: 'one_shot',   title: '일격필살',  description: '단일 카드로 30 이상 데미지.', emoji: '💥', category: 'combat' },
-  { id: 'iron_wall',  title: '철벽',      description: '한 전투에서 방어도 50 이상 누적.', emoji: '🛡', category: 'combat' },
-  { id: 'quick_kill', title: '신속 처리', description: '3턴 이내로 전투 승리.',       emoji: '💨', category: 'combat' },
-  { id: 'mighty',     title: '강해지다',  description: '힘 +8 이상 보유.',            emoji: '💪', category: 'combat' },
-  { id: 'pyromaniac', title: '불의 마스터', description: '화상으로 적을 처치.',         emoji: '🔥', category: 'combat' },
-  { id: 'cryomancer', title: '얼음의 지배자', description: '빙결로 적 행동을 4턴 연속 봉인.', emoji: '❄', category: 'combat' },
-  { id: 'venomous',   title: '맹독술사',  description: '한 적에게 중독 20 이상 누적.', emoji: '☠️', category: 'combat' },
-  { id: 'big_hit',    title: '필살의 일격', description: '단일 카드로 60 이상 데미지.', emoji: '🌟', category: 'combat' },
-  { id: 'spirit_master', title: '정령의 주인', description: '한 전투에서 의식(ritual) 10 이상 누적.', emoji: '🪬', category: 'combat' },
-  { id: 'glass_cannon',  title: '유리 대포',   description: 'HP 1인 상태에서 전투 승리.', emoji: '💀', category: 'combat' },
-  { id: 'soul_eater',    title: '영혼 포식자', description: '한 전투에서 카드 10장 이상 소멸.', emoji: '🌀', category: 'combat' },
+  { id: 'one_shot',   title: t('일격필살'),  description: t('단일 카드로 30 이상 데미지.'), emoji: '💥', category: 'combat' },
+  { id: 'iron_wall',  title: t('철벽'),      description: t('한 전투에서 방어도 50 이상 누적.'), emoji: '🛡', category: 'combat' },
+  { id: 'quick_kill', title: t('신속 처리'), description: t('3턴 이내로 전투 승리.'),       emoji: '💨', category: 'combat' },
+  { id: 'mighty',     title: t('강해지다'),  description: t('힘 +8 이상 보유.'),            emoji: '💪', category: 'combat' },
+  { id: 'pyromaniac', title: t('불의 마스터'), description: t('화상으로 적을 처치.'),         emoji: '🔥', category: 'combat' },
+  { id: 'cryomancer', title: t('얼음의 지배자'), description: t('빙결로 적 행동을 4턴 연속 봉인.'), emoji: '❄', category: 'combat' },
+  { id: 'venomous',   title: t('맹독술사'),  description: t('한 적에게 중독 20 이상 누적.'), emoji: '☠️', category: 'combat' },
+  { id: 'big_hit',    title: t('필살의 일격'), description: t('단일 카드로 60 이상 데미지.'), emoji: '🌟', category: 'combat' },
+  { id: 'spirit_master', title: t('정령의 주인'), description: t('한 전투에서 의식(ritual) 10 이상 누적.'), emoji: '🪬', category: 'combat' },
+  { id: 'glass_cannon',  title: t('유리 대포'),   description: t('HP 1인 상태에서 전투 승리.'), emoji: '💀', category: 'combat' },
+  { id: 'soul_eater',    title: t('영혼 포식자'), description: t('한 전투에서 카드 10장 이상 소멸.'), emoji: '🌀', category: 'combat' },
 
   // ── Collection ──
-  { id: 'cards_30',  title: '카드 수집가', description: '30종 카드 발견.',  emoji: '📖', category: 'collection' },
-  { id: 'cards_60',  title: '카드 박사',   description: '60종 카드 발견.',  emoji: '📚', category: 'collection' },
-  { id: 'cards_120', title: '카드 마스터', description: '120종 카드 발견.', emoji: '🃏', category: 'collection' },
-  { id: 'relics_5',  title: '유물 탐험가', description: '5종 유물 발견.',   emoji: '💎', category: 'collection' },
-  { id: 'relics_15', title: '유물 수집가', description: '15종 유물 발견.',  emoji: '👑', category: 'collection' },
-  { id: 'relics_30', title: '유물의 군주', description: '30종 유물 발견.',  emoji: '🏛️', category: 'collection' },
+  { id: 'cards_30',  title: t('카드 수집가'), description: t('30종 카드 발견.'),  emoji: '📖', category: 'collection' },
+  { id: 'cards_60',  title: t('카드 박사'),   description: t('60종 카드 발견.'),  emoji: '📚', category: 'collection' },
+  { id: 'cards_120', title: t('카드 마스터'), description: t('120종 카드 발견.'), emoji: '🃏', category: 'collection' },
+  { id: 'relics_5',  title: t('유물 탐험가'), description: t('5종 유물 발견.'),   emoji: '💎', category: 'collection' },
+  { id: 'relics_15', title: t('유물 수집가'), description: t('15종 유물 발견.'),  emoji: '👑', category: 'collection' },
+  { id: 'relics_30', title: t('유물의 군주'), description: t('30종 유물 발견.'),  emoji: '🏛️', category: 'collection' },
 ];
 
 interface AchData {
@@ -105,17 +106,17 @@ export function getUnlockedCount(): number {
 export interface AchievementTitle { name: string; emoji: string; threshold: number }
 
 const TITLES: AchievementTitle[] = [
-  { threshold: 3, emoji: '🌱', name: '초보 모험가' },
-  { threshold: 8, emoji: '⚔️', name: '숙련된 전사' },
-  { threshold: 15, emoji: '🔥', name: '던전 정복자' },
-  { threshold: 22, emoji: '👑', name: '전설의 영웅' },
+  { threshold: 3, emoji: '🌱', name: t('초보 모험가') },
+  { threshold: 8, emoji: '⚔️', name: t('숙련된 전사') },
+  { threshold: 15, emoji: '🔥', name: t('던전 정복자') },
+  { threshold: 22, emoji: '👑', name: t('전설의 영웅') },
 ];
 
 export function getAchievementTitle(): AchievementTitle | null {
   const count = getUnlockedCount();
   let best: AchievementTitle | null = null;
-  for (const t of TITLES) {
-    if (count >= t.threshold) best = t;
+  for (const title of TITLES) {
+    if (count >= title.threshold) best = title;
   }
   return best;
 }

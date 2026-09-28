@@ -33,7 +33,7 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
   c.fillStyle = won ? '#d4a05b' : '#c84030';
   c.textAlign = 'center';
   const title = isEndless
-    ? `무한 던전 · 웨이브 ${run.endless!.wave}`
+    ? `${t('무한 던전')} · ${t('웨이브')} ${run.endless!.wave}`
     : (won ? t('승리!') : t('패배...'));
   c.fillText(title, W / 2, 48);
 
@@ -68,7 +68,7 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
   c.fillStyle = '#8a7a82';
   if (isEndless) {
     const score = calcEndlessScore(run);
-    c.fillText(`점수 ${score}`, 40, 134);
+    c.fillText(`${t('점수')} ${score}`, 40, 134);
   } else {
     c.fillText(`${t('챕터')} ${run.chapter} · ${run.floor}${t('층')}`, 40, 134);
   }
@@ -156,8 +156,8 @@ export async function shareRun(run: RunState, won: boolean): Promise<void> {
   const charName = CHAR_NAMES[run.characterClass] ?? run.characterClass;
   const isEndless = !!run.endless;
   const title = isEndless
-    ? `무한 던전 웨이브 ${run.endless!.wave} · 점수 ${calcEndlessScore(run)}`
-    : (won ? '승리!' : '패배...');
+    ? `${t('무한 던전')} ${t('웨이브')} ${run.endless!.wave} · ${t('점수')} ${calcEndlessScore(run)}`
+    : (won ? t('승리!') : t('패배...'));
   const loc = isEndless ? '' : ` · ${t('챕터')}${run.chapter} ${run.floor}${t('층')}`;
   const text = `${title} ${charName}${loc} · ${t('덱 오브 던전')}`;
 

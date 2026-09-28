@@ -1,5 +1,6 @@
 import type { Combatant, Intent } from '../types';
 import { modifiedAttackDamage } from './statuses';
+import { t } from '../i18n';
 
 // Compute the damage shown in intent (per hit, against player)
 export function intentDisplayDamage(intent: Intent, attacker: Combatant, defender: Combatant): number {
@@ -64,9 +65,9 @@ export function buildIntentDisplay(intent: Intent, attacker: Combatant, defender
 
   out.damageText = hits > 1 ? `${modDmg}×${hits}` : `${modDmg}`;
   if (hits > 1 && totalMod !== totalRaw) {
-    out.totalText = ` (총 ${totalMod})`;
+    out.totalText = ` (${t('총')} ${totalMod})`;
   } else if (hits > 1) {
-    out.totalText = ` (총 ${totalMod})`;
+    out.totalText = ` (${t('총')} ${totalMod})`;
   }
 
   if (intent.kind === 'attack_block' && intent.block) {

@@ -135,7 +135,7 @@ function showIosBanner(): void {
 
   const text = el('div', { style: { flex: '1', minWidth: '0' } },
     el('div', { style: { fontSize: '13px', fontWeight: 'bold', color: 'var(--accent)' } }, t('홈 화면에 추가')),
-    el('div', { style: { fontSize: '11px', color: 'var(--muted)', marginTop: '2px', lineHeight: '1.4' } }, '공유 ↑ → "홈 화면에 추가"를 눌러주세요'),
+    el('div', { style: { fontSize: '11px', color: 'var(--muted)', marginTop: '2px', lineHeight: '1.4' } }, t('공유 ↑ → "홈 화면에 추가"를 눌러주세요')),
   );
 
   const closeBtn = el('button', {

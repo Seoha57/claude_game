@@ -1,3 +1,5 @@
+import { t } from '../i18n';
+
 // ── Character Art (detailed, used in select screen + UI) ──
 
 const C = (parts: string) =>
@@ -1950,15 +1952,15 @@ export const ENEMY_SVG: Record<string, string> = {
 };
 
 export const CHAR_NAMES: Record<string, string> = {
-  swordmaster: '검사',
-  gunner: '총잡이',
-  fighter: '격투가',
-  magician: '마법사',
-  priest: '성직자',
-  thief: '도적',
-  summoner: '정령술사',
-  engineer: '공학자',
-  gambler: '갬블러',
+  swordmaster: t('검사'),
+  gunner: t('총잡이'),
+  fighter: t('격투가'),
+  magician: t('마법사'),
+  priest: t('성직자'),
+  thief: t('도적'),
+  summoner: t('정령술사'),
+  engineer: t('공학자'),
+  gambler: t('갬블러'),
 };
 
 export function artEl(svg: string | undefined, size = 64): HTMLElement {

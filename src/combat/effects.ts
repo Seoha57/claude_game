@@ -12,6 +12,7 @@ import { ENEMY_DEFS } from '../content/enemies';
 import { getRunOrNull } from '../state';
 import { playSfx } from '../audio';
 import { checkRitual } from '../achievements';
+import { t } from '../i18n';
 
 // Apply raw damage to a combatant, accounting for block. Returns hp damage dealt (post-block).
 export function dealDamage(
@@ -88,11 +89,11 @@ export function applyEffect(
         // 시그니처(독니): 매 턴 첫 공격 시 적에게 중독 부여
         if (state.flags.firstAttackThisTurn && getRunOrNull()?.player.relics.includes('venom_fang')) {
           applyStatus(tgt, 'poison', 2);
-          log('독니 → 중독 +2');
+          log(`${t('독니')} → ${t('중독')} +2`);
         }
         const modified = modifyAttackAmount(state, effect.amount);
         const hpDmg = dealDamage(state, source, tgt, modified, true);
-        log(`${nameOf(source, state)} → ${nameOf(tgt, state)}: ${hpDmg} 데미지`);
+        log(`${nameOf(source, state)} → ${nameOf(tgt, state)}: ${hpDmg} ${t('데미지')}`);
         state.flags.firstAttackThisTurn = false;
         onAttackAfter(state, log);
       }
@@ -105,28 +106,28 @@ export function applyEffect(
         if (e.hp <= 0) continue;
         if (isFirst && getRunOrNull()?.player.relics.includes('venom_fang')) {
           applyStatus(e, 'poison', 2);
-          log('독니 → 중독 +2');
+          log(`${t('독니')} → ${t('중독')} +2`);
         }
         const modified = modifyAttackAmount(state, effect.amount);
         const hpDmg = dealDamage(state, source, e, modified, true);
-        log(`전체 → ${nameOf(e, state)}: ${hpDmg} 데미지`);
+        log(`${t('전체')} → ${nameOf(e, state)}: ${hpDmg} ${t('데미지')}`);
         onAttackAfter(state, log);
       }
       return;
     }
     case 'block': {
       gainBlock(source as any, effect.amount);
-      log(`${nameOf(source, state)} 방어도 +${effect.amount}`);
+      log(`${nameOf(source, state)} ${t('방어도')} +${effect.amount}`);
       return;
     }
     case 'draw': {
       drawCards(state, effect.amount);
-      log(`${effect.amount}장 드로우`);
+      log(`${effect.amount}${t('장 드로우')}`);
       return;
     }
     case 'energy': {
       player.energy += effect.amount;
-      log(`에너지 +${effect.amount}`);
+      log(`${t('에너지')} +${effect.amount}`);
       return;
     }
     case 'apply_self': {
@@ -150,13 +151,13 @@ export function applyEffect(
         if (e.hp <= 0) continue;
         applyEnemyStatus(e, effect.status, effect.amount, log);
       }
-      log(`모든 적에게 ${statusName(effect.status)} +${effect.amount}`);
+      log(`${t('모든 적에게')} ${statusName(effect.status)} +${effect.amount}`);
       playStatusSfx(effect.status, false);
       return;
     }
     case 'heal': {
       player.hp = Math.min(player.maxHp, player.hp + effect.amount);
-      log(`회복 +${effect.amount}`);
+      log(`${t('회복')} +${effect.amount}`);
       onHealTrigger(state, log);
       return;
     }
@@ -172,7 +173,7 @@ export function applyEffect(
       const idx = player.hand.indexOf(pick);
       player.hand.splice(idx, 1);
       player.exhaust.push(pick);
-      log(`무작위 카드 소멸`);
+      log(t('무작위 카드 소멸'));
       triggerOnExhaust(state, log);
       return;
     }
@@ -183,7 +184,7 @@ export function applyEffect(
         const [c] = player.hand.splice(idx, 1);
         player.discard.push(c);
       }
-      log(`${effect.amount}장 무작위 버림`);
+      log(`${effect.amount}${t('장 무작위 버림')}`);
       return;
     }
     case 'block_all_enemies_attack_lose':
@@ -213,7 +214,7 @@ export function applyEffect(
     case 'fire_all_drones': {
       const times = effect.times ?? 1;
       for (let i = 0; i < times; i++) {
-        log('일제 발사!');
+        log(t('일제 발사!'));
         fireDrones(state);
       }
       return;
@@ -251,17 +252,17 @@ export function applyEffect(
     }
     case 'fix_dice': {
       state.flags.fixedDice = effect.value;
-      log(`다음 턴 주사위 ${effect.value}로 고정!`);
+      log(`${t('다음 턴 주사위')} ${effect.value}${t('로 고정!')}`);
       return;
     }
     case 'set_dice_reroll': {
       state.flags.diceReroll = true;
-      log('🎲 주사위가 1이면 다시 굴립니다!');
+      log(`🎲 ${t('주사위가 1이면 다시 굴립니다!')}`);
       return;
     }
     case 'set_dice_minimum': {
       state.flags.diceMinimum = Math.max(state.flags.diceMinimum ?? 0, effect.value);
-      log(`🎲 주사위 최솟값 ${effect.value}!`);
+      log(`🎲 ${t('주사위 최솟값')} ${effect.value}!`);
       return;
     }
   }
@@ -280,7 +281,7 @@ function evalCondition(state: CombatState, cond: import('../types').EffectCondit
 }
 
 function nameOf(c: Player | Enemy, _state: CombatState): string {
-  if ((c as Player).deck !== undefined) return '플레이어';
+  if ((c as Player).deck !== undefined) return t('플레이어');
   const e = c as Enemy;
   return ENEMY_DEFS[e.defId]?.name ?? e.defId;
 }
@@ -295,17 +296,17 @@ export function applyEnemyStatus(e: Enemy, status: any, amount: number, log: (s:
   const def = ENEMY_DEFS[e.defId];
   if (status === 'freeze' && def?.isBoss && amount > 0) {
     if ((e.freezeImmuneTurns ?? 0) > 0) {
-      log(`${def.name} 빙결 면역 — ${e.freezeImmuneTurns}턴 남음`);
+      log(`${def.name} ${t('빙결 면역')} — ${e.freezeImmuneTurns}${t('턴 남음')}`);
       return;
     }
     const cur = getStatus(e.statuses, 'freeze');
     const allowed = Math.max(0, 1 - cur);
     if (allowed <= 0) {
-      log(`${def.name} 빙결 저항 — 더 얼지 않음`);
+      log(`${def.name} ${t('빙결 저항 — 더 얼지 않음')}`);
       return;
     }
     applyStatus(e, 'freeze', allowed);
-    log(`${def.name} 빙결 +${allowed} (보스 저항)`);
+    log(`${def.name} ${t('빙결')} +${allowed} (${t('보스 저항')})`);
     return;
   }
   applyStatus(e, status, amount);
@@ -373,28 +374,28 @@ export function playCard(
       && def.type === 'skill' && !state.flags.resonanceUsedThisTurn) {
     state.flags.resonanceUsedThisTurn = true;
     drawCards(state, 1);
-    log(`원소 공명 → 카드 +1`);
+    log(`${t('원소 공명')} → ${t('카드')} +1`);
   }
 
   // 정령 계약서 (정령술사) — power 카드 사용 시 방어도 +3
   if (run?.player.relics.includes('spirit_contract') && def.type === 'power') {
     p.block += 3;
-    log(`정령 계약서 → 방어도 +3`);
+    log(`${t('정령 계약서')} → ${t('방어도')} +3`);
   }
 
   // 드론 코어 (공학자) — power 카드 사용 시 랜덤 적에게 4 데미지 + 방어도 +4
   if (run?.player.relics.includes('drone_core') && def.type === 'power') {
     const alive = state.enemies.filter((e) => e.hp > 0);
     if (alive.length > 0) {
-      const t = alive[Math.floor(state.rng() * alive.length)];
-      const absorbed = Math.min(t.block, 4);
-      t.block -= absorbed;
-      t.hp = Math.max(0, t.hp - (4 - absorbed));
-      log(`드론 코어 → ${ENEMY_DEFS[t.defId]?.name ?? t.defId}에게 4 데미지`);
-      maybeTriggerPhase(state, t);
+      const droneTarget = alive[Math.floor(state.rng() * alive.length)];
+      const absorbed = Math.min(droneTarget.block, 4);
+      droneTarget.block -= absorbed;
+      droneTarget.hp = Math.max(0, droneTarget.hp - (4 - absorbed));
+      log(`${t('드론 코어')} → ${ENEMY_DEFS[droneTarget.defId]?.name ?? droneTarget.defId}${t('에게')} 4 ${t('데미지')}`);
+      maybeTriggerPhase(state, droneTarget);
     }
     p.block += 4;
-    log(`드론 코어 → 방어도 +4`);
+    log(`${t('드론 코어')} → ${t('방어도')} +4`);
   }
 
   // Track cards played this turn for 일심
@@ -404,22 +405,22 @@ export function playCard(
       && !state.flags.fighterProcThisTurn) {
     applyStatus(p, 'strength', 1);
     state.flags.fighterProcThisTurn = true;
-    log(`일심 → 힘 +1`);
+    log(`${t('일심')} → ${t('힘')} +1`);
   }
 
   // 공격 카드 사용 시 attackCount 증가 (per-card, 검혼/펜촉/탄창 데미지 공용)
   if (def.type === 'attack') {
     state.flags.attackCount = (state.flags.attackCount ?? 0) + 1;
     const ac = state.flags.attackCount;
-    if (run?.player.relics.includes('gwihon_charm') && ac % 5 === 0) log('검혼 발동!');
-    if (run?.player.relics.includes('pen_nib') && ac % 10 === 0) log('펜촉 → 데미지 2배!');
+    if (run?.player.relics.includes('gwihon_charm') && ac % 5 === 0) log(t('검혼 발동!'));
+    if (run?.player.relics.includes('pen_nib') && ac % 10 === 0) log(`${t('펜촉')} → ${t('데미지 2배!')}`);
   }
 
   // 탄창(총잡이): 공격 카드 3장마다 카드 1장 드로우 (attackCount 공용)
   if (run?.player.relics.includes('gunner_magazine') && def.type === 'attack') {
     if (state.flags.attackCount! % 3 === 0) {
       drawCards(state, 1);
-      log(`탄창 → 카드 +1`);
+      log(`${t('탄창')} → ${t('카드')} +1`);
     }
   }
 
@@ -443,12 +444,12 @@ export function playCard(
   if (def.scaling) {
     if (def.scaling.kind === 'on_play') {
       card.bonusDamage = (card.bonusDamage ?? 0) + def.scaling.amount;
-      log(`${def.name}: 영구 데미지 +${def.scaling.amount}`);
+      log(`${def.name}: ${t('영구 데미지')} +${def.scaling.amount}`);
     } else if (def.scaling.kind === 'on_kill') {
       const afterAlive = state.enemies.filter((e) => e.hp > 0).length;
       if (afterAlive < beforeAlive) {
         card.bonusDamage = (card.bonusDamage ?? 0) + def.scaling.amount;
-        log(`${def.name}: 처치! 영구 데미지 +${def.scaling.amount}`);
+        log(`${def.name}: ${t('처치!')} ${t('영구 데미지')} +${def.scaling.amount}`);
       }
     }
   }
@@ -460,22 +461,22 @@ function triggerOnExhaust(state: CombatState, log: (s: string) => void): void {
   const str = getStatus(p.statuses, 'on_exhaust_str');
   if (str > 0) {
     applyStatus(p, 'strength', str);
-    log(`소멸의 힘 → 힘 +${str}`);
+    log(`${t('소멸의 힘')} → ${t('힘')} +${str}`);
   }
   const draw = getStatus(p.statuses, 'on_exhaust_draw');
   if (draw > 0) {
     drawCards(state, draw);
-    log(`소멸 드로우 → ${draw}장 드로우`);
+    log(`${t('소멸 드로우')} → ${draw}${t('장 드로우')}`);
   }
   const block = getStatus(p.statuses, 'on_exhaust_block');
   if (block > 0) {
     gainBlock(p, block);
-    log(`소멸 방어 → 방어도 +${block}`);
+    log(`${t('소멸 방어')} → ${t('방어도')} +${block}`);
   }
   const energy = getStatus(p.statuses, 'on_exhaust_energy');
   if (energy > 0) {
     p.energy += energy;
-    log(`소멸 에너지 → 에너지 +${energy}`);
+    log(`${t('소멸 에너지')} → ${t('에너지')} +${energy}`);
   }
 }
 
@@ -511,7 +512,7 @@ export function onHealTrigger(state: CombatState, log: (s: string) => void): voi
   if (!run) return;
   if (run.player.relics.includes('holy_seal')) {
     state.player.block += 2;
-    log('신성한 인장 → 방어도 +2');
+    log(`${t('신성한 인장')} → ${t('방어도')} +2`);
   }
 }
 

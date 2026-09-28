@@ -16,6 +16,7 @@ import { loadStats } from './stats';
 import { recordRunHistory } from './run-history';
 import type { RunOutcome } from './run-history';
 import { ENEMY_DEFS } from './content/enemies';
+import { t } from './i18n';
 
 let runState: RunState | null = null;
 let combatState: CombatState | null = null;
@@ -162,8 +163,8 @@ function maybeShowUnlockToast(prev: { wins: number; trueWins: number }): void {
       showAchievementToast({
         id: 'unlock_toast',
         emoji: '🔓',
-        title: '새로운 컨텐츠 해제!',
-        description: `${news.tierLabel ? news.tierLabel + ' — ' : ''}카드 ${news.cardCount}장 · 유물 ${news.relicCount}개`,
+        title: t('새로운 컨텐츠 해제!'),
+        description: `${news.tierLabel ? news.tierLabel + ' — ' : ''}${t('카드')} ${news.cardCount}${t('장')} · ${t('유물')} ${news.relicCount}${t('개')}`,
         category: 'progression',
       });
     } catch { /* ignore */ }

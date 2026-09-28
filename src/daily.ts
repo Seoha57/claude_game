@@ -10,6 +10,7 @@
 
 import type { CharacterClass } from './types';
 import { markDirty } from './sync/sync';
+import { t } from './i18n';
 
 const STORAGE_KEY = 'dod_daily';
 const STORAGE_VERSION = 1;
@@ -33,22 +34,22 @@ export interface DailyConstraint {
 }
 
 const CONSTRAINTS: DailyConstraint[] = [
-  { id: 'harsh_march',   name: '강행군',       desc: '시작 HP -30%',                    hpMult: 0.7 },
-  { id: 'energy_drain',  name: '에너지 빈혈',  desc: '매 턴 시작 에너지 -1',            bonusMaxEnergy: -1 },
-  { id: 'exhaustion',    name: '탈진',         desc: '매 턴 손패 -1',                   handDrawDelta: -1 },
-  { id: 'cursed_fate',   name: '사슬 운명',    desc: '시작 덱에 상처 2장',              startCurses: 2 },
-  { id: 'no_upgrade',    name: '강화 봉인',    desc: '모닥불 강화 불가',                disableUpgrade: true },
-  { id: 'no_remove',     name: '정화 봉인',    desc: '카드 제거 불가',                  disableRemove: true },
-  { id: 'tradeoff',      name: '둔중함',       desc: '손패 -1, 최대 에너지 +1',         handDrawDelta: -1, bonusMaxEnergy: 1 },
-  { id: 'titan_clash',   name: '거인의 전쟁',  desc: 'HP +30%, 적 HP +40%',              hpMult: 1.3, enemyHpMult: 1.4 },
-  { id: 'costly',        name: '과중한 대가',  desc: '모든 카드 비용 +1',               costIncrease: 1 },
-  { id: 'no_shop',       name: '상점 폐쇄',    desc: '상점 이용 불가',                  noShop: true },
-  { id: 'brutal',        name: '잔혹한 적',    desc: '적 시작 힘 +2',                   enemyStrBonus: 2 },
-  { id: 'glass_fury',    name: '유리의 분노',  desc: 'HP -50%, 에너지 +1',              hpMult: 0.5, bonusMaxEnergy: 1 },
-  { id: 'overdrive',     name: '과부하',       desc: '손패 +2, 에너지 -1',              handDrawDelta: 2, bonusMaxEnergy: -1 },
-  { id: 'berserker',     name: '광전사',       desc: '힘 +3, 상처 3장',                 startStr: 3, startCurses: 3 },
-  { id: 'double_seal',   name: '이중 봉인',    desc: '강화·정화 모두 불가',             disableUpgrade: true, disableRemove: true },
-  { id: 'fragile',       name: '취약체질',     desc: 'HP -20%, 적 HP -15%',             hpMult: 0.8, enemyHpMult: 0.85 },
+  { id: 'harsh_march',   name: t('강행군'),       desc: t('시작 HP -30%'),                    hpMult: 0.7 },
+  { id: 'energy_drain',  name: t('에너지 빈혈'),  desc: t('매 턴 시작 에너지 -1'),            bonusMaxEnergy: -1 },
+  { id: 'exhaustion',    name: t('탈진'),         desc: t('매 턴 손패 -1'),                   handDrawDelta: -1 },
+  { id: 'cursed_fate',   name: t('사슬 운명'),    desc: t('시작 덱에 상처 2장'),              startCurses: 2 },
+  { id: 'no_upgrade',    name: t('강화 봉인'),    desc: t('모닥불 강화 불가'),                disableUpgrade: true },
+  { id: 'no_remove',     name: t('정화 봉인'),    desc: t('카드 제거 불가'),                  disableRemove: true },
+  { id: 'tradeoff',      name: t('둔중함'),       desc: t('손패 -1, 최대 에너지 +1'),         handDrawDelta: -1, bonusMaxEnergy: 1 },
+  { id: 'titan_clash',   name: t('거인의 전쟁'),  desc: t('HP +30%, 적 HP +40%'),              hpMult: 1.3, enemyHpMult: 1.4 },
+  { id: 'costly',        name: t('과중한 대가'),  desc: t('모든 카드 비용 +1'),               costIncrease: 1 },
+  { id: 'no_shop',       name: t('상점 폐쇄'),    desc: t('상점 이용 불가'),                  noShop: true },
+  { id: 'brutal',        name: t('잔혹한 적'),    desc: t('적 시작 힘 +2'),                   enemyStrBonus: 2 },
+  { id: 'glass_fury',    name: t('유리의 분노'),  desc: t('HP -50%, 에너지 +1'),              hpMult: 0.5, bonusMaxEnergy: 1 },
+  { id: 'overdrive',     name: t('과부하'),       desc: t('손패 +2, 에너지 -1'),              handDrawDelta: 2, bonusMaxEnergy: -1 },
+  { id: 'berserker',     name: t('광전사'),       desc: t('힘 +3, 상처 3장'),                 startStr: 3, startCurses: 3 },
+  { id: 'double_seal',   name: t('이중 봉인'),    desc: t('강화·정화 모두 불가'),             disableUpgrade: true, disableRemove: true },
+  { id: 'fragile',       name: t('취약체질'),     desc: t('HP -20%, 적 HP -15%'),             hpMult: 0.8, enemyHpMult: 0.85 },
 ];
 
 const CHARACTERS: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief', 'summoner'];

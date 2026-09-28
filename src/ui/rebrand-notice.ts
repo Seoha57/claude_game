@@ -1,5 +1,6 @@
 import { el } from './dom';
 import { ic } from './art';
+import { t } from '../i18n';
 
 const NOTICE_KEY = 'dod_rebrand_seen';
 
@@ -36,10 +37,10 @@ export function showRebrandNotice(): void {
     (() => { const d = el('div', { style: { fontSize: '42px', marginBottom: '12px' } }); d.innerHTML = `${ic('sword')}${ic('sparkle')}`; return d; })(),
     el('div', {
       style: { fontSize: '18px', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '8px' },
-    }, '덱 오브 던전'),
+    }, t('덱 오브 던전')),
     el('div', {
       style: { fontSize: '13px', color: 'var(--muted)', marginBottom: '16px', lineHeight: '1.6' },
-    }, '던전앤카드가 덱 오브 던전으로 새롭게 태어났습니다!\n캐릭터와 카드 이름이 판타지 세계관에 맞게 변경되었어요.'),
+    }, t('던전앤카드가 덱 오브 던전으로 새롭게 태어났습니다!\n캐릭터와 카드 이름이 판타지 세계관에 맞게 변경되었어요.')),
     el('div', {
       style: {
         fontSize: '12px',
@@ -51,7 +52,7 @@ export function showRebrandNotice(): void {
         marginBottom: '20px',
         lineHeight: '1.5',
       },
-    }, '바로가기 이름이 예전 그대로라면,\n삭제 후 다시 추가해 주세요.\n(세이브는 유지됩니다)'),
+    }, t('바로가기 이름이 예전 그대로라면,\n삭제 후 다시 추가해 주세요.\n(세이브는 유지됩니다)')),
     el('button', {
       style: {
         marginTop: '4px',
@@ -64,7 +65,7 @@ export function showRebrandNotice(): void {
         backdrop.style.animation = 'rebrand-fade-out 0.25s ease forwards';
         setTimeout(() => backdrop.remove(), 260);
       },
-    }, '확인'),
+    }, t('확인')),
   );
 
   backdrop.appendChild(card);

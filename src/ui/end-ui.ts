@@ -16,7 +16,7 @@ import { t } from '../i18n';
 
 export function renderChapterClear(): HTMLElement {
   const run = getRunOrNull();
-  if (!run) return el('div', {}, '오류');
+  if (!run) return el('div', {}, t('오류'));
 
   const cleared = run.chapter;
   const next = cleared + 1;
@@ -176,15 +176,15 @@ export function renderWin(): HTMLElement {
     { class: 'end-screen' },
     el('h1', { class: 'win' }, t('승리!')),
     ...(didUnlock && newMax > 0
-      ? [(() => { const d = el('div', { style: { color: 'var(--good)', marginTop: '12px' } }); d.innerHTML = `${ic('unlock')} 등반 A${newMax} 해금!`; return d; })()]
+      ? [(() => { const d = el('div', { style: { color: 'var(--good)', marginTop: '12px' } }); d.innerHTML = `${ic('unlock')} ${t('등반')} A${newMax} ${t('해금!')}`; return d; })()]
       : []),
     ...(runAscension >= 10
-      ? [el('div', { style: { color: 'var(--accent)', marginTop: '8px' } }, '최고 난이도 클리어! 진정한 승리!')]
+      ? [el('div', { style: { color: 'var(--accent)', marginTop: '8px' } }, t('최고 난이도 클리어! 진정한 승리!'))]
       : []),
     ...(run ? [renderRunSummary(run)] : []),
     ...(runAscension > 0
       ? [el('div', { style: { color: 'var(--accent)', fontSize: '13px', marginTop: '4px' } },
-          `무한 던전 점수 ×${(1 + runAscension * 0.1).toFixed(1)} (A${runAscension} 보너스)`)]
+          `${t('무한 던전 점수')} ×${(1 + runAscension * 0.1).toFixed(1)} (A${runAscension} ${t('보너스')})`)]
       : []),
     ...(run ? [el('button', {
       style: { background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', fontSize: '13px', padding: '8px 16px' },
@@ -200,16 +200,16 @@ export function renderWin(): HTMLElement {
 
 export function renderTrueEndingChoice(): HTMLElement {
   const run = getRunOrNull();
-  if (!run) return el('div', {}, '오류');
+  if (!run) return el('div', {}, t('오류'));
 
   return el(
     'div',
     { class: 'end-screen' },
-    el('h1', { style: { color: 'var(--accent)' } }, '균열이 열린다...'),
+    el('h1', { style: { color: 'var(--accent)' } }, t('균열이 열린다...')),
     el(
       'div',
       { style: { color: 'var(--muted)', maxWidth: '480px', textAlign: 'center', lineHeight: '1.7' } },
-      '공허의 심장을 쓰러뜨리자, 모아둔 세 개의 열쇠가 빛을 발한다. 더 깊은 차원의 문이 열렸다. 그 너머에는 진정한 적이 기다리고 있다.',
+      t('공허의 심장을 쓰러뜨리자, 모아둔 세 개의 열쇠가 빛을 발한다. 더 깊은 차원의 문이 열렸다. 그 너머에는 진정한 적이 기다리고 있다.'),
     ),
     el(
       'div',
@@ -228,7 +228,7 @@ export function renderTrueEndingChoice(): HTMLElement {
             showChapterIntro(4);
           },
         },
-        '차원의 문으로 (진엔딩 도전)',
+        t('차원의 문으로 (진엔딩 도전)'),
       ),
       el(
         'button',
@@ -236,10 +236,10 @@ export function renderTrueEndingChoice(): HTMLElement {
           style: { background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)' },
           onClick: () => setScreen('win'),
         },
-        '여기서 멈춘다 (일반 엔딩)',
+        t('여기서 멈춘다 (일반 엔딩)'),
       ),
     ),
-    (() => { const d = el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginTop: '20px' } }); d.innerHTML = `${ic('key')} ${run.player.keys.length}/3 획득`; return d; })(),
+    (() => { const d = el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginTop: '20px' } }); d.innerHTML = `${ic('key')} ${run.player.keys.length}/3 ${t('획득')}`; return d; })(),
   );
 }
 
@@ -254,19 +254,19 @@ export function renderTrueWin(): HTMLElement {
   return el(
     'div',
     { class: 'end-screen' },
-    (() => { const h = el('h1', { class: 'win', style: { color: 'var(--accent)', textShadow: '0 0 20px var(--accent)' } }); h.innerHTML = `${ic('sparkle')} 진엔딩 ${ic('sparkle')}`; return h; })(),
+    (() => { const h = el('h1', { class: 'win', style: { color: 'var(--accent)', textShadow: '0 0 20px var(--accent)' } }); h.innerHTML = `${ic('sparkle')} ${t('진엔딩')} ${ic('sparkle')}`; return h; })(),
     el(
       'div',
       { style: { color: 'var(--accent)', fontSize: '15px', maxWidth: '500px', textAlign: 'center', lineHeight: '1.8' } },
-      '차원의 지배자를 쓰러뜨렸다. 모든 균열이 닫히고, 세상은 평화를 되찾았다. 진정한 영웅으로서 그대의 이름이 영원히 기록될 것이다.',
+      t('차원의 지배자를 쓰러뜨렸다. 모든 균열이 닫히고, 세상은 평화를 되찾았다. 진정한 영웅으로서 그대의 이름이 영원히 기록될 것이다.'),
     ),
     ...(didUnlock && newMax > 0
-      ? [(() => { const d = el('div', { style: { color: 'var(--good)', marginTop: '12px' } }); d.innerHTML = `${ic('unlock')} 등반 A${newMax} 해금!`; return d; })()]
+      ? [(() => { const d = el('div', { style: { color: 'var(--good)', marginTop: '12px' } }); d.innerHTML = `${ic('unlock')} ${t('등반')} A${newMax} ${t('해금!')}`; return d; })()]
       : []),
     ...(run ? [renderRunSummary(run)] : []),
     ...(runAscension > 0
       ? [el('div', { style: { color: 'var(--accent)', fontSize: '13px', marginTop: '4px' } },
-          `무한 던전 점수 ×${(1 + runAscension * 0.1).toFixed(1)} (A${runAscension} 보너스)`)]
+          `${t('무한 던전 점수')} ×${(1 + runAscension * 0.1).toFixed(1)} (A${runAscension} ${t('보너스')})`)]
       : []),
     ...(run ? [el('button', {
       style: { background: 'transparent', border: '1px solid var(--accent)', color: 'var(--accent)', fontSize: '13px', padding: '8px 16px' },

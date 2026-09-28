@@ -8,22 +8,22 @@ import { CHARACTER_SVG, ACHIEVEMENT_SVG, TITLE_SVG, artEl, ic } from './art';
 import { t } from '../i18n';
 
 const CHAR_LABEL: Record<CharacterClass, string> = {
-  swordmaster: '검사',
-  gunner: '총잡이',
-  fighter: '격투가',
-  magician: '마법사',
-  priest: '성직자',
-  thief: '도적',
-  summoner: '정령술사',
-  engineer: '공학자',
-  gambler: '갬블러',
+  swordmaster: t('검사'),
+  gunner: t('총잡이'),
+  fighter: t('격투가'),
+  magician: t('마법사'),
+  priest: t('성직자'),
+  thief: t('도적'),
+  summoner: t('정령술사'),
+  engineer: t('공학자'),
+  gambler: t('갬블러'),
 };
 
 const CATEGORY_ICON: Record<AchievementDef['category'], string> = {
   progression: 'progress', character: 'mask', difficulty: 'mountain', combat: 'sword', collection: 'box',
 };
 const CATEGORY_TEXT: Record<AchievementDef['category'], string> = {
-  progression: '진행', character: '캐릭터', difficulty: '등반', combat: '전투', collection: '수집',
+  progression: t('진행'), character: t('캐릭터'), difficulty: t('등반'), combat: t('전투'), collection: t('수집'),
 };
 
 export function renderAchievements(): HTMLElement {
@@ -58,10 +58,10 @@ export function renderAchievements(): HTMLElement {
     // 칭호 표시
     const title = getAchievementTitle();
     const TITLES: AchievementTitle[] = [
-      { threshold: 3, emoji: '🌱', name: '초보 모험가' },
-      { threshold: 8, emoji: '⚔️', name: '숙련된 전사' },
-      { threshold: 15, emoji: '🔥', name: '던전 정복자' },
-      { threshold: 22, emoji: '👑', name: '전설의 영웅' },
+      { threshold: 3, emoji: '🌱', name: t('초보 모험가') },
+      { threshold: 8, emoji: '⚔️', name: t('숙련된 전사') },
+      { threshold: 15, emoji: '🔥', name: t('던전 정복자') },
+      { threshold: 22, emoji: '👑', name: t('전설의 영웅') },
     ];
     const TITLE_KEYS = ['beginner', 'veteran', 'conqueror', 'legend'];
     const nextTitle = TITLES.find((t) => t.threshold > done);

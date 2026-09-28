@@ -26,190 +26,190 @@ interface CharacterInfo {
 const CHARACTERS: CharacterInfo[] = [
   {
     id: 'swordmaster',
-    name: '검사',
-    subname: '검술사 계열',
+    name: t('검사'),
+    subname: t('검술사 계열'),
     hp: 75,
-    startRelic: '불타는 피',
+    startRelic: t('불타는 피'),
     startRelicId: 'burning_blood',
-    signatureRelic: '검혼',
-    signatureDesc: '5번째 공격마다 +6 데미지',
-    description: '전투 승리 시 HP 6 회복. 강력한 근접 검술로 적을 압도한다.',
+    signatureRelic: t('검혼'),
+    signatureDesc: t('5번째 공격마다 +6 데미지'),
+    description: t('전투 승리 시 HP 6 회복. 강력한 근접 검술로 적을 압도한다.'),
     starterCards: [
-      { name: '검격', type: 'attack', count: 5 },
-      { name: '가드', type: 'skill', count: 4 },
-      { name: '찌르기', type: 'attack', count: 1 },
+      { name: t('검격'), type: 'attack', count: 5 },
+      { name: t('가드'), type: 'skill', count: 4 },
+      { name: t('찌르기'), type: 'attack', count: 1 },
     ],
     emoji: '⚔️',
     difficulty: 1,
-    diffLabel: '직관적인 공격 스타일, 입문용으로 추천',
+    diffLabel: t('직관적인 공격 스타일, 입문용으로 추천'),
     color: '#e85040',
-    playstyle: '근접 공격형',
+    playstyle: t('근접 공격형'),
   },
   {
     id: 'gunner',
-    name: '총잡이',
-    subname: '저격·포격·기계·화약·돌격',
+    name: t('총잡이'),
+    subname: t('저격·포격·기계·화약·돌격'),
     hp: 70,
-    startRelic: '구슬 주머니',
+    startRelic: t('구슬 주머니'),
     startRelicId: 'bag_of_marbles',
-    signatureRelic: '탄창',
-    signatureDesc: '3번째 공격마다 +5 데미지, 카드 1장 드로우',
-    description: '전투 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.',
+    signatureRelic: t('탄창'),
+    signatureDesc: t('3번째 공격마다 +5 데미지, 카드 1장 드로우'),
+    description: t('전투 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.'),
     starterCards: [
-      { name: '속사', type: 'attack', count: 5 },
-      { name: '긴급 회피', type: 'skill', count: 4 },
-      { name: '산탄', type: 'attack', count: 1 },
+      { name: t('속사'), type: 'attack', count: 5 },
+      { name: t('긴급 회피'), type: 'skill', count: 4 },
+      { name: t('산탄'), type: 'attack', count: 1 },
     ],
     emoji: '🔫',
     difficulty: 2,
-    diffLabel: '디버프와 콤보 시너지 활용이 핵심',
+    diffLabel: t('디버프와 콤보 시너지 활용이 핵심'),
     color: '#5090d0',
-    playstyle: '디버프 콤보형',
+    playstyle: t('디버프 콤보형'),
   },
   {
     id: 'fighter',
-    name: '격투가',
-    subname: '타격·기공·유술·격투',
+    name: t('격투가'),
+    subname: t('타격·기공·유술·격투'),
     hp: 80,
-    startRelic: '투혼',
+    startRelic: t('투혼'),
     startRelicId: 'fighting_spirit',
-    signatureRelic: '일심',
-    signatureDesc: '한 턴 카드 3장 사용 시 힘 +1 (턴당 1회)',
-    description: '전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.',
+    signatureRelic: t('일심'),
+    signatureDesc: t('한 턴 카드 3장 사용 시 힘 +1 (턴당 1회)'),
+    description: t('전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.'),
     starterCards: [
-      { name: '속공각', type: 'attack', count: 5 },
-      { name: '강철 방어', type: 'skill', count: 4 },
-      { name: '승천각', type: 'attack', count: 1 },
+      { name: t('속공각'), type: 'attack', count: 5 },
+      { name: t('강철 방어'), type: 'skill', count: 4 },
+      { name: t('승천각'), type: 'attack', count: 1 },
     ],
     emoji: '🥊',
     difficulty: 1,
-    diffLabel: '높은 체력과 힘 버프로 안정적인 플레이',
+    diffLabel: t('높은 체력과 힘 버프로 안정적인 플레이'),
     color: '#e0a030',
-    playstyle: '힘 스케일링형',
+    playstyle: t('힘 스케일링형'),
   },
   {
     id: 'magician',
-    name: '마법사',
-    subname: '원소·소환·전투마법·연금·부여',
+    name: t('마법사'),
+    subname: t('원소·소환·전투마법·연금·부여'),
     hp: 65,
-    startRelic: '마탑의 결정',
+    startRelic: t('마탑의 결정'),
     startRelicId: 'mage_orb',
-    signatureRelic: '원소 공명',
-    signatureDesc: '방어 카드 사용 시 1장 드로우 (턴당 1회)',
-    description: '매 턴 시작 시 무작위 적에게 3 데미지. 다양한 원소 마법으로 광역 전투에 강하다.',
+    signatureRelic: t('원소 공명'),
+    signatureDesc: t('방어 카드 사용 시 1장 드로우 (턴당 1회)'),
+    description: t('매 턴 시작 시 무작위 적에게 3 데미지. 다양한 원소 마법으로 광역 전투에 강하다.'),
     starterCards: [
-      { name: '마력 화살', type: 'attack', count: 5 },
-      { name: '마력 방벽', type: 'skill', count: 4 },
-      { name: '차원 전환', type: 'skill', count: 1 },
+      { name: t('마력 화살'), type: 'attack', count: 5 },
+      { name: t('마력 방벽'), type: 'skill', count: 4 },
+      { name: t('차원 전환'), type: 'skill', count: 1 },
     ],
     emoji: '🔮',
     difficulty: 3,
-    diffLabel: '낮은 체력, 카드 순서와 콤보 관리 필요',
+    diffLabel: t('낮은 체력, 카드 순서와 콤보 관리 필요'),
     color: '#a060e0',
-    playstyle: '광역 마법형',
+    playstyle: t('광역 마법형'),
   },
   {
     id: 'priest',
-    name: '성직자',
-    subname: '성기사·권성·퇴마·복수',
+    name: t('성직자'),
+    subname: t('성기사·권성·퇴마·복수'),
     hp: 78,
-    startRelic: '성배',
+    startRelic: t('성배'),
     startRelicId: 'holy_chalice',
-    signatureRelic: '신성한 인장',
-    signatureDesc: '회복/재생 발동 시 방어도 +2',
-    description: '전투 시작 시 재생 +3. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.',
+    signatureRelic: t('신성한 인장'),
+    signatureDesc: t('회복/재생 발동 시 방어도 +2'),
+    description: t('전투 시작 시 재생 +3. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.'),
     starterCards: [
-      { name: '강타', type: 'attack', count: 5 },
-      { name: '신성 방어', type: 'skill', count: 4 },
-      { name: '행운의 일격', type: 'attack', count: 1 },
+      { name: t('강타'), type: 'attack', count: 5 },
+      { name: t('신성 방어'), type: 'skill', count: 4 },
+      { name: t('행운의 일격'), type: 'attack', count: 1 },
     ],
     emoji: '⛪',
     difficulty: 1,
-    diffLabel: '회복이 풍부해 실수를 만회하기 쉬움',
+    diffLabel: t('회복이 풍부해 실수를 만회하기 쉬움'),
     color: '#e0d060',
-    playstyle: '회복 지속형',
+    playstyle: t('회복 지속형'),
   },
   {
     id: 'thief',
-    name: '도적',
-    subname: '암살·강령·인법·그림자',
+    name: t('도적'),
+    subname: t('암살·강령·인법·그림자'),
     hp: 68,
-    startRelic: '매끈한 돌',
+    startRelic: t('매끈한 돌'),
     startRelicId: 'oddly_smooth_stone',
-    signatureRelic: '독니',
-    signatureDesc: '매 턴 첫 공격이 적에게 중독 +2',
-    description: '전투 시작 시 민첩 +1. 중독과 다단히트, 그림자를 다루는 날렵한 암살자.',
+    signatureRelic: t('독니'),
+    signatureDesc: t('매 턴 첫 공격이 적에게 중독 +2'),
+    description: t('전투 시작 시 민첩 +1. 중독과 다단히트, 그림자를 다루는 날렵한 암살자.'),
     starterCards: [
-      { name: '베기', type: 'attack', count: 5 },
-      { name: '뼈 방패', type: 'skill', count: 4 },
-      { name: '암흑의 혼', type: 'attack', count: 1 },
+      { name: t('베기'), type: 'attack', count: 5 },
+      { name: t('뼈 방패'), type: 'skill', count: 4 },
+      { name: t('암흑의 혼'), type: 'attack', count: 1 },
     ],
     emoji: '🗡️',
     difficulty: 3,
-    diffLabel: '낮은 체력, 중독·민첩 콤보를 굴려야 생존',
+    diffLabel: t('낮은 체력, 중독·민첩 콤보를 굴려야 생존'),
     color: '#60c080',
-    playstyle: '중독 암살형',
+    playstyle: t('중독 암살형'),
   },
   {
     id: 'summoner',
-    name: '정령술사',
-    subname: '정령·영혼·소환·계약',
+    name: t('정령술사'),
+    subname: t('정령·영혼·소환·계약'),
     hp: 62,
-    startRelic: '영혼의 등불',
+    startRelic: t('영혼의 등불'),
     startRelicId: 'soul_lantern',
-    signatureRelic: '정령 계약서',
-    signatureDesc: 'power 카드 사용 시 방어도 +3',
-    description: '정령 소환과 영혼 마법으로 전투를 지배하는 정령술사. HP가 낮지만 다양한 power 스케일링이 강하다.',
+    signatureRelic: t('정령 계약서'),
+    signatureDesc: t('power 카드 사용 시 방어도 +3'),
+    description: t('정령 소환과 영혼 마법으로 전투를 지배하는 정령술사. HP가 낮지만 다양한 power 스케일링이 강하다.'),
     starterCards: [
-      { name: '마력탄', type: 'attack', count: 5 },
-      { name: '보호막', type: 'skill', count: 4 },
-      { name: '대지 정령 소환', type: 'power', count: 1 },
+      { name: t('마력탄'), type: 'attack', count: 5 },
+      { name: t('보호막'), type: 'skill', count: 4 },
+      { name: t('대지 정령 소환'), type: 'power', count: 1 },
     ],
     emoji: '🪬',
     difficulty: 3,
-    diffLabel: '최저 체력, 파워 카드 스케일링에 의존',
+    diffLabel: t('최저 체력, 파워 카드 스케일링에 의존'),
     color: '#60b0c0',
-    playstyle: '소환 스케일형',
+    playstyle: t('소환 스케일형'),
   },
   {
     id: 'engineer',
-    name: '공학자',
-    subname: '드론·기계·화력·자동화',
+    name: t('공학자'),
+    subname: t('드론·기계·화력·자동화'),
     hp: 68,
-    startRelic: '에너지 배터리',
+    startRelic: t('에너지 배터리'),
     startRelicId: 'energy_battery',
-    signatureRelic: '드론 코어',
-    signatureDesc: 'power 카드 사용 시 랜덤 적 4 데미지 + 방어도 +4',
-    description: '드론을 배치해 자동 화력을 구축하는 공학자. 드론 데미지는 힘에 비례해 후반 보스전에도 강력하다.',
+    signatureRelic: t('드론 코어'),
+    signatureDesc: t('power 카드 사용 시 랜덤 적 4 데미지 + 방어도 +4'),
+    description: t('드론을 배치해 자동 화력을 구축하는 공학자. 드론 데미지는 힘에 비례해 후반 보스전에도 강력하다.'),
     starterCards: [
-      { name: '렌치 타격', type: 'attack', count: 5 },
-      { name: '에너지 실드', type: 'skill', count: 5 },
+      { name: t('렌치 타격'), type: 'attack', count: 5 },
+      { name: t('에너지 실드'), type: 'skill', count: 5 },
     ],
     emoji: '🔧',
     difficulty: 2,
-    diffLabel: '드론 배치 후 자동 화력, 힘 스케일링 필수',
+    diffLabel: t('드론 배치 후 자동 화력, 힘 스케일링 필수'),
     color: '#c0a040',
-    playstyle: '드론 자동화형',
+    playstyle: t('드론 자동화형'),
   },
   {
     id: 'gambler',
-    name: '갬블러',
-    subname: '주사위·도박·행운·배팅',
+    name: t('갬블러'),
+    subname: t('주사위·도박·행운·배팅'),
     hp: 70,
-    startRelic: '행운의 동전',
+    startRelic: t('행운의 동전'),
     startRelicId: 'lucky_coin',
-    signatureRelic: '갬블러의 직감',
-    signatureDesc: '전투 시작 시 1장 드로우, 힘 +1',
-    description: '운에 모든 것을 건다. 카드 효과가 날카롭지만 일정하지 않아 매 전투가 도박이다.',
+    signatureRelic: t('갬블러의 직감'),
+    signatureDesc: t('전투 시작 시 1장 드로우, 힘 +1'),
+    description: t('운에 모든 것을 건다. 카드 효과가 날카롭지만 일정하지 않아 매 전투가 도박이다.'),
     starterCards: [
-      { name: '주사위 투척', type: 'attack', count: 5 },
-      { name: '블러프', type: 'skill', count: 5 },
+      { name: t('주사위 투척'), type: 'attack', count: 5 },
+      { name: t('블러프'), type: 'skill', count: 5 },
     ],
     emoji: '🎲',
     difficulty: 3,
-    diffLabel: '랜덤 기반 고위험/고보상, 운이 곧 전략',
+    diffLabel: t('랜덤 기반 고위험/고보상, 운이 곧 전략'),
     color: '#d0a060',
-    playstyle: '랜덤 배팅형',
+    playstyle: t('랜덤 배팅형'),
   },
 ];
 
@@ -249,8 +249,8 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
         },
         (() => { const s = el('span', { class: 'cs-item-emoji' }); s.innerHTML = CHARACTER_SVG[ch.id] ?? ch.emoji; return s; })(),
         el('div', { class: 'cs-item-info' },
-          el('div', { class: 'cs-item-name' }, t(ch.name)),
-          el('div', { class: 'cs-item-sub' }, t(ch.playstyle)),
+          el('div', { class: 'cs-item-name' }, ch.name),
+          el('div', { class: 'cs-item-sub' }, ch.playstyle),
         ),
         el('div', {
           class: 'cs-item-diff',
@@ -274,10 +274,10 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     bigEmoji.innerHTML = CHARACTER_SVG[ch.id] ?? ch.emoji;
     header.appendChild(bigEmoji);
     const headerText = el('div', { class: 'cs-header-text' });
-    headerText.appendChild(el('div', { class: 'cs-char-name' }, t(ch.name)));
-    headerText.appendChild(el('div', { class: 'cs-char-sub' }, t(ch.subname)));
+    headerText.appendChild(el('div', { class: 'cs-char-name' }, ch.name));
+    headerText.appendChild(el('div', { class: 'cs-char-sub' }, ch.subname));
     const tags = el('div', { class: 'cs-tags' });
-    tags.appendChild(el('span', { class: 'cs-tag', style: { background: `${ch.color}25`, color: ch.color, border: `1px solid ${ch.color}50` } }, t(ch.playstyle)));
+    tags.appendChild(el('span', { class: 'cs-tag', style: { background: `${ch.color}25`, color: ch.color, border: `1px solid ${ch.color}50` } }, ch.playstyle));
     tags.appendChild(el('span', {
       class: 'cs-tag',
       style: {
@@ -294,21 +294,21 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     const stats = el('div', { class: 'cs-stats' });
     stats.appendChild(makeStatBox(ic('heart'), `${ch.hp}`, 'HP'));
     const relicDef = RELIC_DEFS[ch.startRelicId];
-    const relicBox = makeStatBox(ic('gem'), t(ch.startRelic), t('시작 유물'));
+    const relicBox = makeStatBox(ic('gem'), ch.startRelic, t('시작 유물'));
     if (relicDef) relicBox.setAttribute('data-tooltip', `${relicDef.name}\n${relicDef.description}`);
     stats.appendChild(relicBox);
     stats.appendChild(makeStatBox(ic('lightning'), '3', t('에너지')));
     detail.appendChild(stats);
 
     // Description
-    detail.appendChild(el('div', { class: 'cs-desc' }, t(ch.description)));
+    detail.appendChild(el('div', { class: 'cs-desc' }, ch.description));
 
     // Signature relic
     const sig = el('div', { class: 'cs-signature', style: { borderColor: `${ch.color}50`, background: `${ch.color}10` } });
     const sigTitle = el('div', { class: 'cs-sig-title', style: { color: ch.color } });
-    sigTitle.innerHTML = `${ic('star')} ${t(ch.signatureRelic)}`;
+    sigTitle.innerHTML = `${ic('star')} ${ch.signatureRelic}`;
     sig.appendChild(sigTitle);
-    sig.appendChild(el('div', { class: 'cs-sig-desc' }, t(ch.signatureDesc)));
+    sig.appendChild(el('div', { class: 'cs-sig-desc' }, ch.signatureDesc));
     detail.appendChild(sig);
 
     // Starter deck preview
@@ -333,7 +333,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
 
     // Difficulty note
     const diffNote = el('div', { class: 'cs-diff-note' });
-    diffNote.innerHTML = `${ic('tip')} ${t(ch.diffLabel)}`;
+    diffNote.innerHTML = `${ic('tip')} ${ch.diffLabel}`;
     detail.appendChild(diffNote);
 
     layout.appendChild(detail);
@@ -345,7 +345,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
         class: 'cs-start-btn',
         style: { background: ch.color, borderColor: ch.color },
         onClick: () => startNewRun(seed, ascension, selected, { goToScreen: 'neow_blessing' }),
-      }, `${t(ch.name)} ${t('시작')}`),
+      }, `${ch.name} ${t('시작')}`),
     );
 
     wrapper.appendChild(
