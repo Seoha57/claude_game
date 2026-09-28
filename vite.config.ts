@@ -10,7 +10,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         cleanupOutdatedCaches: true,
         navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/guide\.html/, /^\/privacy\.html/, /^\/terms\.html/, /^\/robots\.txt/, /^\/sitemap\.xml/],
+        navigateFallbackDenylist: [/^\/guide\.html/, /^\/guide-en\.html/, /^\/privacy\.html/, /^\/terms\.html/, /^\/robots\.txt/, /^\/sitemap\.xml/],
         skipWaiting: true,
         clientsClaim: true,
       },

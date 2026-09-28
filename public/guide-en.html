@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Deck of Dungeon beginner's guide — 9 classes, card system, combat tips, relic synergies, and true ending walkthrough" />
+  <meta name="keywords" content="Deck of Dungeon guide, walkthrough, beginner, card game tips, deckbuilder strategy" />
+  <meta property="og:title" content="Deck of Dungeon — Beginner's Guide" />
+  <meta property="og:description" content="9 classes, card system, combat tips, relic synergies, and true ending walkthrough" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://deck-of-dungeon.pages.dev/guide-en.html" />
+  <link rel="alternate" hreflang="ko" href="https://deck-of-dungeon.pages.dev/guide.html" />
+  <link rel="alternate" hreflang="en" href="https://deck-of-dungeon.pages.dev/guide-en.html" />
+  <title>Beginner's Guide — Deck of Dungeon</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    body { font-family: 'Pretendard', system-ui, -apple-system, sans-serif; background: #1a1416; color: #e8dac8; max-width: 780px; margin: 0 auto; padding: 24px 16px; line-height: 1.8; }
+    h1 { color: #d4aa44; font-size: 28px; border-bottom: 2px solid #3a2a1a; padding-bottom: 12px; text-align: center; }
+    h2 { color: #d4aa44; font-size: 20px; margin-top: 40px; border-left: 4px solid #d4aa44; padding-left: 12px; }
+    h3 { color: #e8dac8; font-size: 16px; margin-top: 24px; }
+    a { color: #5599dd; }
+    .back { display: inline-block; margin-bottom: 16px; color: #5599dd; text-decoration: none; }
+    .back:hover { text-decoration: underline; }
+    .intro { text-align: center; color: #a89878; font-size: 15px; margin-bottom: 32px; }
+    .toc { background: #241c1e; border-radius: 10px; padding: 16px 24px; margin-bottom: 32px; }
+    .toc h3 { margin-top: 0; color: #d4aa44; }
+    .toc ul { margin: 0; padding-left: 20px; }
+    .toc li { margin: 4px 0; }
+    .toc a { text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .card-type { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    .attack { background: #8b2020; color: #fff; }
+    .skill { background: #2060a0; color: #fff; }
+    .power { background: #607020; color: #fff; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { padding: 8px 12px; border: 1px solid #3a2a1a; text-align: left; font-size: 14px; }
+    th { background: #241c1e; color: #d4aa44; }
+    .tip { background: #1e2a1e; border-left: 3px solid #44aa44; padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 14px; }
+    .tip::before { content: '💡 '; }
+    .warn { background: #2a1e1e; border-left: 3px solid #aa4444; padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 14px; }
+    .warn::before { content: '⚠️ '; }
+    .cta { text-align: center; margin: 40px 0; }
+    .cta a { display: inline-block; background: #d4aa44; color: #1a1416; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; }
+    .cta a:hover { background: #e8c060; }
+    footer { text-align: center; color: #666; font-size: 13px; margin-top: 40px; padding-top: 16px; border-top: 1px solid #3a2a1a; }
+    footer a { color: #888; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/">&larr; Back to Game</a>
+  <h1>🎴 Deck of Dungeon &mdash; Beginner's Guide</h1>
+  <p class="intro">The complete handbook for conquering a 4-chapter dungeon with 9 classes, 200+ cards, and powerful relic synergies in this free deckbuilder roguelite.</p>
+
+  <nav class="toc">
+    <h3>📋 Table of Contents</h3>
+    <ul>
+      <li><a href="#overview">Game Overview</a></li>
+      <li><a href="#classes">The 9 Classes</a></li>
+      <li><a href="#cards">Card System</a></li>
+      <li><a href="#combat">Combat Basics</a></li>
+      <li><a href="#map">Map Nodes &amp; Exploration</a></li>
+      <li><a href="#relics">Relics &amp; Synergies</a></li>
+      <li><a href="#status">Status Effects</a></li>
+      <li><a href="#true-ending">True Ending</a></li>
+      <li><a href="#ascension">Ascension</a></li>
+      <li><a href="#modes">Game Modes</a></li>
+      <li><a href="#tips">Advanced Tips</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="overview">🎮 Game Overview</h2>
+  <p><strong>Deck of Dungeon</strong> is a free deckbuilder roguelite card game you can play right in your browser. Inspired by <em>Slay the Spire</em>, it features 9 unique classes, 200+ cards, diverse relic synergies, a 4-chapter dungeon to explore, and a true ending system packed with content.</p>
+  <p>No installation required &mdash; play on both PC and mobile. Link your Google account to sync progress across devices.</p>
+
+  <div class="tip">New to the game? Start with the <strong>Swordsman</strong>. His straightforward attack style is perfect for learning the core mechanics.</div>
+
+  <h2 id="classes">⚔️ The 9 Classes</h2>
+  <p>Each class has a unique starting relic, a dedicated card pool, and a distinct playstyle.</p>
+
+  <table>
+    <tr><th>Class</th><th>Playstyle</th><th>Difficulty</th><th>Starting Relic</th></tr>
+    <tr><td><strong>Swordsman</strong></td><td>Melee attacker</td><td>⭐</td><td>Recover 6 HP on combat victory</td></tr>
+    <tr><td><strong>Gunner</strong></td><td>Debuff combo</td><td>⭐⭐</td><td>Apply Vulnerable +1 to all enemies at combat start</td></tr>
+    <tr><td><strong>Fighter</strong></td><td>Strength scaling</td><td>⭐⭐</td><td>Gain Strength +2 at combat start</td></tr>
+    <tr><td><strong>Mage</strong></td><td>AoE magic</td><td>⭐⭐⭐</td><td>Deal 3 damage to a random enemy each turn</td></tr>
+    <tr><td><strong>Cleric</strong></td><td>Sustain &amp; healing</td><td>⭐⭐</td><td>Gain Regen +3 at combat start</td></tr>
+    <tr><td><strong>Rogue</strong></td><td>Poison assassin</td><td>⭐⭐⭐</td><td>Gain Dexterity +1 at combat start</td></tr>
+    <tr><td><strong>Summoner</strong></td><td>Summon scaling</td><td>⭐⭐⭐⭐</td><td>Spirit summons and Power card scaling</td></tr>
+    <tr><td><strong>Engineer</strong></td><td>Drone automation</td><td>⭐⭐⭐</td><td>Deploy drones for automated firepower</td></tr>
+    <tr><td><strong>Gambler</strong></td><td>Random betting</td><td>⭐⭐⭐⭐</td><td>Draw 1 card and gain Strength +1 at combat start</td></tr>
+  </table>
+
+  <div class="tip">The Summoner and Gambler are the hardest classes. Get comfortable with the basics before giving them a try.</div>
+
+  <h2 id="cards">🃏 Card System</h2>
+  <p>Cards come in three types:</p>
+  <ul>
+    <li><span class="card-type attack">Attack</span> &mdash; Deals damage to enemies. Red frame.</li>
+    <li><span class="card-type skill">Skill</span> &mdash; Grants Block or triggers utility effects. Blue frame.</li>
+    <li><span class="card-type power">Power</span> &mdash; Played once, stays in effect for the rest of the fight. Green frame.</li>
+  </ul>
+
+  <h3>Card Rarity</h3>
+  <ul>
+    <li><strong>Starter</strong> &mdash; Basic cards included in your starting deck</li>
+    <li><strong>Common</strong> &mdash; Appears frequently in rewards</li>
+    <li><strong>Uncommon</strong> &mdash; Appears occasionally, with stronger effects</li>
+    <li><strong>Rare</strong> &mdash; Seldom seen, but extremely powerful</li>
+  </ul>
+
+  <h3>Card Keywords</h3>
+  <table>
+    <tr><th>Keyword</th><th>Description</th></tr>
+    <tr><td><strong>Exhaust</strong></td><td>Permanently removed after use (gone from your deck for the fight)</td></tr>
+    <tr><td><strong>Innate</strong></td><td>Always appears in your opening hand at the start of each combat</td></tr>
+    <tr><td><strong>Retain</strong></td><td>Stays in your hand at the end of your turn instead of being discarded</td></tr>
+    <tr><td><strong>Permanent +N</strong></td><td>Damage increases permanently each time you play it (stacks across the run)</td></tr>
+  </table>
+
+  <h3>Upgrading Cards</h3>
+  <p>You can upgrade cards at the smithy in a Rest Site. Upgraded cards gain a "+" after their name and improved stats. <strong>Double upgrade (++)</strong> enhances the card even further, indicated by a gold border.</p>
+
+  <h2 id="combat">⚡ Combat Basics</h2>
+  <p>Combat is turn-based. Each turn you receive 3 Energy and play cards that cost Energy to use.</p>
+
+  <h3>Turn Flow</h3>
+  <ol>
+    <li>Turn starts &rarr; Gain 3 Energy, draw 5 cards</li>
+    <li>Play cards &rarr; As many as you like while you have Energy</li>
+    <li>End turn &rarr; Enemies act (following their displayed intent)</li>
+    <li>Next turn &rarr; Block resets, Energy refills</li>
+  </ol>
+
+  <h3>Enemy Intent</h3>
+  <p>Icons above each enemy telegraph their next action:</p>
+  <ul>
+    <li>⚔️ <strong>Number</strong> &mdash; Attack (deals that much damage)</li>
+    <li>🛡️ &mdash; Defend (gains Block)</li>
+    <li>&uarr; &mdash; Buff (gains Strength, etc.)</li>
+    <li>&darr; &mdash; Debuff (applies Weak, Vulnerable, etc.)</li>
+  </ul>
+
+  <div class="tip"><strong>When your Block fully covers the incoming attack,</strong> the intent icon turns blue &mdash; you're safe!</div>
+
+  <h3>Card Targeting</h3>
+  <p>Cards that target a single enemy require two taps:</p>
+  <ol>
+    <li>Tap the card &rarr; it rises up (selected)</li>
+    <li>Tap the enemy &rarr; the card activates</li>
+  </ol>
+  <p>If only one enemy remains, targeting is automatic. AoE attacks and self-buff cards activate with a single tap.</p>
+
+  <h2 id="map">🗺️ Map Nodes &amp; Exploration</h2>
+  <p>Each chapter features a map of interconnected nodes. Choosing the right path is key to your strategy.</p>
+
+  <table>
+    <tr><th>Node</th><th>Description</th><th>Rewards</th></tr>
+    <tr><td>⚔️ <strong>Battle</strong></td><td>Fight normal monsters</td><td>Gold + card pick</td></tr>
+    <tr><td>💀 <strong>Elite</strong></td><td>Tough enemies, big rewards</td><td>Gold + card + rare Relic</td></tr>
+    <tr><td>🔥 <strong>Rest Site</strong></td><td>Rest / Upgrade / Purge / Duplicate</td><td>HP recovery or card upgrade</td></tr>
+    <tr><td>💰 <strong>Treasure</strong></td><td>Free loot</td><td>Gold + card pick</td></tr>
+    <tr><td>🛒 <strong>Shop</strong></td><td>Buy cards &amp; relics</td><td>Includes card removal service</td></tr>
+    <tr><td>❓ <strong>Event</strong></td><td>Outcomes depend on your choices</td><td>Cards, relics, gold, etc.</td></tr>
+    <tr><td>👑 <strong>Boss</strong></td><td>Chapter boss fight</td><td>Choose 1 of 3 Boss Relics</td></tr>
+  </table>
+
+  <div class="warn">Elite fights are tough, but they are the only way to earn rare relics. Once your deck is ready, seek them out.</div>
+
+  <h2 id="relics">💎 Relics &amp; Synergies</h2>
+  <p>Relics are permanent items that stay active for the entire run once acquired.</p>
+  <ul>
+    <li><strong>Common Relics</strong> &mdash; Found from Elites, Shops, and Events</li>
+    <li><strong>Class-specific Relics</strong> &mdash; Only appear when playing the matching class</li>
+    <li><strong>Boss Relics</strong> &mdash; Pick 1 of 3 after clearing a chapter boss; very powerful</li>
+  </ul>
+
+  <h3>Relic Synergies</h3>
+  <p>Owning certain pairs of relics at the same time triggers a bonus effect! Synergy-active relics are highlighted with a gold border. Check the compendium to see which relic combos unlock synergies.</p>
+
+  <h2 id="status">🌟 Status Effects</h2>
+  <table>
+    <tr><th>Status Effect</th><th>Effect</th><th>Duration</th></tr>
+    <tr><td>💪 <strong>Strength</strong></td><td>Attack damage +N</td><td>Permanent</td></tr>
+    <tr><td>🏃 <strong>Dexterity</strong></td><td>Block gained +N</td><td>Permanent</td></tr>
+    <tr><td>💔 <strong>Vulnerable</strong></td><td>Damage taken +50%</td><td>N turns</td></tr>
+    <tr><td>😵 <strong>Weak</strong></td><td>Damage dealt &minus;25%</td><td>N turns</td></tr>
+    <tr><td>🦴 <strong>Frail</strong></td><td>Block gained &minus;25%</td><td>N turns</td></tr>
+    <tr><td>☠️ <strong>Poison</strong></td><td>Takes N damage at turn start; decreases by 1 each turn</td><td>Decays</td></tr>
+    <tr><td>🔥 <strong>Burn</strong></td><td>Takes N damage at turn end (ignores Block)</td><td>Decays</td></tr>
+    <tr><td>❄️ <strong>Freeze</strong></td><td>Cannot act for N turns</td><td>N turns</td></tr>
+    <tr><td>💚 <strong>Regen</strong></td><td>Heals N HP at turn end</td><td>Decays</td></tr>
+    <tr><td>🌿 <strong>Thorns</strong></td><td>Reflects N damage when attacked</td><td>Permanent</td></tr>
+    <tr><td>🔩 <strong>Metallicize</strong></td><td>Gains N Block at turn end</td><td>Permanent</td></tr>
+    <tr><td>🔮 <strong>Ritual</strong></td><td>Gains N Strength at turn end</td><td>Permanent</td></tr>
+  </table>
+
+  <h2 id="true-ending">🔑 True Ending</h2>
+  <p>Beyond the normal clear, a true ending route awaits &mdash; face an even more powerful final boss.</p>
+
+  <h3>Key System</h3>
+  <p>Defeating the first Elite in each chapter earns you a key:</p>
+  <ul>
+    <li>Chapter 1 Elite &rarr; <strong>Key of Will</strong></li>
+    <li>Chapter 2 Elite &rarr; <strong>Key of Emotion</strong></li>
+    <li>Chapter 3 Elite &rarr; <strong>Key of Flesh</strong></li>
+  </ul>
+  <p>Collect all 3 keys and defeat the Chapter 3 boss to unlock <strong>Chapter 4 &mdash; the True Ending</strong>.</p>
+
+  <div class="warn">The true ending bosses (Dimensional Overlord / Lord of Time / Avatar of the Void) are extremely powerful. Make sure you can clear the normal run consistently before attempting them.</div>
+
+  <h2 id="ascension">📈 Ascension</h2>
+  <p>After clearing the game on normal difficulty, you can tackle higher Ascension levels (A1&ndash;A10). Each level stacks on top of the previous ones:</p>
+  <ul>
+    <li>A1: Enemy HP +5%</li>
+    <li>A2: Enemy Strength +1</li>
+    <li>A3: +1 Wound card added to starting deck</li>
+    <li>A4: Shop prices +10%</li>
+    <li>A5: Starting HP &minus;4</li>
+    <li>&hellip;and it only gets harder from there</li>
+  </ul>
+
+  <h2 id="modes">🎯 Game Modes</h2>
+  <h3>Normal Mode</h3>
+  <p>The standard experience &mdash; explore a 4-chapter dungeon and defeat each chapter's boss.</p>
+
+  <h3>Daily Challenge</h3>
+  <p>Every day, all players share the same seed, character, and modifiers. You get one attempt per day, and results are posted to the leaderboard.</p>
+
+  <h3>Endless Dungeon</h3>
+  <p>A survival mode with endless waves of enemies. Foes grow stronger with each wave, but you earn rewards to power up your deck along the way. Post your final score to the leaderboard and compete with other players.</p>
+
+  <h2 id="tips">💡 Advanced Tips</h2>
+  <ol>
+    <li><strong>Keep your deck lean.</strong> Remove unnecessary cards so you draw your key cards more often.</li>
+    <li><strong>Don't neglect defense.</strong> Focusing only on Attack cards will get you stuck at Elites and Bosses.</li>
+    <li><strong>Upgrading is powerful.</strong> Choosing to upgrade at a Rest Site instead of resting pays off in the long run.</li>
+    <li><strong>Hunt for relic synergies.</strong> A synergy-linked pair can outperform three standalone relics.</li>
+    <li><strong>Play Power cards early.</strong> The sooner you get them down, the more value they generate over the fight.</li>
+    <li><strong>Don't hoard potions.</strong> Using them before Elite or Boss fights is the most efficient play.</li>
+    <li><strong>Plan your path ahead.</strong> An Elite followed by a Rest Site is the ideal route.</li>
+  </ol>
+
+  <div class="cta">
+    <a href="/">🎮 Play Now</a>
+  </div>
+
+  <footer>
+    <p>"Deck of Dungeon" &mdash; A free deckbuilder roguelite web game</p>
+    <p><a href="/guide-en.html">Guide (EN)</a> &middot; <a href="/privacy.html">Privacy Policy</a> &middot; <a href="/terms.html">Terms of Service</a></p>
+  </footer>
+</body>
+</html>

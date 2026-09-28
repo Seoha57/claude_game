@@ -7,7 +7,7 @@ import { RELIC_LIST } from '../content/relics';
 import { isCurseLike } from './deck-overlay';
 import { FRAMES, getCardFrame, setCardFrame } from '../card-frame';
 import { ic } from './art';
-import { t } from '../i18n';
+import { t, getLang } from '../i18n';
 
 let pendingSeed = 0;
 let pendingAscension = 0;
@@ -209,7 +209,8 @@ export function renderTitle(): HTMLElement {
     const footerLinks = el('div', {
       style: { marginTop: '16px', fontSize: '11px', color: 'var(--muted)', textAlign: 'center' },
     });
-    footerLinks.innerHTML = `<a href="/guide.html" style="color:var(--muted)">${t('가이드')}</a> · <a href="/privacy.html" style="color:var(--muted)">${t('개인정보처리방침')}</a> · <a href="/terms.html" style="color:var(--muted)">${t('이용약관')}</a>`;
+    const guideHref = getLang() === 'en' ? '/guide-en.html' : '/guide.html';
+    footerLinks.innerHTML = `<a href="${guideHref}" style="color:var(--muted)">${t('가이드')}</a> · <a href="/privacy.html" style="color:var(--muted)">${t('개인정보처리방침')}</a> · <a href="/terms.html" style="color:var(--muted)">${t('이용약관')}</a>`;
     wrapper.appendChild(footerLinks);
   };
 

@@ -13,6 +13,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://deck-of-dungeon.pages.dev/guide-en.html</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://deck-of-dungeon.pages.dev/privacy.html</loc>
     <lastmod>2026-09-28</lastmod>
     <changefreq>yearly</changefreq>
