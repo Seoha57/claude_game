@@ -386,18 +386,19 @@ export async function pushSync(): Promise<{ version?: number; error?: string }> 
   }
 }
 
-// ── Firebase integration ──────────────────────────────────────────
-import {
-  isFirebaseConfigured,
-  isFirebaseLinked,
-  firebasePull,
-  firebasePush,
-  waitForAuth,
-} from './firebase';
+// ── Firebase integration (lazy-loaded) ───────────────────────────
+type FirebaseModule = typeof import('./firebase');
+let _fb: FirebaseModule | null = null;
+let _fbLinked = false;
+
+async function fb(): Promise<FirebaseModule> {
+  return _fb ??= await import('./firebase');
+}
 
 export async function pullFirebase(): Promise<{ changed: boolean } | { error: string }> {
   try {
-    const remote = await firebasePull();
+    const mod = await fb();
+    const remote = await mod.firebasePull();
     if (!remote) return { changed: false };
     const local = captureLocal();
     const merged = mergeSnapshots(local, remote);
@@ -410,8 +411,9 @@ export async function pullFirebase(): Promise<{ changed: boolean } | { error: st
 
 export async function pushFirebase(): Promise<{ error?: string }> {
   try {
+    const mod = await fb();
     const local = captureLocal();
-    await firebasePush(local);
+    await mod.firebasePush(local);
     return {};
   } catch (e) {
     return { error: String(e) };
@@ -423,54 +425,51 @@ let pushTimer: number | null = null;
 let initialized = false;
 
 function isAnyLinked(): boolean {
-  return isLinked() || isFirebaseLinked();
+  return isLinked() || _fbLinked;
 }
 
-// Mark that local state changed; debounce a push.
 export function markDirty(): void {
   if (!isAnyLinked()) return;
   if (pushTimer != null) clearTimeout(pushTimer);
   pushTimer = window.setTimeout(() => {
     pushTimer = null;
-    if (isFirebaseLinked()) void pushFirebase();
+    if (_fbLinked) void pushFirebase();
     else if (isLinked()) void pushSync();
   }, 3000);
 }
 
-// Force an immediate push (e.g., before app close)
 export async function flushDirty(): Promise<void> {
   if (pushTimer != null) {
     clearTimeout(pushTimer);
     pushTimer = null;
   }
-  if (isFirebaseLinked()) await pushFirebase();
+  if (_fbLinked) await pushFirebase();
   else if (isLinked()) await pushSync();
 }
 
-// Initialize at app startup
 export function initializeSync(): void {
   if (initialized) return;
   initialized = true;
 
-  // Firebase auth: wait for ready, then pull if logged in
-  if (isFirebaseConfigured()) {
-    void waitForAuth().then(() => {
-      if (isFirebaseLinked()) void pullFirebase();
+  fb().then(mod => {
+    if (!mod.isFirebaseConfigured()) return;
+    mod.waitForAuth().then(() => {
+      _fbLinked = mod.isFirebaseLinked();
+      if (_fbLinked) void pullFirebase();
     });
     window.addEventListener('dod:auth-changed', () => {
-      if (isFirebaseLinked()) void pullFirebase();
+      _fbLinked = mod.isFirebaseLinked();
+      if (_fbLinked) void pullFirebase();
     });
-  }
+  });
 
   if (isLinked()) void pullSync();
 
-  // Pull when tab becomes visible again
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
-      if (isFirebaseLinked()) void pullFirebase();
+      if (_fbLinked) void pullFirebase();
       else if (isLinked()) void pullSync();
     }
   });
-  // Flush on page hide (best-effort)
   window.addEventListener('pagehide', () => { void flushDirty(); });
 }

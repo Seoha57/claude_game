@@ -1,4 +1,4 @@
-import { clear } from './dom';
+import { clear, el } from './dom';
 import { getScreen, getCombatOrNull } from '../state';
 import { renderTitle, getPendingRunParams } from './title-ui';
 import { renderCharacterSelect } from './character-select-ui';
@@ -14,7 +14,6 @@ import { renderHelp } from './help-ui';
 import { renderCodex } from './codex-ui';
 import { renderAchievements } from './achievements-ui';
 import { renderNeowBlessing } from './neow-ui';
-import { renderSync } from './sync-ui';
 import { renderDaily } from './daily-ui';
 import { renderHistory } from './history-ui';
 import { renderEndlessWaveClear, renderEndlessResult, renderLeaderboard } from './endless-ui';
@@ -100,7 +99,10 @@ export function render(): void {
       view = renderNeowBlessing();
       break;
     case 'sync':
-      view = renderSync();
+      view = el('div', { class: 'rest-screen' });
+      import('./sync-ui').then(({ renderSync }) => {
+        if (getScreen() === 'sync') { clear(root); root.appendChild(renderSync()); }
+      });
       break;
     case 'daily':
       view = renderDaily();
