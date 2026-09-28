@@ -390,12 +390,11 @@ export const CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 2,
     target: 'enemy',
-    description: 'HP -5. 18 데미지.',
+    description: 'HP -5. 22 데미지.',
     effects: [
       { kind: 'lose_hp', amount: 5 },
-      { kind: 'damage', amount: 18 },
+      { kind: 'damage', amount: 22 },
     ],
-    exhaust: true,
   },
   immolate: {
     id: 'immolate',
@@ -462,8 +461,8 @@ export const CARD_DEFS: Record<string, CardDef> = {
     id: 'twin_slash',
     name: '이중 베기',
     type: 'attack', rarity: 'common', cost: 1, target: 'enemy',
-    description: '4 데미지 2회.',
-    effects: [{ kind: 'damage', amount: 4, times: 2 }],
+    description: '5 데미지 2회.',
+    effects: [{ kind: 'damage', amount: 5, times: 2 }],
   },
   sword_phantom: {
     id: 'sword_phantom',
@@ -537,7 +536,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   chain_release:    { name: '속박 해방+',      description: '카드 소멸 시 힘 +2.',                  effects: [{ kind: 'apply_self', status: 'on_exhaust_str', amount: 2 }] },
   bludgeon:         { name: '폭풍의 검+',           description: '42 데미지. 약화 +2. 유지.',       effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'weak', amount: 2 }] },
   demon_form:       { name: '전투의 눈+',                   description: '턴 시작 시 힘 +3. 선천.',         effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
-  feed:             { name: '과잉 학살+',             description: 'HP -3. 24 데미지.',                effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
+  feed:             { name: '과잉 학살+',             description: 'HP -3. 28 데미지.',                effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 28 }] },
   immolate:         { name: '지옥의 화염+', description: '모든 적에게 28 데미지.',           effects: [{ kind: 'damage_all', amount: 28 }] },
   reaper:           { name: '사신의 낫+',                      description: '모든 적에게 16 데미지. 12 회복.',  effects: [{ kind: 'damage_all', amount: 16 }, { kind: 'heal', amount: 12 }] },
   // 콤보 시너지
@@ -548,7 +547,7 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   thousand_cuts:    { name: '천 번의 칼날+',        description: '데미지 = 3 × 이번 전투 누적 공격 수.',
                       effects: [{ kind: 'damage_per_attack', amount: 3 }] },
   // 풀 확장
-  twin_slash:       { name: '이중 베기+',     description: '5 데미지 2회.',                       effects: [{ kind: 'damage', amount: 5, times: 2 }] },
+  twin_slash:       { name: '이중 베기+',     description: '6 데미지 2회.',                       effects: [{ kind: 'damage', amount: 6, times: 2 }] },
   sword_phantom:    { name: '검의 환영+',     description: '9 데미지. 직전이 방어카드면 +7 데미지.',
                       effects: [{ kind: 'damage', amount: 9 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'skill' }, then: [{ kind: 'damage', amount: 7 }] }] },
   infinite_cut:     { name: '삼연참+',        description: '6 데미지 3회.',                       effects: [{ kind: 'damage', amount: 6, times: 3 }] },

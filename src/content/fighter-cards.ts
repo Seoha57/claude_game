@@ -303,12 +303,11 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 2,
     target: 'enemy',
-    description: 'HP -5. 18 데미지.',
+    description: 'HP -5. 22 데미지.',
     effects: [
       { kind: 'lose_hp', amount: 5 },
-      { kind: 'damage', amount: 18 },
+      { kind: 'damage', amount: 22 },
     ],
-    exhaust: true,
   },
 
   // ── 격투가 콤보 시너지 ─────────────────────────────────────
@@ -354,8 +353,8 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     id: 'f_jab',
     name: '잽',
     type: 'attack', rarity: 'common', cost: 0, target: 'enemy',
-    description: '4 데미지.',
-    effects: [{ kind: 'damage', amount: 4 }],
+    description: '5 데미지.',
+    effects: [{ kind: 'damage', amount: 5 }],
   },
   f_combination: {
     id: 'f_combination',
@@ -391,8 +390,8 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     id: 'f_shadow_kick',
     name: '필살 연각',
     type: 'attack', rarity: 'rare', cost: 2, target: 'enemy',
-    description: '18 데미지 2회. 소멸.',
-    effects: [{ kind: 'damage', amount: 18, times: 2 }],
+    description: '15 데미지 2회. 소멸.',
+    effects: [{ kind: 'damage', amount: 15, times: 2 }],
     exhaust: true,
   },
   f_ten_count: {
@@ -432,7 +431,7 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_golden_thunder: { name: '천둥의 수호자+',   description: '42 데미지. 취약 +3.',                   effects: [{ kind: 'damage', amount: 42 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   f_flame_kick:    { name: '작열 회전각+',                description: '모든 적에게 28 데미지.',                effects: [{ kind: 'damage_all', amount: 28 }] },
   f_sky_fall:      { name: '무한 투지+',                 description: '턴 시작 시 힘 +3. 선천.',               effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
-  f_my_rhythm:     { name: '나의 전투 리듬!!+',       description: 'HP -3. 24 데미지.',                     effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 24 }] },
+  f_my_rhythm:     { name: '나의 전투 리듬!!+',       description: 'HP -3. 28 데미지.',                     effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage', amount: 28 }] },
   // 콤보 시너지
   f_focused_strike: { name: '집중타+',   description: '8 데미지. 이번 턴 첫 카드면 +8 데미지.',
                        effects: [{ kind: 'damage', amount: 8 }, { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'damage', amount: 8 }] }] },
@@ -441,12 +440,12 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_dragon_fury:    { name: '용의 분노+', description: '데미지 = 4 × 이번 전투 누적 공격 수.',
                        effects: [{ kind: 'damage_per_attack', amount: 4 }] },
   // 풀 확장
-  f_jab:            { name: '잽+',         description: '6 데미지.',                              effects: [{ kind: 'damage', amount: 6 }] },
+  f_jab:            { name: '잽+',         description: '7 데미지.',                              effects: [{ kind: 'damage', amount: 7 }] },
   f_combination:    { name: '콤비네이션+',  description: '7 데미지 2회. 직전이 공격이면 +7 데미지.',
                        effects: [{ kind: 'damage', amount: 7, times: 2 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'damage', amount: 7 }] }] },
   f_counter:        { name: '카운터+',      description: '11 데미지. 가시 +5.',                    effects: [{ kind: 'damage', amount: 11 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
   f_rage_burst:     { name: '분노 폭발+',   description: 'HP -3. 모든 적에게 14 데미지.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_all', amount: 14 }] },
-  f_shadow_kick:    { name: '필살 연각+',      description: '22 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 22, times: 2 }] },
+  f_shadow_kick:    { name: '필살 연각+',      description: '19 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 19, times: 2 }] },
   f_ten_count:      { name: '연타 카운트+',   description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.', effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
 };
 

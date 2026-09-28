@@ -52,7 +52,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   fighting_spirit: {
     id: 'fighting_spirit',
     name: '투혼',
-    description: '전투 시작 시 힘 +2.',
+    description: '전투 시작 시 힘 +1.',
     rarity: 'starter',
   },
   mage_orb: {
@@ -215,7 +215,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   golden_chip: {
     id: 'golden_chip',
     name: '황금 칩',
-    description: '전투 시작 시 방어도 +8.',
+    description: '전투 시작 시 방어도 +12.',
     rarity: 'uncommon',
   },
   storm_banner: {

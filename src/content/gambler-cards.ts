@@ -434,8 +434,8 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'rare',
     cost: 1,
     target: 'enemy',
-    description: '4 × 🎲 데미지 2회. 유지.',
-    effects: [{ kind: 'damage_dice', base: 4, times: 2 }],
+    description: '3 × 🎲 데미지 2회. 유지.',
+    effects: [{ kind: 'damage_dice', base: 3, times: 2 }],
     retain: true,
   },
   b_last_stand: {
@@ -487,7 +487,7 @@ const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   b_all_in:       { name: '올인+',            description: '12 × 🎲 데미지. 취약 +3. 다음 턴 🎲 → 6.',                effects: [{ kind: 'damage_dice', base: 12 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }, { kind: 'fix_dice', value: 6 }] },
   b_royal_flush:  { name: '로열 플러시+',     description: '9 × 🎲 데미지 2회. 다음 턴 🎲 → 6. 소멸.',                effects: [{ kind: 'damage_dice', base: 9, times: 2 }, { kind: 'fix_dice', value: 6 }] },
   b_fortune:      { name: '포춘+',            description: '턴 시작 시 힘 +3. 선천.',                                   effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
-  b_ace_up_sleeve: { name: '에이스 업 슬리브+', description: '5 × 🎲 데미지 2회. 유지.',                                 effects: [{ kind: 'damage_dice', base: 5, times: 2 }] },
+  b_ace_up_sleeve: { name: '에이스 업 슬리브+', description: '4 × 🎲 데미지 2회. 유지.',                                 effects: [{ kind: 'damage_dice', base: 4, times: 2 }] },
   b_death_match:  { name: '데스 매치+',       description: 'HP -3. 12 × 🎲 데미지.',                                   effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_dice', base: 12 }] },
   b_last_stand:   { name: '라스트 스탠드+',   description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.',                effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
 };

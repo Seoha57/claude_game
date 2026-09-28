@@ -313,7 +313,6 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
       { kind: 'lose_hp', amount: 5 },
       { kind: 'damage', amount: 22 },
     ],
-    exhaust: true,
   },
   g_airstrike: {
     id: 'g_airstrike',

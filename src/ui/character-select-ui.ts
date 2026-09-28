@@ -76,7 +76,7 @@ const CHARACTERS: CharacterInfo[] = [
     startRelicId: 'fighting_spirit',
     signatureRelic: t('일심'),
     signatureDesc: t('한 턴 카드 3장 사용 시 힘 +1 (턴당 1회)'),
-    description: t('전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.'),
+    description: t('전투 시작 시 힘 +1. 맨손과 기의 힘으로 적을 압도한다.'),
     starterCards: [
       { name: t('속공각'), type: 'attack', count: 5 },
       { name: t('강철 방어'), type: 'skill', count: 4 },
@@ -155,7 +155,7 @@ const CHARACTERS: CharacterInfo[] = [
     id: 'summoner',
     name: t('정령술사'),
     subname: t('정령·영혼·소환·계약'),
-    hp: 62,
+    hp: 66,
     startRelic: t('영혼의 등불'),
     startRelicId: 'soul_lantern',
     signatureRelic: t('정령 계약서'),

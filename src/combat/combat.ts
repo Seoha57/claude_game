@@ -392,7 +392,7 @@ export function canPlayCard(state: CombatState, costAfterMods: number): boolean 
 
 export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
   if (relics.includes('vajra')) applyStatus(cs.player, 'strength', 1);
-  if (relics.includes('fighting_spirit')) applyStatus(cs.player, 'strength', 2);
+  if (relics.includes('fighting_spirit')) applyStatus(cs.player, 'strength', 1);
   if (relics.includes('oddly_smooth_stone')) applyStatus(cs.player, 'dexterity', 1);
   if (relics.includes('anchor')) cs.player.block += 10;
   if (relics.includes('bag_of_marbles')) {
@@ -446,7 +446,7 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
     drawCards(cs, 1); cs.player.block += 6;
   }
   if (relics.includes('lucky_die')) cs.player.energy += 1;
-  if (relics.includes('golden_chip')) cs.player.block += 8;
+  if (relics.includes('golden_chip')) cs.player.block += 12;
   if (relics.includes('gamblers_instinct')) {
     drawCards(cs, 1); applyStatus(cs.player, 'strength', 1);
   }
