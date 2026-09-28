@@ -3857,6 +3857,12 @@ button:disabled {
   z-index: 9000;
   background: rgba(0,0,0,0.6);
 }
+.tutorial-overlay.tutorial-passthrough {
+  pointer-events: none;
+}
+.tutorial-overlay.tutorial-passthrough .tutorial-tooltip {
+  pointer-events: auto;
+}
 .tutorial-tooltip {
   position: fixed;
   width: 280px;
@@ -3867,6 +3873,23 @@ button:disabled {
   z-index: 9001;
   box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   animation: tutorial-in 0.3s ease-out;
+}
+.tutorial-tooltip::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  left: var(--arrow-left, 140px);
+  transform: translateX(-50%);
+}
+.tutorial-tooltip[data-pos="bottom"]::before {
+  top: -16px;
+  border-bottom-color: var(--accent);
+}
+.tutorial-tooltip[data-pos="top"]::before {
+  bottom: -16px;
+  border-top-color: var(--accent);
 }
 @keyframes tutorial-in {
   from { opacity: 0; transform: translateY(8px); }
@@ -3884,10 +3907,22 @@ button:disabled {
   line-height: 1.5;
   margin-bottom: 8px;
 }
-.tutorial-progress {
-  font-size: 11px;
-  color: var(--muted);
+.tutorial-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
   margin-bottom: 8px;
+}
+.tutorial-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s;
+}
+.tutorial-dot.active {
+  background: var(--accent);
+  box-shadow: 0 0 4px var(--accent);
 }
 .tutorial-btn-row {
   display: flex;
@@ -3909,6 +3944,18 @@ button:disabled {
   font-weight: bold;
   border: none;
   border-radius: 6px;
+}
+.tutorial-action-hint {
+  text-align: center;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: bold;
+  animation: tutorial-hint-pulse 1.5s ease-in-out infinite;
+  display: none;
+}
+@keyframes tutorial-hint-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 .tutorial-highlight {
   position: relative;

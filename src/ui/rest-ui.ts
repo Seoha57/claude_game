@@ -1,5 +1,6 @@
 import { el } from './dom';
 import { t } from '../i18n';
+import { showMiniTutorial } from './tutorial-overlay';
 import { getRun, setScreen, makeCard, canAddCard } from '../state';
 import { getEffectiveDef, canUpgrade } from '../content/cards';
 import { getModifiers } from '../ascension';
@@ -62,6 +63,17 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
 
   const titleEl = el('h2', { style: { color: 'var(--accent)' } });
   titleEl.innerHTML = `${ic('fire')} ${t('모닥불')}`;
+
+  requestAnimationFrame(() => {
+    showMiniTutorial('dod_tut_rest', [
+      {
+        target: '.rest-screen',
+        title: t('모닥불 선택'),
+        text: t('휴식으로 HP를 회복하거나, 대장간에서 카드를 영구 강화하세요. 강화가 장기적으로 더 유리합니다!'),
+        position: 'bottom',
+      },
+    ]);
+  });
 
   return el(
     'div',

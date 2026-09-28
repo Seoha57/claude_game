@@ -1,5 +1,6 @@
 import { el } from './dom';
 import { t } from '../i18n';
+import { showMiniTutorial } from './tutorial-overlay';
 import { getRun, makeCard, setScreen, rerender, canAddCard } from '../state';
 import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS, ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS, GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS, GAMBLER_RARE_CARDS } from '../content/cards';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
@@ -214,6 +215,17 @@ export function renderReward(): HTMLElement {
         );
       })()
     : null;
+
+  requestAnimationFrame(() => {
+    showMiniTutorial('dod_tut_reward', [
+      {
+        target: '.reward-cards',
+        title: t('보상 카드'),
+        text: t('3장 중 1장을 선택해 덱에 추가하세요. 필요 없다면 건너뛰기도 전략입니다!'),
+        position: 'top',
+      },
+    ]);
+  });
 
   return el(
     'div',
