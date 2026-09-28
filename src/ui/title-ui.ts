@@ -8,6 +8,7 @@ import { isCurseLike } from './deck-overlay';
 import { FRAMES, getCardFrame, setCardFrame } from '../card-frame';
 import { ic } from './art';
 import { t, getLang } from '../i18n';
+import { playSfx } from '../audio';
 
 let pendingSeed = 0;
 let pendingAscension = 0;
@@ -101,6 +102,7 @@ export function renderTitle(): HTMLElement {
           {
             style: { marginTop: '16px', background: 'var(--good)', color: '#1a1416', fontWeight: 'bold' },
             onClick: () => {
+              playSfx('click');
               if (loadRun()) {
                 const r = getRunOrNull();
                 setScreen(r?.endless ? 'endless_wave_clear' : 'map');
@@ -118,6 +120,7 @@ export function renderTitle(): HTMLElement {
         {
           style: { marginTop: saveExists ? '8px' : '16px' },
           onClick: () => {
+            playSfx('click');
             if (saveExists) {
               const ok = confirm(t('진행 중인 런이 있습니다. 새 게임을 시작하면 기존 진행 상황이 삭제됩니다. 계속할까요?'));
               if (!ok) return;
@@ -135,7 +138,7 @@ export function renderTitle(): HTMLElement {
     const menuBtn = (label: string, screen: string) => {
       const b = el('button', {
         class: 'hb-item',
-        onClick: () => setScreen(screen as any),
+        onClick: () => { playSfx('click'); setScreen(screen as any); },
       });
       b.innerHTML = label;
       return b;

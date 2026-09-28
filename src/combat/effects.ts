@@ -326,16 +326,18 @@ function playStatusSfx(statusKey: string, onSelf: boolean): void {
 
 export function drawCards(state: CombatState, n: number): void {
   const p = state.player;
+  let drawn = 0;
   for (let i = 0; i < n; i++) {
-    if (p.hand.length >= 10) return;
+    if (p.hand.length >= 10) break;
     if (p.draw.length === 0) {
-      if (p.discard.length === 0) return;
+      if (p.discard.length === 0) break;
       p.draw = shuffle(state.rng, p.discard);
       p.discard = [];
     }
     const c = p.draw.pop();
-    if (c) p.hand.push(c);
+    if (c) { p.hand.push(c); drawn++; }
   }
+  if (drawn > 0) playSfx('card_draw');
 }
 
 export function shuffle<T>(rng: () => number, arr: T[]): T[] {

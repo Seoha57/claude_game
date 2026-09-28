@@ -3,6 +3,7 @@ import { startNewRun, setScreen } from '../state';
 import type { CharacterClass } from '../types';
 import { CHARACTER_SVG, CARD_TYPE_SVG, ic } from './art';
 import { RELIC_DEFS } from '../content/relics';
+import { playSfx } from '../audio';
 import { t } from '../i18n';
 
 interface CharacterInfo {
@@ -245,7 +246,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
             background: isSel ? `${ch.color}15` : '',
             boxShadow: isSel ? `0 0 12px ${ch.color}40` : '',
           },
-          onClick: () => { selected = ch.id; rebuild(); },
+          onClick: () => { playSfx('click'); selected = ch.id; rebuild(); },
         },
         (() => { const s = el('span', { class: 'cs-item-emoji' }); s.innerHTML = CHARACTER_SVG[ch.id] ?? ch.emoji; return s; })(),
         el('div', { class: 'cs-item-info' },
@@ -344,7 +345,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
       el('button', {
         class: 'cs-start-btn',
         style: { background: ch.color, borderColor: ch.color },
-        onClick: () => startNewRun(seed, ascension, selected, { goToScreen: 'neow_blessing' }),
+        onClick: () => { playSfx('click'); startNewRun(seed, ascension, selected, { goToScreen: 'neow_blessing' }); },
       }, `${ch.name} ${t('시작')}`),
     );
 
