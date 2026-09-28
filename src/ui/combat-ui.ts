@@ -540,6 +540,18 @@ function renderHand(state: CombatState): HTMLElement {
     }
     inner.appendChild(cardEl);
   });
+  // Fan spread: apply subtle rotation when 3+ cards in hand
+  const count = state.player.hand.length;
+  if (count >= 3) {
+    const cards = inner.children;
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i] as HTMLElement;
+      const angle = (i - (count - 1) / 2) * 3;
+      const yOff = Math.abs(i - (count - 1) / 2) * 4;
+      card.style.transform = `rotate(${angle}deg) translateY(${yOff}px)`;
+      card.style.transformOrigin = 'bottom center';
+    }
+  }
   hand.appendChild(inner);
   previousHandUids = newHandUids;
   // Restore on next frame so the layout is settled
@@ -998,6 +1010,7 @@ function triggerEnemyLunge(enemyEl: HTMLElement): void {
 function triggerEnemyDeath(enemyUid: string): void {
   const enemyEl = document.querySelector(`[data-enemy-uid="${enemyUid}"]`) as HTMLElement | null;
   if (!enemyEl || enemyEl.classList.contains('death-anim')) return;
+  spawnDeathParticles(enemyEl.getBoundingClientRect());
   enemyEl.classList.add('death-anim');
   playSfx('damage_hit');
 }
@@ -1075,7 +1088,7 @@ function triggerEnergyPulse(): void {
   setTimeout(() => orb.classList.remove('energy-pulse'), 450);
 }
 
-function spawnCardPlayAnim(cardEl: HTMLElement, opts: { exhaust?: boolean } = {}): void {
+function spawnCardPlayAnim(cardEl: HTMLElement, opts: { exhaust?: boolean; targetEl?: HTMLElement } = {}): void {
   const rect = cardEl.getBoundingClientRect();
   // Avoid animating cards that aren't actually visible
   if (rect.width === 0 || rect.height === 0) return;
@@ -1098,6 +1111,15 @@ function spawnCardPlayAnim(cardEl: HTMLElement, opts: { exhaust?: boolean } = {}
     // Spawn dissipating particles
     spawnExhaustParticles(rect);
     setTimeout(() => clone.remove(), 820);
+  } else if (opts.targetEl) {
+    const targetRect = opts.targetEl.getBoundingClientRect();
+    const flyX = (targetRect.left + targetRect.width / 2) - (rect.left + rect.width / 2);
+    const flyY = (targetRect.top + targetRect.height / 2) - (rect.top + rect.height / 2);
+    clone.style.setProperty('--fly-x', `${flyX}px`);
+    clone.style.setProperty('--fly-y', `${flyY}px`);
+    clone.classList.add('card-flying');
+    document.body.appendChild(clone);
+    setTimeout(() => clone.remove(), 480);
   } else {
     clone.classList.add('card-playing');
     document.body.appendChild(clone);
@@ -1119,6 +1141,25 @@ function spawnExhaustParticles(rect: DOMRect): void {
     p.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
     p.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
     p.style.animationDelay = `${Math.random() * 0.1}s`;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 900);
+  }
+}
+
+function spawnDeathParticles(rect: DOMRect): void {
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const count = 18;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'death-particle';
+    const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5;
+    const dist = 100 + Math.random() * 150;
+    p.style.left = `${cx}px`;
+    p.style.top = `${cy}px`;
+    p.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+    p.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+    p.style.animationDelay = `${Math.random() * 0.12}s`;
     document.body.appendChild(p);
     setTimeout(() => p.remove(), 900);
   }
@@ -1356,7 +1397,11 @@ function playCardWithFx(state: CombatState, card: CardInstance, target: Enemy | 
   const handCards = document.querySelectorAll('.hand-cards .card');
   const idxInHand = state.player.hand.findIndex((c) => c.uid === card.uid);
   if (idxInHand >= 0 && handCards[idxInHand]) {
-    spawnCardPlayAnim(handCards[idxInHand] as HTMLElement, { exhaust: !!def.exhaust });
+    let targetEl: HTMLElement | undefined;
+    if (def.type === 'attack' && target) {
+      targetEl = document.querySelector(`[data-enemy-uid="${target.uid}"]`) as HTMLElement | undefined ?? undefined;
+    }
+    spawnCardPlayAnim(handCards[idxInHand] as HTMLElement, { exhaust: !!def.exhaust, targetEl });
   }
   const before = snapshotFx(state);
   state.player.energy -= cost;

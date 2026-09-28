@@ -1289,6 +1289,10 @@ button:disabled {
   width: fit-content;
   margin: 0 auto;
 }
+.hand-cards .card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, z-index 0s;
+  transform-origin: bottom center;
+}
 .card {
   width: 140px;
   height: 190px;
@@ -1420,6 +1424,17 @@ button:disabled {
   100% { transform: translateY(-280px) scale(0.3) rotate(4deg); opacity: 0; filter: brightness(1.8); }
 }
 
+/* Card fly-to-enemy — attack card flies toward the target */
+.card-flying {
+  animation: card-fly-to 0.4s cubic-bezier(0.22, 0.8, 0.36, 1) forwards;
+  box-shadow: 0 0 24px rgba(212, 160, 91, 0.6);
+}
+@keyframes card-fly-to {
+  0%   { transform: scale(1); opacity: 1; }
+  70%  { transform: translate(var(--fly-x), var(--fly-y)) scale(0.4); opacity: 0.8; }
+  100% { transform: translate(var(--fly-x), var(--fly-y)) scale(0.2); opacity: 0; }
+}
+
 /* Card exhaust — purple glow, distortion, dissolve */
 .card-exhausting {
   animation: card-exhaust-out 0.8s ease-in forwards;
@@ -1465,6 +1480,23 @@ button:disabled {
   0%   { opacity: 0;   transform: translate(0, 0) scale(0.5); }
   20%  { opacity: 1;   transform: translate(calc(var(--dx) * 0.3), calc(var(--dy) * 0.3)) scale(1.2); }
   100% { opacity: 0;   transform: translate(var(--dx), var(--dy)) scale(0.3); }
+}
+
+/* Death particles — red burst when enemy dies */
+.death-particle {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bad);
+  box-shadow: 0 0 6px var(--bad), 0 0 12px rgba(255, 60, 40, 0.5);
+  pointer-events: none;
+  z-index: 2000;
+  animation: death-burst 0.7s ease-out forwards;
+}
+@keyframes death-burst {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
 }
 
 /* ── Deck pile (Hearthstone-style draw pile on the right) ── */
@@ -1717,6 +1749,14 @@ button:disabled {
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
     z-index: 10;
   }
+  .hand-cards .card:hover:not(.disabled) {
+    transform: translateY(-20px) scale(1.12) rotate(0deg) !important;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .hand-cards .card:hover:not(.disabled) + .card {
+    transform: translateX(8px) !important;
+  }
 }
 .card.disabled {
   opacity: 0.5;
@@ -1880,6 +1920,38 @@ button:disabled {
 .reward-cards {
   display: flex;
   gap: 16px;
+}
+
+/* Reward card flip animation */
+.card-flip-container {
+  perspective: 800px;
+}
+.card-flip-container .card {
+  animation: card-flip-in 0.5s ease-out backwards;
+  transform-style: preserve-3d;
+}
+.card-flip-container:nth-child(1) .card { animation-delay: 0.15s; }
+.card-flip-container:nth-child(2) .card { animation-delay: 0.3s; }
+.card-flip-container:nth-child(3) .card { animation-delay: 0.45s; }
+@keyframes card-flip-in {
+  0%   { transform: rotateY(180deg) scale(0.8); opacity: 0; }
+  50%  { transform: rotateY(90deg) scale(0.9); opacity: 0.5; }
+  100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+}
+
+/* Relic acquisition glow */
+.relic-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, rgba(212,170,68,0.3) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 3000;
+  animation: relic-flash-anim 0.6s ease-out forwards;
+}
+@keyframes relic-flash-anim {
+  0%   { opacity: 0; }
+  30%  { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* ── Rest ── */

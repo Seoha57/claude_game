@@ -163,27 +163,28 @@ export function renderReward(): HTMLElement {
     const atMax = !canAddCard(run.player.deck, def.id);
     const inDeck = deckDefIds.has(id);
     const deckCount = inDeck ? run.player.deck.filter((c) => c.defId === id).length : 0;
-    cardsRow.appendChild(
-      el(
-        'div',
-        {
-          class: `card ${def.type} rarity-${def.rarity} ${atMax ? 'disabled' : ''}`,
-          style: atMax ? { cursor: 'default' } : {},
-          onClick: () => {
-            if (reward.picked || atMax) return;
-            reward.picked = true;
-            run.player.deck.push(makeCard(def.id));
-            close();
-          },
+    const flipContainer = el('div', { class: 'card-flip-container' });
+    const cardEl = el(
+      'div',
+      {
+        class: `card ${def.type} rarity-${def.rarity} ${atMax ? 'disabled' : ''}`,
+        style: atMax ? { cursor: 'default' } : {},
+        onClick: () => {
+          if (reward.picked || atMax) return;
+          reward.picked = true;
+          run.player.deck.push(makeCard(def.id));
+          close();
         },
-        el('div', { class: 'card-cost' }, def.cost < 0 ? 'X' : String(def.cost)),
-        el('div', { class: 'card-name' }, def.name),
-        el('div', { class: 'card-desc' }, kwDesc(def.description)),
-        el('div', { class: 'card-type' }, typeLabel(def.type)),
-        ...(atMax ? [el('div', { style: { color: 'var(--bad)', fontSize: '11px', marginTop: '4px' } }, t('최대 보유'))] : []),
-        ...(inDeck && !atMax ? [el('div', { style: { color: 'var(--muted)', fontSize: '11px', marginTop: '4px' } }, `${t('덱에')} ${deckCount}${t('장 보유')}`)] : []),
-      ),
+      },
+      el('div', { class: 'card-cost' }, def.cost < 0 ? 'X' : String(def.cost)),
+      el('div', { class: 'card-name' }, def.name),
+      el('div', { class: 'card-desc' }, kwDesc(def.description)),
+      el('div', { class: 'card-type' }, typeLabel(def.type)),
+      ...(atMax ? [el('div', { style: { color: 'var(--bad)', fontSize: '11px', marginTop: '4px' } }, t('최대 보유'))] : []),
+      ...(inDeck && !atMax ? [el('div', { style: { color: 'var(--muted)', fontSize: '11px', marginTop: '4px' } }, `${t('덱에')} ${deckCount}${t('장 보유')}`)] : []),
     );
+    flipContainer.appendChild(cardEl);
+    cardsRow.appendChild(flipContainer);
   }
 
   // gold is auto-added on entry
@@ -202,6 +203,7 @@ export function renderReward(): HTMLElement {
               if (!run.player.relics.includes(def.id)) {
                 run.player.relics.push(def.id);
                 playSfx('relic');
+                flashRelicAcquire();
               }
               (reward as any)._relicTaken = true;
               close();
@@ -250,6 +252,13 @@ export function renderReward(): HTMLElement {
       t('건너뛰기'),
     ),
   );
+}
+
+function flashRelicAcquire(): void {
+  const flash = document.createElement('div');
+  flash.className = 'relic-flash';
+  document.body.appendChild(flash);
+  flash.addEventListener('animationend', () => flash.remove());
 }
 
 function close(): void {
