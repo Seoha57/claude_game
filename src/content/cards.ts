@@ -8,7 +8,7 @@ import { THIEF_CARD_DEFS, thiefGetEffectiveDef, canUpgradeThief } from './thief-
 import { SUMMONER_CARD_DEFS, summonerGetEffectiveDef, canUpgradeSummoner } from './summoner-cards';
 import { ENGINEER_CARD_DEFS, engineerGetEffectiveDef, canUpgradeEngineer } from './engineer-cards';
 import { GAMBLER_CARD_DEFS, gamblerGetEffectiveDef, canUpgradeGambler } from './gambler-cards';
-import { BLOOD_MAGE_CARD_DEFS, bloodMageGetEffectiveDef } from './blood-mage-cards';
+import { BLOOD_MAGE_CARD_DEFS, bloodMageGetEffectiveDef, canUpgradeBloodMage } from './blood-mage-cards';
 export { GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS } from './gunner-cards';
 export { FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS } from './fighter-cards';
 export { MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS } from './magician-cards';
@@ -619,5 +619,6 @@ export function canUpgrade(card: CardInstance): boolean {
   if (card.defId.startsWith('s_')) return canUpgradeSummoner(card);
   if (card.defId.startsWith('n_')) return canUpgradeEngineer(card);
   if (card.defId.startsWith('b_')) return canUpgradeGambler(card);
+  if (card.defId.startsWith('v_')) return canUpgradeBloodMage(card);
   return (card.upgraded ?? 0) < 2 && card.defId in UPGRADE_MAP;
 }
