@@ -25,7 +25,9 @@ export type StatusKey =
   | 'drone_ice'
   | 'drone_burn'
   | 'drone_recon'
-  | 'drone_shield';
+  | 'drone_shield'
+  | 'blood_armor'
+  | 'blood_power';
 
 export type EffectCondition =
   | { kind: 'nth_or_more'; n: number }           // 이번 턴 N번째 이상의 카드일 때 (cardsPlayedThisTurn >= n)
@@ -61,7 +63,9 @@ export type Effect =
   | { kind: 'heal_dice'; base: number }                      // 회복 = base × 주사위
   | { kind: 'fix_dice'; value: number }                     // 다음 턴 주사위 고정
   | { kind: 'set_dice_reroll' }                              // 주사위 1이면 리롤 (영구)
-  | { kind: 'set_dice_minimum'; value: number };             // 주사위 최솟값 설정 (영구)
+  | { kind: 'set_dice_minimum'; value: number }             // 주사위 최솟값 설정 (영구)
+  | { kind: 'lifesteal'; amount: number; times?: number }   // 데미지 + 실제 HP 피해만큼 회복
+  | { kind: 'lifesteal_all'; amount: number };               // 전체 적 흡혈
 
 export interface CardDef {
   id: string;
@@ -169,6 +173,7 @@ export interface CombatState {
     fixedDice?: number;               // 갬블러: 다음 턴 고정 주사위 값
     diceReroll?: boolean;             // 갬블러: 주사위 1이면 리롤
     diceMinimum?: number;             // 갬블러: 주사위 최솟값
+    hemocoreUsedThisTurn?: boolean;   // 혈술의 핵: 턴당 1회 드로우
   };
 }
 
@@ -185,7 +190,7 @@ export interface MapNode {
 
 export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync' | 'daily' | 'history' | 'endless_wave_clear' | 'endless_result' | 'leaderboard' | 'settings';
 
-export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner' | 'engineer' | 'gambler';
+export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner' | 'engineer' | 'gambler' | 'blood_mage';
 
 export interface RewardChoice {
   cards: string[]; // card def ids

@@ -240,7 +240,7 @@ export function startNewRun(
   options: { goToScreen?: Screen; daily?: { date: string; constraint: DailyConstraint } } = {},
 ): void {
   const mods = getModifiers(ascension);
-  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82, thief: 68, summoner: 62, engineer: 68, gambler: 70 };
+  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82, thief: 68, summoner: 62, engineer: 68, gambler: 70, blood_mage: 72 };
   let baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
   // 데일리 제약: HP 배율
   if (options.daily?.constraint.hpMult !== undefined) {
@@ -255,6 +255,7 @@ export function startNewRun(
     characterClass === 'summoner' ? makeSummonerStarterDeck() :
     characterClass === 'engineer' ? makeEngineerStarterDeck() :
     characterClass === 'gambler' ? makeGamblerStarterDeck() :
+    characterClass === 'blood_mage' ? makeBloodMageStarterDeck() :
     makeStarterDeck();
   for (let i = 0; i < mods.cursesInDeck; i++) deck.push(makeCard('wound'));
   // 데일리 제약: 시작 저주
@@ -271,6 +272,7 @@ export function startNewRun(
     summoner: 'soul_lantern',
     engineer: 'energy_battery',
     gambler: 'lucky_coin',
+    blood_mage: 'blood_chalice',
   };
   // 시그니처 유물 — 캐릭터 정체성을 강화하는 두 번째 시작 유물
   const signatureMap: Record<CharacterClass, string> = {
@@ -283,6 +285,7 @@ export function startNewRun(
     summoner: 'spirit_contract',
     engineer: 'drone_core',
     gambler: 'gamblers_instinct',
+    blood_mage: 'hemomancy_core',
   };
   const startingRelic = relicMap[characterClass];
   const signatureRelic = signatureMap[characterClass];
@@ -429,6 +432,14 @@ function makeGamblerStarterDeck(): CardInstance[] {
   for (let i = 0; i < 5; i++) deck.push(makeCard('b_dice_throw'));
   for (let i = 0; i < 4; i++) deck.push(makeCard('b_bluff'));
   deck.push(makeCard('b_gambit'));
+  return deck;
+}
+
+function makeBloodMageStarterDeck(): CardInstance[] {
+  const deck: CardInstance[] = [];
+  for (let i = 0; i < 5; i++) deck.push(makeCard('v_blood_strike'));
+  for (let i = 0; i < 4; i++) deck.push(makeCard('v_crimson_guard'));
+  deck.push(makeCard('v_drain'));
   return deck;
 }
 

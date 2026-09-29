@@ -2,7 +2,7 @@ import { el } from './dom';
 import { t } from '../i18n';
 import { showMiniTutorial } from './tutorial-overlay';
 import { getRun, makeCard, setScreen, rerender, canAddCard } from '../state';
-import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS, ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS, GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS, GAMBLER_RARE_CARDS } from '../content/cards';
+import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS, ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS, GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS, GAMBLER_RARE_CARDS, BLOOD_MAGE_COMMON_CARDS, BLOOD_MAGE_UNCOMMON_CARDS, BLOOD_MAGE_RARE_CARDS } from '../content/cards';
 import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
 import type { CardDef } from '../types';
 import { kwDesc } from './keywords';
@@ -65,9 +65,9 @@ function rerollCards(): void {
 
   const cc = run.characterClass;
   const ignoreLocks = !!run.dailyConfig;
-  const commonPool = filterUnlocked(cc === 'gunner' ? GUNNER_COMMON_CARDS : cc === 'fighter' ? FIGHTER_COMMON_CARDS : cc === 'magician' ? MAGICIAN_COMMON_CARDS : cc === 'priest' ? PRIEST_COMMON_CARDS : cc === 'thief' ? THIEF_COMMON_CARDS : cc === 'summoner' ? SUMMONER_COMMON_CARDS : cc === 'engineer' ? ENGINEER_COMMON_CARDS : cc === 'gambler' ? GAMBLER_COMMON_CARDS : COMMON_CARDS, ignoreLocks);
-  const uncommonPool = filterUnlocked(cc === 'gunner' ? GUNNER_UNCOMMON_CARDS : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS : cc === 'magician' ? MAGICIAN_UNCOMMON_CARDS : cc === 'priest' ? PRIEST_UNCOMMON_CARDS : cc === 'thief' ? THIEF_UNCOMMON_CARDS : cc === 'summoner' ? SUMMONER_UNCOMMON_CARDS : cc === 'engineer' ? ENGINEER_UNCOMMON_CARDS : cc === 'gambler' ? GAMBLER_UNCOMMON_CARDS : UNCOMMON_CARDS, ignoreLocks);
-  const rarePool = filterUnlocked(cc === 'gunner' ? GUNNER_RARE_CARDS : cc === 'fighter' ? FIGHTER_RARE_CARDS : cc === 'magician' ? MAGICIAN_RARE_CARDS : cc === 'priest' ? PRIEST_RARE_CARDS : cc === 'thief' ? THIEF_RARE_CARDS : cc === 'summoner' ? SUMMONER_RARE_CARDS : cc === 'engineer' ? ENGINEER_RARE_CARDS : cc === 'gambler' ? GAMBLER_RARE_CARDS : RARE_CARDS, ignoreLocks);
+  const commonPool = filterUnlocked(cc === 'gunner' ? GUNNER_COMMON_CARDS : cc === 'fighter' ? FIGHTER_COMMON_CARDS : cc === 'magician' ? MAGICIAN_COMMON_CARDS : cc === 'priest' ? PRIEST_COMMON_CARDS : cc === 'thief' ? THIEF_COMMON_CARDS : cc === 'summoner' ? SUMMONER_COMMON_CARDS : cc === 'engineer' ? ENGINEER_COMMON_CARDS : cc === 'gambler' ? GAMBLER_COMMON_CARDS : cc === 'blood_mage' ? BLOOD_MAGE_COMMON_CARDS : COMMON_CARDS, ignoreLocks);
+  const uncommonPool = filterUnlocked(cc === 'gunner' ? GUNNER_UNCOMMON_CARDS : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS : cc === 'magician' ? MAGICIAN_UNCOMMON_CARDS : cc === 'priest' ? PRIEST_UNCOMMON_CARDS : cc === 'thief' ? THIEF_UNCOMMON_CARDS : cc === 'summoner' ? SUMMONER_UNCOMMON_CARDS : cc === 'engineer' ? ENGINEER_UNCOMMON_CARDS : cc === 'gambler' ? GAMBLER_UNCOMMON_CARDS : cc === 'blood_mage' ? BLOOD_MAGE_UNCOMMON_CARDS : UNCOMMON_CARDS, ignoreLocks);
+  const rarePool = filterUnlocked(cc === 'gunner' ? GUNNER_RARE_CARDS : cc === 'fighter' ? FIGHTER_RARE_CARDS : cc === 'magician' ? MAGICIAN_RARE_CARDS : cc === 'priest' ? PRIEST_RARE_CARDS : cc === 'thief' ? THIEF_RARE_CARDS : cc === 'summoner' ? SUMMONER_RARE_CARDS : cc === 'engineer' ? ENGINEER_RARE_CARDS : cc === 'gambler' ? GAMBLER_RARE_CARDS : cc === 'blood_mage' ? BLOOD_MAGE_RARE_CARDS : RARE_CARDS, ignoreLocks);
 
   const cur = run.currentNodeId ? nodeById(run.map, run.currentNodeId) : null;
   const isElite = cur?.kind === 'elite';
@@ -101,6 +101,7 @@ function ensureReward(): RewardChoiceUI {
     : cc === 'summoner' ? SUMMONER_COMMON_CARDS
     : cc === 'engineer' ? ENGINEER_COMMON_CARDS
     : cc === 'gambler' ? GAMBLER_COMMON_CARDS
+    : cc === 'blood_mage' ? BLOOD_MAGE_COMMON_CARDS
     : COMMON_CARDS,
     ignoreLocks,
   );
@@ -113,6 +114,7 @@ function ensureReward(): RewardChoiceUI {
     : cc === 'summoner' ? SUMMONER_UNCOMMON_CARDS
     : cc === 'engineer' ? ENGINEER_UNCOMMON_CARDS
     : cc === 'gambler' ? GAMBLER_UNCOMMON_CARDS
+    : cc === 'blood_mage' ? BLOOD_MAGE_UNCOMMON_CARDS
     : UNCOMMON_CARDS,
     ignoreLocks,
   );
@@ -125,6 +127,7 @@ function ensureReward(): RewardChoiceUI {
     : cc === 'summoner' ? SUMMONER_RARE_CARDS
     : cc === 'engineer' ? ENGINEER_RARE_CARDS
     : cc === 'gambler' ? GAMBLER_RARE_CARDS
+    : cc === 'blood_mage' ? BLOOD_MAGE_RARE_CARDS
     : RARE_CARDS,
     ignoreLocks,
   );

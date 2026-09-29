@@ -167,6 +167,20 @@ export const STATUS_INFO: Record<StatusKey, StatusInfo> = {
     decay: false,
     buff: true,
   },
+  blood_armor: {
+    key: 'blood_armor',
+    name: t('피의 방벽'),
+    description: t('HP를 잃는 카드 사용 시 잃은 HP × N 방어도'),
+    decay: false,
+    buff: true,
+  },
+  blood_power: {
+    key: 'blood_power',
+    name: t('피의 광기'),
+    description: t('HP를 잃는 카드 사용 시 힘 +N'),
+    decay: false,
+    buff: true,
+  },
 };
 
 export function applyStatus(c: Combatant, key: StatusKey, amount: number): void {
@@ -285,6 +299,10 @@ export function getStatusTooltip(key: StatusKey, value: number): string {
       return `${name}: ${t('매턴')} ${value}${t('장 드로우')}`;
     case 'drone_shield':
       return `${name}: ${t('2턴마다 방어도')} +${value}`;
+    case 'blood_armor':
+      return `${name}: ${t('HP를 잃는 카드 사용 시 잃은 HP')} ×${value} ${t('방어도')} (${t('영구')})`;
+    case 'blood_power':
+      return `${name}: ${t('HP를 잃는 카드 사용 시 힘')} +${value} (${t('영구')})`;
     default:
       return `${name}: ${info.description}`;
   }

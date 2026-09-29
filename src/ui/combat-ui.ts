@@ -1559,6 +1559,9 @@ function applyVictoryRelics(run: any, _state: any): void {
   if (run.player.relics.includes('lucky_coin')) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 6);
   }
+  if (run.player.relics.includes('blood_chalice')) {
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
+  }
   if (meatEligible) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 12);
   }

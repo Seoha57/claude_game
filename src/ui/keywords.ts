@@ -76,4 +76,6 @@ export const STATUS_ICON: Record<StatusKey, string> = {
   drone_burn: ic('fire'),
   drone_recon: ic('card'),
   drone_shield: ic('shield'),
+  blood_armor: ic('shield'),
+  blood_power: ic('sword'),
 };

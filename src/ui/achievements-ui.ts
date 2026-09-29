@@ -17,6 +17,7 @@ const CHAR_LABEL: Record<CharacterClass, string> = {
   summoner: t('정령술사'),
   engineer: t('공학자'),
   gambler: t('갬블러'),
+  blood_mage: t('혈술사'),
 };
 
 const CATEGORY_ICON: Record<AchievementDef['category'], string> = {

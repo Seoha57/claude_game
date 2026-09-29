@@ -52,7 +52,7 @@ const CONSTRAINTS: DailyConstraint[] = [
   { id: 'fragile',       name: t('취약체질'),     desc: t('HP -20%, 적 HP -15%'),             hpMult: 0.8, enemyHpMult: 0.85 },
 ];
 
-const CHARACTERS: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief', 'summoner'];
+const CHARACTERS: CharacterClass[] = ['swordmaster', 'gunner', 'fighter', 'magician', 'priest', 'thief', 'summoner', 'blood_mage'];
 
 // ── 일자 계산 (UTC 고정) ────────────────────────────────────────
 export function todayDateString(): string {

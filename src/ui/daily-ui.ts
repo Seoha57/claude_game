@@ -21,6 +21,7 @@ const CHAR_INFO: Record<CharacterClass, { name: string }> = {
   summoner:    { name: '정령술사' },
   engineer:    { name: '공학자' },
   gambler:     { name: '갬블러' },
+  blood_mage:  { name: '혈술사' },
 };
 
 export function renderDaily(): HTMLElement {

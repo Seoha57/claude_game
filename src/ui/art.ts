@@ -375,6 +375,39 @@ export const CHARACTER_SVG: Record<string, string> = {
     p('M22 58 L20 63 L30 63 L28 58Z', '#1a0a20'),
     p('M36 58 L34 63 L44 63 L42 58Z', '#1a0a20'),
   ].join('')),
+
+  blood_mage: C([
+    // Dark robe
+    p('M18 28 L14 34 L12 58 L28 62 L36 62 L52 58 L50 34 L46 28Z', '#3a0a0a'),
+    // Inner robe
+    p('M28 28 L36 28 L36 58 L28 58Z', '#1a0000'),
+    // Blood sigils on robe
+    ci(24, 44, 3, '#8b000040'),
+    ci(40, 44, 3, '#8b000040'),
+    // Collar
+    p('M26 28 L32 24 L38 28 L36 30 L28 30Z', '#5a0a0a'),
+    // Head
+    ci(32, 17, 8, '#e8c8a0'),
+    // Hood
+    p('M22 10 L42 10 L44 20 L40 24 L24 24 L20 20Z', '#3a0a0a'),
+    p('M24 10 L40 10 L42 18 L22 18Z', '#2a0000'),
+    // Eyes (glowing red)
+    ci(28, 17, 1.5, '#ff2020'),
+    ci(36, 17, 1.5, '#ff2020'),
+    // Blood orb in hand
+    ci(48, 34, 5, '#8b0000'),
+    ci(48, 34, 3, '#cc2020'),
+    ci(48, 33, 1.5, '#ff6060'),
+    // Blood drips from orb
+    p('M47 39 L48 44 L49 39Z', '#8b0000'),
+    p('M45 38 L46 42 L47 38Z', '#8b0000'),
+    // Belt with blood vial
+    p('M24 48 L40 48 L40 50 L24 50Z', '#5a2020'),
+    rc(30, 46, 4, 6, '#cc4040'),
+    // Boots
+    p('M24 58 L22 63 L30 63 L28 58Z', '#2a0808'),
+    p('M36 58 L34 63 L42 63 L40 58Z', '#2a0808'),
+  ].join('')),
 };
 
 
@@ -1961,6 +1994,7 @@ export const CHAR_NAMES: Record<string, string> = {
   summoner: t('정령술사'),
   engineer: t('공학자'),
   gambler: t('갬블러'),
+  blood_mage: t('혈술사'),
 };
 
 export function artEl(svg: string | undefined, size = 64): HTMLElement {
@@ -3875,6 +3909,36 @@ export const RELIC_SVG: Record<string, string> = {
     ci(40, 32, 2, '#c03030')
   ),
 
+  // ── Blood Mage relics ──
+
+  blood_chalice: C(
+    // Chalice cup
+    p('M22 16 L42 16 L40 36 L38 40 L26 40 L24 36Z', '#8b0000') +
+    p('M24 18 L40 18 L38 34 L36 38 L28 38 L26 34Z', '#cc2020') +
+    // Blood inside
+    ci(32, 28, 6, '#ff2020') +
+    ci(32, 26, 3, '#ff6060') +
+    // Stem
+    rc(30, 40, 4, 10, '#8b0000') +
+    // Base
+    p('M24 50 L40 50 L42 54 L22 54Z', '#8b0000')
+  ),
+
+  hemomancy_core: C(
+    // Outer diamond
+    p('M32 8 L52 32 L32 56 L12 32Z', '#3a0a0a') +
+    p('M32 12 L48 32 L32 52 L16 32Z', '#5a1010') +
+    // Inner core
+    ci(32, 32, 10, '#8b0000') +
+    ci(32, 32, 6, '#cc2020') +
+    ci(32, 30, 3, '#ff4040') +
+    // Blood veins
+    p('M22 22 L28 28', '#cc202060') +
+    p('M42 22 L36 28', '#cc202060') +
+    p('M22 42 L28 36', '#cc202060') +
+    p('M42 42 L36 36', '#cc202060')
+  ),
+
   // ── BOSS RELICS ──
 
   energy_core: C(
@@ -4824,6 +4888,17 @@ export const ACHIEVEMENT_SVG: Record<string, string> = {
     ci(40, 24, 2.5, '#c03030') +
     ci(32, 24, 2.5, '#222') +
     ci(32, 40, 2.5, '#222')
+  ),
+
+  blood_mage_clear: C(
+    ci(32, 32, 22, '#3a0a0a') +
+    ci(32, 32, 18, '#5a1010') +
+    ci(32, 32, 12, '#8b0000') +
+    ci(32, 32, 7, '#cc2020') +
+    ci(32, 30, 3, '#ff4040') +
+    p('M30 44 L32 50 L34 44Z', '#cc2020') +
+    p('M22 36 L18 38 L22 40Z', '#cc2020') +
+    p('M42 36 L46 38 L42 40Z', '#cc2020')
   ),
 
   // ⛰ 등반자 — mountain

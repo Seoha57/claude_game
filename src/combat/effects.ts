@@ -71,6 +71,26 @@ export function gainBlock(c: { block: number; statuses: any }, base: number): vo
   c.block += modifiedBlockGain(base, c as any);
 }
 
+function applyAttackDamage(
+  state: CombatState,
+  source: Player | Enemy,
+  target: Enemy,
+  baseAmount: number,
+  log: (s: string) => void,
+): number {
+  if (target.hp <= 0) return 0;
+  if (state.flags.firstAttackThisTurn && getRunOrNull()?.player.relics.includes('venom_fang')) {
+    applyStatus(target, 'poison', 2);
+    log(`${t('독니')} → ${t('중독')} +2`);
+  }
+  const modified = modifyAttackAmount(state, baseAmount);
+  const hpDmg = dealDamage(state, source, target, modified, true);
+  log(`${nameOf(source, state)} → ${nameOf(target, state)}: ${hpDmg} ${t('데미지')}`);
+  state.flags.firstAttackThisTurn = false;
+  onAttackAfter(state, log);
+  return hpDmg;
+}
+
 export function applyEffect(
   state: CombatState,
   effect: Effect,
@@ -164,6 +184,23 @@ export function applyEffect(
     case 'lose_hp': {
       player.hp = Math.max(0, player.hp - effect.amount);
       log(`HP -${effect.amount}`);
+      const ba = getStatus(player.statuses, 'blood_armor');
+      if (ba > 0) {
+        const blockGain = effect.amount * ba;
+        gainBlock(player, blockGain);
+        log(`${t('피의 방벽')} → ${t('방어도')} +${blockGain}`);
+      }
+      const bp = getStatus(player.statuses, 'blood_power');
+      if (bp > 0) {
+        applyStatus(player, 'strength', bp);
+        log(`${t('피의 광기')} → ${t('힘')} +${bp}`);
+      }
+      const run = getRunOrNull();
+      if (run?.player.relics.includes('hemomancy_core') && !state.flags.hemocoreUsedThisTurn) {
+        state.flags.hemocoreUsedThisTurn = true;
+        drawCards(state, 1);
+        log(`${t('혈술의 핵')} → ${t('카드')} +1`);
+      }
       return;
     }
     case 'exhaust_random_hand': {
@@ -263,6 +300,36 @@ export function applyEffect(
     case 'set_dice_minimum': {
       state.flags.diceMinimum = Math.max(state.flags.diceMinimum ?? 0, effect.value);
       log(`🎲 ${t('주사위 최솟값')} ${effect.value}!`);
+      return;
+    }
+    case 'lifesteal': {
+      const tgt = targetEnemy ?? state.enemies.find((e) => e.hp > 0) ?? null;
+      if (!tgt) return;
+      const times = effect.times ?? 1;
+      let totalHealed = 0;
+      for (let i = 0; i < times; i++) {
+        const dmgDealt = applyAttackDamage(state, source, tgt, effect.amount, log);
+        totalHealed += dmgDealt;
+      }
+      if (totalHealed > 0) {
+        player.hp = Math.min(player.maxHp, player.hp + totalHealed);
+        log(`${t('흡혈')} +${totalHealed}`);
+        onHealTrigger(state, log);
+      }
+      return;
+    }
+    case 'lifesteal_all': {
+      let totalHealed = 0;
+      for (const e of state.enemies) {
+        if (e.hp <= 0) continue;
+        const dmgDealt = applyAttackDamage(state, source, e, effect.amount, log);
+        totalHealed += dmgDealt;
+      }
+      if (totalHealed > 0) {
+        player.hp = Math.min(player.maxHp, player.hp + totalHealed);
+        log(`${t('흡혈')} +${totalHealed}`);
+        onHealTrigger(state, log);
+      }
       return;
     }
   }

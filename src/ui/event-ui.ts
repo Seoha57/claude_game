@@ -38,6 +38,9 @@ import {
   GAMBLER_COMMON_CARDS,
   GAMBLER_UNCOMMON_CARDS,
   GAMBLER_RARE_CARDS,
+  BLOOD_MAGE_COMMON_CARDS,
+  BLOOD_MAGE_UNCOMMON_CARDS,
+  BLOOD_MAGE_RARE_CARDS,
   canUpgrade,
 } from '../content/cards';
 
@@ -243,6 +246,8 @@ export function renderEvent(): HTMLElement {
       pool = rarity === 'common' ? ENGINEER_COMMON_CARDS : rarity === 'uncommon' ? ENGINEER_UNCOMMON_CARDS : ENGINEER_RARE_CARDS;
     } else if (cls === 'gambler') {
       pool = rarity === 'common' ? GAMBLER_COMMON_CARDS : rarity === 'uncommon' ? GAMBLER_UNCOMMON_CARDS : GAMBLER_RARE_CARDS;
+    } else if (cls === 'blood_mage') {
+      pool = rarity === 'common' ? BLOOD_MAGE_COMMON_CARDS : rarity === 'uncommon' ? BLOOD_MAGE_UNCOMMON_CARDS : BLOOD_MAGE_RARE_CARDS;
     } else {
       pool = rarity === 'common' ? COMMON_CARDS : rarity === 'uncommon' ? UNCOMMON_CARDS : RARE_CARDS;
     }

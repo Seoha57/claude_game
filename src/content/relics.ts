@@ -135,6 +135,18 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '전투 시작 시 1장 드로우, 힘 +1.',
     rarity: 'starter',
   },
+  blood_chalice: {
+    id: 'blood_chalice',
+    name: '피의 성배',
+    description: '전투 종료 시 8 회복.',
+    rarity: 'starter',
+  },
+  hemomancy_core: {
+    id: 'hemomancy_core',
+    name: '혈술의 핵',
+    description: 'HP를 잃는 카드 사용 시 카드 1장 드로우 (턴당 1회).',
+    rarity: 'starter',
+  },
 
   // ── Common ──
   frozen_dart: {

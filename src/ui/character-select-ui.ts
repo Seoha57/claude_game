@@ -212,6 +212,27 @@ const CHARACTERS: CharacterInfo[] = [
     color: '#d0a060',
     playstyle: t('랜덤 배팅형'),
   },
+  {
+    id: 'blood_mage',
+    name: t('혈술사'),
+    subname: t('사혈·흡혈·혈갑·출혈'),
+    hp: 72,
+    startRelic: t('피의 성배'),
+    startRelicId: 'blood_chalice',
+    signatureRelic: t('혈술의 핵'),
+    signatureDesc: t('HP를 잃는 카드 사용 시 카드 1장 드로우 (턴당 1회)'),
+    description: t('전투 종료 시 8 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.'),
+    starterCards: [
+      { name: t('피의 일격'), type: 'attack', count: 5 },
+      { name: t('핏빛 방패'), type: 'skill', count: 4 },
+      { name: t('흡혈'), type: 'attack', count: 1 },
+    ],
+    emoji: '🩸',
+    difficulty: 3,
+    diffLabel: t('HP 관리가 핵심, 상급자 추천'),
+    color: '#8b0000',
+    playstyle: t('HP 소모/흡혈 순환형'),
+  },
 ];
 
 const CARD_TYPE_ICON: Record<string, string> = { attack: ic('sword'), skill: ic('shield'), power: ic('star') };

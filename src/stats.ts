@@ -46,6 +46,7 @@ function emptyStats(): AggregateStats {
       summoner: { ...EMPTY_CHAR },
       engineer: { ...EMPTY_CHAR },
       gambler: { ...EMPTY_CHAR },
+      blood_mage: { ...EMPTY_CHAR },
     },
   };
 }
