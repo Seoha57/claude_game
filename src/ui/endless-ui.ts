@@ -7,7 +7,8 @@ import { applyStatus } from '../combat/statuses';
 import {
   NORMAL_ENCOUNTERS, ELITE_ENCOUNTERS, BOSS_ENCOUNTERS,
   CH2_NORMAL_ENCOUNTERS, CH2_ELITE_ENCOUNTERS, CH2_BOSS_ENCOUNTERS,
-  CH3_NORMAL_ENCOUNTERS, CH3_ELITE_ENCOUNTERS,
+  CH3_NORMAL_ENCOUNTERS, CH3_ELITE_ENCOUNTERS, CH3_BOSS_ENCOUNTERS,
+  CH4_NORMAL_ENCOUNTERS, CH4_ELITE_ENCOUNTERS, CH4_BOSS_ENCOUNTERS,
   pickEncounter,
 } from '../content/enemies';
 import { makeRng, pick, shuffle } from '../rng';
@@ -29,11 +30,20 @@ function saveEndlessBest(wave: number): void {
 }
 
 function waveEncounterTable(wave: number): string[][] {
-  if (wave % 10 === 0) return BOSS_ENCOUNTERS.concat(CH2_BOSS_ENCOUNTERS);
-  if (wave % 5 === 0) return ELITE_ENCOUNTERS.concat(CH2_ELITE_ENCOUNTERS).concat(CH3_ELITE_ENCOUNTERS);
+  if (wave % 10 === 0) {
+    if (wave >= 30) return CH3_BOSS_ENCOUNTERS.concat(CH4_BOSS_ENCOUNTERS);
+    if (wave >= 20) return CH2_BOSS_ENCOUNTERS.concat(CH3_BOSS_ENCOUNTERS);
+    return BOSS_ENCOUNTERS.concat(CH2_BOSS_ENCOUNTERS);
+  }
+  if (wave % 5 === 0) {
+    if (wave >= 25) return CH3_ELITE_ENCOUNTERS.concat(CH4_ELITE_ENCOUNTERS);
+    if (wave >= 15) return CH2_ELITE_ENCOUNTERS.concat(CH3_ELITE_ENCOUNTERS);
+    return ELITE_ENCOUNTERS.concat(CH2_ELITE_ENCOUNTERS);
+  }
   if (wave <= 5) return NORMAL_ENCOUNTERS;
   if (wave <= 10) return CH2_NORMAL_ENCOUNTERS;
-  return CH3_NORMAL_ENCOUNTERS;
+  if (wave <= 15) return CH3_NORMAL_ENCOUNTERS;
+  return CH3_NORMAL_ENCOUNTERS.concat(CH4_NORMAL_ENCOUNTERS);
 }
 
 function enemyHpMult(wave: number): number {
@@ -44,6 +54,20 @@ function enemyStrBonus(wave: number): number {
   return Math.floor(wave / 3);
 }
 
+function nextWaveLabel(nextWave: number): string {
+  if (nextWave % 10 === 0) return t('보스');
+  if (nextWave % 5 === 0) return t('엘리트');
+  return t('일반');
+}
+
+function waveScalingText(wave: number): string {
+  const hpMult = enemyHpMult(wave);
+  const strBonus = enemyStrBonus(wave);
+  const parts: string[] = [`HP ×${hpMult.toFixed(1)}`];
+  if (strBonus > 0) parts.push(`${t('힘')}+${strBonus}`);
+  return parts.join(' · ');
+}
+
 export function startNextWave(): void {
   const run = getRun();
   if (!run.endless) return;
@@ -52,7 +76,7 @@ export function startNextWave(): void {
 
   // Every 5th wave (except boss waves at 10, 20...): rest — heal before save
   if (wave > 1 && (wave - 1) % 5 === 0 && (wave - 1) % 10 !== 0) {
-    const heal = Math.ceil(run.player.maxHp * 0.25);
+    const heal = Math.ceil(run.player.maxHp * 0.3);
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + heal);
     run.endless.lastHeal = heal;
     setScreen('endless_wave_clear');
@@ -122,15 +146,6 @@ function buildRewardPool(run: RunState): EndlessReward[] {
       apply: (r) => {
         r.endless!.bonusDex = (r.endless!.bonusDex ?? 0) + 1;
         return `${ic('shield')} ${t('민첩')} +1 (${t('총')} +${r.endless!.bonusDex})`;
-      },
-    },
-    {
-      id: 'max_hp', label: t('생명력 강화'), emoji: ic('heart'),
-      desc: t('최대 HP +8'),
-      apply: (r) => {
-        r.player.maxHp += 8;
-        r.player.hp = Math.min(r.player.maxHp, r.player.hp + 8);
-        return `${ic('heart')} ${t('최대 HP')} +8 (${r.player.hp}/${r.player.maxHp})`;
       },
     },
     {
@@ -231,7 +246,7 @@ export function renderEndlessWaveClear(): HTMLElement {
   }
 
   if (isRest) {
-    const heal = run.endless.lastHeal ?? Math.ceil(run.player.maxHp * 0.25);
+    const heal = run.endless.lastHeal ?? Math.ceil(run.player.maxHp * 0.3);
     const restH = el('h1', { style: { color: 'var(--good)' } });
     restH.innerHTML = `${ic('fire')} ${t('휴식')}`;
     wrapper.appendChild(restH);
@@ -242,10 +257,16 @@ export function renderEndlessWaveClear(): HTMLElement {
       el('div', { style: { color: 'var(--muted)', marginBottom: '20px' } },
         `${t('웨이브')} ${wave} ${t('완료')} · ${t('점수')} ${calcEndlessScore(run)}`),
     );
+    const nextW = wave + 1;
+    const nextType = nextWaveLabel(nextW);
+    wrapper.appendChild(
+      el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px' } },
+        `${t('다음')}: ${nextType} · ${waveScalingText(nextW)}`),
+    );
     wrapper.appendChild(
       el('button', {
         onClick: () => startNextWave(),
-      }, `${t('웨이브')} ${wave + 1} ${t('시작')}`),
+      }, `${t('웨이브')} ${nextW} ${t('시작')} (${nextType})`),
     );
     wrapper.appendChild(
       el('button', {
@@ -321,8 +342,14 @@ export function renderEndlessWaveClear(): HTMLElement {
             el('div', { style: { color: 'var(--muted)', marginBottom: '20px' } },
               `HP ${run.player.hp}/${run.player.maxHp} · ${t('점수')} ${calcEndlessScore(run)}${bt}`),
           );
+          const nw = wave + 1;
+          const nt = nextWaveLabel(nw);
           wrapper.appendChild(
-            el('button', { onClick: () => startNextWave() }, `${t('웨이브')} ${wave + 1} ${t('시작')}`),
+            el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px' } },
+              `${t('다음')}: ${nt} · ${waveScalingText(nw)}`),
+          );
+          wrapper.appendChild(
+            el('button', { onClick: () => startNextWave() }, `${t('웨이브')} ${nw} ${t('시작')} (${nt})`),
           );
           wrapper.appendChild(
             el('button', {
@@ -350,8 +377,14 @@ export function renderEndlessWaveClear(): HTMLElement {
     wrapper.appendChild(rewardRow);
   } else {
     // No reward (normal wave) or already picked — show continue
+    const nwNo = wave + 1;
+    const ntNo = nextWaveLabel(nwNo);
     wrapper.appendChild(
-      el('button', { onClick: () => startNextWave() }, `${t('웨이브')} ${wave + 1} ${t('시작')}`),
+      el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px' } },
+        `${t('다음')}: ${ntNo} · ${waveScalingText(nwNo)}`),
+    );
+    wrapper.appendChild(
+      el('button', { onClick: () => startNextWave() }, `${t('웨이브')} ${nwNo} ${t('시작')} (${ntNo})`),
     );
     wrapper.appendChild(
       el('button', {

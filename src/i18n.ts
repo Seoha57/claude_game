@@ -56,6 +56,7 @@ const EN: Record<string, string> = {
 
   // ── 맵 ──
   '전투': 'Combat',
+  '일반': 'Normal',
   '일반 전투': 'Combat',
   '엘리트': 'Elite',
   '보스': 'Boss',

@@ -69,7 +69,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   fungi_beast: {
     id: 'fungi_beast',
     name: '버섯괴수',
-    hpRange: [22, 28],
+    hpRange: [28, 34],
     decideIntent(_state, _self, turn) {
       const i = turn % 3;
       if (i === 2) return { kind: 'buff', label: '힘 +3' };
@@ -270,7 +270,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   shield_gremlin: {
     id: 'shield_gremlin',
     name: '방패 그렘린',
-    hpRange: [35, 40],
+    hpRange: [42, 48],
     decideIntent(_state, _self, turn) {
       const i = turn % 3;
       if (i === 0) return { kind: 'block', block: 15, label: '방어 15' };
@@ -287,14 +287,14 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   taskmaster: {
     id: 'taskmaster',
     name: '태스크마스터',
-    hpRange: [54, 60],
+    hpRange: [68, 76],
     decideIntent(_state, _self, turn) {
-      if (turn % 3 === 0) return { kind: 'debuff', label: '중독 +4' };
+      if (turn % 3 === 0) return { kind: 'debuff', label: '중독 +6' };
       return attack(10, 1);
     },
     act(state, self) {
       const it = self.intent;
-      if (it.kind === 'debuff') applyStatus(state.player, 'poison', 4);
+      if (it.kind === 'debuff') applyStatus(state.player, 'poison', 6);
       else if (it.damage) dealDamage(state, self, state.player, it.damage, true);
     },
   },
@@ -302,7 +302,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
   book_of_stabbing: {
     id: 'book_of_stabbing',
     name: '스타빙의 서',
-    hpRange: [56, 60],
+    hpRange: [66, 72],
     decideIntent(_state, _self, turn) {
       const hits = 2 + Math.min(turn, 4);
       return { kind: 'attack', damage: 6, hits, label: `6×${hits}` };
@@ -364,7 +364,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
       return wPick(state.rng, [
         [{ kind: 'attack_buff', damage: 16, label: '16 + 힘+2' }, low ? 5 : (last === 'attack_buff' ? 1 : 3)],
         [{ kind: 'attack_block', damage: 12, block: 8, label: '12 / 방어 8' }, last === 'attack_block' ? 1 : 3],
-        [attack(20, 1), low ? 4 : 2],
+        [attack(16, 1), low ? 4 : 2],
         [attack(10, 2), 2],
       ]);
     },
@@ -573,10 +573,10 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
       return '광기의 정점! (힘 +5, 의식 +2)';
     },
     decideIntent(_state, _self, turn) {
-      if (turn === 0) return { kind: 'buff', label: '광기의 힘 +4' };
+      if (turn === 0) return { kind: 'buff', label: '광기의 힘 +3' };
       const cycle = (turn - 1) % 5;
-      if (cycle === 0) return { kind: 'attack', damage: 8, hits: 4, label: '8×4' };
-      if (cycle === 1) return { kind: 'attack', damage: 24, hits: 1, label: '24' };
+      if (cycle === 0) return { kind: 'attack', damage: 7, hits: 4, label: '7×4' };
+      if (cycle === 1) return { kind: 'attack', damage: 22, hits: 1, label: '22' };
       if (cycle === 2) return { kind: 'buff', label: '힘 +2' };
       if (cycle === 3) return { kind: 'debuff', label: '취약+2, 약화+2' };
       return { kind: 'attack', damage: 6, hits: 5, label: '6×5' };
@@ -584,7 +584,7 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     act(state, self) {
       const it = self.intent;
       if (it.kind === 'buff') {
-        applyStatus(self, 'strength', self.turn === 0 ? 4 : 2);
+        applyStatus(self, 'strength', self.turn === 0 ? 3 : 2);
       } else if (it.kind === 'debuff') {
         applyStatus(state.player, 'vulnerable', 2);
         applyStatus(state.player, 'weak', 2);
