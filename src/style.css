@@ -3486,6 +3486,40 @@ button:disabled {
   }
   .audio-toggle { min-height: 28px; }
 
+  /* Hide keyboard hotkey badges on touch devices */
+  .card-hotkey { display: none; }
+  .kbd-hint { display: none; }
+
+  /* Card tap feedback (no hover on mobile) */
+  .card:active:not(.disabled) {
+    transform: translateY(-12px) scale(1.06);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  }
+  .card.selected {
+    animation: mobile-selected-pulse 1.2s ease-in-out infinite;
+  }
+
+  /* Scroll-snap for card hand */
+  .combat-bottom {
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
+  }
+  .hand-cards .card {
+    scroll-snap-align: center;
+  }
+
+  /* Enemy touch target */
+  .enemy {
+    min-width: 60px;
+    min-height: 60px;
+    padding: 6px;
+  }
+
+  /* Safe area bottom padding for screens with scrollable content */
+  .shop-screen, .rest-screen, .event-screen, .reward-screen {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
   /* Swipe feedback flash */
   .combat-screen.swipe-flash .combat-top {
     animation: swipe-hint 0.3s ease-out;
@@ -3495,6 +3529,10 @@ button:disabled {
 @keyframes swipe-hint {
   0%   { filter: brightness(1.4); }
   100% { filter: brightness(1); }
+}
+@keyframes mobile-selected-pulse {
+  0%, 100% { box-shadow: 0 0 12px var(--accent); }
+  50%      { box-shadow: 0 0 24px var(--accent), 0 0 40px rgba(212, 160, 91, 0.3); }
 }
 
 /* Very small phones — stack vertically */

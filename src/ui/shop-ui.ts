@@ -218,6 +218,7 @@ function renderCardItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild:
           run.player.gold -= item.price;
           run.player.deck.push(makeCard(def.id));
           item.sold = true;
+          playSfx('shop_buy');
           rebuild();
         },
       },

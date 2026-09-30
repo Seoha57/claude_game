@@ -145,6 +145,7 @@ export function renderEvent(): HTMLElement {
       switch (effect.kind) {
         case 'heal':
           run.player.hp = Math.min(run.player.maxHp, run.player.hp + effect.amount);
+          playSfx('heal');
           break;
         case 'lose_hp':
           run.player.hp = Math.max(1, run.player.hp - effect.amount);

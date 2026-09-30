@@ -176,7 +176,7 @@ export function renderMap(): HTMLElement {
         } ${isCurrent ? 'current' : ''} ${marked ? 'marked' : ''} ${shopBlocked ? 'disabled' : ''}`,
         style: { left: `${x}px`, top: `${y}px` },
         'data-tooltip': shopBlocked ? `${t('상점 폐쇄')}\n${t('오늘의 도전')}: ${t('상점 이용 불가')}` : nodeLabel(n, run.chapter),
-        onClick: () => { if (isAccessible && !shopBlocked) { playSfx('click'); enterNode(n); } },
+        onClick: () => { if (isAccessible && !shopBlocked) { playSfx('map_node'); enterNode(n); } },
         onContextmenu: (e: Event) => { e.preventDefault(); toggleMark(); },
       },
     );

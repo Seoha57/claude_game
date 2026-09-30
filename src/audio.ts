@@ -163,12 +163,16 @@ export type SfxName =
   | 'potion'
   | 'upgrade'
   | 'gold'
-  | 'boss_phase'      // 보스 절반 HP 트리거 시 극적 사운드
-  | 'burn_apply'      // 화상 부여
-  | 'freeze_apply'    // 빙결 부여
-  | 'poison_apply'    // 중독 부여
-  | 'buff_apply'      // 일반 버프 (힘/민첩/재생 등)
-  | 'debuff_apply';   // 일반 디버프 (취약/약화/쇠약)
+  | 'boss_phase'
+  | 'burn_apply'
+  | 'freeze_apply'
+  | 'poison_apply'
+  | 'buff_apply'
+  | 'debuff_apply'
+  | 'heal'
+  | 'shop_buy'
+  | 'map_node'
+  | 'rest_select';
 
 export function playSfx(name: SfxName): void {
   if (muted) return;
@@ -250,8 +254,22 @@ export function playSfx(name: SfxName): void {
       playTone({ freq: 800, freqEnd: 1300, duration: 0.16, type: 'triangle', gain: 0.18 });
       break;
     case 'debuff_apply':
-      // 짧은 하강 톤
       playTone({ freq: 500, freqEnd: 280, duration: 0.16, type: 'sawtooth', gain: 0.18 });
+      break;
+    case 'heal':
+      playTone({ freq: 520, freqEnd: 780, duration: 0.22, type: 'sine', gain: 0.2 });
+      playTone({ freq: 780, freqEnd: 1040, duration: 0.15, type: 'triangle', gain: 0.12 });
+      break;
+    case 'shop_buy':
+      playArpeggio([1100, 1400, 1760], 0.04, 'sine', 0.18);
+      playNoise({ duration: 0.06, filterFreq: 4000, q: 6, gain: 0.08 });
+      break;
+    case 'map_node':
+      playTone({ freq: 700, freqEnd: 900, duration: 0.08, type: 'triangle', gain: 0.15 });
+      break;
+    case 'rest_select':
+      playTone({ freq: 400, freqEnd: 600, duration: 0.3, type: 'sine', gain: 0.15 });
+      playTone({ freq: 600, freqEnd: 800, duration: 0.2, type: 'sine', gain: 0.1 });
       break;
   }
 }
@@ -260,7 +278,7 @@ export function playSfx(name: SfxName): void {
 // Procedural BGM
 // ─────────────────────────────────────────────────────────────
 
-export type BgmTrack = 'title' | 'map' | 'combat' | 'boss';
+export type BgmTrack = 'title' | 'map' | 'combat' | 'boss' | 'shop' | 'rest' | 'event';
 
 interface TrackDef {
   pads: number[];      // chord drone frequencies (low Hz)
@@ -309,7 +327,7 @@ const TRACKS: Record<BgmTrack, TrackDef> = {
   },
   // Heavy, slower, ominous
   boss: {
-    pads: [65.4, 82.4, 98],             // C2 minor (C Eb G)... low E G
+    pads: [65.4, 82.4, 98],
     arp:  [261.6, 311.1, 392, 523.3, 392, 311.1],
     bpm: 95,
     filterHz: 600,
@@ -317,6 +335,39 @@ const TRACKS: Record<BgmTrack, TrackDef> = {
     arpWave: 'triangle',
     padGain: 0.07,
     arpGain: 0.05,
+  },
+  // Warm, relaxed — browsing wares
+  shop: {
+    pads: [174.6, 220, 261.6],          // F3 major (F A C)
+    arp:  [349.2, 440, 523.3, 659.3, 523.3, 440],
+    bpm: 85,
+    filterHz: 900,
+    padWave: 'sine',
+    arpWave: 'triangle',
+    padGain: 0.07,
+    arpGain: 0.035,
+  },
+  // Quiet, peaceful — campfire
+  rest: {
+    pads: [98, 123.5, 146.8],           // G2 major (G B D)
+    arp:  [392, 493.9, 587.3, 493.9],
+    bpm: 60,
+    filterHz: 600,
+    padWave: 'sine',
+    arpWave: 'sine',
+    padGain: 0.06,
+    arpGain: 0.025,
+  },
+  // Mysterious, uncertain — what lies ahead?
+  event: {
+    pads: [130.8, 155.6, 196],          // C3 aug (C E G#)
+    arp:  [523.3, 622.3, 784, 622.3, 523.3, 392],
+    bpm: 75,
+    filterHz: 800,
+    padWave: 'triangle',
+    arpWave: 'sine',
+    padGain: 0.07,
+    arpGain: 0.03,
   },
 };
 

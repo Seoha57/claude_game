@@ -219,7 +219,10 @@ function bgmTrackForScreen(s: Screen): BgmTrack | null {
     }
     return 'combat';
   }
-  if (s === 'map' || s === 'reward' || s === 'rest' || s === 'shop' || s === 'event' || s === 'chapter_clear') {
+  if (s === 'shop') return 'shop';
+  if (s === 'rest') return 'rest';
+  if (s === 'event') return 'event';
+  if (s === 'map' || s === 'reward' || s === 'chapter_clear') {
     return 'map';
   }
   if (s === 'endless_wave_clear') return 'map';

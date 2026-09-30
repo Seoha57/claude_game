@@ -48,7 +48,7 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
   const smithBtn = el('button', {
     ...(noUpgrade ? { disabled: 'true', title: t('데일리 제약: 강화 봉인') } : {}),
     style: noUpgrade ? { opacity: '0.45', cursor: 'not-allowed' } : {},
-    onClick: () => { if (!noUpgrade) goTo('smith'); },
+    onClick: () => { if (!noUpgrade) { playSfx('rest_select'); goTo('smith'); } },
   });
   if (noUpgrade) smithBtn.innerHTML = `${ic('lock')} ${t('대장간')} (${t('강화 봉인')})`;
   else smithBtn.textContent = `${t('대장간')} (${t('카드 강화')} · ${t('덱')} ${run.player.deck.length}${t('장')})`;
@@ -56,7 +56,7 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
   const purgeBtn = el('button', {
     ...(noRemove ? { disabled: 'true', title: t('데일리 제약: 정화 봉인') } : {}),
     style: noRemove ? { opacity: '0.45', cursor: 'not-allowed' } : {},
-    onClick: () => { if (!noRemove) goTo('purge'); },
+    onClick: () => { if (!noRemove) { playSfx('rest_select'); goTo('purge'); } },
   });
   if (noRemove) purgeBtn.innerHTML = `${ic('lock')} ${t('정화')} (${t('정화 봉인')})`;
   else purgeBtn.textContent = `${t('정화')} (${t('카드 제거')} · ${t('덱')} ${run.player.deck.length}${t('장')})`;
@@ -86,13 +86,14 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
       el('button', {
         onClick: () => {
           run.player.hp = Math.min(run.player.maxHp, run.player.hp + healAmount);
+          playSfx('heal');
           setScreen('map');
         },
       }, `${t('휴식')} (HP +${healAmount})`),
       smithBtn,
       purgeBtn,
       el('button', {
-        onClick: () => goTo('dup'),
+        onClick: () => { playSfx('rest_select'); goTo('dup'); },
       }, `${t('복제')} (${t('카드 복제')} · ${t('덱')} ${run.player.deck.length}${t('장')})`),
     ),
   );
