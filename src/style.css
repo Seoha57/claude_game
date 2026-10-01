@@ -3513,7 +3513,7 @@ button:disabled {
 
   /* Character select — stack vertically on mobile */
   .cs-layout { flex-direction: column; }
-  .cs-list { flex-direction: row; overflow-x: auto; gap: 6px; min-width: 0; padding-bottom: 4px; }
+  .cs-list { flex-direction: row; overflow-x: auto; gap: 6px; min-width: 0; width: 100%; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
   .cs-item { min-width: 120px; flex-shrink: 0; padding: 8px 10px; }
   .cs-item-sub { display: none; }
   .cs-detail { padding: 16px; }

@@ -180,14 +180,17 @@ export function renderCombat(): HTMLElement {
     ),
   );
 
-  // Swipe-left to end turn (mobile)
+  // Swipe-left to end turn (mobile) — skip if touch started in hand area
   let touchStartX = 0;
   let touchStartY = 0;
+  let touchInHand = false;
   screen.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
+    touchInHand = !!(e.target as Element)?.closest?.('.combat-bottom');
   }, { passive: true });
   screen.addEventListener('touchend', (e) => {
+    if (touchInHand) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
     if (dx < -80 && Math.abs(dy) < 60 && state.phase === 'player') {
