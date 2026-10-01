@@ -53,7 +53,10 @@ let resolvedEventText: string | null = null;
 export function renderEvent(): HTMLElement {
   const run = getRun();
   const rng = makeRng(run.seed * 53 + run.floor * 17);
-  const pool = EVENT_DEFS.filter((e) => !e.forClass || e.forClass === run.characterClass);
+  const pool = EVENT_DEFS.filter((e) =>
+    (!e.forClass || e.forClass === run.characterClass) &&
+    (!e.minKeys || run.player.keys.length >= e.minKeys),
+  );
   const eventDef = pick(rng, pool);
 
   const eventKey = `${run.seed}_${run.chapter}_${run.currentNodeId}`;

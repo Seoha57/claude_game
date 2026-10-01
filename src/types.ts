@@ -188,7 +188,7 @@ export interface MapNode {
   visited: boolean;
 }
 
-export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync' | 'daily' | 'history' | 'endless_wave_clear' | 'endless_result' | 'leaderboard' | 'settings';
+export type Screen = 'title' | 'character_select' | 'map' | 'combat' | 'reward' | 'rest' | 'shop' | 'chapter_clear' | 'win' | 'lose' | 'event' | 'true_ending_choice' | 'true_win' | 'stats' | 'help' | 'codex' | 'achievements' | 'neow_blessing' | 'sync' | 'daily' | 'history' | 'endless_wave_clear' | 'endless_result' | 'leaderboard' | 'settings' | 'challenge';
 
 export type CharacterClass = 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner' | 'engineer' | 'gambler' | 'blood_mage';
 

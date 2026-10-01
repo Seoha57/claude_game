@@ -30,6 +30,7 @@ export interface EventDef {
   emoji: string;
   mood?: EventMood;
   forClass?: import('../types').CharacterClass;
+  minKeys?: number;
   choices: EventChoice[];
 }
 
@@ -580,6 +581,46 @@ export const EVENT_DEFS: EventDef[] = [
       { label: '동전을 던진다 (20골드)', result: '분수가 빛나며 행운이 깃들었다!', condition: { kind: 'min_gold', amount: 20 }, effects: [{ kind: 'lose_gold', amount: 20 }, { kind: 'add_random_relic' }] },
       { label: '동전을 줍는다', result: '분수에서 금화를 건졌지만 저주가 따라왔다.', effects: [{ kind: 'gold', amount: 60 }, { kind: 'add_curse', count: 1 }] },
       { label: '그냥 쉰다', result: '분수 옆에서 잠시 쉬니 기분이 좋아졌다.', effects: [{ kind: 'heal', amount: 15 }] },
+    ],
+  },
+  // ── 진엔딩 루트 이벤트 (열쇠 보유 시) ──
+  {
+    id: 'dimensional_rift',
+    title: '차원의 균열',
+    emoji: '🌀',
+    mood: 'mystic',
+    minKeys: 1,
+    description: '열쇠가 반응하며 허공에 균열이 열렸다. 균열 너머에서 강대한 힘의 기운이 느껴진다.',
+    choices: [
+      { label: '균열에 손을 뻗는다 (HP -12)', result: '차원의 에너지가 몸에 스며들었다. 더 강해진 느낌이다.', effects: [{ kind: 'lose_hp', amount: 12 }, { kind: 'upgrade_random', count: 2 }, { kind: 'max_hp', amount: 5 }] },
+      { label: '균열에 금화를 던진다 (30골드)', result: '금화가 빛나며 희귀한 유물로 변했다!', condition: { kind: 'min_gold', amount: 30 }, effects: [{ kind: 'lose_gold', amount: 30 }, { kind: 'add_random_relic' }] },
+      { label: '관찰만 한다', result: '균열의 패턴을 관찰해 비전 지식을 얻었다.', effects: [{ kind: 'add_card', rarity: 'rare' }] },
+    ],
+  },
+  {
+    id: 'key_resonance',
+    title: '열쇠의 공명',
+    emoji: '🔑',
+    mood: 'mystic',
+    minKeys: 2,
+    description: '두 열쇠가 공명하며 진동한다. 열쇠들이 이끄는 방향으로 숨겨진 방이 나타났다.',
+    choices: [
+      { label: '방 안으로 들어간다 (HP -8)', result: '방 안에서 고대의 축복을 받았다. 몸과 영혼이 강해졌다.', effects: [{ kind: 'lose_hp', amount: 8 }, { kind: 'max_hp', amount: 8 }, { kind: 'upgrade_random', count: 1 }, { kind: 'add_potion' }] },
+      { label: '공명의 힘을 흡수한다', result: '공명의 에너지가 덱을 정화했다.', effects: [{ kind: 'add_blessing', count: 1 }, { kind: 'heal', amount: 10 }] },
+      { label: '지나친다', result: '조용히 지나쳤다.', effects: [] },
+    ],
+  },
+  {
+    id: 'gate_of_dimensions',
+    title: '차원의 문 앞에서',
+    emoji: '🚪',
+    mood: 'dark',
+    minKeys: 3,
+    description: '세 열쇠가 일제히 빛나며, 저 멀리 거대한 문의 윤곽이 드러난다. 문 앞에 고대의 시련이 기다리고 있다.',
+    choices: [
+      { label: '시련에 도전한다 (HP -15)', result: '시련을 이겨냈다! 차원의 힘이 깃든 유물과 축복을 얻었다.', effects: [{ kind: 'lose_hp', amount: 15 }, { kind: 'add_random_relic' }, { kind: 'upgrade_random', count: 2 }] },
+      { label: '문 앞에서 명상한다', result: '차원의 기운이 상처를 치유하고 정신을 맑게 했다.', effects: [{ kind: 'heal', amount: 20 }, { kind: 'max_hp', amount: 5 }] },
+      { label: '그냥 지나친다', result: '아직 때가 아닌 것 같다.', effects: [] },
     ],
   },
 ];

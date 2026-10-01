@@ -9,12 +9,31 @@ import { initializeSync } from './sync/sync';
 import { showRebrandNotice } from './ui/rebrand-notice';
 import { initPwaInstall } from './ui/pwa-install';
 import { initTouchTooltip } from './ui/touch-tooltip';
+import { applyToDOM } from './game-settings';
+import { setPendingRunParams } from './ui/title-ui';
+import { setScreen } from './state';
 
 setAchievementNotifier(showAchievementToast);
+applyToDOM();
 setRenderer(render);
 reconcileAchievements();
 initializeSync();
 render();
+
+// Handle challenge URL: ?seed=X&char=Y&asc=Z
+const urlParams = new URLSearchParams(window.location.search);
+const seedParam = urlParams.get('seed');
+if (seedParam) {
+  const seed = parseInt(seedParam, 10);
+  const asc = parseInt(urlParams.get('asc') ?? '0', 10);
+  if (!isNaN(seed)) {
+    setPendingRunParams(seed, asc);
+    setScreen('character_select');
+    render();
+    history.replaceState(null, '', window.location.pathname);
+  }
+}
+
 showRebrandNotice();
 initPwaInstall();
 initTouchTooltip();

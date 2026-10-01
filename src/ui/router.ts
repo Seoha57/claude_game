@@ -18,6 +18,7 @@ import { renderDaily } from './daily-ui';
 import { renderHistory } from './history-ui';
 import { renderEndlessWaveClear, renderEndlessResult, renderLeaderboard } from './endless-ui';
 import { renderSettings } from './settings-ui';
+import { renderChallenge } from './challenge-ui';
 
 type Screen = ReturnType<typeof getScreen>;
 let prevScreen: Screen | null = null;
@@ -121,6 +122,9 @@ export function render(): void {
       break;
     case 'settings':
       view = renderSettings();
+      break;
+    case 'challenge':
+      view = renderChallenge();
       break;
   }
 

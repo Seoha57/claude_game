@@ -227,7 +227,7 @@ function bgmTrackForScreen(s: Screen): BgmTrack | null {
   }
   if (s === 'endless_wave_clear') return 'map';
   if (s === 'endless_result' || s === 'leaderboard') return 'title';
-  if (s === 'title' || s === 'character_select' || s === 'help' || s === 'stats' || s === 'codex') {
+  if (s === 'title' || s === 'character_select' || s === 'help' || s === 'stats' || s === 'codex' || s === 'challenge') {
     return 'title';
   }
   if (s === 'true_ending_choice') return 'boss';

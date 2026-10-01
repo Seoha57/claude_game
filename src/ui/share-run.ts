@@ -139,8 +139,13 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
     rx += tw + 6;
   }
 
-  // Watermark
+  // Challenge seed
   c.font = '11px system-ui, sans-serif';
+  c.fillStyle = '#d4a05b';
+  c.textAlign = 'left';
+  c.fillText(`Seed: ${run.seed}`, 40, H - 16);
+
+  // Watermark
   c.fillStyle = '#50404a';
   c.textAlign = 'right';
   c.fillText('deck-of-dungeon.pages.dev', W - 20, H - 16);
@@ -159,11 +164,12 @@ export async function shareRun(run: RunState, won: boolean): Promise<void> {
     ? `${t('무한 던전')} ${t('웨이브')} ${run.endless!.wave} · ${t('점수')} ${calcEndlessScore(run)}`
     : (won ? t('승리!') : t('패배...'));
   const loc = isEndless ? '' : ` · ${t('챕터')}${run.chapter} ${run.floor}${t('층')}`;
-  const text = `${title} ${charName}${loc} · ${t('덱 오브 던전')}`;
+  const challengeUrl = `https://deck-of-dungeon.pages.dev/?seed=${run.seed}&char=${run.characterClass}&asc=${run.ascension}`;
+  const text = `${title} ${charName}${loc}\n${t('같은 던전 도전')}: ${challengeUrl}\n${t('덱 오브 던전')}`;
 
   if (navigator.share && navigator.canShare) {
     const file = new File([blob], 'run-result.png', { type: 'image/png' });
-    const shareData = { text, files: [file] };
+    const shareData = { text, url: challengeUrl, files: [file] };
     if (navigator.canShare(shareData)) {
       try {
         await navigator.share(shareData);

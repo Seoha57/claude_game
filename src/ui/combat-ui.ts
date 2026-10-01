@@ -20,6 +20,7 @@ import { makeRng, pick } from '../rng';
 import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison, checkGlassCannon, checkExhaust } from '../achievements';
 import { t } from '../i18n';
 import { getCardFrame } from '../card-frame';
+import { getSettings } from '../game-settings';
 
 function playCost(baseCost: number): number {
   const run = getRunOrNull();
@@ -643,6 +644,7 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
           detectFx(state, before);
           rerender();
           flushFx();
+          maybeAutoEndTurn(state);
         }
       },
     },
@@ -825,6 +827,28 @@ function playSelectedCard(target: Enemy): void {
   detectFx(state, before);
   rerender();
   flushFx();
+  maybeAutoEndTurn(state);
+}
+
+function maybeAutoEndTurn(state: CombatState): void {
+  if (!getSettings().autoEndTurn) return;
+  if (state.phase !== 'player') return;
+  const canPlayAny = state.player.hand.some((c) => {
+    const d = getEffectiveDef(c);
+    return state.player.energy >= playCost(d.cost) && !isCurseLike(d.id);
+  });
+  if (canPlayAny) return;
+  setTimeout(() => {
+    const live = getCombatOrNull();
+    if (!live || live.phase !== 'player') return;
+    selectedCardUid = null;
+    playSfx('turn_end');
+    const before = snapshotFx(live);
+    endPlayerTurn(live);
+    detectEnemyTurnFx(live, before);
+    rerender();
+    flushEnemyTurnFx();
+  }, 400);
 }
 
 function checkCombatEnd(state: CombatState): void {
@@ -1040,6 +1064,7 @@ function triggerPlayerHitFlash(): void {
 }
 
 function triggerScreenShake(intensity: 'light' | 'heavy'): void {
+  if (!getSettings().screenShake) return;
   const root = document.querySelector('.combat-screen');
   if (!root) return;
   const cls = intensity === 'heavy' ? 'screen-shake-heavy' : 'screen-shake-light';

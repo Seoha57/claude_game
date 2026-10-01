@@ -12,8 +12,30 @@
   --energy: #d8a040;
   --good: #80c060;
   --bad: #d05060;
+  --anim-mult: 1;
   font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
 }
+
+/* ── Game settings: no-shake ── */
+.no-shake .screen-shake-light,
+.no-shake .screen-shake-heavy,
+.no-shake .player-hit-shake,
+.no-shake .enemy-hit { animation: none !important; }
+
+/* ── Game settings: font sizes ── */
+.font-small { font-size: 12px; }
+.font-large { font-size: 16px; }
+
+/* ── Game settings: color blind ── */
+.color-blind .buff-icon, .color-blind .debuff-icon { text-decoration: underline; }
+.color-blind .status-burn { outline: 2px dashed #d06040; outline-offset: 1px; }
+.color-blind .status-freeze { outline: 2px dotted #60a0d0; outline-offset: 1px; }
+.color-blind .status-poison { outline: 2px double #60a040; outline-offset: 1px; }
+.color-blind .dot.win { border: 2px solid var(--good); }
+.color-blind .dot.loss { border: 2px solid var(--bad); border-style: dashed; }
+.color-blind .card.attack { border-style: solid; }
+.color-blind .card.skill { border-style: dashed; }
+.color-blind .card.power { border-style: double; }
 
 * {
   box-sizing: border-box;
@@ -90,6 +112,27 @@ button:disabled {
 .title-screen button {
   font-size: 18px;
   padding: 12px 32px;
+}
+
+/* ── Attendance badge ── */
+.attendance-badge {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.attendance-badge.new {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(212, 160, 91, 0.1);
+  animation: att-pop 0.4s ease-out;
+}
+@keyframes att-pop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* Character select — scrollable, fits on mobile */
@@ -2067,12 +2110,15 @@ button:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   min-height: 100%;
-  gap: 12px;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  gap: 8px;
   padding: 28px 20px 60px;
-  max-width: 400px;
+  max-width: 420px;
   margin: 0 auto;
+  width: 100%;
 }
 
 /* ── Audio controls ── */
@@ -2080,7 +2126,7 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 6px;
 }
 .audio-toggle {
   font-size: 12px;
@@ -2092,6 +2138,36 @@ button:disabled {
 .volume-slider {
   width: 110px;
   accent-color: var(--accent);
+}
+
+/* ── Settings controls ── */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  padding: 4px 0;
+}
+.settings-label { font-size: 13px; color: var(--text); }
+.settings-toggle {
+  font-size: 12px; padding: 4px 14px; border-radius: 12px;
+  background: var(--panel); color: var(--muted);
+  border: 1px solid var(--border); min-width: 48px;
+}
+.settings-toggle.on {
+  background: var(--accent); color: #1a1416;
+  border-color: var(--accent);
+}
+.settings-segment { display: flex; gap: 2px; }
+.settings-seg-btn {
+  font-size: 12px; padding: 4px 10px; border-radius: 4px;
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border);
+}
+.settings-seg-btn.active {
+  background: var(--accent); color: #1a1416;
+  border-color: var(--accent);
 }
 
 /* ── Codex screen ── */
@@ -4009,3 +4085,60 @@ button:disabled {
 
 /* ── Touch tooltip (mobile) ── */
 [data-tooltip].tooltip-active::after { opacity: 1 !important; }
+
+/* ── Card detail popup (long-press on mobile) ── */
+.card-detail-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.15s ease;
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.card-detail-inner {
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  padding: 24px 20px;
+  max-width: 280px;
+  width: 90vw;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+.card-detail-cost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--energy);
+  color: #1a1416;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.card-detail-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.card-detail-type {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.card-detail-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+}
+.card-detail-hint {
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--muted);
+}

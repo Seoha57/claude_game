@@ -9,12 +9,18 @@ import { FRAMES, getCardFrame, setCardFrame } from '../card-frame';
 import { ic } from './art';
 import { t, getLang } from '../i18n';
 import { playSfx } from '../audio';
+import { checkAttendance } from '../daily-attendance';
 
 let pendingSeed = 0;
 let pendingAscension = 0;
 
 export function getPendingRunParams(): { seed: number; ascension: number } {
   return { seed: pendingSeed, ascension: pendingAscension };
+}
+
+export function setPendingRunParams(seed: number, ascension: number): void {
+  pendingSeed = seed;
+  pendingAscension = ascension;
 }
 
 export function renderTitle(): HTMLElement {
@@ -31,6 +37,16 @@ export function renderTitle(): HTMLElement {
   const append = () => {
     wrapper.appendChild(el('h1', {}, t('덱 오브 던전')));
     wrapper.appendChild(el('div', { class: 'subtitle' }, t('덱빌더 로그라이트')));
+
+    // Daily attendance
+    const att = checkAttendance();
+    const attEl = el('div', {
+      class: `attendance-badge ${att.isNew ? 'new' : ''}`,
+    });
+    attEl.innerHTML = att.isNew
+      ? `🔥 ${t('연속 출석')} ${att.streak}${t('일')} · ${t('총')} ${att.totalDays}${t('일')}`
+      : `📅 ${t('연속 출석')} ${att.streak}${t('일')}`;
+    wrapper.appendChild(attEl);
 
     // 언락 진행도 표시 (전체 컨텐츠 X% 해제)
     const allCards = Object.values(CARD_DEFS).filter((c) => !isCurseLike(c.id));
@@ -177,8 +193,9 @@ export function renderTitle(): HTMLElement {
     hbWrap.appendChild(hbPanel);
     wrapper.appendChild(hbWrap);
 
-    const row2 = el('div', { style: { display: 'flex', gap: '8px', marginTop: '6px', justifyContent: 'center' } });
+    const row2 = el('div', { style: { display: 'flex', gap: '8px', marginTop: '6px', justifyContent: 'center', flexWrap: 'wrap' } });
     row2.appendChild(accentBtn(`${ic('daily')} ${t('오늘의 도전')}`, 'daily'));
+    row2.appendChild(accentBtn(`${ic('sword')} ${t('챌린지 모드')}`, 'challenge'));
     row2.appendChild(accentBtn(`${ic('trophy')} ${t('리더보드')}`, 'leaderboard'));
     wrapper.appendChild(row2);
 
