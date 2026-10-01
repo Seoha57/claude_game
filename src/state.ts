@@ -243,7 +243,7 @@ export function startNewRun(
   options: { goToScreen?: Screen; daily?: { date: string; constraint: DailyConstraint } } = {},
 ): void {
   const mods = getModifiers(ascension);
-  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82, thief: 68, summoner: 62, engineer: 68, gambler: 70, blood_mage: 72 };
+  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 75, gunner: 70, fighter: 80, magician: 65, priest: 82, thief: 68, summoner: 62, engineer: 68, gambler: 70, blood_mage: 76 };
   let baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
   // 데일리 제약: HP 배율
   if (options.daily?.constraint.hpMult !== undefined) {
@@ -441,8 +441,8 @@ function makeGamblerStarterDeck(): CardInstance[] {
 function makeBloodMageStarterDeck(): CardInstance[] {
   const deck: CardInstance[] = [];
   for (let i = 0; i < 5; i++) deck.push(makeCard('v_blood_strike'));
-  for (let i = 0; i < 4; i++) deck.push(makeCard('v_crimson_guard'));
-  deck.push(makeCard('v_drain'));
+  for (let i = 0; i < 3; i++) deck.push(makeCard('v_crimson_guard'));
+  for (let i = 0; i < 2; i++) deck.push(makeCard('v_drain'));
   return deck;
 }
 

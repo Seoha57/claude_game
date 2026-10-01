@@ -20,8 +20,8 @@ export const BLOOD_MAGE_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'starter',
     cost: 1,
     target: 'self',
-    description: '방어도 +5.',
-    effects: [{ kind: 'block', amount: 5 }],
+    description: '방어도 +7.',
+    effects: [{ kind: 'block', amount: 7 }],
   },
   v_drain: {
     id: 'v_drain',
@@ -397,7 +397,7 @@ export const BLOOD_MAGE_CARD_DEFS: Record<string, CardDef> = {
 
 const BLOOD_MAGE_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   v_blood_strike:    { name: '피의 일격+',     description: 'HP -2. 12 데미지.',                effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'damage', amount: 12 }] },
-  v_crimson_guard:   { name: '핏빛 방패+',     description: '방어도 +8.',                       effects: [{ kind: 'block', amount: 8 }] },
+  v_crimson_guard:   { name: '핏빛 방패+',     description: '방어도 +10.',                      effects: [{ kind: 'block', amount: 10 }] },
   v_drain:           { name: '흡혈+',          description: '7 흡혈 데미지.',                    effects: [{ kind: 'lifesteal', amount: 7 }] },
   v_hemorrhage:      { name: '출혈+',          description: '5 데미지를 두 번.',                 effects: [{ kind: 'damage', amount: 5, times: 2 }] },
   v_blood_offering:  { name: '피의 제물+',     description: 'HP -2. 2장 드로우.',                effects: [{ kind: 'lose_hp', amount: 2 }, { kind: 'draw', amount: 2 }] },
