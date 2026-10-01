@@ -102,19 +102,27 @@ function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
 function buildDuplicate(onBack: () => void): HTMLElement {
   const run = getRun();
 
-  // Filter out curses and cards already at max copies
-  const dupable = run.player.deck.filter((c) => !isCurseLike(getEffectiveDef(c).id) && canAddCard(run.player.deck, c.defId));
-
+  const allCards = run.player.deck.filter((c) => !isCurseLike(getEffectiveDef(c).id));
   const cardRow = el('div', { class: 'rest-card-row' });
-  for (const card of sortForUpgrade(dupable)) {
-    cardRow.appendChild(renderCardChoice(card, () => {
+  for (const card of sortForUpgrade(allCards)) {
+    const ok = canAddCard(run.player.deck, card.defId);
+    const cardEl = renderCardChoice(card, ok ? () => {
       const copy = makeCard(card.defId);
       if (card.upgraded) copy.upgraded = card.upgraded;
       run.player.deck.push(copy);
       playSfx('upgrade');
       setScreen('map');
-    }));
+    } : () => {});
+    if (!ok) {
+      cardEl.style.opacity = '0.35';
+      cardEl.style.pointerEvents = 'none';
+      const badge = el('div', { style: { position: 'absolute', top: '4px', right: '4px', background: 'var(--bad)', color: '#fff', fontSize: '9px', padding: '1px 5px', borderRadius: '4px', fontWeight: 'bold' } }, 'MAX');
+      cardEl.style.position = 'relative';
+      cardEl.appendChild(badge);
+    }
+    cardRow.appendChild(cardEl);
   }
+  const dupCount = allCards.filter((c) => canAddCard(run.player.deck, c.defId)).length;
 
   return el(
     'div',
@@ -123,7 +131,7 @@ function buildDuplicate(onBack: () => void): HTMLElement {
     el(
       'div',
       { style: { color: 'var(--muted)', marginBottom: '16px' } },
-      dupable.length === 0
+      dupCount === 0
         ? t('복제할 카드가 없습니다.')
         : t('복제할 카드 1장을 선택하세요. 같은 카드 1장이 덱에 추가됩니다.'),
     ),
