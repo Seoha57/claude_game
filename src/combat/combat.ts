@@ -7,10 +7,12 @@ import { getModifiers } from '../ascension';
 import { getRunOrNull } from '../state';
 import { checkBurnKill } from '../achievements';
 import { getEffectiveDef } from '../content/cards';
-import { getActiveSynergies } from '../content/relics';
+import { getActiveSynergies, RELIC_DEFS } from '../content/relics';
 import { t } from '../i18n';
 
 const PLAYER_DRAW = 5;
+// 매 턴 2 회복으로 전환된 캐릭터 시작 유물
+const TURN_HEAL_RELICS = ['burning_blood', 'energy_battery', 'lucky_coin', 'blood_chalice', 'soul_lantern'] as const;
 
 export function startCombat(player: Player, enemyDefIds: string[], seed: number): CombatState {
   const rng = makeRng(seed);
@@ -135,6 +137,20 @@ export function beginPlayerTurn(state: CombatState): void {
       }
     }
     if (run.player.relics.includes('storm_banner')) p.block += 4;
+    if (run.player.relics.includes('bag_of_marbles')) {
+      for (const e of state.enemies) if (e.hp > 0) applyStatus(e, 'vulnerable', 1);
+    }
+    // 성배: 재생이 소모된 만큼 3까지 되돌린다
+    if (run.player.relics.includes('holy_chalice')) {
+      const regen = getStatus(p.statuses, 'regen');
+      if (regen > 0 && regen < 3) applyStatus(p, 'regen', 3 - regen);
+    }
+    for (const r of TURN_HEAL_RELICS) {
+      if (!run.player.relics.includes(r)) continue;
+      const before = p.hp;
+      p.hp = Math.min(p.maxHp, p.hp + 2);
+      if (p.hp > before) state.log.push(`${t(RELIC_DEFS[r].name)} → ${t('회복')} +${p.hp - before}`);
+    }
   }
 
   // ── 갬블러 주사위 ──
@@ -396,9 +412,6 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
   if (relics.includes('fighting_spirit')) applyStatus(cs.player, 'strength', 1);
   if (relics.includes('oddly_smooth_stone')) applyStatus(cs.player, 'dexterity', 1);
   if (relics.includes('anchor')) cs.player.block += 10;
-  if (relics.includes('bag_of_marbles')) {
-    for (const e of cs.enemies) applyStatus(e, 'vulnerable', 1);
-  }
   if (relics.includes('frozen_dart')) {
     for (const e of cs.enemies) applyStatus(e, 'weak', 1);
   }

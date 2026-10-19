@@ -4,7 +4,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   burning_blood: {
     id: 'burning_blood',
     name: '불타는 피',
-    description: '전투 종료 시 6 회복.',
+    description: '매 턴 시작 시 2 회복.',
     rarity: 'starter',
   },
   vajra: {
@@ -22,7 +22,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   bag_of_marbles: {
     id: 'bag_of_marbles',
     name: '구슬 주머니',
-    description: '전투 시작 시 모든 적에게 취약 +1.',
+    description: '매 턴 시작 시 모든 적에게 취약 +1.',
     rarity: 'common',
   },
   pen_nib: {
@@ -64,7 +64,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   holy_chalice: {
     id: 'holy_chalice',
     name: '성배',
-    description: '전투 시작 시 재생 +3.',
+    description: '전투 시작 시 재생 +3. 재생이 소모되지 않는다.',
     rarity: 'starter',
   },
 
@@ -120,13 +120,13 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   energy_battery: {
     id: 'energy_battery',
     name: '에너지 배터리',
-    description: '전투 종료 시 7 회복.',
+    description: '매 턴 시작 시 2 회복.',
     rarity: 'starter',
   },
   lucky_coin: {
     id: 'lucky_coin',
     name: '행운의 동전',
-    description: '전투 종료 시 6 회복.',
+    description: '매 턴 시작 시 2 회복.',
     rarity: 'starter',
   },
   gamblers_instinct: {
@@ -138,7 +138,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   blood_chalice: {
     id: 'blood_chalice',
     name: '피의 성배',
-    description: '전투 종료 시 8 회복.',
+    description: '매 턴 시작 시 2 회복.',
     rarity: 'starter',
   },
   hemomancy_core: {
@@ -215,7 +215,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   soul_lantern: {
     id: 'soul_lantern',
     name: '영혼의 등불',
-    description: '전투 종료 시 추가로 8 회복.',
+    description: '매 턴 시작 시 2 회복.',
     rarity: 'uncommon',
   },
   phoenix_feather: {
@@ -401,7 +401,7 @@ export const SYNERGY_SETS: SynergySet[] = [
     id: 'eye_of_storm',
     name: '폭풍의 눈',
     relics: ['storm_banner', 'storm_core'],
-    description: '전투 시작 시 모든 적에게 취약 +1.',
+    description: '매 턴 시작 시 모든 적에게 취약 +1.',
     timing: 'combat_start',
   },
   {

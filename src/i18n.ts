@@ -630,11 +630,11 @@ const EN: Record<string, string> = {
   '전투 시작 시 1장 드로우, 힘 +1': 'At combat start: draw 1, Strength +1',
 
   // ── 캐릭터 선택 · 설명 ──
-  '전투 승리 시 HP 6 회복. 강력한 근접 검술로 적을 압도한다.': 'Heal 6 HP on combat win. Overwhelms foes with powerful melee swordplay.',
-  '전투 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.': 'Apply Vulnerable +1 to all enemies at combat start. Dominates at range with guns and explosives.',
+  '매 턴 시작 시 2 회복. 강력한 근접 검술로 적을 압도한다.': 'Heal 2 at the start of each turn. Overwhelms foes with powerful melee swordplay.',
+  '매 턴 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.': 'Apply Vulnerable +1 to all enemies at the start of each turn. Dominates at range with guns and explosives.',
   '전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.': 'Strength +2 at combat start. Overwhelms with fists and ki.',
   '매 턴 시작 시 무작위 적에게 3 데미지. 다양한 원소 마법으로 광역 전투에 강하다.': 'Deal 3 damage to a random enemy each turn. Excels at AoE with elemental magic.',
-  '전투 시작 시 재생 +3. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.': 'Regen +3 at combat start. Versatile: heals, combos, and HP-cost strikes.',
+  '재생 +3이 전투 내내 유지된다. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.': 'Regen +3 lasts the whole combat. A versatile priest with healing, combos, and HP-fueled smites.',
   '전투 시작 시 민첩 +1. 중독과 다단히트, 그림자를 다루는 날렵한 암살자.': 'Dexterity +1 at combat start. A nimble assassin wielding poison, multi-hits, and shadows.',
   '정령 소환과 영혼 마법으로 전투를 지배하는 정령술사. HP가 낮지만 다양한 power 스케일링이 강하다.': 'A summoner who commands spirits and soul magic. Low HP but strong power scaling.',
   '드론을 배치해 자동 화력을 구축하는 공학자. 드론 데미지는 힘에 비례해 후반 보스전에도 강력하다.': 'An engineer who deploys drones for auto-fire. Drone damage scales with Strength.',
@@ -1101,6 +1101,8 @@ const EN: Record<string, string> = {
   // Blood Mage relics
   '피의 성배': 'Blood Chalice',
   '혈술의 핵': 'Hemomancy Core',
+  '전투 시작 시 힘 +1. 맨손과 기의 힘으로 적을 압도한다.': 'Strength +1 at combat start. Overwhelms foes with bare fists and inner force.',
+  '매 턴 시작 시 2 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.': 'Heal 2 at the start of each turn. Spends HP as a resource and takes it back with lifesteal.',
 
   // Blood Mage statuses
   'HP를 잃는 카드 사용 시 잃은 HP × N 방어도': 'Gain lost HP × N as Block when playing HP-cost cards',

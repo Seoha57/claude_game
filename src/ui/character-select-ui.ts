@@ -34,7 +34,7 @@ const CHARACTERS: CharacterInfo[] = [
     startRelicId: 'burning_blood',
     signatureRelic: t('검혼'),
     signatureDesc: t('5번째 공격마다 +6 데미지'),
-    description: t('전투 승리 시 HP 6 회복. 강력한 근접 검술로 적을 압도한다.'),
+    description: t('매 턴 시작 시 2 회복. 강력한 근접 검술로 적을 압도한다.'),
     starterCards: [
       { name: t('검격'), type: 'attack', count: 5 },
       { name: t('가드'), type: 'skill', count: 4 },
@@ -55,7 +55,7 @@ const CHARACTERS: CharacterInfo[] = [
     startRelicId: 'bag_of_marbles',
     signatureRelic: t('탄창'),
     signatureDesc: t('3번째 공격마다 +5 데미지, 카드 1장 드로우'),
-    description: t('전투 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.'),
+    description: t('매 턴 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.'),
     starterCards: [
       { name: t('속사'), type: 'attack', count: 5 },
       { name: t('긴급 회피'), type: 'skill', count: 4 },
@@ -118,7 +118,7 @@ const CHARACTERS: CharacterInfo[] = [
     startRelicId: 'holy_chalice',
     signatureRelic: t('신성한 인장'),
     signatureDesc: t('회복/재생 발동 시 방어도 +2'),
-    description: t('전투 시작 시 재생 +3. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.'),
+    description: t('재생 +3이 전투 내내 유지된다. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.'),
     starterCards: [
       { name: t('강타'), type: 'attack', count: 5 },
       { name: t('신성 방어'), type: 'skill', count: 4 },
@@ -221,7 +221,7 @@ const CHARACTERS: CharacterInfo[] = [
     startRelicId: 'blood_chalice',
     signatureRelic: t('혈술의 핵'),
     signatureDesc: t('HP를 잃는 카드 사용 시 카드 1장 드로우 (턴당 1회)'),
-    description: t('전투 종료 시 8 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.'),
+    description: t('매 턴 시작 시 2 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.'),
     starterCards: [
       { name: t('피의 일격'), type: 'attack', count: 5 },
       { name: t('핏빛 방패'), type: 'skill', count: 3 },

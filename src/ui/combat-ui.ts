@@ -1569,26 +1569,11 @@ if (typeof window !== 'undefined') {
 function applyVictoryRelics(run: any, _state: any): void {
   const cur = run.currentNodeId ? run.map.find((n: any) => n.id === run.currentNodeId) : null;
   const meatEligible = run.player.relics.includes('meat_on_the_bone') && run.player.hp / run.player.maxHp <= 0.5;
-  if (run.player.relics.includes('burning_blood')) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 6);
-  }
   if (run.player.relics.includes('blood_vial')) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 4);
   }
   if (run.player.relics.includes('herb_pouch')) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 5);
-  }
-  if (run.player.relics.includes('soul_lantern')) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
-  }
-  if (run.player.relics.includes('energy_battery')) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 7);
-  }
-  if (run.player.relics.includes('lucky_coin')) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 6);
-  }
-  if (run.player.relics.includes('blood_chalice')) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
   }
   if (meatEligible) {
     run.player.hp = Math.min(run.player.maxHp, run.player.hp + 12);
