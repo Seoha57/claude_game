@@ -173,7 +173,7 @@ export interface CombatState {
     fixedDice?: number;               // 갬블러: 다음 턴 고정 주사위 값
     diceReroll?: boolean;             // 갬블러: 주사위 1이면 리롤
     diceMinimum?: number;             // 갬블러: 주사위 최솟값
-    hemocoreUsedThisTurn?: boolean;   // 혈술의 핵: 턴당 1회 드로우
+    hemocoreUsedThisTurn?: boolean;   // 혈술의 핵: 턴당 1회 방어도+드로우
   };
 }
 

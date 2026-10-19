@@ -144,7 +144,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   hemomancy_core: {
     id: 'hemomancy_core',
     name: '혈술의 핵',
-    description: 'HP를 잃는 카드 사용 시 카드 1장 드로우 (턴당 1회).',
+    description: 'HP를 잃는 카드 사용 시 방어도 +3, 카드 1장 드로우 (턴당 1회).',
     rarity: 'starter',
   },
 

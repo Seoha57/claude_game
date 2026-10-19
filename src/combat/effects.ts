@@ -198,8 +198,9 @@ export function applyEffect(
       const run = getRunOrNull();
       if (run?.player.relics.includes('hemomancy_core') && !state.flags.hemocoreUsedThisTurn) {
         state.flags.hemocoreUsedThisTurn = true;
+        gainBlock(player, 3);
         drawCards(state, 1);
-        log(`${t('혈술의 핵')} → ${t('카드')} +1`);
+        log(`${t('혈술의 핵')} → ${t('방어도')} +3, ${t('카드')} +1`);
       }
       return;
     }
