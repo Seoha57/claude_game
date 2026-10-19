@@ -38,7 +38,7 @@ export const STATUS_INFO: Record<StatusKey, StatusInfo> = {
     key: 'poison',
     name: t('중독'),
     description: t('턴 시작마다 N 데미지, 이후 1 감소'),
-    decay: false,
+    decay: true,
     buff: false,
   },
   thorns: {
@@ -52,7 +52,7 @@ export const STATUS_INFO: Record<StatusKey, StatusInfo> = {
     key: 'regen',
     name: t('재생'),
     description: t('턴 종료 시 N 회복, 이후 1 감소'),
-    decay: false,
+    decay: true,
     buff: true,
   },
   frail: {
