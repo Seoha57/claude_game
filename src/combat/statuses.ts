@@ -5,180 +5,154 @@ export interface StatusInfo {
   key: StatusKey;
   name: string;
   description: string;
-  // true = decrements by 1 each owner end-of-turn
-  decay: boolean;
   // true = positive buff (UI hint)
   buff: boolean;
 }
 
 export const STATUS_INFO: Record<StatusKey, StatusInfo> = {
-  strength: { key: 'strength', name: t('힘'), description: t('공격 데미지 +N'), decay: false, buff: true },
+  strength: { key: 'strength', name: t('힘'), description: t('공격 데미지 +N'), buff: true },
   dexterity: {
     key: 'dexterity',
     name: t('민첩'),
     description: t('획득 방어도 +N'),
-    decay: false,
     buff: true,
   },
   vulnerable: {
     key: 'vulnerable',
     name: t('취약'),
     description: t('받는 공격 데미지 50% 증가'),
-    decay: true,
     buff: false,
   },
   weak: {
     key: 'weak',
     name: t('약화'),
     description: t('주는 공격 데미지 25% 감소'),
-    decay: true,
     buff: false,
   },
   poison: {
     key: 'poison',
     name: t('중독'),
     description: t('턴 시작마다 N 데미지, 이후 1 감소'),
-    decay: true,
     buff: false,
   },
   thorns: {
     key: 'thorns',
     name: t('가시'),
     description: t('공격받으면 N 반사'),
-    decay: false,
     buff: true,
   },
   regen: {
     key: 'regen',
     name: t('재생'),
     description: t('턴 종료 시 N 회복, 이후 1 감소'),
-    decay: true,
     buff: true,
   },
   frail: {
     key: 'frail',
     name: t('쇠약'),
     description: t('획득 방어도 25% 감소'),
-    decay: true,
     buff: false,
   },
   ritual: {
     key: 'ritual',
     name: t('의식'),
     description: t('턴 종료 시 힘 +N'),
-    decay: false,
     buff: true,
   },
   metallicize: {
     key: 'metallicize',
     name: t('금속화'),
     description: t('턴 종료 시 방어도 +N'),
-    decay: false,
     buff: true,
   },
   burn: {
     key: 'burn',
     name: t('화상'),
     description: t('턴 종료 시 N 데미지. 이후 1 감소'),
-    decay: true,
     buff: false,
   },
   freeze: {
     key: 'freeze',
     name: t('빙결'),
     description: t('다음 N턴 행동 불가'),
-    decay: true,
     buff: false,
   },
   on_exhaust_str: {
     key: 'on_exhaust_str',
     name: t('소멸의 힘'),
     description: t('카드 소멸 시 힘 +N'),
-    decay: false,
     buff: true,
   },
   on_exhaust_draw: {
     key: 'on_exhaust_draw',
     name: t('소멸 드로우'),
     description: t('카드 소멸 시 N장 드로우'),
-    decay: false,
     buff: true,
   },
   on_exhaust_block: {
     key: 'on_exhaust_block',
     name: t('소멸 방어'),
     description: t('카드 소멸 시 방어도 +N'),
-    decay: false,
     buff: true,
   },
   on_exhaust_energy: {
     key: 'on_exhaust_energy',
     name: t('소멸 에너지'),
     description: t('카드 소멸 시 에너지 +N'),
-    decay: false,
     buff: true,
   },
   drone_basic: {
     key: 'drone_basic',
     name: t('경량 드론'),
     description: t('매턴 랜덤 적에게 N 데미지 (힘 적용)'),
-    decay: false,
     buff: true,
   },
   drone_heavy: {
     key: 'drone_heavy',
     name: t('중형 드론'),
     description: t('2턴마다 랜덤 적에게 N 데미지 (힘 적용)'),
-    decay: false,
     buff: true,
   },
   drone_aoe: {
     key: 'drone_aoe',
     name: t('공성 드론'),
     description: t('3턴마다 모든 적에게 N 데미지 (힘 적용)'),
-    decay: false,
     buff: true,
   },
   drone_ice: {
     key: 'drone_ice',
     name: t('냉각 드론'),
     description: t('2턴마다 랜덤 적에게 빙결 +N'),
-    decay: false,
     buff: true,
   },
   drone_burn: {
     key: 'drone_burn',
     name: t('화염 드론'),
     description: t('매턴 랜덤 적에게 화상 +N'),
-    decay: false,
     buff: true,
   },
   drone_recon: {
     key: 'drone_recon',
     name: t('정찰 드론'),
     description: t('매턴 N장 드로우'),
-    decay: false,
     buff: true,
   },
   drone_shield: {
     key: 'drone_shield',
     name: t('보호 드론'),
     description: t('2턴마다 방어도 +N'),
-    decay: false,
     buff: true,
   },
   blood_armor: {
     key: 'blood_armor',
     name: t('피의 방벽'),
     description: t('HP를 잃는 카드 사용 시 잃은 HP × N 방어도'),
-    decay: false,
     buff: true,
   },
   blood_power: {
     key: 'blood_power',
     name: t('피의 광기'),
     description: t('HP를 잃는 카드 사용 시 힘 +N'),
-    decay: false,
     buff: true,
   },
 };
