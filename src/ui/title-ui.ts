@@ -201,30 +201,26 @@ export function renderTitle(): HTMLElement {
 
     // Card frame selector
     const currentFrame = getCardFrame();
-    const frameRow = el('div', {
-      style: { display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '8px' },
+    const frameBox = el('div', {
+      style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginTop: '8px' },
     });
-    frameRow.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px', alignSelf: 'center', width: '100%', textAlign: 'center' } }, t('카드 프레임')));
+    frameBox.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } }, t('카드 프레임')));
+    const frameGrid = el('div', { class: 'frame-grid' });
     for (const f of FRAMES) {
       const unlocked = f.check();
       const active = currentFrame === f.id;
-      frameRow.appendChild(el('button', {
-        style: {
-          fontSize: '12px', padding: '4px 10px',
-          background: active ? 'var(--accent-2)' : 'transparent',
-          color: unlocked ? (active ? 'white' : 'var(--text)') : 'var(--muted)',
-          border: `1px solid ${active ? 'var(--accent)' : 'var(--border)'}`,
-          borderRadius: '6px',
-          cursor: unlocked ? 'pointer' : 'default',
-          opacity: unlocked ? '1' : '0.5',
-        },
+      const btn = el('button', {
+        class: [active ? 'active' : '', unlocked ? '' : 'locked'].filter(Boolean).join(' '),
         title: unlocked ? f.name : `${t('해금')}: ${f.unlockLabel}`,
         onClick: () => { if (unlocked) { setCardFrame(f.id); rebuild(); } },
-      }));
-      const frameBtn = frameRow.lastElementChild as HTMLElement;
-      frameBtn.innerHTML = unlocked ? `${f.emoji} ${f.name}` : `${ic('lock')} ${f.unlockLabel || f.name}`;
+      }) as HTMLElement;
+      btn.innerHTML = unlocked
+        ? `<span>${f.emoji} ${f.name}</span>`
+        : `<span>${ic('lock')} ${f.name}</span><span class="frame-cond">${f.unlockLabel}</span>`;
+      frameGrid.appendChild(btn);
     }
-    wrapper.appendChild(frameRow);
+    frameBox.appendChild(frameGrid);
+    wrapper.appendChild(frameBox);
 
     const footerLinks = el('div', {
       style: { marginTop: '16px', fontSize: '11px', color: 'var(--muted)', textAlign: 'center' },
