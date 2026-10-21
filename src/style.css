@@ -115,41 +115,18 @@ button:disabled {
 }
 
 /* ── Card frame selector ── */
-.frame-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
-  gap: 6px;
-  width: 100%;
-  max-width: 420px;
-}
-.title-screen .frame-grid button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  min-height: 46px;
-  padding: 6px 4px;
+.frame-select {
   font-size: 12px;
-  line-height: 1.25;
+  padding: 5px 8px;
   color: var(--text);
-  background: transparent;
+  background: var(--panel, rgba(0, 0, 0, 0.3));
   border: 1px solid var(--border);
   border-radius: 6px;
   cursor: pointer;
+  max-width: 220px;
+  color-scheme: dark;
 }
-.title-screen .frame-grid button.locked {
-  color: var(--muted);
-  opacity: 0.5;
-  cursor: default;
-}
-.title-screen .frame-grid button.active {
-  color: #fff;
-  background: var(--accent-2);
-  border-color: var(--accent);
-}
-.frame-grid .frame-cond {
-  font-size: 9px;
+.frame-select option:disabled {
   color: var(--muted);
 }
 

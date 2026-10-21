@@ -6,6 +6,7 @@ import { CARD_DEFS } from '../content/cards';
 import { RELIC_LIST } from '../content/relics';
 import { isCurseLike } from './deck-overlay';
 import { FRAMES, getCardFrame, setCardFrame } from '../card-frame';
+import type { CardFrame } from '../card-frame';
 import { ic } from './art';
 import { t, getLang } from '../i18n';
 import { playSfx } from '../audio';
@@ -202,24 +203,22 @@ export function renderTitle(): HTMLElement {
     // Card frame selector
     const currentFrame = getCardFrame();
     const frameBox = el('div', {
-      style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginTop: '8px' },
+      style: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '8px' },
     });
-    frameBox.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } }, t('카드 프레임')));
-    const frameGrid = el('div', { class: 'frame-grid' });
+    frameBox.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px' } }, t('카드 프레임')));
+    const frameSelect = document.createElement('select');
+    frameSelect.className = 'frame-select';
     for (const f of FRAMES) {
       const unlocked = f.check();
-      const active = currentFrame === f.id;
-      const btn = el('button', {
-        class: [active ? 'active' : '', unlocked ? '' : 'locked'].filter(Boolean).join(' '),
-        title: unlocked ? f.name : `${t('해금')}: ${f.unlockLabel}`,
-        onClick: () => { if (unlocked) { setCardFrame(f.id); rebuild(); } },
-      }) as HTMLElement;
-      btn.innerHTML = unlocked
-        ? `<span>${f.emoji} ${f.name}</span>`
-        : `<span>${ic('lock')} ${f.name}</span><span class="frame-cond">${f.unlockLabel}</span>`;
-      frameGrid.appendChild(btn);
+      const opt = document.createElement('option');
+      opt.value = f.id;
+      opt.textContent = unlocked ? `${f.emoji} ${f.name}` : `🔒 ${f.name} — ${f.unlockLabel}`;
+      opt.disabled = !unlocked;
+      opt.selected = f.id === currentFrame;
+      frameSelect.appendChild(opt);
     }
-    frameBox.appendChild(frameGrid);
+    frameSelect.onchange = () => { setCardFrame(frameSelect.value as CardFrame); rebuild(); };
+    frameBox.appendChild(frameSelect);
     wrapper.appendChild(frameBox);
 
     const footerLinks = el('div', {
