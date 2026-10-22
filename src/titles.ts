@@ -57,16 +57,16 @@ function masteryLevels(): number[] {
 
 // 캐릭터별 숙련 칭호 — 해당 캐릭터 숙련도 Lv.3에서 획득
 const CLASS_TITLES: { cls: CharacterClass; charName: string; name: string; emoji: string }[] = [
-  { cls: 'swordmaster', charName: t('검사'),     name: t('검성'),        emoji: '🗡️' },
-  { cls: 'gunner',      charName: t('총잡이'),   name: t('명사수'),      emoji: '🎯' },
-  { cls: 'fighter',     charName: t('격투가'),   name: t('권왕'),        emoji: '🥊' },
-  { cls: 'magician',    charName: t('마법사'),   name: t('대마법사'),    emoji: '🔮' },
-  { cls: 'priest',      charName: t('성직자'),   name: t('대사제'),      emoji: '⛪' },
-  { cls: 'thief',       charName: t('도적'),     name: t('그림자'),      emoji: '🌑' },
-  { cls: 'summoner',    charName: t('정령술사'), name: t('정령왕'),      emoji: '🧿' },
-  { cls: 'engineer',    charName: t('공학자'),   name: t('수석 기술자'), emoji: '⚙️' },
-  { cls: 'gambler',     charName: t('갬블러'),   name: t('하우스'),      emoji: '🎰' },
-  { cls: 'blood_mage',  charName: t('혈술사'),   name: t('혈왕'),        emoji: '🩸' },
+  { cls: 'swordmaster', charName: t('검사'),     name: t('한 칼이면 된다'),      emoji: '🗡️' },
+  { cls: 'gunner',      charName: t('총잡이'),   name: t('장전은 끝났다'),       emoji: '🎯' },
+  { cls: 'fighter',     charName: t('격투가'),   name: t('주먹이 답이다'),       emoji: '🥊' },
+  { cls: 'magician',    charName: t('마법사'),   name: t('재가 되어라'),         emoji: '🔮' },
+  { cls: 'priest',      charName: t('성직자'),   name: t('쓰러질 때가 아니다'),  emoji: '⛪' },
+  { cls: 'thief',       charName: t('도적'),     name: t('알아챘을 땐 늦었다'),  emoji: '🌑' },
+  { cls: 'summoner',    charName: t('정령술사'), name: t('혼자 온 게 아니야'),   emoji: '🧿' },
+  { cls: 'engineer',    charName: t('공학자'),   name: t('설계대로군'),          emoji: '⚙️' },
+  { cls: 'gambler',     charName: t('갬블러'),   name: t('운도 실력이지'),       emoji: '🎰' },
+  { cls: 'blood_mage',  charName: t('혈술사'),   name: t('피 맛 좀 볼까?'),      emoji: '🩸' },
 ];
 
 const CLASS_TITLE_DEFS: TitleDef[] = CLASS_TITLES.map((c) => ({
