@@ -330,7 +330,7 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     headerText.appendChild(el('div', { class: 'cs-mastery-progress' },
       mastery.nextAt === null
         ? `${t('숙련도')} ${t('최대')} · ${mastery.points}${t('점')}`
-        : `${mastery.points} / ${mastery.nextAt}${t('점')} · ${t('다음 레벨까지')} ${mastery.nextAt - mastery.points}${t('점')}`));
+        : `${t('다음 레벨까지')} ${mastery.nextAt - mastery.points}${t('점')} (${mastery.points}/${mastery.nextAt})`));
     header.appendChild(headerText);
     detail.appendChild(header);
 
