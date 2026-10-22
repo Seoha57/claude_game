@@ -5,6 +5,7 @@ import { CHARACTER_SVG, CARD_TYPE_SVG, ic } from './art';
 import { RELIC_DEFS } from '../content/relics';
 import { playSfx } from '../audio';
 import { t } from '../i18n';
+import { getMastery } from '../stats';
 
 interface CharacterInfo {
   id: CharacterClass;
@@ -274,10 +275,18 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
           el('div', { class: 'cs-item-name' }, ch.name),
           el('div', { class: 'cs-item-sub' }, ch.playstyle),
         ),
-        el('div', {
-          class: 'cs-item-diff',
-          style: { color: ch.difficulty === 1 ? 'var(--good)' : ch.difficulty === 2 ? 'var(--accent)' : 'var(--bad)' },
-        }, '★'.repeat(ch.difficulty) + '☆'.repeat(3 - ch.difficulty)),
+        el('div', { class: 'cs-item-right' },
+          el('div', {
+            class: 'cs-item-diff',
+            style: { color: ch.difficulty === 1 ? 'var(--good)' : ch.difficulty === 2 ? 'var(--accent)' : 'var(--bad)' },
+          }, '★'.repeat(ch.difficulty) + '☆'.repeat(3 - ch.difficulty)),
+          (() => {
+            const m = getMastery(ch.id);
+            return el('div', {
+              class: m.level > 0 ? 'cs-item-mastery earned' : 'cs-item-mastery',
+            }, m.level > 0 ? `Lv.${m.level}` : '—');
+          })(),
+        ),
       );
       list.appendChild(item);
     }
@@ -308,7 +317,20 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
         border: `1px solid ${ch.difficulty === 1 ? 'rgba(128,192,96,0.4)' : ch.difficulty === 2 ? 'rgba(212,160,91,0.4)' : 'rgba(208,80,96,0.4)'}`,
       },
     }, ch.difficulty === 1 ? t('쉬움') : ch.difficulty === 2 ? t('보통') : t('어려움')));
+    const mastery = getMastery(ch.id);
+    tags.appendChild(el('span', {
+      class: 'cs-tag',
+      style: {
+        background: mastery.level > 0 ? 'rgba(212,160,91,0.15)' : 'rgba(255,255,255,0.05)',
+        color: mastery.level > 0 ? 'var(--accent)' : 'var(--muted)',
+        border: `1px solid ${mastery.level > 0 ? 'rgba(212,160,91,0.4)' : 'var(--border)'}`,
+      },
+    }, mastery.level > 0 ? `${t('숙련도')} Lv.${mastery.level} ${mastery.title}` : t('미숙련')));
     headerText.appendChild(tags);
+    headerText.appendChild(el('div', { class: 'cs-mastery-progress' },
+      mastery.nextAt === null
+        ? `${t('숙련도')} ${t('최대')} · ${mastery.points}${t('점')}`
+        : `${mastery.points} / ${mastery.nextAt}${t('점')} · ${t('다음 레벨까지')} ${mastery.nextAt - mastery.points}${t('점')}`));
     header.appendChild(headerText);
     detail.appendChild(header);
 

@@ -199,6 +199,10 @@ button:disabled {
 .cs-item-name { font-size: 15px; }
 .cs-item-sub { font-size: 11px; color: var(--muted); }
 .cs-item-diff { font-size: 11px; flex-shrink: 0; letter-spacing: -1px; }
+.cs-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+.cs-item-mastery { font-size: 10px; color: var(--muted); }
+.cs-item-mastery.earned { color: var(--accent); }
+.cs-mastery-progress { margin-top: 6px; font-size: 11px; color: var(--muted); }
 .cs-detail {
   flex: 1;
   border: 1px solid var(--border);

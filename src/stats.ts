@@ -1,5 +1,6 @@
 import type { CharacterClass } from './types';
 import { markDirty } from './sync/sync';
+import { t } from './i18n';
 
 const STORAGE_KEY = 'dod_stats';
 const STATS_VERSION = 1;
@@ -119,4 +120,35 @@ export function recordLoss(cls: CharacterClass): void {
 
 export function resetStats(): void {
   try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+}
+
+// ── 캐릭터 숙련도 ──
+// 저장을 늘리지 않고 기존 전적에서 파생한다.
+// 숙련 점수 = 일반 엔딩 1점 + 진엔딩 2점 + 최고 등반 단계(+1)
+
+export interface Mastery {
+  level: number;        // 0 ~ 5
+  points: number;
+  title: string;        // 레벨 명칭
+  nextAt: number | null; // 다음 레벨 필요 점수 (최대 레벨이면 null)
+}
+
+const MASTERY_TIERS: { at: number; title: string }[] = [
+  { at: 1,  title: t('수련생') },
+  { at: 3,  title: t('숙련자') },
+  { at: 6,  title: t('달인') },
+  { at: 10, title: t('명인') },
+  { at: 15, title: t('전설') },
+];
+
+export function getMastery(cls: CharacterClass): Mastery {
+  const c = loadStats().perCharacter[cls];
+  const points = c.wins + c.trueWins * 2 + Math.max(0, c.bestAscension + 1);
+  let level = 0;
+  let title = t('미숙련');
+  for (const tier of MASTERY_TIERS) {
+    if (points >= tier.at) { level += 1; title = tier.title; }
+  }
+  const nextAt = level >= MASTERY_TIERS.length ? null : MASTERY_TIERS[level].at;
+  return { level, points, title, nextAt };
 }
