@@ -552,10 +552,12 @@ function triggerOnExhaust(state: CombatState, log: (s: string) => void): void {
 
 // ── Signature relic hooks ─────────────────────────────────────────
 // 데미지 카드가 적에 적용되기 직전 호출 (per-hit). 카운터는 playCard에서 per-card로 관리.
-export function modifyAttackAmount(state: CombatState, base: number): number {
+// attackCountOverride: 미리보기용 — 카드를 내면 공격 카운터가 먼저 +1 되므로
+// 그 시점의 값을 넘겨 실제와 같은 보너스를 계산한다.
+export function modifyAttackAmount(state: CombatState, base: number, attackCountOverride?: number): number {
   const run = getRunOrNull();
   if (!run) return base;
-  const ac = state.flags.attackCount ?? 0;
+  const ac = attackCountOverride ?? state.flags.attackCount ?? 0;
   let amount = base;
   // 검혼: 5번째 공격마다 +6
   if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {

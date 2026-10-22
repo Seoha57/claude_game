@@ -12,7 +12,7 @@ import { kwDesc, STATUS_ICON } from './keywords';
 import { ENEMY_SVG, POTION_SVG, RELIC_SVG, ic } from './art';
 import { buildIntentDisplay } from '../combat/intent';
 import { endPlayerTurn } from '../combat/combat';
-import { playCard } from '../combat/effects';
+import { playCard, modifyAttackAmount } from '../combat/effects';
 import type { CardInstance, CombatState, Enemy } from '../types';
 import { POTION_DEFS, POTION_LIST } from '../content/potions';
 import { isCurseLike } from './deck-overlay';
@@ -53,8 +53,11 @@ function computeCardDamageVsEnemy(card: CardInstance, state: CombatState, enemy:
   const def = getEffectiveDef(card);
   const player = state.player;
   let total = 0;
+  // 공격 카드를 내면 attackCount가 먼저 +1 되고, 그 값이 카드의 모든 타격에 공통 적용된다.
+  const previewAc = (state.flags.attackCount ?? 0) + (def.type === 'attack' ? 1 : 0);
   const addDamage = (amount: number, times = 1) => {
-    total += modifiedAttackDamage(amount, player as any, enemy) * times;
+    const withRelics = modifyAttackAmount(state, amount, previewAc);
+    total += modifiedAttackDamage(withRelics, player as any, enemy) * times;
   };
   const dice = state.flags.diceRoll ?? 1;
   for (const eff of def.effects) {
