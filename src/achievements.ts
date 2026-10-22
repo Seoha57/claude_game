@@ -109,7 +109,7 @@ export function getUnlockedCount(): number {
 
 export interface AchievementTitle { name: string; emoji: string; threshold: number }
 
-const TITLES: AchievementTitle[] = [
+export const ACHIEVEMENT_TITLES: AchievementTitle[] = [
   { threshold: 3, emoji: '🌱', name: t('초보 모험가') },
   { threshold: 8, emoji: '⚔️', name: t('숙련된 전사') },
   { threshold: 15, emoji: '🔥', name: t('던전 정복자') },
@@ -119,7 +119,7 @@ const TITLES: AchievementTitle[] = [
 export function getAchievementTitle(): AchievementTitle | null {
   const count = getUnlockedCount();
   let best: AchievementTitle | null = null;
-  for (const title of TITLES) {
+  for (const title of ACHIEVEMENT_TITLES) {
     if (count >= title.threshold) best = title;
   }
   return best;

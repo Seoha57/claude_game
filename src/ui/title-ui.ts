@@ -9,6 +9,7 @@ import { FRAMES, getCardFrame, setCardFrame } from '../card-frame';
 import type { CardFrame } from '../card-frame';
 import { ic } from './art';
 import { t, getLang } from '../i18n';
+import { TITLES, getSelectedTitle, setSelectedTitle, getEarnedCount } from '../titles';
 import { playSfx } from '../audio';
 import { checkAttendance } from '../daily-attendance';
 
@@ -220,6 +221,33 @@ export function renderTitle(): HTMLElement {
     frameSelect.onchange = () => { setCardFrame(frameSelect.value as CardFrame); rebuild(); };
     frameBox.appendChild(frameSelect);
     wrapper.appendChild(frameBox);
+
+    // Title (칭호) selector
+    const selectedTitle = getSelectedTitle();
+    const titleBox = el('div', {
+      style: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '6px' },
+    });
+    titleBox.appendChild(el('span', { style: { color: 'var(--muted)', fontSize: '12px' } },
+      `${t('칭호')} ${getEarnedCount()}/${TITLES.length}`));
+    const titleSelect = document.createElement('select');
+    titleSelect.className = 'frame-select';
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.textContent = t('칭호 없음');
+    noneOpt.selected = selectedTitle === null;
+    titleSelect.appendChild(noneOpt);
+    for (const ti of TITLES) {
+      const earned = ti.check();
+      const opt = document.createElement('option');
+      opt.value = ti.id;
+      opt.textContent = earned ? `${ti.emoji} ${ti.name}` : `🔒 ${ti.name} — ${ti.condition}`;
+      opt.disabled = !earned;
+      opt.selected = selectedTitle?.id === ti.id;
+      titleSelect.appendChild(opt);
+    }
+    titleSelect.onchange = () => { setSelectedTitle(titleSelect.value || null); rebuild(); };
+    titleBox.appendChild(titleSelect);
+    wrapper.appendChild(titleBox);
 
     const footerLinks = el('div', {
       style: { marginTop: '16px', fontSize: '11px', color: 'var(--muted)', textAlign: 'center' },

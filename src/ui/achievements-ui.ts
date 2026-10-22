@@ -1,7 +1,7 @@
 import { el } from './dom';
 import { setScreen } from '../state';
-import { ACHIEVEMENTS, getUnlockedSet, resetAchievements, reconcileAchievements, getCharClearStatus, getAchievementTitle } from '../achievements';
-import type { AchievementTitle } from '../achievements';
+import { ACHIEVEMENTS, getUnlockedSet, resetAchievements, reconcileAchievements, getCharClearStatus, getAchievementTitle, ACHIEVEMENT_TITLES } from '../achievements';
+import { TITLES, getSelectedTitle, getEarnedCount } from '../titles';
 import type { AchievementDef } from '../achievements';
 import type { CharacterClass } from '../types';
 import { CHARACTER_SVG, ACHIEVEMENT_SVG, TITLE_SVG, artEl, ic } from './art';
@@ -56,29 +56,30 @@ export function renderAchievements(): HTMLElement {
     bar.appendChild(el('div', { class: 'ach-progress-fill', style: { width: `${(done / total) * 100}%` } }));
     wrapper.appendChild(bar);
 
-    // 칭호 표시
+    // 칭호 표시 — 장착한 칭호가 있으면 그것을, 없으면 업적 수로 얻은 칭호를 보여준다
+    const equipped = getSelectedTitle();
     const title = getAchievementTitle();
-    const TITLES: AchievementTitle[] = [
-      { threshold: 3, emoji: '🌱', name: t('초보 모험가') },
-      { threshold: 8, emoji: '⚔️', name: t('숙련된 전사') },
-      { threshold: 15, emoji: '🔥', name: t('던전 정복자') },
-      { threshold: 22, emoji: '👑', name: t('전설의 영웅') },
-    ];
     const TITLE_KEYS = ['beginner', 'veteran', 'conqueror', 'legend'];
-    const nextTitle = TITLES.find((t) => t.threshold > done);
-    const titleIdx = title ? TITLES.indexOf(title) : -1;
+    const nextTitle = ACHIEVEMENT_TITLES.find((x) => x.threshold > done);
+    const titleIdx = equipped
+      ? TITLE_KEYS.indexOf(equipped.id)
+      : (title ? ACHIEVEMENT_TITLES.findIndex((x) => x.name === title.name) : -1);
     const titleRow = el('div', {
       style: { color: 'var(--accent)', fontSize: '14px', margin: '8px 0 4px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' },
     });
-    if (title && titleIdx >= 0) {
-      titleRow.appendChild(artEl(TITLE_SVG[TITLE_KEYS[titleIdx]], 20));
-      titleRow.appendChild(document.createTextNode(`${t('칭호')}: ${t(title.name)}`));
+    const shownName = equipped ? equipped.name : title?.name;
+    if (shownName) {
+      if (titleIdx >= 0) titleRow.appendChild(artEl(TITLE_SVG[TITLE_KEYS[titleIdx]], 20));
+      else if (equipped) titleRow.appendChild(document.createTextNode(equipped.emoji));
+      titleRow.appendChild(document.createTextNode(`${t('칭호')}: ${t(shownName)}`));
     } else {
       titleRow.textContent = t('칭호 없음');
     }
     wrapper.appendChild(titleRow);
+    wrapper.appendChild(el('div', { style: { color: 'var(--muted)', fontSize: '12px', textAlign: 'center' } },
+      `${t('칭호 수집')} ${getEarnedCount()} / ${TITLES.length} · ${t('제목 화면에서 변경')}`));
     if (nextTitle) {
-      const nextIdx = TITLES.indexOf(nextTitle);
+      const nextIdx = ACHIEVEMENT_TITLES.indexOf(nextTitle);
       const nextRow = el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' } });
       nextRow.appendChild(document.createTextNode(`${t('다음 칭호')}: `));
       if (nextIdx >= 0) nextRow.appendChild(artEl(TITLE_SVG[TITLE_KEYS[nextIdx]], 14));

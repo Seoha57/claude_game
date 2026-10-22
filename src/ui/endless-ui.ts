@@ -2,6 +2,7 @@ import { el } from './dom';
 import { ic, CHARACTER_SVG, artEl } from './art';
 import { getRun, getRunOrNull, setScreen, setCombat, endRun } from '../state';
 import { getAchievementTitle } from '../achievements';
+import { getSelectedTitle } from '../titles';
 import { startCombat } from '../combat/combat';
 import { applyStatus } from '../combat/statuses';
 import {
@@ -455,7 +456,7 @@ export function renderEndlessResult(): HTMLElement {
             score,
             wave,
             characterClass: run?.characterClass ?? 'swordmaster',
-            title: getAchievementTitle()?.name ?? '',
+            title: getSelectedTitle()?.name ?? getAchievementTitle()?.name ?? '',
             ascension: run?.ascension ?? 0,
           }),
         });
