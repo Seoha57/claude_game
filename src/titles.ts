@@ -80,19 +80,19 @@ const CLASS_TITLE_DEFS: TitleDef[] = CLASS_TITLES.map((c) => ({
 }));
 
 export const TITLES: TitleDef[] = [
-  { id: 'beginner',   name: t('초보 모험가'),  emoji: '🌱', condition: t('업적 3개'),        check: () => readAchCount() >= 3 },
-  { id: 'veteran',    name: t('숙련된 전사'),  emoji: '⚔️', condition: t('업적 8개'),        check: () => readAchCount() >= 8 },
-  { id: 'conqueror',  name: t('던전 정복자'),  emoji: '🔥', condition: t('업적 15개'),       check: () => readAchCount() >= 15 },
-  { id: 'legend',     name: t('전설의 영웅'),  emoji: '👑', condition: t('업적 22개'),       check: () => readAchCount() >= 22 },
-  { id: 'hunter',     name: t('사냥꾼'),       emoji: '🏹', condition: t('적 30종 처치'),    check: () => readCodex().enemies >= 30 },
-  { id: 'naturalist', name: t('박물학자'),     emoji: '📕', condition: t('적 53종 처치'),    check: () => readCodex().enemies >= 53 },
-  { id: 'collector',  name: t('수집가'),       emoji: '💎', condition: t('카드·유물 93종'),  check: () => { const c = readCodex(); return c.cards + c.relics >= 93; } },
-  { id: 'ace',        name: t('일인자'),       emoji: '🥇', condition: t('숙련도 Lv.5 달성'), check: () => masteryLevels().some((l) => l >= 5) },
-  { id: 'allrounder', name: t('만상의 달인'),  emoji: '🎭', condition: t('전 캐릭터 Lv.3'),  check: () => masteryLevels().every((l) => l >= 3) },
-  { id: 'truth',      name: t('심연의 정복자'), emoji: '✨', condition: t('진엔딩 달성'),     check: () => readTrueWins() >= 1 },
-  { id: 'climber',    name: t('등반가'),       emoji: '🧗', condition: t('등반 A5 해금'),    check: () => readAscension() >= 5 },
-  { id: 'unbroken',   name: t('불굴'),         emoji: '🛡️', condition: t('등반 A10 해금'),   check: () => readAscension() >= 10 },
-  { id: 'endless',    name: t('무한의 끝'),    emoji: '♾️', condition: t('무한 웨이브 20'),  check: () => readEndlessBest() >= 20 },
+  { id: 'beginner',   name: t('이제 좀 알겠어'),  emoji: '🌱', condition: t('업적 3개'),        check: () => readAchCount() >= 3 },
+  { id: 'veteran',    name: t('몇 번 죽어봤지'),  emoji: '⚔️', condition: t('업적 8개'),        check: () => readAchCount() >= 8 },
+  { id: 'conqueror',  name: t('여긴 내 앞마당이야'),  emoji: '🔥', condition: t('업적 15개'),       check: () => readAchCount() >= 15 },
+  { id: 'legend',     name: t('이름은 남는다'),  emoji: '👑', condition: t('업적 22개'),       check: () => readAchCount() >= 22 },
+  { id: 'hunter',     name: t('다음은 누구지?'),       emoji: '🏹', condition: t('적 30종 처치'),    check: () => readCodex().enemies >= 30 },
+  { id: 'naturalist', name: t('안 만나본 놈이 없다'),     emoji: '📕', condition: t('적 53종 처치'),    check: () => readCodex().enemies >= 53 },
+  { id: 'collector',  name: t('이거 다 내 거야'),       emoji: '💎', condition: t('카드·유물 93종'),  check: () => { const c = readCodex(); return c.cards + c.relics >= 93; } },
+  { id: 'ace',        name: t('나보다 잘하는 놈 있나?'),       emoji: '🥇', condition: t('숙련도 Lv.5 달성'), check: () => masteryLevels().some((l) => l >= 5) },
+  { id: 'allrounder', name: t('뭘 줘도 한다'),  emoji: '🎭', condition: t('전 캐릭터 Lv.3'),  check: () => masteryLevels().every((l) => l >= 3) },
+  { id: 'truth',      name: t('끝을 봤다'), emoji: '✨', condition: t('진엔딩 달성'),     check: () => readTrueWins() >= 1 },
+  { id: 'climber',    name: t('더 높이'),       emoji: '🧗', condition: t('등반 A5 해금'),    check: () => readAscension() >= 5 },
+  { id: 'unbroken',   name: t('아직 안 끝났어'),         emoji: '🛡️', condition: t('등반 A10 해금'),   check: () => readAscension() >= 10 },
+  { id: 'endless',    name: t('끝이 없잖아'),    emoji: '♾️', condition: t('무한 웨이브 20'),  check: () => readEndlessBest() >= 20 },
   ...CLASS_TITLE_DEFS,
 ];
 

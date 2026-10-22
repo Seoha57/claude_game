@@ -110,10 +110,10 @@ export function getUnlockedCount(): number {
 export interface AchievementTitle { name: string; emoji: string; threshold: number }
 
 export const ACHIEVEMENT_TITLES: AchievementTitle[] = [
-  { threshold: 3, emoji: '🌱', name: t('초보 모험가') },
-  { threshold: 8, emoji: '⚔️', name: t('숙련된 전사') },
-  { threshold: 15, emoji: '🔥', name: t('던전 정복자') },
-  { threshold: 22, emoji: '👑', name: t('전설의 영웅') },
+  { threshold: 3, emoji: '🌱', name: t('이제 좀 알겠어') },
+  { threshold: 8, emoji: '⚔️', name: t('몇 번 죽어봤지') },
+  { threshold: 15, emoji: '🔥', name: t('여긴 내 앞마당이야') },
+  { threshold: 22, emoji: '👑', name: t('이름은 남는다') },
 ];
 
 export function getAchievementTitle(): AchievementTitle | null {

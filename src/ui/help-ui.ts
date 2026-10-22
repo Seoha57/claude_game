@@ -128,11 +128,11 @@ export function renderHelp(): HTMLElement {
 
   wrapper.appendChild(section(`${ic('medal')} ${t('업적 보상')}`, [
     t('업적을 달성할수록 칭호와 시작 보너스를 얻습니다.'),
-    `${t('3개 —')} ${ic('star')} ${t('초보 모험가 (시작 골드 +20)')}`,
-    `${t('8개 —')} ${ic('sword')} ${t('숙련된 전사 (시작 최대HP +3)')}`,
-    `${t('15개 —')} ${ic('fire')} ${t('던전 정복자 (시작 골드 +30)')}`,
-    `${t('22개 —')} ${ic('crown')} ${t('전설의 영웅')}`,
-    t('칭호는 리더보드에 표시됩니다.'),
+    `${t('3개 —')} ${ic('star')} ${t('이제 좀 알겠어 (시작 골드 +20)')}`,
+    `${t('8개 —')} ${ic('sword')} ${t('몇 번 죽어봤지 (시작 최대HP +3)')}`,
+    `${t('15개 —')} ${ic('fire')} ${t('여긴 내 앞마당이야 (시작 골드 +30)')}`,
+    `${t('22개 —')} ${ic('crown')} ${t('이름은 남는다')}`,
+    t('칭호는 적 도감·숙련도·등반 등으로도 얻습니다. 제목 화면에서 장착할 수 있고, 리더보드에 표시됩니다.'),
   ]));
 
   const backScreen = getCombatOrNull() ? 'combat' as const : getRunOrNull() ? 'map' as const : 'title' as const;
