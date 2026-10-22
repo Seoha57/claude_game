@@ -55,6 +55,30 @@ function masteryLevels(): number[] {
   });
 }
 
+// 캐릭터별 숙련 칭호 — 해당 캐릭터 숙련도 Lv.3에서 획득
+const CLASS_TITLES: { cls: CharacterClass; charName: string; name: string; emoji: string }[] = [
+  { cls: 'swordmaster', charName: t('검사'),     name: t('검성'),        emoji: '🗡️' },
+  { cls: 'gunner',      charName: t('총잡이'),   name: t('명사수'),      emoji: '🎯' },
+  { cls: 'fighter',     charName: t('격투가'),   name: t('권왕'),        emoji: '🥊' },
+  { cls: 'magician',    charName: t('마법사'),   name: t('대마법사'),    emoji: '🔮' },
+  { cls: 'priest',      charName: t('성직자'),   name: t('대사제'),      emoji: '⛪' },
+  { cls: 'thief',       charName: t('도적'),     name: t('그림자'),      emoji: '🌑' },
+  { cls: 'summoner',    charName: t('정령술사'), name: t('정령왕'),      emoji: '🧿' },
+  { cls: 'engineer',    charName: t('공학자'),   name: t('수석 기술자'), emoji: '⚙️' },
+  { cls: 'gambler',     charName: t('갬블러'),   name: t('하우스'),      emoji: '🎰' },
+  { cls: 'blood_mage',  charName: t('혈술사'),   name: t('혈왕'),        emoji: '🩸' },
+];
+
+const CLASS_TITLE_DEFS: TitleDef[] = CLASS_TITLES.map((c) => ({
+  id: `mastery_${c.cls}`,
+  name: c.name,
+  emoji: c.emoji,
+  condition: `${c.charName} ${t('숙련도')} Lv.3`,
+  check: () => {
+    try { return getMastery(c.cls).level >= 3; } catch { return false; }
+  },
+}));
+
 export const TITLES: TitleDef[] = [
   { id: 'beginner',   name: t('초보 모험가'),  emoji: '🌱', condition: t('업적 3개'),        check: () => readAchCount() >= 3 },
   { id: 'veteran',    name: t('숙련된 전사'),  emoji: '⚔️', condition: t('업적 8개'),        check: () => readAchCount() >= 8 },
@@ -69,6 +93,7 @@ export const TITLES: TitleDef[] = [
   { id: 'climber',    name: t('등반가'),       emoji: '🧗', condition: t('등반 A5 해금'),    check: () => readAscension() >= 5 },
   { id: 'unbroken',   name: t('불굴'),         emoji: '🛡️', condition: t('등반 A10 해금'),   check: () => readAscension() >= 10 },
   { id: 'endless',    name: t('무한의 끝'),    emoji: '♾️', condition: t('무한 웨이브 20'),  check: () => readEndlessBest() >= 20 },
+  ...CLASS_TITLE_DEFS,
 ];
 
 export function isTitleEarned(id: string): boolean {
