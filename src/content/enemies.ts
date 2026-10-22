@@ -1598,3 +1598,37 @@ export function pickEncounter(rng: () => number, table: string[][]): string[] {
   return table[Math.floor(rng() * table.length)];
 }
 
+
+// ── 도감용 색인: 적 id → 등장 챕터 / 종류 ──
+export type EnemyKind = 'normal' | 'elite' | 'boss';
+
+export const ENEMY_INDEX: Record<string, { chapter: number; kind: EnemyKind }> = (() => {
+  const index: Record<string, { chapter: number; kind: EnemyKind }> = {};
+  const tables: { chapter: number; kind: EnemyKind; table: string[][] }[] = [
+    { chapter: 1, kind: 'normal', table: EASY_ENCOUNTERS },
+    { chapter: 1, kind: 'normal', table: NORMAL_ENCOUNTERS },
+    { chapter: 1, kind: 'elite',  table: ELITE_ENCOUNTERS },
+    { chapter: 1, kind: 'boss',   table: BOSS_ENCOUNTERS },
+    { chapter: 2, kind: 'normal', table: CH2_NORMAL_ENCOUNTERS },
+    { chapter: 2, kind: 'elite',  table: CH2_ELITE_ENCOUNTERS },
+    { chapter: 2, kind: 'boss',   table: CH2_BOSS_ENCOUNTERS },
+    { chapter: 3, kind: 'normal', table: CH3_NORMAL_ENCOUNTERS },
+    { chapter: 3, kind: 'elite',  table: CH3_ELITE_ENCOUNTERS },
+    { chapter: 3, kind: 'boss',   table: CH3_BOSS_ENCOUNTERS },
+    { chapter: 4, kind: 'normal', table: CH4_NORMAL_ENCOUNTERS },
+    { chapter: 4, kind: 'elite',  table: CH4_ELITE_ENCOUNTERS },
+    { chapter: 4, kind: 'boss',   table: CH4_BOSS_ENCOUNTERS },
+  ];
+  for (const { chapter, kind, table } of tables) {
+    for (const ids of table) {
+      for (const id of ids) {
+        if (!index[id]) index[id] = { chapter, kind };
+      }
+    }
+  }
+  // 조우 테이블에 없는 적(소환수 등)은 보스 플래그로만 분류
+  for (const [id, def] of Object.entries(ENEMY_DEFS)) {
+    if (!index[id]) index[id] = { chapter: 0, kind: def.isBoss ? 'boss' : 'normal' };
+  }
+  return index;
+})();

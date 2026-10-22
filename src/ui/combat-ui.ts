@@ -6,6 +6,7 @@ import { getEffectiveDef } from '../content/cards';
 import { openDeckOverlay } from './deck-overlay';
 import { ENEMY_DEFS } from '../content/enemies';
 import { bossDefeatFlavor } from '../content/lore';
+import { recordEnemyKills } from '../codex';
 import { STATUS_INFO, applyStatus, modifiedAttackDamage, getStatusValueLabel, getStatusTooltip } from '../combat/statuses';
 import { kwDesc, STATUS_ICON } from './keywords';
 import { ENEMY_SVG, POTION_SVG, RELIC_SVG, ic } from './art';
@@ -1567,6 +1568,7 @@ if (typeof window !== 'undefined') {
 }
 
 function applyVictoryRelics(run: any, _state: any): void {
+  recordEnemyKills(run.combatEnemyDefIds ?? []);
   const cur = run.currentNodeId ? run.map.find((n: any) => n.id === run.currentNodeId) : null;
   const meatEligible = run.player.relics.includes('meat_on_the_bone') && run.player.hp / run.player.maxHp <= 0.5;
   if (run.player.relics.includes('blood_vial')) {

@@ -57,6 +57,9 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'relics_5',  title: t('유물 탐험가'), description: t('5종 유물 발견.'),   emoji: '💎', category: 'collection' },
   { id: 'relics_15', title: t('유물 수집가'), description: t('15종 유물 발견.'),  emoji: '👑', category: 'collection' },
   { id: 'relics_30', title: t('유물의 군주'), description: t('30종 유물 발견.'),  emoji: '🏛️', category: 'collection' },
+  { id: 'enemies_15',  title: t('사냥 입문'),   description: t('15종 적 처치.'),      emoji: '🐾', category: 'collection' },
+  { id: 'enemies_30',  title: t('현상금 사냥꾼'), description: t('30종 적 처치.'),      emoji: '🎯', category: 'collection' },
+  { id: 'enemies_all', title: t('도감 완성'),   description: t('모든 적 53종 처치.'), emoji: '📕', category: 'collection' },
 ];
 
 interface AchData {
@@ -232,21 +235,25 @@ export function reconcileAchievements(): void {
   if (codex.relics >= 5 && !d.unlocked.includes('relics_5')) { d.unlocked.push('relics_5'); changed = true; }
   if (codex.relics >= 15 && !d.unlocked.includes('relics_15')) { d.unlocked.push('relics_15'); changed = true; }
   if (codex.relics >= 30 && !d.unlocked.includes('relics_30')) { d.unlocked.push('relics_30'); changed = true; }
+  if (codex.enemies >= 15 && !d.unlocked.includes('enemies_15')) { d.unlocked.push('enemies_15'); changed = true; }
+  if (codex.enemies >= 30 && !d.unlocked.includes('enemies_30')) { d.unlocked.push('enemies_30'); changed = true; }
+  if (codex.enemies >= 53 && !d.unlocked.includes('enemies_all')) { d.unlocked.push('enemies_all'); changed = true; }
 
   if (changed) persist(d);
 }
 
-function readCodexCounts(): { cards: number; relics: number } {
+function readCodexCounts(): { cards: number; relics: number; enemies: number } {
   try {
     const raw = localStorage.getItem('dod_codex');
-    if (!raw) return { cards: 0, relics: 0 };
+    if (!raw) return { cards: 0, relics: 0, enemies: 0 };
     const data = JSON.parse(raw);
     return {
       cards: Array.isArray(data.cards) ? data.cards.length : 0,
       relics: Array.isArray(data.relics) ? data.relics.length : 0,
+      enemies: (data.enemies && typeof data.enemies === 'object') ? Object.keys(data.enemies).length : 0,
     };
   } catch {
-    return { cards: 0, relics: 0 };
+    return { cards: 0, relics: 0, enemies: 0 };
   }
 }
 
@@ -306,6 +313,12 @@ export function checkCodexRelics(count: number): void {
   if (count >= 5) unlockId('relics_5');
   if (count >= 15) unlockId('relics_15');
   if (count >= 30) unlockId('relics_30');
+}
+
+export function checkCodexEnemies(count: number): void {
+  if (count >= 15) unlockId('enemies_15');
+  if (count >= 30) unlockId('enemies_30');
+  if (count >= 53) unlockId('enemies_all');
 }
 
 export function resetAchievements(): void {

@@ -2,17 +2,19 @@ import { el } from './dom';
 import { setScreen } from '../state';
 import { CARD_DEFS } from '../content/cards';
 import { RELIC_DEFS, SYNERGY_SETS } from '../content/relics';
-import { getSeenCards, getSeenRelics, resetCodex } from '../codex';
+import { getSeenCards, getSeenRelics, getEnemyKills, resetCodex } from '../codex';
+import { ENEMY_DEFS, ENEMY_INDEX } from '../content/enemies';
 import { isCurseLike } from './deck-overlay';
-import type { CardDef, RelicDef } from '../types';
+import type { CardDef, RelicDef, EnemyDef } from '../types';
 import { isCardUnlocked, isRelicUnlocked, cardUnlockReq, relicUnlockReq, reqLabel } from '../unlocks';
 import { kwDesc } from './keywords';
 import { ic } from './art';
 import { t } from '../i18n';
 
-type Tab = 'cards' | 'relics';
+type Tab = 'cards' | 'relics' | 'enemies';
 type CardFilter = 'all' | 'swordmaster' | 'gunner' | 'fighter' | 'magician' | 'priest' | 'thief' | 'summoner' | 'engineer' | 'gambler';
 type RarityFilter = 'all' | 'starter' | 'common' | 'uncommon' | 'rare' | 'boss';
+type ChapterFilter = 'all' | 1 | 2 | 3 | 4;
 
 const RARITY_LABEL: Record<string, string> = {
   starter: '시작', common: '커먼', uncommon: '언커먼', rare: '레어', elite: '엘리트', boss: '보스',
@@ -26,6 +28,7 @@ export function renderCodex(): HTMLElement {
   let tab: Tab = 'cards';
   let cardFilter: CardFilter = 'all';
   let rarityFilter: RarityFilter = 'all';
+  let chapterFilter: ChapterFilter = 'all';
   let searchText = '';
 
   const rebuild = () => {
@@ -39,7 +42,7 @@ export function renderCodex(): HTMLElement {
     wrapper.appendChild(codexTitle);
     wrapper.appendChild(
       el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '4px', textAlign: 'center' } },
-        t('발견한 카드와 유물을 모두 모아보세요. 미발견 항목은 ???로 표시됩니다.')),
+        t('발견한 카드와 유물, 쓰러뜨린 적을 모두 모아보세요. 미발견 항목은 ???로 표시됩니다.')),
     );
 
     // Search bar
@@ -47,7 +50,7 @@ export function renderCodex(): HTMLElement {
     const searchInput = el('input', {
       type: 'text',
       class: 'codex-search',
-      placeholder: t('카드/유물 이름 검색...'),
+      placeholder: t('이름 검색...'),
       value: searchText,
       onInput: (e: Event) => {
         searchText = (e.target as HTMLInputElement).value;
@@ -77,12 +80,20 @@ export function renderCodex(): HTMLElement {
     });
     relicTab.innerHTML = `${ic('gem')} ${t('유물')}`;
     tabRow.appendChild(relicTab);
+    const enemyTab = el('button', {
+      class: tab === 'enemies' ? 'codex-tab active' : 'codex-tab',
+      onClick: () => { tab = 'enemies'; rebuild(); },
+    });
+    enemyTab.innerHTML = `${ic('sword')} ${t('적')}`;
+    tabRow.appendChild(enemyTab);
     wrapper.appendChild(tabRow);
 
     if (tab === 'cards') {
       appendCardsTab();
-    } else {
+    } else if (tab === 'relics') {
       appendRelicsTab();
+    } else {
+      appendEnemiesTab();
     }
 
     // Footer
@@ -250,8 +261,83 @@ export function renderCodex(): HTMLElement {
     wrapper.appendChild(grid);
   };
 
+  const appendEnemiesTab = () => {
+    const kills = getEnemyKills();
+    let entries = Object.values(ENEMY_DEFS);
+
+    const chapterRow = el('div', { class: 'codex-filter-row' });
+    const chapters: { key: ChapterFilter; label: string }[] = [
+      { key: 'all', label: t('전체') },
+      { key: 1, label: `${t('챕터')} 1` },
+      { key: 2, label: `${t('챕터')} 2` },
+      { key: 3, label: `${t('챕터')} 3` },
+      { key: 4, label: `${t('챕터')} 4` },
+    ];
+    for (const c of chapters) {
+      chapterRow.appendChild(el('button', {
+        class: chapterFilter === c.key ? 'codex-filter active' : 'codex-filter',
+        onClick: () => { chapterFilter = c.key; rebuild(); },
+      }, c.label));
+    }
+    wrapper.appendChild(chapterRow);
+
+    if (chapterFilter !== 'all') {
+      entries = entries.filter((e) => ENEMY_INDEX[e.id]?.chapter === chapterFilter);
+    }
+    if (searchText) {
+      const q = searchText.toLowerCase();
+      entries = entries.filter((e) => e.name.toLowerCase().includes(q));
+    }
+
+    const killedCount = entries.filter((e) => (kills[e.id] ?? 0) > 0).length;
+    const totalKills = entries.reduce((sum, e) => sum + (kills[e.id] ?? 0), 0);
+    const stats = el('div', { class: 'codex-stats' });
+    stats.innerHTML = `${t('처치')} ${killedCount} / ${entries.length}  ·  ${t('누적')} ${totalKills}`;
+    wrapper.appendChild(stats);
+
+    const kindOrder: Record<string, number> = { normal: 0, elite: 1, boss: 2 };
+    const sorted = [...entries].sort((a, b) => {
+      const ia = ENEMY_INDEX[a.id] ?? { chapter: 9, kind: 'normal' as const };
+      const ib = ENEMY_INDEX[b.id] ?? { chapter: 9, kind: 'normal' as const };
+      if (ia.chapter !== ib.chapter) return ia.chapter - ib.chapter;
+      const k = (kindOrder[ia.kind] ?? 9) - (kindOrder[ib.kind] ?? 9);
+      if (k !== 0) return k;
+      return a.name.localeCompare(b.name);
+    });
+
+    const grid = el('div', { class: 'codex-relic-grid' });
+    for (const def of sorted) {
+      grid.appendChild(renderEnemySlot(def, kills[def.id] ?? 0));
+    }
+    wrapper.appendChild(grid);
+  };
+
   appendContent();
   return wrapper;
+}
+
+const ENEMY_KIND_LABEL: Record<string, string> = { normal: '일반', elite: '엘리트', boss: '보스' };
+const ENEMY_KIND_COLOR: Record<string, string> = { normal: '#888', elite: '#ff55aa', boss: '#ff8030' };
+
+function renderEnemySlot(def: EnemyDef, killCount: number): HTMLElement {
+  const info = ENEMY_INDEX[def.id];
+  const kindColor = ENEMY_KIND_COLOR[info?.kind ?? 'normal'] ?? '#888';
+  const kindLabel = t(ENEMY_KIND_LABEL[info?.kind ?? 'normal'] ?? '일반');
+  const chapterLabel = info && info.chapter > 0 ? `${t('챕터')} ${info.chapter}` : '';
+  const cls = `codex-relic-slot ${killCount > 0 ? '' : 'unseen'}`;
+  if (killCount === 0) {
+    return el('div', { class: cls },
+      (() => { const d = el('div', { class: 'codex-relic-name' }); d.innerHTML = '???'; return d; })(),
+      el('div', { class: 'codex-relic-desc' }, t('미처치')),
+      el('div', { class: 'codex-relic-rarity', style: { color: kindColor } }, `${kindLabel} ${chapterLabel}`),
+    );
+  }
+  return el('div', { class: cls },
+    el('div', { class: 'codex-relic-name' }, def.name),
+    el('div', { class: 'codex-relic-desc', style: { whiteSpace: 'pre-line' } },
+      `HP ${def.hpRange[0]}~${def.hpRange[1]}\n${t('처치')} ×${killCount}`),
+    el('div', { class: 'codex-relic-rarity', style: { color: kindColor } }, `${kindLabel} ${chapterLabel}`),
+  );
 }
 
 function renderCardSlot(def: CardDef, isSeen: boolean): HTMLElement {

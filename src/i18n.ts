@@ -1101,6 +1101,18 @@ const EN: Record<string, string> = {
   // Blood Mage relics
   '피의 성배': 'Blood Chalice',
   '혈술의 핵': 'Hemomancy Core',
+  '적': 'Enemies',
+  '미처치': 'Not defeated',
+  '처치': 'Defeated',
+  '누적': 'Total',
+  '이름 검색...': 'Search by name...',
+  '발견한 카드와 유물, 쓰러뜨린 적을 모두 모아보세요. 미발견 항목은 ???로 표시됩니다.': 'Collect every card, relic and defeated enemy. Undiscovered entries show as ???.',
+  '사냥 입문': 'First Hunt',
+  '현상금 사냥꾼': 'Bounty Hunter',
+  '도감 완성': 'Complete Bestiary',
+  '15종 적 처치.': 'Defeat 15 enemy types.',
+  '30종 적 처치.': 'Defeat 30 enemy types.',
+  '모든 적 53종 처치.': 'Defeat all 53 enemy types.',
   '전투 시작 시 힘 +1. 맨손과 기의 힘으로 적을 압도한다.': 'Strength +1 at combat start. Overwhelms foes with bare fists and inner force.',
   '매 턴 시작 시 2 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.': 'Heal 2 at the start of each turn. Spends HP as a resource and takes it back with lifesteal.',
 
