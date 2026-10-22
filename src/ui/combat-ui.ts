@@ -66,6 +66,10 @@ function computeCardDamageVsEnemy(card: CardInstance, state: CombatState, enemy:
       addDamage(eff.base * dice, eff.times ?? 1);
     } else if (eff.kind === 'damage_all_dice') {
       addDamage(eff.base * dice);
+    } else if (eff.kind === 'lifesteal') {
+      addDamage(eff.amount, eff.times ?? 1);
+    } else if (eff.kind === 'lifesteal_all') {
+      addDamage(eff.amount);
     } else if (eff.kind === 'damage_per_attack') {
       addDamage(eff.amount * (state.flags.attackCount ?? 0));
     } else if (eff.kind === 'damage_per_card_this_turn') {
@@ -614,6 +618,10 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
   const noEnergy = inPlayerPhase && !canAfford && !curse;
   const selected = selectedCardUid === c.uid;
   const hotkey = idx < 9 ? String(idx + 1) : '';
+  // 힘/약화/취약을 반영한 실제 데미지 — 첫 생존 적 기준 (적별 정확한 값은 호버 미리보기)
+  const hitsEnemy = def.target === 'enemy' || def.target === 'all_enemies' || def.target === 'random_enemy';
+  const firstAlive = state.enemies.find((e) => e.hp > 0);
+  const dmgVsFirst = hitsEnemy && firstAlive ? computeCardDamageVsEnemy(c, state, firstAlive) : 0;
   const upLevel = c.upgraded ?? 0;
   const upgraded = upLevel >= 1;
   const upgradedPlus = upLevel >= 2;
@@ -656,6 +664,9 @@ function renderCard(state: CombatState, c: CardInstance, idx: number): HTMLEleme
     el('div', { class: 'card-cost' }, cost < 0 ? 'X' : String(cost)),
     el('div', { class: 'card-name' }, def.name),
     el('div', { class: 'card-desc' }, kwDesc(def.description)),
+    dmgVsFirst > 0
+      ? el('div', { class: 'card-dmg' }, `↦ ${dmgVsFirst}`)
+      : el('div'),
     el('div', { class: 'card-type' }, typeLabel(def.type)),
   );
 }

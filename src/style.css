@@ -1919,6 +1919,13 @@ button:disabled {
   line-height: 1.4;
   color: var(--text);
 }
+.card-dmg {
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  color: #ff9070;
+  text-shadow: 0 0 6px rgba(255, 112, 80, 0.5);
+}
 .card-type {
   font-size: 10px;
   color: var(--muted);
