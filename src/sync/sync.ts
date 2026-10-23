@@ -473,3 +473,63 @@ export function initializeSync(): void {
   });
   window.addEventListener('pagehide', () => { void flushDirty(); });
 }
+
+// ── 복구 키 / 백업 ───────────────────────────────────────────────
+// 페어링 코드(DNC-XXXX)는 1시간이면 만료되므로 복구 수단이 못 된다.
+// 실제 신원인 userId:secret을 사용자가 보관할 수 있게 노출한다.
+
+export function getRecoveryKey(): string | null {
+  const creds = getCredentials();
+  return creds ? `${creds.userId}:${creds.secret}` : null;
+}
+
+/** 복구 키로 기존 클라우드 계정에 다시 연결하고 데이터를 받아온다. */
+export async function restoreWithKey(key: string): Promise<{ ok: true } | { ok: false; error: string }> {
+  const trimmed = key.trim();
+  const sep = trimmed.indexOf(':');
+  if (sep <= 0 || sep === trimmed.length - 1) {
+    return { ok: false, error: '복구 키 형식이 올바르지 않습니다 (userId:secret)' };
+  }
+  const userId = trimmed.slice(0, sep).trim();
+  const secret = trimmed.slice(sep + 1).trim();
+  const previous = getCredentials();
+  setCredentials({ userId, secret });
+  const res = await pullSync();
+  if ('error' in res) {
+    // 복구 실패 — 원래 상태로 되돌린다
+    if (previous) setCredentials(previous);
+    else clearCredentials();
+    return { ok: false, error: res.error };
+  }
+  return { ok: true };
+}
+
+export interface BackupFile {
+  kind: 'dod-backup';
+  version: number;
+  store: Record<string, unknown>;
+  updatedAt: number;
+}
+
+export function exportBackup(): string {
+  const snap = captureLocal();
+  const file: BackupFile = { kind: 'dod-backup', version: 1, store: snap.store, updatedAt: snap.updatedAt };
+  return JSON.stringify(file, null, 2);
+}
+
+/** 백업 파일을 현재 기록과 합친다 (merge는 추가만 하고 지우지 않는다). */
+export function importBackup(text: string): { ok: true } | { ok: false; error: string } {
+  let parsed: BackupFile;
+  try {
+    parsed = JSON.parse(text) as BackupFile;
+  } catch {
+    return { ok: false, error: '백업 파일을 읽을 수 없습니다' };
+  }
+  if (parsed?.kind !== 'dod-backup' || !parsed.store || typeof parsed.store !== 'object') {
+    return { ok: false, error: '덱 오브 던전 백업 파일이 아닙니다' };
+  }
+  const merged = mergeSnapshots(captureLocal(), { store: parsed.store, updatedAt: parsed.updatedAt ?? Date.now() });
+  applySnapshot(merged);
+  markDirty();
+  return { ok: true };
+}

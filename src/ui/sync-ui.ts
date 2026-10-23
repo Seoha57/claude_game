@@ -13,6 +13,10 @@ import {
   pushSync,
   pullFirebase,
   pushFirebase,
+  getRecoveryKey,
+  restoreWithKey,
+  exportBackup,
+  importBackup,
 } from '../sync/sync';
 import {
   isFirebaseConfigured,
@@ -24,17 +28,56 @@ import {
 
 type Mode = 'idle' | 'busy' | 'showcode' | 'enter' | 'linked' | 'firebase';
 
+// 백업 가져오기는 'dod:sync-applied'로 화면 전체를 다시 그리게 만든다.
+// 그때 지역 상태가 날아가므로 메시지만 모듈 스코프에 잠시 남긴다.
+let pendingOk: string | null = null;
+
 export function renderSync(): HTMLElement {
   const wrapper = el('div', { class: 'rest-screen' });
   let mode: Mode = isFirebaseLinked() ? 'firebase' : isLinked() ? 'linked' : 'idle';
   let activeCode: string | null = null;
   let busyText = '';
   let errorText: string | null = null;
-  let okText: string | null = null;
+  let okText: string | null = pendingOk;
+  pendingOk = null;
+  let showRecoveryKey = false;
 
   const rebuild = () => {
     wrapper.innerHTML = '';
     append();
+  };
+
+  // 서버와 무관한 로컬 백업 — 동기화를 안 쓰거나 서버가 죽어도 쓸 수 있다.
+  const backupRow = (): HTMLElement => {
+    const box = el('div', { style: { display: 'flex', gap: '8px', marginTop: '14px', justifyContent: 'center', flexWrap: 'wrap' } });
+    box.appendChild(el('button', {
+      style: { fontSize: '12px', padding: '8px 16px' },
+      onClick: () => {
+        const blob = new Blob([exportBackup()], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `dod-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        okText = t('백업 파일을 저장했습니다');
+        rebuild();
+      },
+    }, `💾 ${t('백업 내보내기')}`));
+    const fileInput = el('input', { type: 'file', accept: 'application/json,.json', style: { display: 'none' } }) as HTMLInputElement;
+    fileInput.onchange = async () => {
+      const f = fileInput.files?.[0];
+      if (!f) return;
+      const r = importBackup(await f.text());
+      if (r.ok) { pendingOk = t('백업을 현재 기록과 합쳤습니다'); okText = pendingOk; }
+      else errorText = r.error;
+      rebuild();
+    };
+    box.appendChild(fileInput);
+    box.appendChild(el('button', {
+      style: { fontSize: '12px', padding: '8px 16px' },
+      onClick: () => fileInput.click(),
+    }, `📂 ${t('백업 가져오기')}`));
+    return box;
   };
 
   const append = () => {
@@ -219,6 +262,37 @@ export function renderSync(): HTMLElement {
       );
       wrapper.appendChild(row);
 
+      // ── 복구 키 ──
+      const keyBox = el('div', { style: { marginTop: '20px', maxWidth: '420px', width: '100%', textAlign: 'center' } });
+      if (showRecoveryKey) {
+        const key = getRecoveryKey() ?? '';
+        keyBox.appendChild(el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } },
+          t('이 키를 메모해 두세요. 캐시를 지워도 이것만 있으면 복구됩니다. 남에게 보여주지 마세요.')));
+        const keyField = el('input', {
+          type: 'text',
+          value: key,
+          readOnly: true,
+          style: { width: '100%', fontSize: '12px', padding: '8px', textAlign: 'center' },
+          onClick: (e: MouseEvent) => (e.currentTarget as HTMLInputElement).select(),
+        }) as HTMLInputElement;
+        keyBox.appendChild(keyField);
+        keyBox.appendChild(el('button', {
+          style: { fontSize: '12px', padding: '6px 14px', marginTop: '8px' },
+          onClick: async () => {
+            try { await navigator.clipboard.writeText(key); okText = t('복구 키를 복사했습니다'); }
+            catch { keyField.select(); errorText = t('복사에 실패했습니다. 직접 선택해 복사하세요'); }
+            rebuild();
+          },
+        }, t('복사')));
+      } else {
+        keyBox.appendChild(el('button', {
+          style: { fontSize: '13px', padding: '10px 20px' },
+          onClick: () => { showRecoveryKey = true; rebuild(); },
+        }, `🔐 ${t('복구 키 보기')}`));
+      }
+      wrapper.appendChild(keyBox);
+      wrapper.appendChild(backupRow());
+
       const dangerRow = el('div', { style: { display: 'flex', gap: '8px', marginTop: '24px', justifyContent: 'center' } });
       dangerRow.appendChild(
         el('button', {
@@ -391,6 +465,33 @@ export function renderSync(): HTMLElement {
         onClick: () => { mode = 'enter'; rebuild(); },
       }, `🔑 ${t('코드 입력해서 연결')}`),
     );
+
+    // ── 복구 키로 복원 ──
+    const restoreBox = el('div', { style: { marginTop: '18px', maxWidth: '420px', width: '100%', textAlign: 'center' } });
+    restoreBox.appendChild(el('div', { style: { color: 'var(--muted)', fontSize: '12px', marginBottom: '6px' } },
+      t('예전 기기에서 저장해 둔 복구 키가 있다면 여기에 붙여넣으세요.')));
+    const restoreInput = el('input', {
+      type: 'text',
+      placeholder: 'userId:secret',
+      style: { width: '100%', fontSize: '12px', padding: '8px', textAlign: 'center' },
+    }) as HTMLInputElement;
+    restoreBox.appendChild(restoreInput);
+    restoreBox.appendChild(el('button', {
+      style: { fontSize: '13px', padding: '8px 18px', marginTop: '8px' },
+      onClick: async () => {
+        const key = restoreInput.value.trim();
+        if (!key) return;
+        errorText = null; okText = null;
+        busyText = t('복구하는 중...');
+        mode = 'busy'; rebuild();
+        const r = await restoreWithKey(key);
+        if (r.ok) { mode = 'linked'; okText = t('복구 완료'); }
+        else { mode = 'idle'; errorText = r.error; }
+        rebuild();
+      },
+    }, `♻️ ${t('복구 키로 복원')}`));
+    wrapper.appendChild(restoreBox);
+    wrapper.appendChild(backupRow());
     wrapper.appendChild(backButton());
   };
 
