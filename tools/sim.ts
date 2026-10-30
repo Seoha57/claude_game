@@ -57,7 +57,8 @@ const spread = (key: keyof (typeof rows)[0]) => {
 };
 console.log(`편차 — 보통 ${pct(spread('normalWinRate'))} · 보스딜 ${pct(spread('bossDamagePct'))}`);
 console.log('※ AI는 모든 캐릭터에 같은 기준(막아야 하면 방어, 아니면 공격)을 쓴다.');
-console.log('   주사위·소환·스케일링처럼 운영이 필요한 캐릭터는 실제보다 낮게 나온다.');
+console.log('   소환·스케일링처럼 턴을 쌓아야 하는 캐릭터는 실제보다 낮게 나온다.');
+console.log('   (갬블러 주사위는 턴당 1회 고정 굴림이라 AI가 불리할 게 없다)');
 const totalTimeouts = rows.reduce((s, r) => s + r.timeouts, 0);
 if (totalTimeouts > 0) {
   console.log(`※ 타임아웃 ${totalTimeouts}건 — AI가 80턴 안에 못 끝낸 전투. 많으면 지표를 믿기 어렵다.`);

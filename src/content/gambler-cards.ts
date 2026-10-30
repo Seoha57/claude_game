@@ -10,8 +10,8 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'starter',
     cost: 1,
     target: 'enemy',
-    description: '2 × 🎲 데미지.',
-    effects: [{ kind: 'damage_dice', base: 2 }],
+    description: '3 × 🎲 데미지.',
+    effects: [{ kind: 'damage_dice', base: 3 }],
   },
   b_bluff: {
     id: 'b_bluff',
@@ -20,8 +20,8 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'starter',
     cost: 1,
     target: 'self',
-    description: '2 × 🎲 방어도.',
-    effects: [{ kind: 'block_dice', base: 2 }],
+    description: '3 × 🎲 방어도.',
+    effects: [{ kind: 'block_dice', base: 3 }],
   },
 
   b_gambit: {
@@ -452,8 +452,8 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
 };
 
 const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
-  b_dice_throw:   { name: '주사위 투척+',     description: '3 × 🎲 데미지.',                                            effects: [{ kind: 'damage_dice', base: 3 }] },
-  b_bluff:        { name: '블러프+',          description: '3 × 🎲 방어도.',                                            effects: [{ kind: 'block_dice', base: 3 }] },
+  b_dice_throw:   { name: '주사위 투척+',     description: '4 × 🎲 데미지.',                                            effects: [{ kind: 'damage_dice', base: 4 }] },
+  b_bluff:        { name: '블러프+',          description: '4 × 🎲 방어도.',                                            effects: [{ kind: 'block_dice', base: 4 }] },
   b_gambit:       { name: '갬빗+',            description: '4 × 🎲 데미지. 1장 드로우.',                                effects: [{ kind: 'damage_dice', base: 4 }, { kind: 'draw', amount: 1 }] },
   b_coin_toss:    { name: '동전 던지기+',     description: '3 × 🎲 데미지를 두 번.',                                    effects: [{ kind: 'damage_dice', base: 3, times: 2 }] },
   b_wild_card:    { name: '와일드 카드+',     description: '5 × 🎲 데미지.',                                            effects: [{ kind: 'damage_dice', base: 5 }] },
