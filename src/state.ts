@@ -332,6 +332,9 @@ export function startNewRun(
     player.statuses.strength = (player.statuses.strength ?? 0) + options.daily.constraint.startStr;
   }
 
+  // 챌린지 링크는 런이 시작되면 역할이 끝난다 (main.ts가 리로드 대비로 남겨둔 값)
+  try { sessionStorage.removeItem('dod_pending_challenge'); } catch { /* ignore */ }
+
   const map = generateMap(makeSeedRng(seed), 1);
   runState = {
     player,

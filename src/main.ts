@@ -21,12 +21,29 @@ initializeSync();
 render();
 
 // Handle challenge URL: ?seed=X&char=Y&asc=Z
+//
+// 파라미터를 sessionStorage에도 남긴다. PWA(autoUpdate)가 새 서비스워커를 잡으면
+// 페이지를 한 번 리로드하는데, 그 시점엔 아래 replaceState로 쿼리가 이미 지워져 있어
+// 링크가 통째로 사라지고 제목 화면으로 떨어졌다.
+const CHALLENGE_KEY = 'dod_pending_challenge';
 const urlParams = new URLSearchParams(window.location.search);
-const seedParam = urlParams.get('seed');
+let seedParam = urlParams.get('seed');
+let ascParam = urlParams.get('asc');
+if (!seedParam) {
+  try {
+    const saved = sessionStorage.getItem(CHALLENGE_KEY);
+    if (saved) {
+      const p = JSON.parse(saved) as { seed: number; asc: number };
+      seedParam = String(p.seed);
+      ascParam = String(p.asc);
+    }
+  } catch { /* ignore */ }
+}
 if (seedParam) {
   const seed = parseInt(seedParam, 10);
-  const asc = parseInt(urlParams.get('asc') ?? '0', 10);
+  const asc = parseInt(ascParam ?? '0', 10);
   if (!isNaN(seed)) {
+    try { sessionStorage.setItem(CHALLENGE_KEY, JSON.stringify({ seed, asc })); } catch { /* ignore */ }
     setPendingRunParams(seed, asc);
     setScreen('character_select');
     render();
