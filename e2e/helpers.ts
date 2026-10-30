@@ -9,7 +9,11 @@ export async function dismissNotices(page: Page): Promise<void> {
 /** 새 런을 시작해 맵까지 간다. 네오의 축복은 보너스 없이 넘긴다. */
 export async function startRun(page: Page, charName = '검사'): Promise<void> {
   await page.goto('/', { waitUntil: 'load' });
-  await page.waitForTimeout(1200);
+  // 서비스워커가 1.5MB를 프리캐시하는 동안은 모든 조작이 느려진다.
+  // 기다리지 않으면 첫 전투 테스트만 몇 분씩 걸린다.
+  await page.waitForFunction(() => navigator.serviceWorker?.controller != null, null,
+    { timeout: 20_000 }).catch(() => { /* 서비스워커가 없는 환경도 있다 */ });
+  await page.waitForTimeout(800);
   await dismissNotices(page);
   await page.getByRole('button', { name: '새 게임 시작' }).click();
   await page.waitForTimeout(600);
