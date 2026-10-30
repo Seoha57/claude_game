@@ -23,6 +23,7 @@ const { reportClass, ALL_CLASSES } = await import('../src/sim/simulator');
 
 const runs = Number(process.argv[2] ?? 200);
 const ascension = Number(process.argv[3] ?? 0);
+const boost = Number(process.argv[4] ?? 0);  // 자기 직업 풀에서 덱에 추가할 카드 수
 
 const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
 const CLASS_NAME: Record<string, string> = {
@@ -35,11 +36,11 @@ const pad = (s: string, n: number) => {
   return s + ' '.repeat(Math.max(0, n - width));
 };
 
-console.log(`\n시작 덱 기준 · 캐릭터당 ${runs}판 · 등반 A${ascension}\n`);
+console.log(`\n${boost ? `획득 카드 ${boost}장 포함` : "시작 덱 기준"} · 캐릭터당 ${runs}판 · 등반 A${ascension}\n`);
 console.log(`${pad('캐릭터', 12)}  ${'쉬움'.padStart(6)}  ${'잔여HP'.padStart(6)}  ${'보통'.padStart(6)}  ${'엘리트'.padStart(6)}  ${'보스딜'.padStart(6)}  ${'돌파'.padStart(6)}`);
 console.log('─'.repeat(66));
 
-const rows = ALL_CLASSES.map((cls) => reportClass(cls, runs, ascension))
+const rows = ALL_CLASSES.map((cls) => reportClass(cls, runs, ascension, boost))
   .sort((a, b) => b.eliteWinRate - a.eliteWinRate);
 
 for (const r of rows) {

@@ -6,7 +6,19 @@
 // 보상·포션·유물 획득은 재현하지 않는다. 즉 모든 캐릭터가 시작 덱 그대로
 // 싸우므로, 시작 덱과 시작 유물의 균형을 비교하는 용도다.
 
-import { startNewRun, getRun } from '../state';
+import { startNewRun, getRun, makeCard } from '../state';
+import {
+  GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS,
+  FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS,
+  MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS,
+  PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS,
+  THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS,
+  SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS,
+  ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS,
+  GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS,
+  BLOOD_MAGE_COMMON_CARDS, BLOOD_MAGE_UNCOMMON_CARDS,
+  COMMON_CARDS, UNCOMMON_CARDS,
+} from '../content/cards';
 import { startCombat, endPlayerTurn } from '../combat/combat';
 import { playCard } from '../combat/effects';
 import { getEffectiveDef } from '../content/cards';
@@ -148,8 +160,9 @@ export function simulateBossFight(cls: CharacterClass, seed: number, ascension =
 }
 
 /** 쉬움 3 → 보통 2 → 엘리트 1 → 보스 1. 중간 회복 없음. */
-export function simulateGauntlet(cls: CharacterClass, seed: number, ascension = 0): FightOutcome {
+export function simulateGauntlet(cls: CharacterClass, seed: number, ascension = 0, boost = 0): FightOutcome {
   startNewRun(seed, ascension, cls);
+  boostDeck(cls, boost, seed);
   const player = getRun().player;
   const fights: string[][] = [
     pick(EASY_ENCOUNTERS, seed), pick(EASY_ENCOUNTERS, seed + 1), pick(EASY_ENCOUNTERS, seed + 2),
@@ -169,9 +182,39 @@ export function simulateGauntlet(cls: CharacterClass, seed: number, ascension = 
 /** 갠틀릿에서 돌파한 전투 수 (0~7). 승률이 전부 0이라 이쪽이 변별력이 있다. */
 export const GAUNTLET_LENGTH = 7;
 
+function classPool(cc: CharacterClass) {
+  switch (cc) {
+    case 'gunner':     return [...GUNNER_COMMON_CARDS, ...GUNNER_UNCOMMON_CARDS];
+    case 'fighter':    return [...FIGHTER_COMMON_CARDS, ...FIGHTER_UNCOMMON_CARDS];
+    case 'magician':   return [...MAGICIAN_COMMON_CARDS, ...MAGICIAN_UNCOMMON_CARDS];
+    case 'priest':     return [...PRIEST_COMMON_CARDS, ...PRIEST_UNCOMMON_CARDS];
+    case 'thief':      return [...THIEF_COMMON_CARDS, ...THIEF_UNCOMMON_CARDS];
+    case 'summoner':   return [...SUMMONER_COMMON_CARDS, ...SUMMONER_UNCOMMON_CARDS];
+    case 'engineer':   return [...ENGINEER_COMMON_CARDS, ...ENGINEER_UNCOMMON_CARDS];
+    case 'gambler':    return [...GAMBLER_COMMON_CARDS, ...GAMBLER_UNCOMMON_CARDS];
+    case 'blood_mage': return [...BLOOD_MAGE_COMMON_CARDS, ...BLOOD_MAGE_UNCOMMON_CARDS];
+    default:           return [...COMMON_CARDS, ...UNCOMMON_CARDS];
+  }
+}
+
+/**
+ * 런 중반 덱을 흉내 낸다 — 자기 직업 풀에서 n장을 덱에 넣는다.
+ * 시작 덱만 쓰면 "획득 카드로 완성되는" 직업(마법사 광역 등)이 구조적으로 불리하다.
+ */
+export function boostDeck(cls: CharacterClass, n: number, seed: number): void {
+  if (n <= 0) return;
+  const pool = classPool(cls);
+  const deck = getRun().player.deck;
+  for (let i = 0; i < n; i++) {
+    const def = pool[Math.abs(seed * 31 + i * 97) % pool.length];
+    deck.push(makeCard(def.id));
+  }
+}
+
 /** 한 전투만 떼어서 본다 — 시작 덱으로 이 난이도를 어떻게 넘기는지. */
-function singleFight(cls: CharacterClass, table: string[][], seed: number, ascension: number) {
+function singleFight(cls: CharacterClass, table: string[][], seed: number, ascension: number, boost = 0) {
   startNewRun(seed, ascension, cls);
+  boostDeck(cls, boost, seed);
   const player = getRun().player;
   const stats = simulateCombatStats(player, pick(table, seed), seed);
   return { ...stats, hpLeftPct: Math.max(0, player.hp) / player.maxHp };
@@ -193,29 +236,29 @@ export interface ClassReport {
   timeouts: number;
 }
 
-export function reportClass(cls: CharacterClass, runs: number, ascension = 0): ClassReport {
+export function reportClass(cls: CharacterClass, runs: number, ascension = 0, boost = 0): ClassReport {
   let easy = 0, normal = 0, elite = 0, gauntlet = 0, timeouts = 0;
   let easyHpSum = 0, bossDmgSum = 0, clearedSum = 0;
   for (let i = 0; i < runs; i++) {
     const seed = 1000 + i * 7919;
 
-    const e = singleFight(cls, EASY_ENCOUNTERS, seed, ascension);
+    const e = singleFight(cls, EASY_ENCOUNTERS, seed, ascension, boost);
     if (e.result === 'won') { easy++; easyHpSum += e.hpLeftPct; }
     if (e.result === 'timeout') timeouts++;
 
-    const n = singleFight(cls, NORMAL_ENCOUNTERS, seed + 1, ascension);
+    const n = singleFight(cls, NORMAL_ENCOUNTERS, seed + 1, ascension, boost);
     if (n.result === 'won') normal++;
     if (n.result === 'timeout') timeouts++;
 
-    const el = singleFight(cls, ELITE_ENCOUNTERS, seed + 2, ascension);
+    const el = singleFight(cls, ELITE_ENCOUNTERS, seed + 2, ascension, boost);
     if (el.result === 'won') elite++;
     if (el.result === 'timeout') timeouts++;
 
-    const b = singleFight(cls, BOSS_ENCOUNTERS, seed + 3, ascension);
+    const b = singleFight(cls, BOSS_ENCOUNTERS, seed + 3, ascension, boost);
     bossDmgSum += b.enemyDamagePct;
     if (b.result === 'timeout') timeouts++;
 
-    const g = simulateGauntlet(cls, seed, ascension);
+    const g = simulateGauntlet(cls, seed, ascension, boost);
     if (g.result === 'won') gauntlet++;
     if (g.result === 'timeout') timeouts++;
     clearedSum += g.cleared ?? 0;
