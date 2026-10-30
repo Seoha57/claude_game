@@ -13,25 +13,30 @@ export interface AscensionModifiers {
 
 // Per-level penalties (cumulative):
 // A1  enemy HP +5%
-// A2  enemy start strength +1
-// A3  +1 Wound in starting deck
+// A2  +1 Wound in starting deck
+// A3  enemy HP +5% more (total +10%)
 // A4  shop prices +10%
 // A5  starting HP -4
-// A6  enemy HP +10% more (total +15%)
+// A6  enemy start strength +1
 // A7  rest heal 30% → 20% of maxHp
 // A8  +1 more Wound (total 2)
 // A9  enemy strength +1 more (total +2)
-// A10 enemy HP +15% more (total +30%)
+// A10 enemy HP +20% more (total +30%)
+//
+// 적 힘 +1은 단계 하나가 주는 부담이 가장 크다. 원래 A2에 있어서 초반이
+// 급격히 꺾이고 A3~A5는 거의 평평했다 (시뮬 기준 레벨당 -0.28 → -0.02전투).
+// 그래서 A6으로 옮기고 HP 증가를 앞으로 당겨 간격을 고르게 했다.
+// A10의 최종 난이도(HP +30%, 힘 +2, 상처 2장)는 그대로다.
 export function getModifiers(level: number): AscensionModifiers {
   const l = Math.max(0, Math.min(10, level));
   let enemyHpMult = 1;
   if (l >= 1) enemyHpMult += 0.05;
-  if (l >= 6) enemyHpMult += 0.10;
-  if (l >= 10) enemyHpMult += 0.15;
+  if (l >= 3) enemyHpMult += 0.05;
+  if (l >= 10) enemyHpMult += 0.20;
 
-  const enemyStrBonus = (l >= 2 ? 1 : 0) + (l >= 9 ? 1 : 0);
+  const enemyStrBonus = (l >= 6 ? 1 : 0) + (l >= 9 ? 1 : 0);
 
-  const cursesInDeck = (l >= 3 ? 1 : 0) + (l >= 8 ? 1 : 0);
+  const cursesInDeck = (l >= 2 ? 1 : 0) + (l >= 8 ? 1 : 0);
 
   const shopPriceMult = l >= 4 ? 1.10 : 1;
 

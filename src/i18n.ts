@@ -1093,6 +1093,8 @@ const EN: Record<string, string> = {
   // Blood Mage relics
   '피의 성배': 'Blood Chalice',
   '혈술의 핵': 'Hemomancy Core',
+  '적 HP +5% 추가': 'Enemy HP +5% more',
+  '적 HP +20% 추가': 'Enemy HP +20% more',
   '복구 키 보기': 'Show recovery key',
   '복사': 'Copy',
   '복구 키를 복사했습니다': 'Recovery key copied',

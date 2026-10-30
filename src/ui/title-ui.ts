@@ -265,15 +265,15 @@ function renderModifierHints(level: number): HTMLElement {
   if (level === 0) return el('div', {});
   const hints: string[] = [];
   if (level >= 1) hints.push(t('적 HP +5%'));
-  if (level >= 2) hints.push(t('적 힘 +1'));
-  if (level >= 3) hints.push(t('시작 덱에 상처 +1'));
+  if (level >= 2) hints.push(t('시작 덱에 상처 +1'));
+  if (level >= 3) hints.push(t('적 HP +5% 추가'));
   if (level >= 4) hints.push(t('상점 가격 +10%'));
   if (level >= 5) hints.push(t('시작 HP -4'));
-  if (level >= 6) hints.push(t('적 HP +10% 추가'));
+  if (level >= 6) hints.push(t('적 힘 +1'));
   if (level >= 7) hints.push(t('휴식 회복량 30%→20%'));
   if (level >= 8) hints.push(t('시작 덱에 상처 +1 추가'));
   if (level >= 9) hints.push(t('적 힘 +1 추가'));
-  if (level >= 10) hints.push(t('적 HP +15% 추가'));
+  if (level >= 10) hints.push(t('적 HP +20% 추가'));
 
   const mult = `${t('무한 던전 점수')} ×${(1 + level * 0.1).toFixed(1)}`;
   return el(
