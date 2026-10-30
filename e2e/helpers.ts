@@ -21,16 +21,29 @@ export async function startRun(page: Page, charName = '검사'): Promise<void> {
   if (await neow.count()) { await neow.first().click(); await page.waitForTimeout(800); }
 }
 
+/**
+ * 전투에 들어갈 때까지 런을 다시 시작한다.
+ * 맵은 런마다 달라서, 가까운 노드가 전부 모닥불·상점인 맵이 걸릴 수 있다.
+ */
+export async function startRunInCombat(page: Page, charName = '검사', attempts = 3): Promise<boolean> {
+  for (let i = 0; i < attempts; i++) {
+    await startRun(page, charName);
+    if (await enterCombat(page)) return true;
+  }
+  return false;
+}
+
 export const inCombat = async (page: Page): Promise<boolean> =>
   (await page.locator('[data-enemy-uid]').count()) > 0;
 
 /** 맵에서 전투 노드를 찾아 들어간다. 모닥불·상점 등은 건너뛴다. */
 export async function enterCombat(page: Page): Promise<boolean> {
-  for (let round = 0; round < 12; round++) {
+  const deadline = Date.now() + 60_000;  // 못 찾으면 타임아웃 대신 빨리 실패한다
+  for (let round = 0; round < 8 && Date.now() < deadline; round++) {
     if (await inCombat(page)) break;
     const nodes = page.locator('[class*="node"]');
     const n = await nodes.count();
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n && Date.now() < deadline; i++) {
       const el = nodes.nth(i);
       if (!(await el.isVisible().catch(() => false))) continue;
       await el.click({ timeout: 1500 }).catch(() => {});
@@ -56,28 +69,35 @@ export async function skipTutorial(page: Page): Promise<void> {
 }
 
 /**
- * 공격 카드를 계속 내서 전투를 끝낸다.
- * 손패 수가 줄었을 때만 "냈다"고 본다 — 에너지가 없으면 클릭해도 그대로다.
+ * 전투를 끝까지 진행한다. 낼 수 있는 카드는 전부 낸다 — 공격만 내면
+ * 방어를 안 해서 지고, 그러면 "승리!"가 안 떠 테스트가 흔들린다.
+ *
+ * 손패 수가 줄었을 때만 "냈다"고 본다. 에너지가 없으면 클릭해도 그대로다.
  */
 export async function fightToEnd(page: Page, maxTurns = 150): Promise<void> {
-  for (let turn = 0; turn < maxTurns; turn++) {
+  const deadline = Date.now() + 110_000;  // 테스트 제한에 걸려 죽지 않도록 먼저 빠져나온다
+  for (let turn = 0; turn < maxTurns && Date.now() < deadline; turn++) {
     if (!(await inCombat(page))) return;
     const handBefore = await page.locator('.card').count();
-    if (handBefore === 0) { await page.keyboard.press('e'); await page.waitForTimeout(1500); continue; }
+    if (handBefore === 0) { await page.keyboard.press('e'); await page.waitForTimeout(900); continue; }
 
+    // 공격을 먼저 보고, 없으면 아무거나 — 방어·파워도 낸다
     let played = false;
-    const cards = page.locator('.card');
-    for (let i = 0; i < handBefore; i++) {
-      const type = await cards.nth(i).locator('.card-type').innerText().catch(() => '');
-      if (!type.includes('공격')) continue;
-      await cards.nth(i).click({ timeout: 2000 }).catch(() => {});
-      await page.waitForTimeout(200);
-      const enemy = page.locator('[data-enemy-uid]').first();
-      if (await enemy.count()) await enemy.click({ timeout: 2000 }).catch(() => {});
-      await page.waitForTimeout(450);
-      if ((await page.locator('.card').count()) < handBefore) { played = true; break; }
+    for (const attacksOnly of [true, false]) {
+      const cards = page.locator('.card');
+      for (let i = 0; i < handBefore && !played && Date.now() < deadline; i++) {
+        const type = await cards.nth(i).locator('.card-type').innerText().catch(() => '');
+        if (attacksOnly && !type.includes('공격')) continue;
+        await cards.nth(i).click({ timeout: 2000 }).catch(() => {});
+        await page.waitForTimeout(120);
+        const enemy = page.locator('[data-enemy-uid]').first();
+        if (await enemy.count()) await enemy.click({ timeout: 2000 }).catch(() => {});
+        await page.waitForTimeout(260);
+        if ((await page.locator('.card').count()) < handBefore) played = true;
+      }
+      if (played) break;
     }
-    if (!played) { await page.keyboard.press('e'); await page.waitForTimeout(1500); }
+    if (!played) { await page.keyboard.press('e'); await page.waitForTimeout(900); }
   }
 }
 

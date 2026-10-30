@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # wrangler와 vite 모두 node 20 이상이 필요하다
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # tsc 타입 검사 + vite 빌드
+      - name: 빌드
+        run: npm run build
+
+      - name: 유닛 테스트
+        run: npm test
+
+      # 밸런스 시뮬이 깨지지 않았는지만 짧게 확인 (수치는 사람이 본다)
+      - name: 시뮬 스모크
+        run: npm run sim -- 20
+
+      - name: playwright 브라우저 캐시
+        uses: actions/cache@v4
+        id: pw-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: playwright 브라우저 설치
+        run: npx playwright install --with-deps firefox
+
+      - name: e2e 테스트
+        run: npm run test:e2e
+
+      - name: 실패 시 리포트 업로드
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

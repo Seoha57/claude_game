@@ -1,9 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { startRun, enterCombat, fightToEnd, readStorage, dismissNotices } from './helpers';
+import { startRunInCombat, fightToEnd, readStorage, dismissNotices } from './helpers';
 
 test('적을 쓰러뜨리면 도감에 처치 기록이 남는다', async ({ page }) => {
-  await startRun(page);
-  expect(await enterCombat(page), '맵에서 전투 노드를 못 찾음').toBe(true);
+  expect(await startRunInCombat(page), '세 번 시도했는데 전투 노드를 못 찾음').toBe(true);
 
   const before = await readStorage(page, 'dod_codex');
   expect(before?.enemies ?? {}).toEqual({});

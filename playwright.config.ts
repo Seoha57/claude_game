@@ -4,8 +4,10 @@ import { defineConfig, devices } from '@playwright/test';
 // 크롬도 쓰려면 받고 projects에 추가하면 된다.
 export default defineConfig({
   testDir: './e2e',
-  timeout: 180_000,
+  timeout: 240_000,
   expect: { timeout: 15_000 },
+  // 게임 진행이 랜덤이라 아주 가끔 긴 전투가 걸린다 — 한 번은 다시 해본다
+  retries: 1,
   fullyParallel: false,
   workers: 1,
   reporter: [['list']],
@@ -19,6 +21,6 @@ export default defineConfig({
     command: 'npm run build && npx vite preview --port 4173 --host 127.0.0.1',
     url: 'http://127.0.0.1:4173',
     reuseExistingServer: true,
-    timeout: 180_000,
+    timeout: 240_000,
   },
 });
