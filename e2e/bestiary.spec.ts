@@ -1,7 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { startRunInCombat, fightToEnd, readStorage, dismissNotices } from './helpers';
 
-test('적을 쓰러뜨리면 도감에 처치 기록이 남는다', async ({ page }) => {
+// 실제 전투를 끝까지 돌린다. 맵·적 조합·뽑기가 전부 랜덤이라 40초에 끝날 때도,
+// 6분 가까이 갈 때도 있다. 그래서 CI에서는 빼고(@slow) 손으로 돌린다:
+//   npm run test:e2e
+// 여기서 보는 "승리 → 도감 기록" 배선 중 기록 로직 자체는
+// src/progression.test.ts의 '도감' 묶음이 유닛으로 덮고 있다.
+test('적을 쓰러뜨리면 도감에 처치 기록이 남는다', { tag: '@slow' }, async ({ page }) => {
   expect(await startRunInCombat(page), '세 번 시도했는데 전투 노드를 못 찾음').toBe(true);
 
   const before = await readStorage(page, 'dod_codex');

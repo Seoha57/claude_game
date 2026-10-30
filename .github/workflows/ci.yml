@@ -43,8 +43,10 @@ jobs:
       - name: playwright 브라우저 설치
         run: npx playwright install --with-deps firefox
 
+      # @slow(전투를 끝까지 돌리는 테스트)는 빼고 돌린다 — 게임이 랜덤이라
+      # 40초~6분으로 튀어서 CI를 불안정하게 만들었다. 손으로 돌릴 때는 npm run test:e2e.
       - name: e2e 테스트
-        run: npm run test:e2e
+        run: npm run test:e2e:ci
 
       - name: 실패 시 리포트 업로드
         if: failure()

@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { dismissNotices } from './helpers';
 
-// 회귀 테스트: 앱 소스가 여러 청크로 쪼개지면 state.ts가 두 번 로드되고,
-// 두 번째 인스턴스가 currentScreen을 'title'로 초기화해 이 화면이 타이틀로 되돌아갔다.
-// vite.config.ts의 manualChunks가 그걸 막는다.
+// 회귀 테스트: PWA가 autoUpdate로 새로고침을 걸면서 replaceState로 지운 직후의
+// 주소가 아니라 원래 주소로 되돌아가 ?seed=가 사라졌다.
+// 지금은 seed를 sessionStorage에 넣어두고 새로고침 뒤에도 다시 읽는다 (main.ts).
 test('?seed= 챌린지 링크가 캐릭터 선택으로 들어간다', async ({ page }) => {
   await page.goto('/?seed=12345', { waitUntil: 'load' });
   await page.waitForTimeout(2000);
