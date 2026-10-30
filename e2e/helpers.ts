@@ -69,19 +69,19 @@ export async function skipTutorial(page: Page): Promise<void> {
 }
 
 /**
- * 전투를 끝까지 진행한다. 낼 수 있는 카드는 전부 낸다 — 공격만 내면
- * 방어를 안 해서 지고, 그러면 "승리!"가 안 떠 테스트가 흔들린다.
+ * 전투를 끝까지 진행한다. 공격을 먼저 보고, 없으면 방어·파워도 낸다.
+ * 손패 수가 줄었을 때만 "냈다"고 본다 — 에너지가 없으면 클릭해도 그대로다.
  *
- * 손패 수가 줄었을 때만 "냈다"고 본다. 에너지가 없으면 클릭해도 그대로다.
+ * 화면에서 HP를 읽어 판단하지 않는다. 못 찾는 선택자를 턴마다 기다리면
+ * 전투 하나가 몇 분으로 늘어난다.
  */
-export async function fightToEnd(page: Page, maxTurns = 150): Promise<void> {
-  const deadline = Date.now() + 110_000;  // 테스트 제한에 걸려 죽지 않도록 먼저 빠져나온다
+export async function fightToEnd(page: Page, maxTurns = 200): Promise<void> {
+  const deadline = Date.now() + 150_000;
   for (let turn = 0; turn < maxTurns && Date.now() < deadline; turn++) {
     if (!(await inCombat(page))) return;
     const handBefore = await page.locator('.card').count();
-    if (handBefore === 0) { await page.keyboard.press('e'); await page.waitForTimeout(900); continue; }
+    if (handBefore === 0) { await page.keyboard.press('e'); await page.waitForTimeout(500); continue; }
 
-    // 공격을 먼저 보고, 없으면 아무거나 — 방어·파워도 낸다
     let played = false;
     for (const attacksOnly of [true, false]) {
       const cards = page.locator('.card');
@@ -89,15 +89,15 @@ export async function fightToEnd(page: Page, maxTurns = 150): Promise<void> {
         const type = await cards.nth(i).locator('.card-type').innerText().catch(() => '');
         if (attacksOnly && !type.includes('공격')) continue;
         await cards.nth(i).click({ timeout: 2000 }).catch(() => {});
-        await page.waitForTimeout(120);
+        await page.waitForTimeout(60);
         const enemy = page.locator('[data-enemy-uid]').first();
         if (await enemy.count()) await enemy.click({ timeout: 2000 }).catch(() => {});
-        await page.waitForTimeout(260);
+        await page.waitForTimeout(140);
         if ((await page.locator('.card').count()) < handBefore) played = true;
       }
       if (played) break;
     }
-    if (!played) { await page.keyboard.press('e'); await page.waitForTimeout(900); }
+    if (!played) { await page.keyboard.press('e'); await page.waitForTimeout(500); }
   }
 }
 
