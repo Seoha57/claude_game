@@ -558,6 +558,9 @@ export function modifyAttackAmount(state: CombatState, base: number, attackCount
   const run = getRunOrNull();
   if (!run) return base;
   const ac = attackCountOverride ?? state.flags.attackCount ?? 0;
+  // ac가 0이면 아직 공격 카드를 낸 적이 없다. 0 % N === 0이라 그냥 두면
+  // 데미지를 주는 스킬·파워 카드가 첫 사용부터 공짜로 보너스를 받는다.
+  if (ac <= 0) return base;
   let amount = base;
   // 검혼: 5번째 공격마다 +6
   if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
