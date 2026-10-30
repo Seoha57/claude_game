@@ -40,25 +40,39 @@ export async function startRunInCombat(page: Page, charName = '검사', attempts
 export const inCombat = async (page: Page): Promise<boolean> =>
   (await page.locator('[data-enemy-uid]').count()) > 0;
 
-/** 맵에서 전투 노드를 찾아 들어간다. 모닥불·상점 등은 건너뛴다. */
+/**
+ * 맵에서 일반 전투 노드로 들어간다.
+ * 엘리트는 피한다 — 시작 덱으로는 전투가 몇 배로 길어져서 테스트가 흔들린다.
+ * (노드 클래스는 `map-node <kind> accessible` 형태다)
+ */
 export async function enterCombat(page: Page): Promise<boolean> {
-  const deadline = Date.now() + 60_000;  // 못 찾으면 타임아웃 대신 빨리 실패한다
+  const deadline = Date.now() + 60_000;
   for (let round = 0; round < 8 && Date.now() < deadline; round++) {
     if (await inCombat(page)) break;
-    const nodes = page.locator('[class*="node"]');
+    const nodes = page.locator('.map-node.combat.accessible');
     const n = await nodes.count();
     for (let i = 0; i < n && Date.now() < deadline; i++) {
       const el = nodes.nth(i);
       if (!(await el.isVisible().catch(() => false))) continue;
       await el.click({ timeout: 1500 }).catch(() => {});
-      await page.waitForTimeout(800);
+      await page.waitForTimeout(700);
+      if (await inCombat(page)) break;
+    }
+    if (await inCombat(page)) break;
+    // 일반 전투가 없으면 아무 노드나 (모닥불·상점은 건너뛰고 다음 줄로)
+    const any = page.locator('.map-node.accessible');
+    const m = await any.count();
+    for (let i = 0; i < m && Date.now() < deadline; i++) {
+      const el = any.nth(i);
+      if (!(await el.isVisible().catch(() => false))) continue;
+      await el.click({ timeout: 1500 }).catch(() => {});
+      await page.waitForTimeout(700);
       if (await inCombat(page)) break;
       for (const label of [/건너뛰기/, /맵으로/, /나가기/]) {
         const btn = page.getByRole('button', { name: label });
-        if (await btn.count()) { await btn.first().click().catch(() => {}); await page.waitForTimeout(600); break; }
+        if (await btn.count()) { await btn.first().click().catch(() => {}); await page.waitForTimeout(500); break; }
       }
     }
-    await page.waitForTimeout(300);
   }
   await skipTutorial(page);
   return inCombat(page);
