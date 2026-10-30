@@ -138,7 +138,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   blood_chalice: {
     id: 'blood_chalice',
     name: '피의 성배',
-    description: '매 턴 시작 시 2 회복.',
+    description: '매 턴 시작 시 1 회복.',
     rarity: 'starter',
   },
   hemomancy_core: {

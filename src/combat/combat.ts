@@ -12,7 +12,15 @@ import { t } from '../i18n';
 
 const PLAYER_DRAW = 5;
 // 매 턴 2 회복으로 전환된 캐릭터 시작 유물
-const TURN_HEAL_RELICS = ['burning_blood', 'energy_battery', 'lucky_coin', 'blood_chalice', 'soul_lantern'] as const;
+// 매 턴 회복으로 전환된 캐릭터 시작 유물 → 회복량.
+// 피의 성배만 1인 이유: 혈술사는 흡혈로도 회복해서 2를 주면 지속력이 중첩된다.
+const TURN_HEAL_RELICS: Record<string, number> = {
+  burning_blood: 2,
+  energy_battery: 2,
+  lucky_coin: 2,
+  soul_lantern: 2,
+  blood_chalice: 1,
+};
 
 export function startCombat(player: Player, enemyDefIds: string[], seed: number): CombatState {
   const rng = makeRng(seed);
@@ -145,10 +153,10 @@ export function beginPlayerTurn(state: CombatState): void {
       const regen = getStatus(p.statuses, 'regen');
       if (regen > 0 && regen < 3) applyStatus(p, 'regen', 3 - regen);
     }
-    for (const r of TURN_HEAL_RELICS) {
+    for (const [r, amount] of Object.entries(TURN_HEAL_RELICS)) {
       if (!run.player.relics.includes(r)) continue;
       const before = p.hp;
-      p.hp = Math.min(p.maxHp, p.hp + 2);
+      p.hp = Math.min(p.maxHp, p.hp + amount);
       if (p.hp > before) state.log.push(`${t(RELIC_DEFS[r].name)} → ${t('회복')} +${p.hp - before}`);
     }
   }

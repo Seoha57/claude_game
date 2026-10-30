@@ -222,7 +222,7 @@ const CHARACTERS: CharacterInfo[] = [
     startRelicId: 'blood_chalice',
     signatureRelic: t('혈술의 핵'),
     signatureDesc: t('HP를 잃는 카드 사용 시 카드 1장 드로우 (턴당 1회)'),
-    description: t('매 턴 시작 시 2 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.'),
+    description: t('매 턴 시작 시 1 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.'),
     starterCards: [
       { name: t('피의 일격'), type: 'attack', count: 5 },
       { name: t('핏빛 방패'), type: 'skill', count: 3 },

@@ -1169,7 +1169,7 @@ const EN: Record<string, string> = {
   '30종 적 처치.': 'Defeat 30 enemy types.',
   '모든 적 53종 처치.': 'Defeat all 53 enemy types.',
   '전투 시작 시 힘 +1. 맨손과 기의 힘으로 적을 압도한다.': 'Strength +1 at combat start. Overwhelms foes with bare fists and inner force.',
-  '매 턴 시작 시 2 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.': 'Heal 2 at the start of each turn. Spends HP as a resource and takes it back with lifesteal.',
+  '매 턴 시작 시 1 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.': 'Heal 1 at the start of each turn. Spends HP as a resource and takes it back with lifesteal.',
 
   // Blood Mage statuses
   'HP를 잃는 카드 사용 시 잃은 HP × N 방어도': 'Gain lost HP × N as Block when playing HP-cost cards',

@@ -441,8 +441,8 @@ function makeGamblerStarterDeck(): CardInstance[] {
 function makeBloodMageStarterDeck(): CardInstance[] {
   const deck: CardInstance[] = [];
   for (let i = 0; i < 5; i++) deck.push(makeCard('v_blood_strike'));
-  for (let i = 0; i < 3; i++) deck.push(makeCard('v_crimson_guard'));
-  for (let i = 0; i < 2; i++) deck.push(makeCard('v_drain'));
+  for (let i = 0; i < 4; i++) deck.push(makeCard('v_crimson_guard'));
+  deck.push(makeCard('v_drain'));
   return deck;
 }
 
