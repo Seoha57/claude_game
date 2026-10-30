@@ -38,3 +38,7 @@ TODO.local.md
 
 # KV 덤프 (사용자 세이브 데이터 — 절대 커밋 금지)
 .kvdump/
+
+# playwright
+test-results/
+playwright-report/

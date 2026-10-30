@@ -8,9 +8,11 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run --config vitest.config.ts",
-    "sim": "vite-node tools/sim.ts"
+    "sim": "vite-node tools/sim.ts",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.1",
     "jsdom": "^25.0.1",
     "typescript": "^5.4.5",
     "vite": "^6.0.0",
