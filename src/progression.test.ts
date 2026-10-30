@@ -3,6 +3,7 @@ import { getModifiers } from './ascension';
 import { getMastery } from './stats';
 import { TITLES, getSelectedTitle, setSelectedTitle, getEarnedCount } from './titles';
 import { recordEnemyKills, getEnemyKills, getCodexCounts, recordCards, recordRelic } from './codex';
+import { startNewRun, getRun, makeCard, countCardCopies, canAddCard } from './state';
 
 beforeEach(() => localStorage.clear());
 
@@ -148,5 +149,39 @@ describe('도감', () => {
     expect(getCodexCounts()).toEqual({ cards: 1, relics: 0, enemies: 0 });
     recordEnemyKills(['cultist']);
     expect(getCodexCounts().enemies).toBe(1);
+  });
+});
+
+describe('덱 구성 규칙', () => {
+  it('추가 카드는 3장까지만 넣을 수 있다', () => {
+    startNewRun(1, 0, 'swordmaster');
+    const deck = getRun().player.deck;
+    expect(countCardCopies(deck, 'cleave')).toBe(0);
+
+    for (let i = 0; i < 3; i++) {
+      expect(canAddCard(deck, 'cleave'), `${i}장일 때`).toBe(true);
+      deck.push(makeCard('cleave'));
+    }
+    expect(canAddCard(deck, 'cleave')).toBe(false);
+    expect(canAddCard(deck, 'thunderclap'), '다른 카드는 영향받지 않는다').toBe(true);
+  });
+
+  it('시작 덱은 상한(3장)을 넘겨 들어간다 — 보상으로 더 못 넣을 뿐', () => {
+    startNewRun(1, 0, 'swordmaster');
+    const deck = getRun().player.deck;
+    expect(countCardCopies(deck, 'strike')).toBe(5);
+    expect(canAddCard(deck, 'strike')).toBe(false);
+  });
+
+  it('덱에 없는 카드는 0장으로 센다', () => {
+    startNewRun(1, 0, 'swordmaster');
+    expect(countCardCopies(getRun().player.deck, 'v_drain')).toBe(0);
+  });
+
+  it('등반 단계만큼 상처가 시작 덱에 섞인다', () => {
+    for (const [asc, wounds] of [[0, 0], [2, 1], [7, 1], [8, 2], [10, 2]] as const) {
+      startNewRun(1, asc, 'swordmaster');
+      expect(countCardCopies(getRun().player.deck, 'wound'), `A${asc}`).toBe(wounds);
+    }
   });
 });
