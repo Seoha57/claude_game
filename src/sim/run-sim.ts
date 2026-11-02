@@ -279,6 +279,8 @@ export interface RunReport {
   timeouts: number;
   /** 가장 자주 런을 끝낸 적 */
   topKiller: string;
+  /** 챕터 1을 넘긴 비율 — 고단계에서는 여기서 승부가 갈린다 */
+  clearedCh1: number;
 }
 
 /**
@@ -300,7 +302,7 @@ function unlockEverythingForSim(): void {
 
 export function reportRuns(cls: CharacterClass, runs: number, ascension = 0): RunReport {
   unlockEverythingForSim();
-  let wins = 0, timeouts = 0;
+  let wins = 0, timeouts = 0, pastCh1 = 0;
   let chapterSum = 0, nodeSum = 0, hpSum = 0, deckSum = 0, relicSum = 0;
   const killers = new Map<string, number>();
 
@@ -312,6 +314,7 @@ export function reportRuns(cls: CharacterClass, runs: number, ascension = 0): Ru
       const key = o.killedBy.join('+') || '?';
       killers.set(key, (killers.get(key) ?? 0) + 1);
     }
+    if (o.chapter > 1 || o.result === 'won') pastCh1++;
     chapterSum += o.chapter;
     nodeSum += o.nodesCleared;
     deckSum += o.deckSize;
@@ -331,5 +334,6 @@ export function reportRuns(cls: CharacterClass, runs: number, ascension = 0): Ru
     avgRelics: relicSum / runs,
     timeouts,
     topKiller: top ? `${top[0]} (${top[1]})` : '-',
+    clearedCh1: pastCh1 / runs,
   };
 }

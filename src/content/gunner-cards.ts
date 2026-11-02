@@ -19,8 +19,8 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'starter',
     cost: 1,
     target: 'self',
-    description: '방어도 +5.',
-    effects: [{ kind: 'block', amount: 5 }],
+    description: '방어도 +6.',
+    effects: [{ kind: 'block', amount: 6 }],
   },
 
   // ── Common attacks ──
@@ -428,7 +428,7 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
 
 const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_rising_shot:    { name: '속사+',       description: '9 데미지.',                        effects: [{ kind: 'damage', amount: 9 }] },
-  g_reload:         { name: '긴급 회피+',      description: '방어도 +8.',                       effects: [{ kind: 'block', amount: 8 }] },
+  g_reload:         { name: '긴급 회피+',      description: '방어도 +9.',                       effects: [{ kind: 'block', amount: 9 }] },
   g_headshot:       { name: '산탄+',           description: '10 데미지. 취약 +3.',              effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   g_double_gunhawk: { name: '이중 사격+',    description: '7 데미지를 두 번.',                effects: [{ kind: 'damage', amount: 7, times: 2 }] },
   g_western_fire:   { name: '난사+',        description: '모든 적에게 11 데미지.',           effects: [{ kind: 'damage_all', amount: 11 }] },

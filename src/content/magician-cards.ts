@@ -9,8 +9,8 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'starter',
     cost: 1,
     target: 'enemy',
-    description: '6 데미지.',
-    effects: [{ kind: 'damage', amount: 6 }],
+    description: '7 데미지.',
+    effects: [{ kind: 'damage', amount: 7 }],
   },
   m_aura_shield: {
     id: 'm_aura_shield',
@@ -415,7 +415,7 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
 };
 
 const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
-  m_magic_missile:  { name: '마력 화살+',                description: '9 데미지.',                              effects: [{ kind: 'damage', amount: 9 }] },
+  m_magic_missile:  { name: '마력 화살+',                description: '10 데미지.',                             effects: [{ kind: 'damage', amount: 10 }] },
   m_aura_shield:    { name: '마력 방벽+',                  description: '방어도 +8.',                             effects: [{ kind: 'block', amount: 8 }] },
   m_phase_shift:    { name: '차원 전환+',                   description: '10 데미지. 취약 +3.',                    effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   m_skystrike:      { name: '번개 일격+',                       description: '18 데미지.',                             effects: [{ kind: 'damage', amount: 18 }] },

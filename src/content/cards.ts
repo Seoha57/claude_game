@@ -116,8 +116,8 @@ export const CARD_DEFS: Record<string, CardDef> = {
     rarity: 'starter',
     cost: 1,
     target: 'self',
-    description: '방어도 +5.',
-    effects: [{ kind: 'block', amount: 5 }],
+    description: '방어도 +6.',
+    effects: [{ kind: 'block', amount: 6 }],
   },
 
   // ── Common attacks ──
@@ -515,7 +515,7 @@ export const RARE_CARDS     = CARD_LIST.filter((c) => c.rarity === 'rare');
 // Upgrade overrides — only fields that change
 const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   strike:           { name: '검격+',          description: '9 데미지.',                          effects: [{ kind: 'damage', amount: 9 }] },
-  defend:           { name: '가드+',          description: '방어도 +8.',                         effects: [{ kind: 'block', amount: 8 }] },
+  defend:           { name: '가드+',          description: '방어도 +9.',                         effects: [{ kind: 'block', amount: 9 }] },
   bash:             { name: '찌르기+',      description: '10 데미지. 취약 +3.',                effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   cleave:           { name: '회전 참격+',  description: '모든 적에게 11 데미지.',              effects: [{ kind: 'damage_all', amount: 11 }] },
   twin_strike:      { name: '올려치기+',   description: '7 데미지를 두 번.',                   effects: [{ kind: 'damage', amount: 7, times: 2 }] },
