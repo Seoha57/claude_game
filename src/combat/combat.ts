@@ -20,6 +20,10 @@ const TURN_HEAL_RELICS: Record<string, number> = {
   lucky_coin: 2,
   soul_lantern: 2,
   blood_chalice: 1,
+  // 총잡이·도적: sim:run 150런에서 둘만 0.7%였다. 턴당 회복이 없는 두 직업이
+  // 정확히 최하위였으므로 다른 직업과 같은 축을 맞춰준다.
+  gunner_magazine: 2,
+  venom_fang: 2,
 };
 
 export function startCombat(player: Player, enemyDefIds: string[], seed: number): CombatState {

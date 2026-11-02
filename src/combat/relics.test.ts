@@ -31,6 +31,17 @@ describe('매 턴 회복 유물', () => {
     expect(s.player.hp - before).toBe(1);
   });
 
+  it.each(['gunner', 'thief'] as const)(
+    '%s의 시그니처 유물도 턴마다 2 회복한다 — 지속력이 없어 최하위였다',
+    (cls) => {
+      const s = fight(cls);
+      s.player.hp = s.player.maxHp - 10;
+      const before = s.player.hp;
+      beginPlayerTurn(s);
+      expect(s.player.hp - before).toBe(2);
+    },
+  );
+
   it('최대 HP를 넘겨 회복하지 않는다', () => {
     const s = fight('swordmaster');
     s.player.hp = s.player.maxHp;

@@ -78,7 +78,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   gunner_magazine: {
     id: 'gunner_magazine',
     name: '탄창',
-    description: '공격 카드 3회 사용마다 +5 데미지, 카드 1장 드로우.',
+    description: '공격 카드 3회 사용마다 +5 데미지, 카드 1장 드로우. 매 턴 시작 시 2 회복.',
     rarity: 'starter',
   },
   one_mind_belt: {
@@ -102,7 +102,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   venom_fang: {
     id: 'venom_fang',
     name: '독니',
-    description: '매 턴 첫 공격이 적에게 중독 +2.',
+    description: '매 턴 첫 공격이 적에게 중독 +2. 매 턴 시작 시 2 회복.',
     rarity: 'starter',
   },
   spirit_contract: {
