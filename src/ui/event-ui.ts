@@ -1,48 +1,11 @@
 import { el } from './dom';
 import { t } from '../i18n';
-import { getRun, setScreen, makeCard, canAddCard } from '../state';
-import { EVENT_DEFS } from '../content/events';
+import { getRun, setScreen } from '../state';
 import type { EventEffect, EventChoice } from '../content/events';
-import { POTION_LIST } from '../content/potions';
-import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
-import { makeRng, pick, shuffle } from '../rng';
-import { PICKABLE_RELICS } from '../content/relics';
+import { applyEventEffects, canPickEventChoice, eventFor } from '../run/rules';
 import { playSfx } from '../audio';
 import { recordCard, recordRelic } from '../codex';
 import { EVENT_SVG, ic } from './art';
-import {
-  COMMON_CARDS,
-  UNCOMMON_CARDS,
-  RARE_CARDS,
-  GUNNER_COMMON_CARDS,
-  GUNNER_UNCOMMON_CARDS,
-  GUNNER_RARE_CARDS,
-  FIGHTER_COMMON_CARDS,
-  FIGHTER_UNCOMMON_CARDS,
-  FIGHTER_RARE_CARDS,
-  MAGICIAN_COMMON_CARDS,
-  MAGICIAN_UNCOMMON_CARDS,
-  MAGICIAN_RARE_CARDS,
-  PRIEST_COMMON_CARDS,
-  PRIEST_UNCOMMON_CARDS,
-  PRIEST_RARE_CARDS,
-  THIEF_COMMON_CARDS,
-  THIEF_UNCOMMON_CARDS,
-  THIEF_RARE_CARDS,
-  SUMMONER_COMMON_CARDS,
-  SUMMONER_UNCOMMON_CARDS,
-  SUMMONER_RARE_CARDS,
-  ENGINEER_COMMON_CARDS,
-  ENGINEER_UNCOMMON_CARDS,
-  ENGINEER_RARE_CARDS,
-  GAMBLER_COMMON_CARDS,
-  GAMBLER_UNCOMMON_CARDS,
-  GAMBLER_RARE_CARDS,
-  BLOOD_MAGE_COMMON_CARDS,
-  BLOOD_MAGE_UNCOMMON_CARDS,
-  BLOOD_MAGE_RARE_CARDS,
-  canUpgrade,
-} from '../content/cards';
 
 // 이벤트 해결 상태를 모듈 레벨에 보존. 선택 도중 외부 render()
 // (예: 백그라운드 sync) 가 발생해도 선택지가 다시 떠서 효과가
@@ -52,12 +15,7 @@ let resolvedEventText: string | null = null;
 
 export function renderEvent(): HTMLElement {
   const run = getRun();
-  const rng = makeRng(run.seed * 53 + run.floor * 17);
-  const pool = EVENT_DEFS.filter((e) =>
-    (!e.forClass || e.forClass === run.characterClass) &&
-    (!e.minKeys || run.player.keys.length >= e.minKeys),
-  );
-  const eventDef = pick(rng, pool);
+  const eventDef = eventFor(run);
 
   const eventKey = `${run.seed}_${run.chapter}_${run.currentNodeId}`;
   // 이미 해결된 이벤트면 결과 화면부터 시작
@@ -135,129 +93,14 @@ export function renderEvent(): HTMLElement {
   }
 
   function isChoiceDisabled(choice: EventChoice): boolean {
-    if (!choice.condition) return false;
-    const cond = choice.condition;
-    if (cond.kind === 'min_gold') {
-      return run.player.gold < cond.amount;
-    }
-    return false;
+    return !canPickEventChoice(run, choice);
   }
 
   function applyEffects(effects: EventEffect[]): void {
-    for (const effect of effects) {
-      switch (effect.kind) {
-        case 'heal':
-          run.player.hp = Math.min(run.player.maxHp, run.player.hp + effect.amount);
-          playSfx('heal');
-          break;
-        case 'lose_hp':
-          run.player.hp = Math.max(1, run.player.hp - effect.amount);
-          break;
-        case 'gold':
-          run.player.gold += effect.amount;
-          playSfx('gold');
-          break;
-        case 'lose_gold':
-          run.player.gold = Math.max(0, run.player.gold - effect.amount);
-          break;
-        case 'add_curse': {
-          const cursePool = ['wound', 'decay', 'parasite', 'doubt'];
-          for (let i = 0; i < effect.count; i++) {
-            const id = cursePool[Math.floor(rng() * cursePool.length)];
-            run.player.deck.push(makeCard(id));
-          }
-          break;
-        }
-        case 'upgrade_random': {
-          // Prefer fresh (non-upgraded) cards; if none, upgrade + cards to ++.
-          const fresh = run.player.deck.filter((c) => canUpgrade(c) && !c.upgraded);
-          const plus = run.player.deck.filter((c) => canUpgrade(c) && c.upgraded === 1);
-          const pool = fresh.length > 0 ? fresh : plus;
-          const toUpgrade = shuffle(rng, pool.slice()).slice(0, effect.count);
-          for (const card of toUpgrade) {
-            card.upgraded = (card.upgraded ?? 0) + 1;
-          }
-          if (toUpgrade.length > 0) playSfx('upgrade');
-          break;
-        }
-        case 'add_random_relic': {
-          const ignoreLocks = !!run.dailyConfig;
-          const allowed = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
-          const source = allowed.length > 0 ? allowed : PICKABLE_RELICS;
-          const unowned = source.filter((r) => !run.player.relics.includes(r.id));
-          if (unowned.length > 0) {
-            const chosen = pick(rng, unowned);
-            run.player.relics.push(chosen.id);
-            recordRelic(chosen.id);
-            playSfx('relic');
-          }
-          break;
-        }
-        case 'add_card': {
-          const pool = poolFor(effect.rarity).filter((c) => canAddCard(run.player.deck, c.id));
-          if (pool.length > 0) {
-            const chosen = pick(rng, pool);
-            run.player.deck.push(makeCard(chosen.id));
-            recordCard(chosen.id);
-          }
-          break;
-        }
-        case 'add_potion': {
-          if (run.player.potions.length < 3) {
-            const chosen = pick(rng, POTION_LIST);
-            run.player.potions.push(chosen.id);
-            playSfx('potion');
-          }
-          break;
-        }
-        case 'max_hp': {
-          run.player.maxHp = Math.max(1, run.player.maxHp + effect.amount);
-          run.player.hp = Math.max(1, Math.min(run.player.maxHp, run.player.hp + effect.amount));
-          break;
-        }
-        case 'add_blessing': {
-          const blessings = ['divine_strike', 'divine_shield', 'miracle'];
-          for (let i = 0; i < effect.count; i++) {
-            const available = blessings.filter((b) => canAddCard(run.player.deck, b));
-            if (available.length === 0) break;
-            const id = available[Math.floor(rng() * available.length)];
-            run.player.deck.push(makeCard(id));
-          }
-          playSfx('upgrade');
-          break;
-        }
-      }
-    }
-  }
-
-  function poolFor(rarity: 'common' | 'uncommon' | 'rare'): { id: string }[] {
-    const cls = run.characterClass;
-    const ignoreLocks = !!run.dailyConfig;
-    let pool: any[];
-    if (cls === 'gunner') {
-      pool = rarity === 'common' ? GUNNER_COMMON_CARDS : rarity === 'uncommon' ? GUNNER_UNCOMMON_CARDS : GUNNER_RARE_CARDS;
-    } else if (cls === 'fighter') {
-      pool = rarity === 'common' ? FIGHTER_COMMON_CARDS : rarity === 'uncommon' ? FIGHTER_UNCOMMON_CARDS : FIGHTER_RARE_CARDS;
-    } else if (cls === 'magician') {
-      pool = rarity === 'common' ? MAGICIAN_COMMON_CARDS : rarity === 'uncommon' ? MAGICIAN_UNCOMMON_CARDS : MAGICIAN_RARE_CARDS;
-    } else if (cls === 'priest') {
-      pool = rarity === 'common' ? PRIEST_COMMON_CARDS : rarity === 'uncommon' ? PRIEST_UNCOMMON_CARDS : PRIEST_RARE_CARDS;
-    } else if (cls === 'thief') {
-      pool = rarity === 'common' ? THIEF_COMMON_CARDS : rarity === 'uncommon' ? THIEF_UNCOMMON_CARDS : THIEF_RARE_CARDS;
-    } else if (cls === 'summoner') {
-      pool = rarity === 'common' ? SUMMONER_COMMON_CARDS : rarity === 'uncommon' ? SUMMONER_UNCOMMON_CARDS : SUMMONER_RARE_CARDS;
-    } else if (cls === 'engineer') {
-      pool = rarity === 'common' ? ENGINEER_COMMON_CARDS : rarity === 'uncommon' ? ENGINEER_UNCOMMON_CARDS : ENGINEER_RARE_CARDS;
-    } else if (cls === 'gambler') {
-      pool = rarity === 'common' ? GAMBLER_COMMON_CARDS : rarity === 'uncommon' ? GAMBLER_UNCOMMON_CARDS : GAMBLER_RARE_CARDS;
-    } else if (cls === 'blood_mage') {
-      pool = rarity === 'common' ? BLOOD_MAGE_COMMON_CARDS : rarity === 'uncommon' ? BLOOD_MAGE_UNCOMMON_CARDS : BLOOD_MAGE_RARE_CARDS;
-    } else {
-      pool = rarity === 'common' ? COMMON_CARDS : rarity === 'uncommon' ? UNCOMMON_CARDS : RARE_CARDS;
-    }
-    if (ignoreLocks) return pool;
-    const filtered = pool.filter((c) => isCardUnlocked(c));
-    return filtered.length > 0 ? filtered : pool;
+    const gains = applyEventEffects(run, effects);
+    for (const name of gains.sfx) playSfx(name as Parameters<typeof playSfx>[0]);
+    if (gains.relicId) recordRelic(gains.relicId);
+    for (const id of gains.cardIds) recordCard(id);
   }
 
   appendContent();

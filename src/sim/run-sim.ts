@@ -5,9 +5,8 @@
 // 여기서는 run/rules.ts의 진짜 규칙으로 보상·모닥불·상점·유물·포션 드랍까지
 // 태워서 챕터 3 보스까지 간다. 즉 이 파일이 내는 승률이 실제 플레이에 가깝다.
 //
-// 재현하지 않는 것: 이벤트 노드(선택지가 갈래져서 "아무 일도 없음"으로 지나간다),
-// 포션 사용(획득만 하고 쓰지 않는다), 네오우 축복. 전부 플레이어에게 이득인
-// 쪽이므로 여기 승률은 실제보다 약간 낮게 나온다.
+// 재현하지 않는 것: 포션 사용(획득만 하고 쓰지 않는다)과 네오우 축복. 둘 다
+// 플레이어에게 이득인 쪽이므로 여기 승률은 실제보다 약간 낮게 나온다.
 
 import { startNewRun, getRun, makeCard, startNextChapter, canAddCard } from '../state';
 import { CARD_DEFS, canUpgrade } from '../content/cards';
@@ -15,8 +14,9 @@ import { startNode, nextNodes } from '../map/map';
 import {
   encounterFor, combatSeedFor, rollReward, restHealAmount,
   buildShopItems, applyVictoryRewards, chapterClearHeal, bossRelicChoices,
-  applyBossRelicOnPickup,
+  applyBossRelicOnPickup, eventFor, canPickEventChoice, applyEventEffects,
 } from '../run/rules';
+import type { EventChoice, EventEffect } from '../content/events';
 import { simulateCombat } from './simulator';
 import type { CardInstance, CharacterClass, MapNode, RunState } from '../types';
 
@@ -146,6 +146,44 @@ function clearChapter(run: RunState, cleared: number): void {
 }
 
 /** 한 런을 끝까지 돌린다. 챕터 3 보스를 잡으면 'won'. */
+// ── 이벤트 ──
+
+/**
+ * 선택지 하나의 값어치. HP는 비율로 본다 — 62짜리 정령술사와 80짜리 격투가에게
+ * "HP -8"의 무게가 다르다. 소지금은 쓸 데가 상점뿐이라 싸게 친다.
+ */
+function scoreEventEffect(run: RunState, e: EventEffect): number {
+  const maxHp = run.player.maxHp;
+  switch (e.kind) {
+    case 'heal':             return Math.min(e.amount, maxHp - run.player.hp) * (100 / maxHp);
+    case 'lose_hp':          return -e.amount * (100 / maxHp) * (run.player.hp <= e.amount + 10 ? 6 : 2);
+    case 'max_hp':           return e.amount * (150 / maxHp);
+    case 'gold':             return e.amount * 0.08;
+    case 'lose_gold':        return run.player.gold < e.amount ? -100 : -e.amount * 0.08;
+    case 'add_random_relic': return 25;
+    case 'add_card':         return e.rarity === 'rare' ? 14 : e.rarity === 'uncommon' ? 9 : 5;
+    case 'add_blessing':     return e.count * 8;
+    case 'upgrade_random':   return e.count * 7;
+    case 'add_potion':       return run.player.potions.length < 3 ? 4 : 0;
+    case 'add_curse':        return -e.count * 12;
+    default:                 return 0;
+  }
+}
+
+function scoreEventChoice(run: RunState, choice: EventChoice): number {
+  return choice.effects.reduce((sum, e) => sum + scoreEventEffect(run, e), 0);
+}
+
+/** 이벤트 노드 — 점수가 가장 높은 선택지를 고른다. 전부 손해면 그냥 지나간다. */
+function doEvent(run: RunState): void {
+  const ev = eventFor(run);
+  const pickable = ev.choices.filter((c) => canPickEventChoice(run, c));
+  if (pickable.length === 0) return;
+  const best = pickable.reduce((a, b) => (scoreEventChoice(run, a) >= scoreEventChoice(run, b) ? a : b));
+  if (scoreEventChoice(run, best) <= 0) return;
+  applyEventEffects(run, best.effects);
+}
+
 export function simulateRun(cls: CharacterClass, seed: number, ascension = 0): RunOutcome {
   startNewRun(seed, ascension, cls);
   const run = getRun();
@@ -192,8 +230,9 @@ export function simulateRun(cls: CharacterClass, seed: number, ascension = 0): R
         takeReward(run, false);
       } else if (node.kind === 'shop') {
         doShop(run);
+      } else if (node.kind === 'event') {
+        doEvent(run);
       }
-      // event 노드는 지나간다 (선택지가 갈래져서 재현하지 않는다)
 
       if (node.kind === 'boss') break;
     }

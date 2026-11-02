@@ -6,6 +6,7 @@ import {
   cardPools, rollReward, rerollRewardCards, restHealAmount, buildShopItems,
   encounterFor, combatSeedFor, applyVictoryRewards, chapterClearHeal,
   bossRelicChoices, applyBossRelicOnPickup, usePotion,
+  eventFor, canPickEventChoice, applyEventEffects,
 } from './rules';
 import { nodeById } from '../map/map';
 import { CARD_DEFS } from '../content/cards';
@@ -267,6 +268,79 @@ describe('포션', () => {
     const s = startCombat(run.player, ['jaw_worm'], 1);
     usePotion(s, run, 'poison_potion', s.enemies[0]);
     expect(getStatus(s.enemies[0].statuses, 'poison')).toBe(8);
+  });
+});
+
+describe('이벤트', () => {
+  it('같은 런·같은 층이면 같은 이벤트가 나온다', () => {
+    startNewRun(7, 0, 'swordmaster');
+    const run = getRun();
+    run.floor = 3;
+    expect(eventFor(run).id).toBe(eventFor(run).id);
+
+    // 층이 다르면 적어도 가끔은 달라야 한다 (전부 같으면 뽑기가 고장 난 것)
+    const ids = new Set<string>();
+    for (let floor = 0; floor < 12; floor++) { run.floor = floor; ids.add(eventFor(run).id); }
+    expect(ids.size).toBeGreaterThan(1);
+  });
+
+  it('직업 전용 이벤트는 다른 직업에게 안 나온다', () => {
+    startNewRun(7, 0, 'swordmaster');
+    const run = getRun();
+    for (let floor = 0; floor < 40; floor++) {
+      run.floor = floor;
+      const ev = eventFor(run);
+      expect(ev.forClass ?? 'swordmaster').toBe('swordmaster');
+    }
+  });
+
+  it('소지금이 모자라면 그 선택지는 못 고른다', () => {
+    startNewRun(7, 0, 'swordmaster');
+    const run = getRun();
+    const choice = { label: '', result: '', effects: [], condition: { kind: 'min_gold' as const, amount: 100 } };
+    run.player.gold = 50;
+    expect(canPickEventChoice(run, choice)).toBe(false);
+    run.player.gold = 100;
+    expect(canPickEventChoice(run, choice)).toBe(true);
+  });
+
+  it('HP를 잃어도 죽지는 않는다', () => {
+    startNewRun(7, 0, 'swordmaster');
+    const run = getRun();
+    run.player.hp = 5;
+    applyEventEffects(run, [{ kind: 'lose_hp', amount: 99 }]);
+    expect(run.player.hp).toBe(1);
+  });
+
+  it('최대 HP를 올리면 현재 HP도 같이 오른다', () => {
+    startNewRun(7, 0, 'swordmaster');
+    const run = getRun();
+    const before = { hp: run.player.hp, maxHp: run.player.maxHp };
+    applyEventEffects(run, [{ kind: 'max_hp', amount: 10 }]);
+    expect(run.player.maxHp).toBe(before.maxHp + 10);
+    expect(run.player.hp).toBe(before.hp + 10);
+  });
+
+  it('유물·카드·저주가 실제로 들어가고, 얻은 것을 돌려준다', () => {
+    startNewRun(7, 0, 'swordmaster');
+    const run = getRun();
+    const deckBefore = run.player.deck.length;
+    const gains = applyEventEffects(run, [
+      { kind: 'add_random_relic' },
+      { kind: 'add_card', rarity: 'rare' },
+      { kind: 'add_curse', count: 2 },
+    ]);
+    expect(gains.relicId, '유물을 줬는데 뭘 줬는지 안 알려주면 도감에 못 남긴다').toBeTruthy();
+    expect(run.player.relics).toContain(gains.relicId);
+    expect(gains.cardIds.length).toBe(1);
+    expect(run.player.deck.length).toBe(deckBefore + 3);
+  });
+
+  it('회복은 최대 HP를 넘지 않는다', () => {
+    startNewRun(7, 0, 'swordmaster');
+    const run = getRun();
+    applyEventEffects(run, [{ kind: 'heal', amount: 999 }]);
+    expect(run.player.hp).toBe(run.player.maxHp);
   });
 });
 

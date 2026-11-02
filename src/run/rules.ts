@@ -18,6 +18,7 @@ import {
   ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS,
   GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS, GAMBLER_RARE_CARDS,
   BLOOD_MAGE_COMMON_CARDS, BLOOD_MAGE_UNCOMMON_CARDS, BLOOD_MAGE_RARE_CARDS,
+  canUpgrade,
 } from '../content/cards';
 import { PICKABLE_RELICS, ELITE_RELICS, BOSS_RELICS, getActiveSynergies } from '../content/relics';
 import { POTION_LIST, POTION_DEFS } from '../content/potions';
@@ -32,6 +33,9 @@ import {
   pickEncounter,
 } from '../content/enemies';
 import { applyStatus } from '../combat/statuses';
+import { EVENT_DEFS } from '../content/events';
+import type { EventChoice, EventDef, EventEffect } from '../content/events';
+import { makeCard, canAddCard } from '../state';
 import type { CardDef, CombatState, Enemy, MapNode, RelicDef, RunState } from '../types';
 
 // ── 카드 풀 ──
@@ -265,6 +269,121 @@ export function applyBossRelicOnPickup(run: RunState, id: string, addWound: () =
       addWound();
       break;
   }
+}
+
+// ── 이벤트 ──
+
+const CURSE_POOL = ['wound', 'decay', 'parasite', 'doubt'];
+const BLESSING_POOL = ['divine_strike', 'divine_shield', 'miracle'];
+
+/** 이 층에서 만날 이벤트. 같은 런·같은 노드면 항상 같다. */
+export function eventFor(run: RunState): EventDef {
+  const rng = makeRng(run.seed * 53 + run.floor * 17);
+  const pool = EVENT_DEFS.filter((e) =>
+    (!e.forClass || e.forClass === run.characterClass) &&
+    (!e.minKeys || run.player.keys.length >= e.minKeys),
+  );
+  return pick(rng, pool);
+}
+
+/** 조건(소지금 등)을 만족해 고를 수 있는 선택지인가. */
+export function canPickEventChoice(run: RunState, choice: EventChoice): boolean {
+  const cond = choice.condition;
+  if (!cond) return true;
+  if (cond.kind === 'min_gold') return run.player.gold >= cond.amount;
+  return true;
+}
+
+/** 이벤트 효과로 실제 덱·유물에 들어간 것들 — 도감 기록은 UI 몫이다. */
+export interface EventGains {
+  relicId: string | null;
+  cardIds: string[];
+  /** UI가 낼 효과음 (중복 없이, 적용 순서대로) */
+  sfx: string[];
+}
+
+/** 선택지 효과를 런에 적용한다. 효과음·도감·리렌더는 호출하는 쪽에서. */
+export function applyEventEffects(run: RunState, effects: EventEffect[]): EventGains {
+  const rng = makeRng(run.seed * 53 + run.floor * 17 + 1);
+  const p = run.player;
+  const gains: EventGains = { relicId: null, cardIds: [], sfx: [] };
+  const sfx = (name: string) => { if (!gains.sfx.includes(name)) gains.sfx.push(name); };
+
+  for (const effect of effects) {
+    switch (effect.kind) {
+      case 'heal':
+        p.hp = Math.min(p.maxHp, p.hp + effect.amount);
+        sfx('heal');
+        break;
+      case 'lose_hp':
+        p.hp = Math.max(1, p.hp - effect.amount);
+        break;
+      case 'gold':
+        p.gold += effect.amount;
+        sfx('gold');
+        break;
+      case 'lose_gold':
+        p.gold = Math.max(0, p.gold - effect.amount);
+        break;
+      case 'max_hp':
+        p.maxHp = Math.max(1, p.maxHp + effect.amount);
+        p.hp = Math.max(1, Math.min(p.maxHp, p.hp + effect.amount));
+        break;
+      case 'add_curse':
+        for (let i = 0; i < effect.count; i++) {
+          p.deck.push(makeCard(CURSE_POOL[Math.floor(rng() * CURSE_POOL.length)]));
+        }
+        break;
+      case 'add_blessing': {
+        for (let i = 0; i < effect.count; i++) {
+          const available = BLESSING_POOL.filter((b) => canAddCard(p.deck, b));
+          if (available.length === 0) break;
+          p.deck.push(makeCard(available[Math.floor(rng() * available.length)]));
+        }
+        sfx('upgrade');
+        break;
+      }
+      case 'upgrade_random': {
+        // 아직 강화 안 한 카드가 먼저, 없으면 +를 ++로.
+        const fresh = p.deck.filter((c) => canUpgrade(c) && !c.upgraded);
+        const plus = p.deck.filter((c) => canUpgrade(c) && c.upgraded === 1);
+        const target = shuffle(rng, (fresh.length > 0 ? fresh : plus).slice()).slice(0, effect.count);
+        for (const card of target) card.upgraded = (card.upgraded ?? 0) + 1;
+        if (target.length > 0) sfx('upgrade');
+        break;
+      }
+      case 'add_random_relic': {
+        const ignoreLocks = !!run.dailyConfig;
+        const allowed = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
+        const source = allowed.length > 0 ? allowed : PICKABLE_RELICS;
+        const unowned = source.filter((r) => !p.relics.includes(r.id));
+        if (unowned.length > 0) {
+          const chosen = pick(rng, unowned);
+          p.relics.push(chosen.id);
+          gains.relicId = chosen.id;
+          sfx('relic');
+        }
+        break;
+      }
+      case 'add_card': {
+        const pools = cardPools(run);
+        const pool = pools[effect.rarity].filter((c) => canAddCard(p.deck, c.id));
+        if (pool.length > 0) {
+          const chosen = pick(rng, pool);
+          p.deck.push(makeCard(chosen.id));
+          gains.cardIds.push(chosen.id);
+        }
+        break;
+      }
+      case 'add_potion':
+        if (p.potions.length < 3) {
+          p.potions.push(pick(rng, POTION_LIST).id);
+          sfx('potion');
+        }
+        break;
+    }
+  }
+  return gains;
 }
 
 // ── 포션 ──
