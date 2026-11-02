@@ -1,6 +1,19 @@
 import type { EnemyDef, Intent } from '../types';
 import { dealDamage, gainBlock } from '../combat/effects';
-import { applyStatus } from '../combat/statuses';
+import { applyStatus, getStatus } from '../combat/statuses';
+
+/**
+ * 흑요암 골렘의 가시는 쌓이지 않고 이 값으로 유지된다 (반피 각성 때 한 번 더 붙는다).
+ *
+ * 원래는 2턴마다 +3씩 상한 없이 늘었다. 런 시뮬에서 10개 직업 중 8개의 최다
+ * 사망 원인이었고, 가시만 떼어내 재면 승률이 0% ↔ 100%로 갈렸다 — HP나 방어
+ * 턴은 거의 영향이 없었다(200HP로 낮춰도 0%). 즉 "큰 단타를 들고 왔는가"
+ * 하나로 승패가 결정되는 절벽이었다.
+ *
+ * 가시 3 유지 + 각성 +2로 두면 같은 조건에서 36%. 챕터 1 다른 보스들
+ * (헥사고스트 26%, 광폭한 도살자 75%) 사이에 들어온다.
+ */
+export const GOLEM_THORNS_CAP = 3;
 
 function attack(amount: number, hits = 1): Intent {
   return { kind: 'attack', damage: amount, hits, label: `${amount}×${hits}` };
@@ -197,16 +210,22 @@ export const ENEMY_DEFS: Record<string, EnemyDef> = {
     hpRange: [215, 225],
     isBoss: true,
     onHalfHp(_state, self) {
-      applyStatus(self, 'thorns', 5);
+      applyStatus(self, 'thorns', 2);
       applyStatus(self, 'metallicize', 3);
-      return '균열에서 빛이 솟구친다! (가시 +5, 금속화 +3)';
+      return '균열에서 빛이 솟구친다! (가시 +2, 금속화 +3)';
     },
-    decideIntent(_state, _self, turn) {
-      if (turn === 0) return { kind: 'buff', label: '가시 +3' };
+    decideIntent(_state, self, turn) {
+      // 가시는 GOLEM_THORNS_CAP까지만 쌓는다. 상한 없이 2턴마다 +3씩 늘던 때는
+      // 전투가 길어질수록 공격 자체가 자살이 돼서, 런 시뮬에서 8개 직업의
+      // 최다 사망 원인이었다. 상한에 닿으면 방어로 바꿔 압박은 유지한다.
+      const capped = () => (getStatus(self.statuses, 'thorns') >= GOLEM_THORNS_CAP
+        ? { kind: 'block', block: 10, label: '방어 10' } as Intent
+        : { kind: 'buff', label: '가시 +3' } as Intent);
+      if (turn === 0) return capped();
       const cycle = (turn - 1) % 4;
       if (cycle === 0) return { kind: 'block', block: 12, label: '방어 12' };
       if (cycle === 1) return { kind: 'attack', damage: 16, hits: 1, label: '16' };
-      if (cycle === 2) return { kind: 'buff', label: '가시 +3' };
+      if (cycle === 2) return capped();
       return { kind: 'attack', damage: 5, hits: 2, label: '5×2' };
     },
     act(state, self) {

@@ -20,7 +20,9 @@ export default defineConfig({
   webServer: {
     command: 'npm run build && npx vite preview --port 4173 --host 127.0.0.1',
     url: 'http://127.0.0.1:4173',
-    reuseExistingServer: true,
+    // 이 command는 build까지 한다. 서버를 재사용하면 빌드를 건너뛰어
+    // 예전 dist/를 그대로 검사하게 된다 — 실제로 바뀐 코드가 아닌 걸 보고 통과했다.
+    reuseExistingServer: false,
     timeout: 300_000,
   },
 });

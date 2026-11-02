@@ -444,7 +444,8 @@ export function playCard(
       && def.type === 'skill' && !state.flags.resonanceUsedThisTurn) {
     state.flags.resonanceUsedThisTurn = true;
     drawCards(state, 1);
-    log(`${t('원소 공명')} → ${t('카드')} +1`);
+    p.block += 3;
+    log(`${t('원소 공명')} → ${t('카드')} +1, ${t('방어도')} +3`);
   }
 
   // 정령 계약서 (정령술사) — power 카드 사용 시 방어도 +3

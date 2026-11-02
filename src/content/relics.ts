@@ -58,7 +58,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   mage_orb: {
     id: 'mage_orb',
     name: '마탑의 결정',
-    description: '매 턴 시작 시 무작위 적에게 3 데미지.',
+    description: '매 턴 시작 시 무작위 적에게 3 데미지, HP +2 회복.',
     rarity: 'starter',
   },
   holy_chalice: {
@@ -90,7 +90,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   elemental_resonance: {
     id: 'elemental_resonance',
     name: '원소 공명',
-    description: '방어 카드 사용 시 카드 1장 드로우 (턴당 1회).',
+    description: '방어 카드 사용 시 카드 1장 드로우, 방어도 +3 (턴당 1회).',
     rarity: 'starter',
   },
   holy_seal: {

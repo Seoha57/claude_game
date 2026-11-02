@@ -397,7 +397,10 @@ function makeMagicianStarterDeck(): CardInstance[] {
   const deck: CardInstance[] = [];
   for (let i = 0; i < 5; i++) deck.push(makeCard('m_magic_missile'));
   for (let i = 0; i < 4; i++) deck.push(makeCard('m_aura_shield'));
-  deck.push(makeCard('m_phase_shift'));
+  // 차원 전환(8뎀+취약2, 2코스트)은 검사의 찌르기와 글자까지 같았다. 같은 덱에
+  // HP만 10 낮은 꼴이라 런 시뮬에서 유일하게 승률 0%였고, 죽는 자리도 보스가
+  // 아니라 적이 둘인 잡몹이었다. 광역을 시작부터 줘서 직업 정체성과 맞춘다.
+  deck.push(makeCard('m_petal'));
   return deck;
 }
 

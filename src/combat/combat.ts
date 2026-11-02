@@ -129,6 +129,10 @@ export function beginPlayerTurn(state: CombatState): void {
         const absorbed = Math.min(target.block, 3);
         target.block -= absorbed;
         target.hp = Math.max(0, target.hp - (3 - absorbed));
+        // 마법사는 턴당 회복 수단이 없는 유일한 직업이었다 (65 HP, 10개 중 9위).
+        // 런 시뮬에서 회복을 가진 직업들이 상위를 쓸고 있었고, 마법사는 보스도
+        // 못 보고 평균 8.6노드에서 끝났다. 결정이 때린 만큼 조금 돌려받는다.
+        p.hp = Math.min(p.maxHp, p.hp + 2);
         state.log.push(`${t('마탑의 결정')} → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}${t('에게')} 3 ${t('데미지')}`);
         maybeTriggerPhase(state, target);
       }
