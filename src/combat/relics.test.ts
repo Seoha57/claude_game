@@ -42,6 +42,14 @@ describe('매 턴 회복 유물', () => {
     },
   );
 
+  it('정령술사는 등불 2 + 정령 계약서 2로 턴마다 4 회복한다', () => {
+    const s = fight('summoner');
+    s.player.hp = s.player.maxHp - 10;
+    const before = s.player.hp;
+    beginPlayerTurn(s);
+    expect(s.player.hp - before).toBe(4);
+  });
+
   it('최대 HP를 넘겨 회복하지 않는다', () => {
     const s = fight('swordmaster');
     s.player.hp = s.player.maxHp;

@@ -24,6 +24,9 @@ const TURN_HEAL_RELICS: Record<string, number> = {
   // 정확히 최하위였으므로 다른 직업과 같은 축을 맞춰준다.
   gunner_magazine: 2,
   venom_fang: 2,
+  // 정령술사: HP가 62로 가장 낮은데 턴당 회복이 공용 유물(영혼의 등불) 2뿐이었다.
+  // 회복만 늘려봤을 때 2.0% → 8.0%. HP를 75로 올려도 4.7%에 그쳐서 축은 회복이다.
+  spirit_contract: 2,
 };
 
 export function startCombat(player: Player, enemyDefIds: string[], seed: number): CombatState {

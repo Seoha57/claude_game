@@ -108,7 +108,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   spirit_contract: {
     id: 'spirit_contract',
     name: '정령 계약서',
-    description: 'power 카드 사용 시 방어도 +3.',
+    description: 'power 카드 사용 시 방어도 +3. 매 턴 시작 시 2 회복.',
     rarity: 'starter',
   },
   drone_core: {
