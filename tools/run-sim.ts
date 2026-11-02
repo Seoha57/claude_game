@@ -17,8 +17,8 @@ const runs = Number(process.argv[2] ?? 100);
 const ascension = Number(process.argv[3] ?? 0);
 
 console.log(`\n런 전체 · 캐릭터당 ${runs}판 · 등반 A${ascension}\n`);
-console.log(`${pad('캐릭터', 12)}  ${'승률'.padStart(6)}  ${'도달'.padStart(6)}  ${'노드'.padStart(6)}  ${'잔여HP'.padStart(6)}  ${'덱'.padStart(5)}  ${'유물'.padStart(5)}`);
-console.log('─'.repeat(64));
+console.log(`${pad('캐릭터', 12)}  ${'승률'.padStart(6)}  ${'ch1돌파'.padStart(7)}  ${'도달'.padStart(6)}  ${'노드'.padStart(6)}  ${'잔여HP'.padStart(6)}  ${'덱'.padStart(5)}  ${'유물'.padStart(5)}`);
+console.log('─'.repeat(73));
 
 const rows = ALL_CLASSES.map((cls) => reportRuns(cls, runs, ascension))
   .sort((a, b) => b.winRate - a.winRate);
@@ -26,12 +26,13 @@ const rows = ALL_CLASSES.map((cls) => reportRuns(cls, runs, ascension))
 for (const r of rows) {
   console.log(
     `${pad(CLASS_NAME[r.cls] ?? r.cls, 12)}  ${pct(r.winRate).padStart(6)}`
+    + `  ${pct(r.clearedCh1).padStart(7)}`
     + `  ${('ch' + r.avgChapter.toFixed(1)).padStart(6)}  ${r.avgNodes.toFixed(1).padStart(6)}`
     + `  ${pct(r.avgHpLeftPct).padStart(6)}  ${r.avgDeckSize.toFixed(1).padStart(5)}  ${r.avgRelics.toFixed(1).padStart(5)}`,
   );
 }
 
-console.log('─'.repeat(64));
+console.log('─'.repeat(73));
 const wr = rows.map((r) => r.winRate);
 console.log(`승률 편차 — ${pct(Math.max(...wr) - Math.min(...wr))} (최고 ${CLASS_NAME[rows[0].cls]} ${pct(wr[0])}, 최저 ${CLASS_NAME[rows[rows.length - 1].cls]} ${pct(wr[wr.length - 1])})`);
 
