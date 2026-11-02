@@ -76,7 +76,7 @@ describe('독니 (도적 시그니처)', () => {
 });
 
 describe('혈술의 핵 (혈술사 시그니처)', () => {
-  it('HP를 잃는 카드를 내면 방어도 +3과 드로우 1을 준다', () => {
+  it('HP를 잃는 카드를 내면 방어도 +3을 준다 (드로우는 고단계에서 너무 세서 뺐다)', () => {
     const s = fight('blood_mage');
     s.player.block = 0;
     const strike = s.player.hand.find((c) => c.defId === 'v_blood_strike')
@@ -87,8 +87,8 @@ describe('혈술의 핵 (혈술사 시그니처)', () => {
     playCard(s, strike, s.enemies[0], () => {});
 
     expect(s.player.block).toBe(3);
-    // 카드 한 장을 내고 한 장을 뽑으므로 손패 수는 그대로
-    expect(s.player.hand.length).toBe(handBefore);
+    // 낸 카드만 손에서 빠진다 (뽑지 않는다)
+    expect(s.player.hand.length).toBe(handBefore - 1);
   });
 
   it('턴당 한 번만 발동한다', () => {

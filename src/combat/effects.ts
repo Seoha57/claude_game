@@ -201,11 +201,12 @@ export function applyEffect(
         log(`${t('피의 광기')} → ${t('힘')} +${bp}`);
       }
       const run = getRunOrNull();
+      // 드로우는 고단계에서만 유독 셌다 (500판: A10 -4.0%p, A0 -1.0%p).
+      // 매 턴 공짜 카드가 긴 전투에서 복리로 불어나 혈술사 혼자 전환율을 끌어올렸다.
       if (run?.player.relics.includes('hemomancy_core') && !state.flags.hemocoreUsedThisTurn) {
         state.flags.hemocoreUsedThisTurn = true;
         gainBlock(player, 3);
-        drawCards(state, 1);
-        log(`${t('혈술의 핵')} → ${t('방어도')} +3, ${t('카드')} +1`);
+        log(`${t('혈술의 핵')} → ${t('방어도')} +3`);
       }
       return;
     }
