@@ -1,9 +1,9 @@
 import { el } from './dom';
 import { t } from '../i18n';
 import { getRun, setScreen } from '../state';
-import { rollBlessings, type NeowBlessing } from '../content/neow';
+import { type NeowBlessing } from '../content/neow';
+import { applyNeowBlessing, neowChoices } from '../run/rules';
 import { showChapterIntro } from './splash-overlay';
-import { makeRng } from '../rng';
 import { playSfx } from '../audio';
 import { recordRelic } from '../codex';
 import { NEOW_SVG } from './art';
@@ -20,10 +20,7 @@ const BLESSING_SVG_KEY: Record<string, string> = {
 
 export function renderNeowBlessing(): HTMLElement {
   const run = getRun();
-  // Use the run seed so blessings are stable for "save/resume" semantics
-  // (even though we transition to map immediately after picking).
-  const rng = makeRng(run.seed ^ 0x9e3779b1);
-  const choices = rollBlessings(rng, 4);
+  const choices = neowChoices(run);
 
   const wrapper = el('div', { class: 'neow-screen' });
 
@@ -59,14 +56,7 @@ export function renderNeowBlessing(): HTMLElement {
     return el('div', {
       class: `neow-card tone-${b.tone}`,
       onClick: () => {
-        const p = getRun().player;
-        // Track existing relics to detect newly-added ones (for codex)
-        const before = new Set(p.relics);
-        b.apply(p, rng);
-        // Record any new relics granted by the blessing
-        for (const id of p.relics) {
-          if (!before.has(id)) recordRelic(id);
-        }
+        for (const id of applyNeowBlessing(getRun(), b)) recordRelic(id);
         playSfx(b.tone === 'risky' ? 'relic' : 'upgrade');
         proceed();
       },

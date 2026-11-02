@@ -5,8 +5,8 @@
 // 여기서는 run/rules.ts의 진짜 규칙으로 보상·모닥불·상점·유물·포션 드랍까지
 // 태워서 챕터 3 보스까지 간다. 즉 이 파일이 내는 승률이 실제 플레이에 가깝다.
 //
-// 재현하지 않는 것: 포션 사용(획득만 하고 쓰지 않는다)과 네오우 축복. 둘 다
-// 플레이어에게 이득인 쪽이므로 여기 승률은 실제보다 약간 낮게 나온다.
+// 사람보다 못 두는 것: 선택지 하나하나의 판단(아래 정책 함수들). 모든 캐릭터에
+// 같은 기준을 쓰므로 직업 간 비교와 변경 전후 비교에는 쓸 만하다.
 
 import { startNewRun, getRun, makeCard, startNextChapter, canAddCard } from '../state';
 import { CARD_DEFS, canUpgrade } from '../content/cards';
@@ -15,6 +15,7 @@ import {
   encounterFor, combatSeedFor, rollReward, restHealAmount,
   buildShopItems, applyVictoryRewards, chapterClearHeal, bossRelicChoices,
   applyBossRelicOnPickup, eventFor, canPickEventChoice, applyEventEffects,
+  neowChoices, applyNeowBlessing,
 } from '../run/rules';
 import type { EventChoice, EventEffect } from '../content/events';
 import { simulateCombat } from './simulator';
@@ -146,6 +147,21 @@ function clearChapter(run: RunState, cleared: number): void {
 }
 
 /** 한 런을 끝까지 돌린다. 챕터 3 보스를 잡으면 'won'. */
+// ── 네오의 축복 ──
+
+// 축복은 네 개 중 하나를 고른다. 사람은 덱을 보고 고르지만, 여기서는 고정 선호를
+// 쓴다 — 모든 직업에 같은 기준이라 비교에는 영향이 없다.
+// (에너지 +1이 압도적이고, 그 다음이 보스 유물이다.)
+const NEOW_PREFERENCE = ['energy_blessing', 'dark_pact', 'relic_blessing',
+  'health_blessing', 'upgrade_blessing', 'potion_blessing', 'wealth_blessing'];
+
+function takeNeowBlessing(run: RunState): void {
+  const choices = neowChoices(run);
+  const best = choices.reduce((a, b) =>
+    (NEOW_PREFERENCE.indexOf(a.id) <= NEOW_PREFERENCE.indexOf(b.id) ? a : b));
+  applyNeowBlessing(run, best);
+}
+
 // ── 이벤트 ──
 
 /**
@@ -187,6 +203,7 @@ function doEvent(run: RunState): void {
 export function simulateRun(cls: CharacterClass, seed: number, ascension = 0): RunOutcome {
   startNewRun(seed, ascension, cls);
   const run = getRun();
+  takeNeowBlessing(run);
   let nodesCleared = 0;
   let killedBy: string[] = [];
 

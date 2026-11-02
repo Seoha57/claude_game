@@ -73,17 +73,31 @@ function pickTarget(state: CombatState): Enemy | null {
 }
 
 /**
- * 위급하면 포션 한 개를 쓴다 — 막을 수 없는 데미지가 남은 HP를 넘길 때.
- * 사람은 더 영리하게 쓰지만, 적어도 "모아두고 안 쓰는" 왜곡은 없앤다.
+ * 포션을 쓴다. 전에는 "위급할 때 가방의 첫 포션"이라 화염 물약으로 피를 채우려
+ * 드는 일이 있었다. 지금은 상황에 맞는 포션을 고르고, 긴 싸움(보스·엘리트처럼
+ * 적 HP가 많이 남은 경우)에는 공격 포션도 쓴다.
  */
+const DEFENSIVE_POTIONS = new Set(['health_potion', 'block_potion', 'weak_potion', 'vulnerable_potion', 'freeze_potion']);
+const OFFENSIVE_POTIONS = new Set(['fire_potion', 'poison_potion', 'burn_potion', 'strength_potion', 'energy_potion']);
+
 function maybeDrinkPotion(state: CombatState): void {
   const run = getRunOrNull();
   if (!run || run.player.potions.length === 0) return;
+
   const unblocked = incomingDamage(state) - state.player.block;
-  if (unblocked < state.player.hp * 0.5) return;
-  const potionId = run.player.potions[0];
-  const target = POTION_DEFS[potionId]?.target === 'enemy' ? pickTarget(state) : null;
-  usePotion(state, run, potionId, target);
+  const inDanger = unblocked >= state.player.hp * 0.5;
+  const enemyHpLeft = state.enemies.reduce((sum, e) => sum + Math.max(0, e.hp), 0);
+  const longFight = enemyHpLeft >= 80;
+  if (!inDanger && !longFight) return;
+
+  const wanted = inDanger ? DEFENSIVE_POTIONS : OFFENSIVE_POTIONS;
+  const potionId = run.player.potions.find((id) => wanted.has(id));
+  // 쓸 만한 게 없으면 아낀다 — 가방이 꽉 찼을 때만 아무거나 비운다.
+  const id = potionId ?? (run.player.potions.length >= 3 ? run.player.potions[0] : null);
+  if (!id) return;
+
+  const target = POTION_DEFS[id]?.target === 'enemy' ? pickTarget(state) : null;
+  usePotion(state, run, id, target);
 }
 
 function playTurn(state: CombatState): void {

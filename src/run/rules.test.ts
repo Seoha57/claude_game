@@ -7,7 +7,9 @@ import {
   encounterFor, combatSeedFor, applyVictoryRewards, chapterClearHeal,
   bossRelicChoices, applyBossRelicOnPickup, usePotion,
   eventFor, canPickEventChoice, applyEventEffects,
+  neowChoices, applyNeowBlessing,
 } from './rules';
+import { NEOW_BLESSINGS } from '../content/neow';
 import { nodeById } from '../map/map';
 import { CARD_DEFS } from '../content/cards';
 import type { MapNode } from '../types';
@@ -341,6 +343,44 @@ describe('이벤트', () => {
     const run = getRun();
     applyEventEffects(run, [{ kind: 'heal', amount: 999 }]);
     expect(run.player.hp).toBe(run.player.maxHp);
+  });
+});
+
+describe('네오의 축복', () => {
+  it('같은 런이면 같은 후보 4개가 나온다 (이어하기 때문에)', () => {
+    startNewRun(42, 0, 'swordmaster');
+    const run = getRun();
+    const first = neowChoices(run).map((b) => b.id);
+    expect(first.length).toBe(4);
+    expect(new Set(first).size, '같은 축복이 두 번 뜨면 안 된다').toBe(4);
+    expect(neowChoices(run).map((b) => b.id)).toEqual(first);
+  });
+
+  it('체력의 축복은 최대 HP와 현재 HP를 같이 올린다', () => {
+    startNewRun(42, 0, 'swordmaster');
+    const run = getRun();
+    const before = { hp: run.player.hp, maxHp: run.player.maxHp };
+    applyNeowBlessing(run, NEOW_BLESSINGS.find((b) => b.id === 'health_blessing')!);
+    expect(run.player.maxHp).toBe(before.maxHp + 10);
+    expect(run.player.hp).toBe(before.hp + 10);
+  });
+
+  it('유물을 주는 축복은 무엇을 줬는지 알려준다 (도감 기록용)', () => {
+    startNewRun(42, 0, 'swordmaster');
+    const run = getRun();
+    const added = applyNeowBlessing(run, NEOW_BLESSINGS.find((b) => b.id === 'relic_blessing')!);
+    expect(added.length).toBe(1);
+    expect(run.player.relics).toContain(added[0]);
+  });
+
+  it('사악한 거래는 보스 유물을 주고 최대 HP를 깎는다', () => {
+    startNewRun(42, 0, 'swordmaster');
+    const run = getRun();
+    const maxHp = run.player.maxHp;
+    const added = applyNeowBlessing(run, NEOW_BLESSINGS.find((b) => b.id === 'dark_pact')!);
+    expect(added.length).toBe(1);
+    expect(run.player.maxHp).toBe(maxHp - 10);
+    expect(run.player.hp).toBeLessThanOrEqual(run.player.maxHp);
   });
 });
 

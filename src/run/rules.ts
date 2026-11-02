@@ -34,6 +34,8 @@ import {
 } from '../content/enemies';
 import { applyStatus } from '../combat/statuses';
 import { EVENT_DEFS } from '../content/events';
+import { rollBlessings } from '../content/neow';
+import type { NeowBlessing } from '../content/neow';
 import type { EventChoice, EventDef, EventEffect } from '../content/events';
 import { makeCard, canAddCard } from '../state';
 import type { CardDef, CombatState, Enemy, MapNode, RelicDef, RunState } from '../types';
@@ -384,6 +386,21 @@ export function applyEventEffects(run: RunState, effects: EventEffect[]): EventG
     }
   }
   return gains;
+}
+
+// ── 네오의 축복 ──
+
+/** 런 시작 축복 후보 4개. 같은 런이면 항상 같다 (저장 후 이어하기 때문에). */
+export function neowChoices(run: RunState): NeowBlessing[] {
+  return rollBlessings(makeRng(run.seed ^ 0x9e3779b1), 4);
+}
+
+/** 축복을 적용하고, 새로 생긴 유물 id를 돌려준다 (도감 기록은 UI 몫). */
+export function applyNeowBlessing(run: RunState, blessing: NeowBlessing): string[] {
+  const p = run.player;
+  const before = new Set(p.relics);
+  blessing.apply(p, makeRng(run.seed ^ 0x9e3779b1));
+  return p.relics.filter((id) => !before.has(id));
 }
 
 // ── 포션 ──
