@@ -41,6 +41,12 @@ describe('등반 보정치', () => {
     expect(getModifiers(9).enemyStrBonus).toBe(2);
   });
 
+  it('빈 단계가 없다 — 모든 단계가 뭔가 하나는 더 조인다', () => {
+    for (let l = 1; l <= 10; l++) {
+      expect(getModifiers(l), `A${l}가 A${l - 1}과 같다`).not.toEqual(getModifiers(l - 1));
+    }
+  });
+
   it('범위를 벗어난 값도 0~10으로 고정된다', () => {
     expect(getModifiers(-5)).toEqual(getModifiers(0));
     expect(getModifiers(99)).toEqual(getModifiers(10));
