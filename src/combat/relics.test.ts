@@ -174,7 +174,7 @@ describe('마법사 시작 유물', () => {
     const hp = s.player.hp;
     const ehp = s.enemies[0].hp;
     beginPlayerTurn(s);
-    expect(ehp - s.enemies[0].hp, '적을 안 때렸다').toBe(3);
+    expect(ehp - s.enemies[0].hp, '적을 안 때렸다').toBe(4);
     expect(s.player.hp - hp, '회복이 안 됐다').toBe(2);
   });
 

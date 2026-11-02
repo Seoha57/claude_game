@@ -9,6 +9,7 @@
 // 같은 기준을 쓰므로 직업 간 비교와 변경 전후 비교에는 쓸 만하다.
 
 import { startNewRun, getRun, makeCard, startNextChapter, canAddCard } from '../state';
+import { ACHIEVEMENTS } from '../achievements';
 import { CARD_DEFS, canUpgrade } from '../content/cards';
 import { startNode, nextNodes } from '../map/map';
 import {
@@ -280,7 +281,25 @@ export interface RunReport {
   topKiller: string;
 }
 
+/**
+ * 측정을 시작하기 전에 해금 상태를 똑같이 맞춘다.
+ *
+ * 카드·유물 풀은 누적 승수와 업적에 따라 열린다 (unlocks.ts). 그런데 전투 중에
+ * checkRitual·checkBurnKill이 업적을 저장해서, 앞 캐릭터를 많이 돌릴수록 뒤
+ * 캐릭터의 풀이 커졌다 — 열 직업을 한 번에 돌리면 갬블러가 40.3%, 혼자 돌리면
+ * 43.2%로 나왔다. 전부 열어두고 재면 순서에 흔들리지 않는다.
+ */
+function unlockEverythingForSim(): void {
+  try {
+    localStorage.setItem('dod_stats', JSON.stringify({ version: 1, totalRuns: 99, totalWins: 99, totalTrueWins: 9, totalLosses: 0 }));
+    localStorage.setItem('dod_achievements', JSON.stringify({
+      version: 1, unlocked: ACHIEVEMENTS.map((a) => a.id), perCharClear: {}, perCharTrue: {},
+    }));
+  } catch { /* 저장소가 없는 환경이면 기본 해금 상태로 잰다 */ }
+}
+
 export function reportRuns(cls: CharacterClass, runs: number, ascension = 0): RunReport {
+  unlockEverythingForSim();
   let wins = 0, timeouts = 0;
   let chapterSum = 0, nodeSum = 0, hpSum = 0, deckSum = 0, relicSum = 0;
   const killers = new Map<string, number>();

@@ -133,14 +133,14 @@ export function beginPlayerTurn(state: CombatState): void {
       if (alive.length > 0) {
         const target = alive[Math.floor(state.rng() * alive.length)];
         // Direct damage (non-attack, no strength/vuln scaling)
-        const absorbed = Math.min(target.block, 3);
+        const absorbed = Math.min(target.block, 4);
         target.block -= absorbed;
-        target.hp = Math.max(0, target.hp - (3 - absorbed));
+        target.hp = Math.max(0, target.hp - (4 - absorbed));
         // 마법사는 턴당 회복 수단이 없는 유일한 직업이었다 (65 HP, 10개 중 9위).
         // 런 시뮬에서 회복을 가진 직업들이 상위를 쓸고 있었고, 마법사는 보스도
         // 못 보고 평균 8.6노드에서 끝났다. 결정이 때린 만큼 조금 돌려받는다.
         p.hp = Math.min(p.maxHp, p.hp + 2);
-        state.log.push(`${t('마탑의 결정')} → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}${t('에게')} 3 ${t('데미지')}`);
+        state.log.push(`${t('마탑의 결정')} → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}${t('에게')} 4 ${t('데미지')}`);
         maybeTriggerPhase(state, target);
       }
     }
@@ -429,7 +429,7 @@ export function canPlayCard(state: CombatState, costAfterMods: number): boolean 
 export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
   if (relics.includes('vajra')) applyStatus(cs.player, 'strength', 1);
   if (relics.includes('fighting_spirit')) applyStatus(cs.player, 'strength', 1);
-  if (relics.includes('oddly_smooth_stone')) applyStatus(cs.player, 'dexterity', 1);
+  if (relics.includes('oddly_smooth_stone')) applyStatus(cs.player, 'dexterity', 2);
   if (relics.includes('anchor')) cs.player.block += 10;
   if (relics.includes('frozen_dart')) {
     for (const e of cs.enemies) applyStatus(e, 'weak', 1);

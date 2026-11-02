@@ -40,7 +40,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   oddly_smooth_stone: {
     id: 'oddly_smooth_stone',
     name: '매끈한 돌',
-    description: '전투 시작 시 민첩 +1.',
+    description: '전투 시작 시 민첩 +2.',
     rarity: 'common',
   },
   meat_on_the_bone: {
@@ -58,7 +58,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   mage_orb: {
     id: 'mage_orb',
     name: '마탑의 결정',
-    description: '매 턴 시작 시 무작위 적에게 3 데미지, HP +2 회복.',
+    description: '매 턴 시작 시 무작위 적에게 4 데미지, HP +2 회복.',
     rarity: 'starter',
   },
   holy_chalice: {
