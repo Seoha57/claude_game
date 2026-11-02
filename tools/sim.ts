@@ -8,16 +8,7 @@
 //       "시작 덱 + 시작 유물"의 균형을 보는 지표다. 실제 런의 승률이 아니다.
 //       보스는 시작 덱으로 거의 못 잡으므로 승률 대신 "보스 HP를 몇 % 깎았나"로 본다.
 
-// 게임 코드가 localStorage를 직접 만지므로, node에서 돌리려면 최소한의 대역이 필요하다.
-// (전부 try/catch로 감싸여 있긴 하지만, 없으면 매 호출이 예외로 빠져 느려진다)
-const mem = new Map<string, string>();
-(globalThis as any).localStorage ??= {
-  getItem: (k: string) => mem.get(k) ?? null,
-  setItem: (k: string, v: string) => { mem.set(k, String(v)); },
-  removeItem: (k: string) => { mem.delete(k); },
-  clear: () => mem.clear(),
-};
-(globalThis as any).window ??= { addEventListener() {}, dispatchEvent() { return true; } };
+import { pad, pct, CLASS_NAME } from './shim';
 
 const { reportClass, ALL_CLASSES } = await import('../src/sim/simulator');
 
@@ -25,16 +16,6 @@ const runs = Number(process.argv[2] ?? 200);
 const ascension = Number(process.argv[3] ?? 0);
 const boost = Number(process.argv[4] ?? 0);  // 자기 직업 풀에서 덱에 추가할 카드 수
 
-const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
-const CLASS_NAME: Record<string, string> = {
-  swordmaster: '검사', gunner: '총잡이', fighter: '격투가', magician: '마법사', priest: '성직자',
-  thief: '도적', summoner: '정령술사', engineer: '공학자', gambler: '갬블러', blood_mage: '혈술사',
-};
-const pad = (s: string, n: number) => {
-  // 한글은 터미널에서 두 칸을 먹는다
-  const width = [...s].reduce((w, ch) => w + (ch.charCodeAt(0) > 0x1100 ? 2 : 1), 0);
-  return s + ' '.repeat(Math.max(0, n - width));
-};
 
 console.log(`\n${boost ? `획득 카드 ${boost}장 포함` : "시작 덱 기준"} · 캐릭터당 ${runs}판 · 등반 A${ascension}\n`);
 console.log(`${pad('캐릭터', 12)}  ${'쉬움'.padStart(6)}  ${'잔여HP'.padStart(6)}  ${'보통'.padStart(6)}  ${'엘리트'.padStart(6)}  ${'보스딜'.padStart(6)}  ${'돌파'.padStart(6)}`);

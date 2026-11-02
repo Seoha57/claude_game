@@ -5,13 +5,13 @@ import { playSfx } from '../audio';
 import { recordRelics } from '../codex';
 import { unlockNextAscension, getUnlockedMax } from '../ascension';
 import { ENEMY_DEFS } from '../content/enemies';
-import { BOSS_RELICS, RELIC_DEFS } from '../content/relics';
-import { makeRng, shuffle } from '../rng';
+import { RELIC_DEFS } from '../content/relics';
 import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
 import type { RunState } from '../types';
 import { CHARACTER_SVG, CHAR_NAMES, artEl, ic } from './art';
 import { shareRun } from './share-run';
+import { chapterClearHeal, bossRelicChoices, applyBossRelicOnPickup as applyRelicPickup } from '../run/rules';
 import { t } from '../i18n';
 
 export function renderChapterClear(): HTMLElement {
@@ -21,17 +21,13 @@ export function renderChapterClear(): HTMLElement {
   const cleared = run.chapter;
   const next = cleared + 1;
 
-  // Auto-heal 25% of max HP on entering this screen (once)
+  // Auto-heal on entering this screen (once)
   if (!(run as any)._chapterHealApplied) {
-    const heal = Math.ceil(run.player.maxHp * 0.25);
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + heal);
+    run.player.hp = Math.min(run.player.maxHp, run.player.hp + chapterClearHeal(run));
     (run as any)._chapterHealApplied = true;
   }
 
-  // Pick 3 random boss relics not yet owned
-  const rng = makeRng(run.seed * 31 + cleared * 77);
-  const candidates = shuffle(rng, BOSS_RELICS.slice()).filter((r) => !run.player.relics.includes(r.id));
-  const choices = candidates.slice(0, 3);
+  const choices = bossRelicChoices(run, cleared);
   recordRelics(choices.map((r) => r.id));
 
   // Track which chapters we've already claimed a boss relic for (explicit & robust)
@@ -48,7 +44,7 @@ export function renderChapterClear(): HTMLElement {
   const rebuild = () => { wrapper.innerHTML = ''; appendContent(); };
 
   const appendContent = () => {
-    const healAmt = Math.ceil(run.player.maxHp * 0.25);
+    const healAmt = chapterClearHeal(run);
     const tentativeId: string | null = (run as any)._tentativeBossRelicId ?? null;
     const noChoices = choices.length === 0;
     const canConfirm = alreadyConfirmed || noChoices || tentativeId !== null;
@@ -144,22 +140,7 @@ export function renderChapterClear(): HTMLElement {
 
   function applyBossRelicOnPickup(id: string) {
     const r = getRun();
-    switch (id) {
-      case 'energy_core':
-        r.player.maxEnergy += 1;
-        r.player.maxHp = Math.max(1, r.player.maxHp - 6);
-        r.player.hp = Math.min(r.player.hp, r.player.maxHp);
-        break;
-      case 'warriors_heart':
-        r.player.maxHp += 20;
-        r.player.hp = Math.min(r.player.maxHp, r.player.hp + 20);
-        break;
-      case 'doom_ring':
-        r.player.maxEnergy += 1;
-        r.player.deck.push(makeCard('wound'));
-        r.player.deck.push(makeCard('wound'));
-        break;
-    }
+    applyRelicPickup(r, id, () => r.player.deck.push(makeCard('wound')));
   }
 }
 

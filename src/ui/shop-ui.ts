@@ -2,91 +2,26 @@ import { el } from './dom';
 import { t } from '../i18n';
 import { kwDesc } from './keywords';
 import { getRun, makeCard, setScreen, canAddCard } from '../state';
-import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS, ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS, GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS, GAMBLER_RARE_CARDS, BLOOD_MAGE_COMMON_CARDS, BLOOD_MAGE_UNCOMMON_CARDS, BLOOD_MAGE_RARE_CARDS, getEffectiveDef } from '../content/cards';
-import { PICKABLE_RELICS, RELIC_DEFS } from '../content/relics';
-import { POTION_LIST, POTION_DEFS } from '../content/potions';
-import { makeRng, shuffle } from '../rng';
-import { getModifiers } from '../ascension';
+import { CARD_DEFS, getEffectiveDef } from '../content/cards';
+import { RELIC_DEFS } from '../content/relics';
+import { POTION_DEFS } from '../content/potions';
 import { playSfx } from '../audio';
 import { recordCard, recordRelic } from '../codex';
-import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
+import { buildShopItems, type ShopItem } from '../run/rules';
 import { RELIC_SVG, POTION_SVG, ic } from './art';
 
-const BASE_CARD_PRICE: Record<string, number> = { common: 40, uncommon: 60, rare: 110 };
-const BASE_RELIC_PRICE = 150;
-const BASE_REMOVAL_PRICE = 75;
-const BASE_POTION_PRICE = 55;
 const POTION_SELL_PRICE = 25; // 구매가의 절반 이하
-
-function scaledPrice(base: number, mult: number): number {
-  return Math.round(base * mult);
-}
-
-interface ShopItem {
-  kind: 'card' | 'relic' | 'removal' | 'potion';
-  id?: string;
-  price: number;
-  sold: boolean;
-}
 
 let shopItems: ShopItem[] | null = null;
 let lastShopKey: string | null = null;
 
+/** 상점 진열 + 본 물건을 도감에 적는다. 진열 규칙 자체는 run/rules.ts에 있다. */
 function buildShop(): ShopItem[] {
-  const run = getRun();
-  const rng = makeRng(run.seed * 13 + run.floor * 37 + 1);
-  const mult = getModifiers(run.ascension).shopPriceMult;
-
-  const items: ShopItem[] = [];
-  const cc = run.characterClass;
-  const ignoreLocks = !!run.dailyConfig;
-  const unlockFilter = <T extends { id: string; rarity?: any }>(pool: T[]) => {
-    if (ignoreLocks) return pool;
-    const out = pool.filter((c) => isCardUnlocked(c as any));
-    return out.length > 0 ? out : pool;
-  };
-
-  // 3 cards: 1 common, 1 uncommon, 1 rare (floor-weighted)
-  const pools =
-    cc === 'gunner'   ? [GUNNER_COMMON_CARDS,   GUNNER_UNCOMMON_CARDS,   GUNNER_RARE_CARDS] :
-    cc === 'fighter'  ? [FIGHTER_COMMON_CARDS,  FIGHTER_UNCOMMON_CARDS,  FIGHTER_RARE_CARDS] :
-    cc === 'magician' ? [MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS] :
-    cc === 'priest'   ? [PRIEST_COMMON_CARDS,   PRIEST_UNCOMMON_CARDS,   PRIEST_RARE_CARDS] :
-    cc === 'thief'    ? [THIEF_COMMON_CARDS,    THIEF_UNCOMMON_CARDS,    THIEF_RARE_CARDS] :
-    cc === 'summoner' ? [SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS] :
-    cc === 'engineer' ? [ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS] :
-    cc === 'gambler'    ? [GAMBLER_COMMON_CARDS,    GAMBLER_UNCOMMON_CARDS,    GAMBLER_RARE_CARDS] :
-    cc === 'blood_mage' ? [BLOOD_MAGE_COMMON_CARDS, BLOOD_MAGE_UNCOMMON_CARDS, BLOOD_MAGE_RARE_CARDS] :
-                          [COMMON_CARDS,             UNCOMMON_CARDS,            RARE_CARDS];
-  const picked = new Set<string>();
-  for (const pool of pools.map(unlockFilter)) {
-    const candidates = shuffle(rng, pool.slice());
-    const card = candidates.find((c) => !picked.has(c.id));
-    if (card) {
-      picked.add(card.id);
-      items.push({ kind: 'card', id: card.id, price: scaledPrice(BASE_CARD_PRICE[card.rarity] ?? 50, mult), sold: false });
-      recordCard(card.id);
-    }
+  const items = buildShopItems(getRun());
+  for (const item of items) {
+    if (item.kind === 'card' && item.id) recordCard(item.id);
+    if (item.kind === 'relic' && item.id) recordRelic(item.id);
   }
-
-  // 2 relics (서로 다른 유물 — 선택지 확대)
-  const relicSource = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
-  const relicPool = (relicSource.length > 0 ? relicSource : PICKABLE_RELICS).filter((r) => !run.player.relics.includes(r.id));
-  const relicCandidates = shuffle(rng, relicPool.slice());
-  for (const relic of relicCandidates.slice(0, 2)) {
-    items.push({ kind: 'relic', id: relic.id, price: scaledPrice(BASE_RELIC_PRICE, mult), sold: false });
-    recordRelic(relic.id);
-  }
-
-  // 2 potions (포션은 다른 데서 안정적으로 못 얻으니 상점만의 가치)
-  const potionCandidates = shuffle(rng, POTION_LIST.slice());
-  for (const pot of potionCandidates.slice(0, 2)) {
-    items.push({ kind: 'potion', id: pot.id, price: scaledPrice(BASE_POTION_PRICE, mult), sold: false });
-  }
-
-  // card removal service
-  items.push({ kind: 'removal', price: scaledPrice(BASE_REMOVAL_PRICE, mult), sold: false });
-
   return items;
 }
 

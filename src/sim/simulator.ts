@@ -3,25 +3,16 @@
 // 실제 전투 엔진(combat.ts / effects.ts)을 그대로 돌린다. UI는 건드리지 않고,
 // UI가 하던 일(에너지 차감, 타겟 선택, 승리 판정)만 여기서 대신한다.
 //
-// 보상·포션·유물 획득은 재현하지 않는다. 즉 모든 캐릭터가 시작 덱 그대로
+// 보상·모닥불·상점은 재현하지 않는다. 즉 모든 캐릭터가 시작 덱 그대로
 // 싸우므로, 시작 덱과 시작 유물의 균형을 비교하는 용도다.
+// 런 전체(보상·모닥불·상점·챕터 유물까지)를 보려면 run-sim.ts를 쓴다.
 
-import { startNewRun, getRun, makeCard } from '../state';
-import {
-  GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS,
-  FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS,
-  MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS,
-  PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS,
-  THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS,
-  SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS,
-  ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS,
-  GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS,
-  BLOOD_MAGE_COMMON_CARDS, BLOOD_MAGE_UNCOMMON_CARDS,
-  COMMON_CARDS, UNCOMMON_CARDS,
-} from '../content/cards';
+import { startNewRun, getRun, getRunOrNull, makeCard } from '../state';
+import { POTION_DEFS } from '../content/potions';
 import { startCombat, endPlayerTurn } from '../combat/combat';
 import { playCard } from '../combat/effects';
 import { getEffectiveDef } from '../content/cards';
+import { cardPools, usePotion } from '../run/rules';
 import {
   EASY_ENCOUNTERS,
   NORMAL_ENCOUNTERS,
@@ -81,7 +72,22 @@ function pickTarget(state: CombatState): Enemy | null {
   return alive.reduce((a, b) => (a.hp <= b.hp ? a : b));
 }
 
+/**
+ * 위급하면 포션 한 개를 쓴다 — 막을 수 없는 데미지가 남은 HP를 넘길 때.
+ * 사람은 더 영리하게 쓰지만, 적어도 "모아두고 안 쓰는" 왜곡은 없앤다.
+ */
+function maybeDrinkPotion(state: CombatState): void {
+  const run = getRunOrNull();
+  if (!run || run.player.potions.length === 0) return;
+  const unblocked = incomingDamage(state) - state.player.block;
+  if (unblocked < state.player.hp * 0.5) return;
+  const potionId = run.player.potions[0];
+  const target = POTION_DEFS[potionId]?.target === 'enemy' ? pickTarget(state) : null;
+  usePotion(state, run, potionId, target);
+}
+
 function playTurn(state: CombatState): void {
+  maybeDrinkPotion(state);
   // 더 낼 카드가 없을 때까지 반복
   for (let guard = 0; guard < 40; guard++) {
     if (state.phase !== 'player') return;
@@ -162,7 +168,7 @@ export function simulateBossFight(cls: CharacterClass, seed: number, ascension =
 /** 쉬움 3 → 보통 2 → 엘리트 1 → 보스 1. 중간 회복 없음. */
 export function simulateGauntlet(cls: CharacterClass, seed: number, ascension = 0, boost = 0): FightOutcome {
   startNewRun(seed, ascension, cls);
-  boostDeck(cls, boost, seed);
+  boostDeck(boost, seed);
   const player = getRun().player;
   const fights: string[][] = [
     pick(EASY_ENCOUNTERS, seed), pick(EASY_ENCOUNTERS, seed + 1), pick(EASY_ENCOUNTERS, seed + 2),
@@ -182,28 +188,15 @@ export function simulateGauntlet(cls: CharacterClass, seed: number, ascension = 
 /** 갠틀릿에서 돌파한 전투 수 (0~7). 승률이 전부 0이라 이쪽이 변별력이 있다. */
 export const GAUNTLET_LENGTH = 7;
 
-function classPool(cc: CharacterClass) {
-  switch (cc) {
-    case 'gunner':     return [...GUNNER_COMMON_CARDS, ...GUNNER_UNCOMMON_CARDS];
-    case 'fighter':    return [...FIGHTER_COMMON_CARDS, ...FIGHTER_UNCOMMON_CARDS];
-    case 'magician':   return [...MAGICIAN_COMMON_CARDS, ...MAGICIAN_UNCOMMON_CARDS];
-    case 'priest':     return [...PRIEST_COMMON_CARDS, ...PRIEST_UNCOMMON_CARDS];
-    case 'thief':      return [...THIEF_COMMON_CARDS, ...THIEF_UNCOMMON_CARDS];
-    case 'summoner':   return [...SUMMONER_COMMON_CARDS, ...SUMMONER_UNCOMMON_CARDS];
-    case 'engineer':   return [...ENGINEER_COMMON_CARDS, ...ENGINEER_UNCOMMON_CARDS];
-    case 'gambler':    return [...GAMBLER_COMMON_CARDS, ...GAMBLER_UNCOMMON_CARDS];
-    case 'blood_mage': return [...BLOOD_MAGE_COMMON_CARDS, ...BLOOD_MAGE_UNCOMMON_CARDS];
-    default:           return [...COMMON_CARDS, ...UNCOMMON_CARDS];
-  }
-}
-
 /**
- * 런 중반 덱을 흉내 낸다 — 자기 직업 풀에서 n장을 덱에 넣는다.
+ * 런 중반 덱을 흉내 낸다 — 현재 런의 직업 풀에서 n장을 덱에 넣는다.
  * 시작 덱만 쓰면 "획득 카드로 완성되는" 직업(마법사 광역 등)이 구조적으로 불리하다.
+ * 실제 보상 흐름(3장 중 1장)을 타는 쪽은 run-sim.ts다.
  */
-export function boostDeck(cls: CharacterClass, n: number, seed: number): void {
+export function boostDeck(n: number, seed: number): void {
   if (n <= 0) return;
-  const pool = classPool(cls);
+  const pools = cardPools(getRun());
+  const pool = [...pools.common, ...pools.uncommon];
   const deck = getRun().player.deck;
   for (let i = 0; i < n; i++) {
     const def = pool[Math.abs(seed * 31 + i * 97) % pool.length];
@@ -214,7 +207,7 @@ export function boostDeck(cls: CharacterClass, n: number, seed: number): void {
 /** 한 전투만 떼어서 본다 — 시작 덱으로 이 난이도를 어떻게 넘기는지. */
 function singleFight(cls: CharacterClass, table: string[][], seed: number, ascension: number, boost = 0) {
   startNewRun(seed, ascension, cls);
-  boostDeck(cls, boost, seed);
+  boostDeck(boost, seed);
   const player = getRun().player;
   const stats = simulateCombatStats(player, pick(table, seed), seed);
   return { ...stats, hpLeftPct: Math.max(0, player.hp) / player.maxHp };

@@ -3,26 +3,16 @@ import { t } from '../i18n';
 import { playSfx } from '../audio';
 import { getRun, setScreen, setCombat, getScreen } from '../state';
 import { openDeckOverlay } from './deck-overlay';
+import { encounterFor, combatSeedFor } from '../run/rules';
 import { nodeById } from '../map/map';
 import { startCombat } from '../combat/combat';
 import {
-  EASY_ENCOUNTERS,
-  ELITE_ENCOUNTERS,
-  NORMAL_ENCOUNTERS,
   BOSS_ENCOUNTERS,
-  CH2_NORMAL_ENCOUNTERS,
-  CH2_ELITE_ENCOUNTERS,
   CH2_BOSS_ENCOUNTERS,
-  CH3_NORMAL_ENCOUNTERS,
-  CH3_ELITE_ENCOUNTERS,
   CH3_BOSS_ENCOUNTERS,
-  CH4_NORMAL_ENCOUNTERS,
-  CH4_ELITE_ENCOUNTERS,
   CH4_BOSS_ENCOUNTERS,
-  pickEncounter,
 } from '../content/enemies';
 import type { MapNode } from '../types';
-import { makeRng } from '../rng';
 import { RELIC_DEFS } from '../content/relics';
 import { ENEMY_DEFS } from '../content/enemies';
 import { ENEMY_ART, resetCombatUiState } from './combat-ui';
@@ -296,26 +286,15 @@ function enterNode(n: MapNode): void {
   n.visited = true;
 
   if (n.kind === 'combat' || n.kind === 'elite' || n.kind === 'boss') {
-    const rng = makeRng(run.seed + n.y * 31 + n.x);
     const ch = run.chapter;
-    let table =
-      ch === 4 ? CH4_NORMAL_ENCOUNTERS :
-      ch === 3 ? CH3_NORMAL_ENCOUNTERS :
-      ch === 2 ? CH2_NORMAL_ENCOUNTERS :
-      NORMAL_ENCOUNTERS;
-    if (n.kind === 'elite')
-      table = ch === 4 ? CH4_ELITE_ENCOUNTERS : ch === 3 ? CH3_ELITE_ENCOUNTERS : ch === 2 ? CH2_ELITE_ENCOUNTERS : ELITE_ENCOUNTERS;
-    else if (n.kind === 'boss')
-      table = ch === 4 ? CH4_BOSS_ENCOUNTERS : ch === 3 ? CH3_BOSS_ENCOUNTERS : ch === 2 ? CH2_BOSS_ENCOUNTERS : BOSS_ENCOUNTERS;
-    else if (ch === 1 && n.y <= 3) table = EASY_ENCOUNTERS;
-    const enemyIds = pickEncounter(rng, table);
+    const enemyIds = encounterFor(run, n);
     // Remember for defeat screen ("X에게 쓰러졌다")
     run.combatEnemyDefIds = enemyIds.slice();
 
     const startBattle = () => {
       try {
         resetCombatUiState();
-        const cs = startCombat(run.player, enemyIds, run.seed + n.y * 17 + n.x * 7);
+        const cs = startCombat(run.player, enemyIds, combatSeedFor(run, n));
         setCombat(cs);
         setScreen('combat');
       } catch (e) {

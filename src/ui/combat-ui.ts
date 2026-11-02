@@ -6,18 +6,18 @@ import { getEffectiveDef } from '../content/cards';
 import { openDeckOverlay } from './deck-overlay';
 import { ENEMY_DEFS } from '../content/enemies';
 import { bossDefeatFlavor } from '../content/lore';
+import { applyVictoryRewards, usePotion } from '../run/rules';
 import { recordEnemyKills } from '../codex';
-import { STATUS_INFO, applyStatus, modifiedAttackDamage, getStatusValueLabel, getStatusTooltip } from '../combat/statuses';
+import { STATUS_INFO, modifiedAttackDamage, getStatusValueLabel, getStatusTooltip } from '../combat/statuses';
 import { kwDesc, STATUS_ICON } from './keywords';
 import { ENEMY_SVG, POTION_SVG, RELIC_SVG, ic } from './art';
 import { buildIntentDisplay } from '../combat/intent';
 import { endPlayerTurn } from '../combat/combat';
 import { playCard, modifyAttackAmount } from '../combat/effects';
 import type { CardInstance, CombatState, Enemy } from '../types';
-import { POTION_DEFS, POTION_LIST } from '../content/potions';
+import { POTION_DEFS } from '../content/potions';
 import { isCurseLike } from './deck-overlay';
 import { playSfx, getMuted, setMuted, getVolume, setVolume, getBgmMuted, setBgmMuted, getBgmVolume, setBgmVolume } from '../audio';
-import { makeRng, pick } from '../rng';
 import { checkDamage, checkBlock, checkTurnCount, checkStrength, checkFreezeChain, checkPoison, checkGlassCannon, checkExhaust } from '../achievements';
 import { t } from '../i18n';
 import { getCardFrame } from '../card-frame';
@@ -750,62 +750,14 @@ function renderPotionBar(state: CombatState): HTMLElement {
 }
 
 function applyPotionSelf(state: CombatState, potionId: string): void {
+  if (!usePotion(state, getRunOrNull()!, potionId, null)) return;
   playSfx('potion');
-  const run = getRunOrNull()!;
-  const idx = run.player.potions.indexOf(potionId);
-  if (idx < 0) return;
-  run.player.potions.splice(idx, 1);
-  switch (potionId) {
-    case 'health_potion':
-      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 20);
-      break;
-    case 'strength_potion':
-      applyStatus(state.player, 'strength', 5);
-      break;
-    case 'block_potion':
-      state.player.block += 15;
-      break;
-    case 'energy_potion':
-      state.player.energy = Math.min(state.player.energy + 2, state.player.maxEnergy + 2);
-      break;
-    case 'weak_potion':
-      for (const e of state.enemies) {
-        if (e.hp > 0) applyStatus(e, 'weak', 3);
-      }
-      break;
-    case 'vulnerable_potion':
-      for (const e of state.enemies) {
-        if (e.hp > 0) applyStatus(e, 'vulnerable', 3);
-      }
-      break;
-  }
 }
 
 function applyPotionEnemy(state: CombatState, potionId: string, enemy: Enemy): void {
+  if (!usePotion(state, getRunOrNull()!, potionId, enemy)) return;
   playSfx('potion');
-  const run = getRunOrNull()!;
-  const idx = run.player.potions.indexOf(potionId);
-  if (idx < 0) return;
-  run.player.potions.splice(idx, 1);
-  switch (potionId) {
-    case 'poison_potion':
-      applyStatus(enemy, 'poison', 8);
-      break;
-    case 'fire_potion': {
-      const dmg = Math.max(0, 20 - enemy.block);
-      enemy.block = Math.max(0, enemy.block - 20);
-      enemy.hp = Math.max(0, enemy.hp - dmg);
-      checkCombatEnd(state);
-      break;
-    }
-    case 'burn_potion':
-      applyStatus(enemy, 'burn', 5);
-      break;
-    case 'freeze_potion':
-      applyStatus(enemy, 'freeze', 1);
-      applyStatus(enemy, 'weak', 2);
-      break;
-  }
+  checkCombatEnd(state);
 }
 
 function typeLabel(ty: string): string {
@@ -1584,36 +1536,7 @@ if (typeof window !== 'undefined') {
 function applyVictoryRelics(run: any, _state: any): void {
   recordEnemyKills(run.combatEnemyDefIds ?? []);
   const cur = run.currentNodeId ? run.map.find((n: any) => n.id === run.currentNodeId) : null;
-  const meatEligible = run.player.relics.includes('meat_on_the_bone') && run.player.hp / run.player.maxHp <= 0.5;
-  if (run.player.relics.includes('blood_vial')) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 4);
-  }
-  if (run.player.relics.includes('herb_pouch')) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 5);
-  }
-  if (meatEligible) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 12);
-  }
-  if (run.player.relics.includes('rich_seal')) run.player.gold += 8;
-  if (run.player.relics.includes('trophy_necklace')) {
-    run.player.hp = Math.min(run.player.maxHp, run.player.hp + 8);
-    run.player.gold += 12;
-  }
-  for (const syn of getActiveSynergies(run.player.relics)) {
-    if (syn.timing !== 'combat_end') continue;
-    if (syn.id === 'undying') {
-      run.player.hp = Math.min(run.player.maxHp, run.player.hp + 10);
-    }
-  }
-  if (run.player.potions.length < 3) {
-    const isElite = cur?.kind === 'elite' || !!run.endless;
-    const dropChance = isElite ? 0.5 : 0.3;
-    const victoryRng = makeRng(run.seed * 71 + (run.endless?.wave ?? run.floor) * 13);
-    if (victoryRng() < dropChance) {
-      const dropped = pick(victoryRng, POTION_LIST);
-      run.player.potions.push(dropped.id);
-    }
-  }
+  applyVictoryRewards(run, cur ?? null);
 }
 
 export function getKeyboardTargetedEnemyUid(state: CombatState): string | null {

@@ -3,7 +3,7 @@ import { t } from '../i18n';
 import { showMiniTutorial } from './tutorial-overlay';
 import { getRun, setScreen, makeCard, canAddCard } from '../state';
 import { getEffectiveDef, canUpgrade } from '../content/cards';
-import { getModifiers } from '../ascension';
+import { restHealAmount } from '../run/rules';
 import { isCurseLike } from './deck-overlay';
 import { playSfx } from '../audio';
 import type { CardInstance } from '../types';
@@ -40,8 +40,7 @@ export function renderRest(): HTMLElement {
 
 function buildChoose(goTo: (m: RestMode) => void): HTMLElement {
   const run = getRun();
-  const mods = getModifiers(run.ascension);
-  const healAmount = Math.floor(run.player.maxHp * mods.restHealMult);
+  const healAmount = restHealAmount(run);
   const noUpgrade = !!run.dailyConfig?.disableUpgrade;
   const noRemove = !!run.dailyConfig?.disableRemove;
 

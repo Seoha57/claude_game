@@ -2,19 +2,12 @@ import { el } from './dom';
 import { t } from '../i18n';
 import { showMiniTutorial } from './tutorial-overlay';
 import { getRun, makeCard, setScreen, rerender, canAddCard } from '../state';
-import { COMMON_CARDS, UNCOMMON_CARDS, RARE_CARDS, CARD_DEFS, GUNNER_COMMON_CARDS, GUNNER_UNCOMMON_CARDS, GUNNER_RARE_CARDS, FIGHTER_COMMON_CARDS, FIGHTER_UNCOMMON_CARDS, FIGHTER_RARE_CARDS, MAGICIAN_COMMON_CARDS, MAGICIAN_UNCOMMON_CARDS, MAGICIAN_RARE_CARDS, PRIEST_COMMON_CARDS, PRIEST_UNCOMMON_CARDS, PRIEST_RARE_CARDS, THIEF_COMMON_CARDS, THIEF_UNCOMMON_CARDS, THIEF_RARE_CARDS, SUMMONER_COMMON_CARDS, SUMMONER_UNCOMMON_CARDS, SUMMONER_RARE_CARDS, ENGINEER_COMMON_CARDS, ENGINEER_UNCOMMON_CARDS, ENGINEER_RARE_CARDS, GAMBLER_COMMON_CARDS, GAMBLER_UNCOMMON_CARDS, GAMBLER_RARE_CARDS, BLOOD_MAGE_COMMON_CARDS, BLOOD_MAGE_UNCOMMON_CARDS, BLOOD_MAGE_RARE_CARDS } from '../content/cards';
-import { isCardUnlocked, isRelicUnlocked } from '../unlocks';
-import type { CardDef } from '../types';
+import { CARD_DEFS } from '../content/cards';
 import { kwDesc } from './keywords';
 
-function filterUnlocked(pool: CardDef[], ignoreLocks: boolean): CardDef[] {
-  if (ignoreLocks) return pool;
-  const out = pool.filter((c) => isCardUnlocked(c));
-  return out.length > 0 ? out : pool;
-}
-import { PICKABLE_RELICS, ELITE_RELICS, RELIC_DEFS } from '../content/relics';
+import { RELIC_DEFS } from '../content/relics';
+import { rollReward, rerollRewardCards } from '../run/rules';
 import { nodeById } from '../map/map';
-import { makeRng, pick, shuffle } from '../rng';
 import { playSfx } from '../audio';
 import { recordCards, recordRelic } from '../codex';
 
@@ -31,30 +24,6 @@ interface RewardChoiceUI {
 let cachedReward: RewardChoiceUI | null = null;
 let lastRewardKey: string | null = null;
 
-function rollCards(rng: () => number, isElite: boolean, commonPool: CardDef[], uncommonPool: CardDef[], rarePool: CardDef[]): string[] {
-  const choices: string[] = [];
-  for (let i = 0; i < 3; i++) {
-    const r = rng();
-    let pool = commonPool;
-    if (isElite) {
-      if (r < 0.4) pool = commonPool;
-      else if (r < 0.85) pool = uncommonPool;
-      else pool = rarePool;
-    } else {
-      if (r < 0.6) pool = commonPool;
-      else if (r < 0.95) pool = uncommonPool;
-      else pool = rarePool;
-    }
-    const tries = shuffle(rng, pool.slice());
-    let picked = tries[0]?.id;
-    for (const c of tries) {
-      if (!choices.includes(c.id)) { picked = c.id; break; }
-    }
-    if (picked) choices.push(picked);
-  }
-  return choices;
-}
-
 function rerollCards(): void {
   if (!cachedReward) return;
   const run = getRun();
@@ -63,16 +32,8 @@ function rerollCards(): void {
   run.player.gold -= cost;
   cachedReward.rerollCount++;
 
-  const cc = run.characterClass;
-  const ignoreLocks = !!run.dailyConfig;
-  const commonPool = filterUnlocked(cc === 'gunner' ? GUNNER_COMMON_CARDS : cc === 'fighter' ? FIGHTER_COMMON_CARDS : cc === 'magician' ? MAGICIAN_COMMON_CARDS : cc === 'priest' ? PRIEST_COMMON_CARDS : cc === 'thief' ? THIEF_COMMON_CARDS : cc === 'summoner' ? SUMMONER_COMMON_CARDS : cc === 'engineer' ? ENGINEER_COMMON_CARDS : cc === 'gambler' ? GAMBLER_COMMON_CARDS : cc === 'blood_mage' ? BLOOD_MAGE_COMMON_CARDS : COMMON_CARDS, ignoreLocks);
-  const uncommonPool = filterUnlocked(cc === 'gunner' ? GUNNER_UNCOMMON_CARDS : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS : cc === 'magician' ? MAGICIAN_UNCOMMON_CARDS : cc === 'priest' ? PRIEST_UNCOMMON_CARDS : cc === 'thief' ? THIEF_UNCOMMON_CARDS : cc === 'summoner' ? SUMMONER_UNCOMMON_CARDS : cc === 'engineer' ? ENGINEER_UNCOMMON_CARDS : cc === 'gambler' ? GAMBLER_UNCOMMON_CARDS : cc === 'blood_mage' ? BLOOD_MAGE_UNCOMMON_CARDS : UNCOMMON_CARDS, ignoreLocks);
-  const rarePool = filterUnlocked(cc === 'gunner' ? GUNNER_RARE_CARDS : cc === 'fighter' ? FIGHTER_RARE_CARDS : cc === 'magician' ? MAGICIAN_RARE_CARDS : cc === 'priest' ? PRIEST_RARE_CARDS : cc === 'thief' ? THIEF_RARE_CARDS : cc === 'summoner' ? SUMMONER_RARE_CARDS : cc === 'engineer' ? ENGINEER_RARE_CARDS : cc === 'gambler' ? GAMBLER_RARE_CARDS : cc === 'blood_mage' ? BLOOD_MAGE_RARE_CARDS : RARE_CARDS, ignoreLocks);
-
   const cur = run.currentNodeId ? nodeById(run.map, run.currentNodeId) : null;
-  const isElite = cur?.kind === 'elite';
-  const rng = makeRng(run.seed * 13 + run.floor * 47 + cachedReward.rerollCount * 311);
-  cachedReward.cardChoices = rollCards(rng, isElite, commonPool, uncommonPool, rarePool);
+  cachedReward.cardChoices = rerollRewardCards(run, cur?.kind === 'elite', cachedReward.rerollCount);
   cachedReward.picked = false;
   recordCards(cachedReward.cardChoices);
   rerender();
@@ -86,68 +47,7 @@ function ensureReward(): RewardChoiceUI {
   if (cachedReward && lastRewardKey === key) return cachedReward;
   lastRewardKey = key;
   const cur = run.currentNodeId ? nodeById(run.map, run.currentNodeId) : null;
-  const isElite = cur?.kind === 'elite';
-  const rng = makeRng(run.seed * 7 + (run.floor + 1) * 91);
-
-  const cc = run.characterClass;
-  // 데일리 챌린지는 잠금 무시 — 모두 같은 풀
-  const ignoreLocks = !!run.dailyConfig;
-  const commonPool   = filterUnlocked(
-    cc === 'gunner'  ? GUNNER_COMMON_CARDS
-    : cc === 'fighter' ? FIGHTER_COMMON_CARDS
-    : cc === 'magician'? MAGICIAN_COMMON_CARDS
-    : cc === 'priest' ? PRIEST_COMMON_CARDS
-    : cc === 'thief' ? THIEF_COMMON_CARDS
-    : cc === 'summoner' ? SUMMONER_COMMON_CARDS
-    : cc === 'engineer' ? ENGINEER_COMMON_CARDS
-    : cc === 'gambler' ? GAMBLER_COMMON_CARDS
-    : cc === 'blood_mage' ? BLOOD_MAGE_COMMON_CARDS
-    : COMMON_CARDS,
-    ignoreLocks,
-  );
-  const uncommonPool = filterUnlocked(
-    cc === 'gunner'  ? GUNNER_UNCOMMON_CARDS
-    : cc === 'fighter' ? FIGHTER_UNCOMMON_CARDS
-    : cc === 'magician'? MAGICIAN_UNCOMMON_CARDS
-    : cc === 'priest' ? PRIEST_UNCOMMON_CARDS
-    : cc === 'thief' ? THIEF_UNCOMMON_CARDS
-    : cc === 'summoner' ? SUMMONER_UNCOMMON_CARDS
-    : cc === 'engineer' ? ENGINEER_UNCOMMON_CARDS
-    : cc === 'gambler' ? GAMBLER_UNCOMMON_CARDS
-    : cc === 'blood_mage' ? BLOOD_MAGE_UNCOMMON_CARDS
-    : UNCOMMON_CARDS,
-    ignoreLocks,
-  );
-  const rarePool     = filterUnlocked(
-    cc === 'gunner'  ? GUNNER_RARE_CARDS
-    : cc === 'fighter' ? FIGHTER_RARE_CARDS
-    : cc === 'magician'? MAGICIAN_RARE_CARDS
-    : cc === 'priest' ? PRIEST_RARE_CARDS
-    : cc === 'thief' ? THIEF_RARE_CARDS
-    : cc === 'summoner' ? SUMMONER_RARE_CARDS
-    : cc === 'engineer' ? ENGINEER_RARE_CARDS
-    : cc === 'gambler' ? GAMBLER_RARE_CARDS
-    : cc === 'blood_mage' ? BLOOD_MAGE_RARE_CARDS
-    : RARE_CARDS,
-    ignoreLocks,
-  );
-
-  const choices = rollCards(rng, isElite, commonPool, uncommonPool, rarePool);
-
-  const gold = isElite ? 25 + Math.floor(rng() * 10) : 10 + Math.floor(rng() * 10);
-  let relicId: string | null = null;
-  if (isElite) {
-    const classRelics = ELITE_RELICS.filter((r) => !r.forClass || r.forClass === run.characterClass);
-    const unowned = classRelics.filter((r) => !run.player.relics.includes(r.id));
-    if (unowned.length > 0) {
-      relicId = pick(rng, unowned).id;
-    } else {
-      const unlockedRelics = ignoreLocks ? PICKABLE_RELICS : PICKABLE_RELICS.filter((r) => isRelicUnlocked(r));
-      const pool = unlockedRelics.length > 0 ? unlockedRelics : PICKABLE_RELICS;
-      const fallback = pool.filter((r) => !run.player.relics.includes(r.id));
-      if (fallback.length > 0) relicId = pick(rng, fallback).id;
-    }
-  }
+  const { cardChoices: choices, gold, relicId } = rollReward(run, cur?.kind === 'elite');
 
   cachedReward = { cardChoices: choices, gold, relicId, picked: false, rerollCount: 0 };
   // Codex: shown card choices + relic option

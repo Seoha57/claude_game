@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run --config vitest.config.ts",
     "sim": "vite-node tools/sim.ts",
+    "sim:run": "vite-node tools/run-sim.ts",
     "test:e2e": "playwright test",
     "test:e2e:ci": "playwright test --grep-invert @slow"
   },
