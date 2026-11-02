@@ -71,6 +71,20 @@ export function gainBlock(c: { block: number; statuses: any }, base: number): vo
   c.block += modifiedBlockGain(base, c as any);
 }
 
+/**
+ * 독니(도적 시그니처): 매 턴 첫 공격에 중독을 얹는다.
+ * 중독은 방어도를 무시해서, 도적이 장갑 두꺼운 적을 넘는 유일한 축이다.
+ * 600런 A0에서 2 → 4로 올렸을 때 4.8% → 12.5%.
+ */
+const VENOM_FANG_POISON = 4;
+
+function applyVenomFang(isFirstAttack: boolean | undefined, target: Enemy, log: (s: string) => void): void {
+  if (!isFirstAttack) return;
+  if (!getRunOrNull()?.player.relics.includes('venom_fang')) return;
+  applyStatus(target, 'poison', VENOM_FANG_POISON);
+  log(`${t('독니')} → ${t('중독')} +${VENOM_FANG_POISON}`);
+}
+
 function applyAttackDamage(
   state: CombatState,
   source: Player | Enemy,
@@ -79,10 +93,7 @@ function applyAttackDamage(
   log: (s: string) => void,
 ): number {
   if (target.hp <= 0) return 0;
-  if (state.flags.firstAttackThisTurn && getRunOrNull()?.player.relics.includes('venom_fang')) {
-    applyStatus(target, 'poison', 2);
-    log(`${t('독니')} → ${t('중독')} +2`);
-  }
+  applyVenomFang(state.flags.firstAttackThisTurn, target, log);
   const modified = modifyAttackAmount(state, baseAmount);
   const hpDmg = dealDamage(state, source, target, modified, true);
   log(`${nameOf(source, state)} → ${nameOf(target, state)}: ${hpDmg} ${t('데미지')}`);
@@ -107,10 +118,7 @@ export function applyEffect(
       for (let i = 0; i < times; i++) {
         if (tgt.hp <= 0) break;
         // 시그니처(독니): 매 턴 첫 공격 시 적에게 중독 부여
-        if (state.flags.firstAttackThisTurn && getRunOrNull()?.player.relics.includes('venom_fang')) {
-          applyStatus(tgt, 'poison', 2);
-          log(`${t('독니')} → ${t('중독')} +2`);
-        }
+        applyVenomFang(state.flags.firstAttackThisTurn, tgt, log);
         const modified = modifyAttackAmount(state, effect.amount);
         const hpDmg = dealDamage(state, source, tgt, modified, true);
         log(`${nameOf(source, state)} → ${nameOf(tgt, state)}: ${hpDmg} ${t('데미지')}`);
@@ -124,10 +132,7 @@ export function applyEffect(
       state.flags.firstAttackThisTurn = false;
       for (const e of state.enemies) {
         if (e.hp <= 0) continue;
-        if (isFirst && getRunOrNull()?.player.relics.includes('venom_fang')) {
-          applyStatus(e, 'poison', 2);
-          log(`${t('독니')} → ${t('중독')} +2`);
-        }
+        applyVenomFang(isFirst, e, log);
         const modified = modifyAttackAmount(state, effect.amount);
         const hpDmg = dealDamage(state, source, e, modified, true);
         log(`${t('전체')} → ${nameOf(e, state)}: ${hpDmg} ${t('데미지')}`);

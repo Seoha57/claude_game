@@ -102,7 +102,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   venom_fang: {
     id: 'venom_fang',
     name: '독니',
-    description: '매 턴 첫 공격이 적에게 중독 +2. 매 턴 시작 시 2 회복.',
+    description: '매 턴 첫 공격이 적에게 중독 +4. 매 턴 시작 시 2 회복.',
     rarity: 'starter',
   },
   spirit_contract: {

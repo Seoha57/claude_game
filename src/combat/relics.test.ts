@@ -58,6 +58,23 @@ describe('매 턴 회복 유물', () => {
   });
 });
 
+describe('독니 (도적 시그니처)', () => {
+  it('매 턴 첫 공격에만 중독 4를 얹는다', () => {
+    const s = fight('thief');
+    beginPlayerTurn(s);
+    const enemy = s.enemies[0];
+    const slicer = s.player.hand.find((c) => c.defId === 't_slicer')
+      ?? (s.player.hand.push(makeCard('t_slicer')), s.player.hand[s.player.hand.length - 1]);
+    playCard(s, slicer, enemy, () => {});
+    expect(getStatus(enemy.statuses, 'poison')).toBe(4);
+
+    const second = makeCard('t_slicer');
+    s.player.hand.push(second);
+    playCard(s, second, enemy, () => {});
+    expect(getStatus(enemy.statuses, 'poison'), '같은 턴 두 번째 공격은 안 얹는다').toBe(4);
+  });
+});
+
 describe('혈술의 핵 (혈술사 시그니처)', () => {
   it('HP를 잃는 카드를 내면 방어도 +3과 드로우 1을 준다', () => {
     const s = fight('blood_mage');
