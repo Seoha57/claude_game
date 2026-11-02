@@ -36,6 +36,9 @@ jobs:
       - name: 런 전체 시뮬 스모크
         run: npm run sim:run -- 5
 
+      - name: 등반 곡선 스모크
+        run: npm run sim:asc -- 2
+
       - name: playwright 브라우저 캐시
         uses: actions/cache@v4
         id: pw-cache
