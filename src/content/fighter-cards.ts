@@ -19,8 +19,8 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     rarity: 'starter',
     cost: 1,
     target: 'self',
-    description: '방어도 +5.',
-    effects: [{ kind: 'block', amount: 5 }],
+    description: '방어도 +7.',
+    effects: [{ kind: 'block', amount: 7 }],
   },
 
   // ── Common (includes starter-special) ──
@@ -406,7 +406,7 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
 
 const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_quick_kick:    { name: '속공각+',                   description: '9 데미지.',                              effects: [{ kind: 'damage', amount: 9 }] },
-  f_nen_guard:     { name: '강철 방어+',                  description: '방어도 +8.',                            effects: [{ kind: 'block', amount: 8 }] },
+  f_nen_guard:     { name: '강철 방어+',                  description: '방어도 +10.',                           effects: [{ kind: 'block', amount: 10 }] },
   f_upper_kick:    { name: '승천각+',                 description: '10 데미지. 취약 +3.',                   effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 3 }] },
   f_low_kick:      { name: '하단 차기+',                     description: '7 데미지를 두 번.',                     effects: [{ kind: 'damage', amount: 7, times: 2 }] },
   f_aerial_stomp:  { name: '낙하 강타+',                description: '모든 적에게 11 데미지.',                effects: [{ kind: 'damage_all', amount: 11 }] },
