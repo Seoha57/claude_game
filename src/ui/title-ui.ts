@@ -252,8 +252,8 @@ export function renderTitle(): HTMLElement {
     const footerLinks = el('div', {
       style: { marginTop: '16px', fontSize: '11px', color: 'var(--muted)', textAlign: 'center' },
     });
-    const guideHref = getLang() === 'en' ? '/guide-en.html' : '/guide.html';
-    footerLinks.innerHTML = `<a href="${guideHref}" style="color:var(--muted)">${t('가이드')}</a> · <a href="/privacy.html" style="color:var(--muted)">${t('개인정보처리방침')}</a> · <a href="/terms.html" style="color:var(--muted)">${t('이용약관')}</a>`;
+    const guideHref = getLang() === 'en' ? '/guide-en' : '/guide';
+    footerLinks.innerHTML = `<a href="${guideHref}" style="color:var(--muted)">${t('가이드')}</a> · <a href="/privacy" style="color:var(--muted)">${t('개인정보처리방침')}</a> · <a href="/terms" style="color:var(--muted)">${t('이용약관')}</a>`;
     wrapper.appendChild(footerLinks);
   };
 
