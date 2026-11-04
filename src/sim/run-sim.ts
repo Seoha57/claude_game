@@ -17,7 +17,11 @@ import {
   buildShopItems, applyVictoryRewards, chapterClearHeal, bossRelicChoices,
   applyBossRelicOnPickup, eventFor, canPickEventChoice, applyEventEffects,
   neowChoices, applyNeowBlessing,
+  isEndlessRestWave, applyEndlessRest, endlessEncounterIds, endlessCombatSeed,
+  applyEndlessScaling, hasEndlessReward, endlessRewardChoices, applyEndlessReward,
+  calcEndlessScore,
 } from '../run/rules';
+import type { EndlessRewardId } from '../run/rules';
 import type { EventChoice, EventEffect } from '../content/events';
 import { simulateCombat } from './simulator';
 import type { CardInstance, CharacterClass, MapNode, RunState } from '../types';
@@ -335,5 +339,105 @@ export function reportRuns(cls: CharacterClass, runs: number, ascension = 0): Ru
     timeouts,
     topKiller: top ? `${top[0]} (${top[1]})` : '-',
     clearedCh1: pastCh1 / runs,
+  };
+}
+
+// ── 무한 던전 ──
+// 무한 던전은 게임을 깬 덱으로 이어서 도전하는 모드다. 그래서 여기서는 이긴
+// 런을 그대로 이어 태운다 — 덱을 따로 지어내지 않는다.
+
+export interface EndlessOutcome {
+  /** 쓰러지기 전까지 넘긴 웨이브 */
+  wavesCleared: number;
+  score: number;
+}
+
+/** 다친 만큼 회복을 먼저 집고, 아니면 영구 성장을 집는다. */
+const ENDLESS_REWARD_PREFERENCE: EndlessRewardId[] = ['str', 'upgrade', 'dex', 'maxhp', 'potion', 'heal'];
+
+function takeEndlessReward(run: RunState): void {
+  const choices = endlessRewardChoices(run);
+  const hurt = run.player.hp / run.player.maxHp < 0.55;
+  if (hurt && choices.includes('heal')) {
+    applyEndlessReward(run, 'heal');
+    return;
+  }
+  for (const id of ENDLESS_REWARD_PREFERENCE) {
+    if (choices.includes(id)) {
+      applyEndlessReward(run, id);
+      return;
+    }
+  }
+}
+
+export function simulateEndless(run: RunState, maxWaves = 60): EndlessOutcome {
+  run.player.hp = run.player.maxHp;
+  run.endless = { wave: 0, score: 0 };
+
+  while (run.endless.wave < maxWaves) {
+    run.endless.wave += 1;
+    const wave = run.endless.wave;
+
+    if (isEndlessRestWave(wave)) {
+      applyEndlessRest(run);
+      continue;
+    }
+
+    const enemyIds = endlessEncounterIds(run, wave);
+    run.combatEnemyDefIds = enemyIds.slice();
+    const result = simulateCombat(
+      run.player, enemyIds, endlessCombatSeed(run, wave),
+      (cs) => applyEndlessScaling(run, cs, wave),
+    );
+    if (result !== 'won') {
+      run.endless.wave = wave - 1;
+      break;
+    }
+
+    applyVictoryRewards(run, null);
+    if (hasEndlessReward(wave)) takeEndlessReward(run);
+  }
+
+  return { wavesCleared: run.endless.wave, score: calcEndlessScore(run) };
+}
+
+export const ENDLESS_MILESTONES = [5, 10, 15, 20, 25, 30];
+
+export interface EndlessReport {
+  cls: CharacterClass;
+  /** 돌린 런 수 — 이 중 이긴 런만 무한 던전으로 이어진다 */
+  runs: number;
+  wins: number;
+  avgWave: number;
+  medianWave: number;
+  maxWave: number;
+  avgScore: number;
+  /** 웨이브별 도달률 (이긴 런 기준) */
+  reach: number[];
+}
+
+export function reportEndless(cls: CharacterClass, runs: number, ascension = 0): EndlessReport {
+  unlockEverythingForSim();
+  const waves: number[] = [];
+  let scoreSum = 0;
+
+  for (let i = 0; i < runs; i++) {
+    if (simulateRun(cls, i * 7919 + 13, ascension).result !== 'won') continue;
+    const out = simulateEndless(getRun());
+    waves.push(out.wavesCleared);
+    scoreSum += out.score;
+  }
+
+  const sorted = waves.slice().sort((a, b) => a - b);
+  const n = sorted.length;
+  return {
+    cls,
+    runs,
+    wins: n,
+    avgWave: n > 0 ? waves.reduce((s, w) => s + w, 0) / n : 0,
+    medianWave: n > 0 ? sorted[Math.floor(n / 2)] : 0,
+    maxWave: n > 0 ? sorted[n - 1] : 0,
+    avgScore: n > 0 ? scoreSum / n : 0,
+    reach: ENDLESS_MILESTONES.map((m) => (n > 0 ? waves.filter((w) => w >= m).length / n : 0)),
   };
 }

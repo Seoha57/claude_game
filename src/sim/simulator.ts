@@ -134,8 +134,10 @@ export interface CombatStats {
 }
 
 /** 전투 하나를 끝까지 돌린다. player는 그 자리에서 변경된다. */
-export function simulateCombatStats(player: Player, enemyIds: string[], seed: number): CombatStats {
+/** tune: 전투 시작 직후 적·플레이어를 손볼 기회 (무한 던전 웨이브 배수 등). */
+export function simulateCombatStats(player: Player, enemyIds: string[], seed: number, tune?: (s: CombatState) => void): CombatStats {
   const state = startCombat(player, enemyIds, seed);
+  tune?.(state);
   const totalEnemyHp = state.enemies.reduce((s, e) => s + e.hp, 0);
   let turns = 0;
   for (; turns < MAX_TURNS; turns++) {
@@ -154,8 +156,8 @@ export function simulateCombatStats(player: Player, enemyIds: string[], seed: nu
   };
 }
 
-export function simulateCombat(player: Player, enemyIds: string[], seed: number): CombatResult {
-  return simulateCombatStats(player, enemyIds, seed).result;
+export function simulateCombat(player: Player, enemyIds: string[], seed: number, tune?: (s: CombatState) => void): CombatResult {
+  return simulateCombatStats(player, enemyIds, seed, tune).result;
 }
 
 function pick<T>(table: T[], seed: number): T {

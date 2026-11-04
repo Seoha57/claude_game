@@ -457,3 +457,132 @@ export function usePotion(
   }
   return true;
 }
+
+// ── 무한 던전 ──
+// 원래 endless-ui.ts 안에 있어서 시뮬레이터가 이 모드를 전혀 볼 수 없었다.
+// 웨이브 구성·스케일링·보상만 여기로 옮기고, 화면 전환과 효과음은 UI에 남긴다.
+
+export function endlessEncounterTable(wave: number): string[][] {
+  if (wave % 10 === 0) {
+    if (wave >= 30) return CH3_BOSS_ENCOUNTERS.concat(CH4_BOSS_ENCOUNTERS);
+    if (wave >= 20) return CH2_BOSS_ENCOUNTERS.concat(CH3_BOSS_ENCOUNTERS);
+    return BOSS_ENCOUNTERS.concat(CH2_BOSS_ENCOUNTERS);
+  }
+  if (wave % 5 === 0) {
+    if (wave >= 25) return CH3_ELITE_ENCOUNTERS.concat(CH4_ELITE_ENCOUNTERS);
+    if (wave >= 15) return CH2_ELITE_ENCOUNTERS.concat(CH3_ELITE_ENCOUNTERS);
+    return ELITE_ENCOUNTERS.concat(CH2_ELITE_ENCOUNTERS);
+  }
+  if (wave <= 5) return NORMAL_ENCOUNTERS;
+  if (wave <= 10) return CH2_NORMAL_ENCOUNTERS;
+  if (wave <= 15) return CH3_NORMAL_ENCOUNTERS;
+  return CH3_NORMAL_ENCOUNTERS.concat(CH4_NORMAL_ENCOUNTERS);
+}
+
+export function endlessHpMult(wave: number): number {
+  return 1 + wave * 0.12;
+}
+
+export function endlessStrBonus(wave: number): number {
+  return Math.floor(wave / 3);
+}
+
+/** 보스 웨이브가 아닌 5의 배수를 넘긴 직후는 전투 대신 휴식이다. */
+export function isEndlessRestWave(wave: number): boolean {
+  return wave > 1 && (wave - 1) % 5 === 0 && (wave - 1) % 10 !== 0;
+}
+
+/** 휴식 웨이브 회복을 적용하고 회복량을 돌려준다. */
+export function applyEndlessRest(run: RunState): number {
+  const heal = Math.ceil(run.player.maxHp * 0.3);
+  run.player.hp = Math.min(run.player.maxHp, run.player.hp + heal);
+  return heal;
+}
+
+export function endlessEncounterIds(run: RunState, wave: number): string[] {
+  return pickEncounter(makeRng(run.seed * 97 + wave * 31), endlessEncounterTable(wave));
+}
+
+export function endlessCombatSeed(run: RunState, wave: number): number {
+  return run.seed + wave * 17;
+}
+
+/** 웨이브 배수를 적에게, 누적 보너스를 플레이어에게 입힌다. */
+export function applyEndlessScaling(run: RunState, state: CombatState, wave: number): void {
+  const hpMult = endlessHpMult(wave);
+  const strBonus = endlessStrBonus(wave);
+  for (const e of state.enemies) {
+    e.maxHp = Math.round(e.maxHp * hpMult);
+    e.hp = e.maxHp;
+    if (strBonus > 0) applyStatus(e, 'strength', strBonus);
+  }
+  const bStr = run.endless?.bonusStr ?? 0;
+  const bDex = run.endless?.bonusDex ?? 0;
+  if (bStr > 0) applyStatus(state.player, 'strength', bStr);
+  if (bDex > 0) applyStatus(state.player, 'dexterity', bDex);
+}
+
+export function calcEndlessScore(run: RunState): number {
+  const wave = run.endless?.wave ?? 0;
+  const base = wave * 100 + run.player.hp + run.player.gold + run.player.relics.length * 25;
+  return Math.floor(base * (1 + (run.ascension ?? 0) * 0.1));
+}
+
+export type EndlessRewardId = 'str' | 'dex' | 'heal' | 'upgrade' | 'maxhp' | 'potion';
+
+export interface EndlessRewardResult {
+  id: EndlessRewardId;
+  /** heal이면 회복량, maxhp면 증가량, str·dex면 누적 보너스 */
+  amount: number;
+  potionId?: string;
+  /** 강화할 카드가 없는 등, 아무 일도 못 한 경우 */
+  noop?: boolean;
+  sfx?: string;
+}
+
+export function hasEndlessReward(wave: number): boolean {
+  return wave > 0 && wave % 5 === 0;
+}
+
+export function endlessRewardChoices(run: RunState): EndlessRewardId[] {
+  const wave = run.endless?.wave ?? 0;
+  const pool: EndlessRewardId[] = ['str', 'dex', 'heal', 'upgrade', 'maxhp'];
+  if (run.player.potions.length < 3) pool.push('potion');
+  return shuffle(makeRng(run.seed * 59 + wave * 43), pool).slice(0, wave % 10 === 0 ? 4 : 3);
+}
+
+export function applyEndlessReward(run: RunState, id: EndlessRewardId): EndlessRewardResult {
+  const wave = run.endless?.wave ?? 0;
+  switch (id) {
+    case 'str':
+      run.endless!.bonusStr = (run.endless!.bonusStr ?? 0) + 1;
+      return { id, amount: run.endless!.bonusStr };
+    case 'dex':
+      run.endless!.bonusDex = (run.endless!.bonusDex ?? 0) + 1;
+      return { id, amount: run.endless!.bonusDex };
+    case 'heal': {
+      const heal = Math.ceil(run.player.maxHp * 0.3);
+      run.player.hp = Math.min(run.player.maxHp, run.player.hp + heal);
+      return { id, amount: heal };
+    }
+    case 'maxhp':
+      run.player.maxHp += 8;
+      run.player.hp += 8;
+      return { id, amount: 8, sfx: 'potion' };
+    case 'upgrade': {
+      const fresh = run.player.deck.filter((c) => canUpgrade(c) && !c.upgraded);
+      const plus = run.player.deck.filter((c) => canUpgrade(c) && c.upgraded === 1);
+      const pool = fresh.length > 0 ? fresh : plus;
+      if (pool.length === 0) return { id, amount: 0, noop: true };
+      const card = pick(makeRng(run.seed * 71 + wave), pool);
+      card.upgraded = (card.upgraded ?? 0) + 1;
+      return { id, amount: 1, sfx: 'upgrade' };
+    }
+    case 'potion': {
+      if (run.player.potions.length >= 3) return { id, amount: 0, noop: true };
+      const chosen = pick(makeRng(run.seed * 83 + wave), POTION_LIST);
+      run.player.potions.push(chosen.id);
+      return { id, amount: 1, potionId: chosen.id, sfx: 'potion' };
+    }
+  }
+}

@@ -8,6 +8,9 @@ import {
   bossRelicChoices, applyBossRelicOnPickup, usePotion,
   eventFor, canPickEventChoice, applyEventEffects,
   neowChoices, applyNeowBlessing,
+  endlessHpMult, endlessStrBonus, isEndlessRestWave, applyEndlessRest,
+  endlessEncounterIds, applyEndlessScaling, hasEndlessReward,
+  endlessRewardChoices, applyEndlessReward, calcEndlessScore,
 } from './rules';
 import { NEOW_BLESSINGS } from '../content/neow';
 import { nodeById } from '../map/map';
@@ -392,5 +395,108 @@ describe('UI와 같은 규칙을 쓴다', () => {
     expect(combatNode, '전투 노드가 하나도 없는 맵은 말이 안 된다').toBeTruthy();
     const ids = encounterFor(run, nodeById(run.map, combatNode!.id));
     expect(ids.length).toBeGreaterThan(0);
+  });
+});
+
+describe('무한 던전', () => {
+  function endlessRun() {
+    startNewRun(1, 0, 'swordmaster');
+    const run = getRun();
+    run.endless = { wave: 0, score: 0 };
+    return run;
+  }
+
+  it('웨이브가 오를수록 적이 세진다', () => {
+    expect(endlessHpMult(1)).toBeCloseTo(1.12);
+    expect(endlessHpMult(10)).toBeCloseTo(2.2);
+    expect(endlessStrBonus(2)).toBe(0);
+    expect(endlessStrBonus(3)).toBe(1);
+  });
+
+  it('5의 배수를 넘긴 직후는 휴식, 보스 다음은 아니다', () => {
+    expect(isEndlessRestWave(6)).toBe(true);
+    expect(isEndlessRestWave(16)).toBe(true);
+    expect(isEndlessRestWave(11)).toBe(false); // 10은 보스
+    expect(isEndlessRestWave(5)).toBe(false);
+  });
+
+  it('휴식은 최대 HP의 30%를 회복하고 넘치지 않는다', () => {
+    const run = endlessRun();
+    run.player.hp = 10;
+    const healed = applyEndlessRest(run);
+    expect(healed).toBe(Math.ceil(run.player.maxHp * 0.3));
+    expect(run.player.hp).toBe(10 + healed);
+
+    run.player.hp = run.player.maxHp;
+    applyEndlessRest(run);
+    expect(run.player.hp).toBe(run.player.maxHp);
+  });
+
+  it('스케일링이 적 HP와 힘에 실제로 들어간다', () => {
+    const run = endlessRun();
+    const wave = 10;
+    const ids = endlessEncounterIds(run, wave);
+    const base = startCombat(run.player, ids, 1);
+    const baseHp = base.enemies.map((e) => e.maxHp);
+
+    const scaled = startCombat(run.player, ids, 1);
+    run.endless!.bonusStr = 2;
+    applyEndlessScaling(run, scaled, wave);
+
+    scaled.enemies.forEach((e, i) => {
+      expect(e.maxHp).toBe(Math.round(baseHp[i] * endlessHpMult(wave)));
+      expect(e.hp).toBe(e.maxHp);
+      expect(getStatus(e.statuses, 'strength')).toBe(endlessStrBonus(wave));
+    });
+    expect(getStatus(scaled.player.statuses, 'strength')).toBe(2);
+  });
+
+  it('보상은 5웨이브마다, 보스 웨이브는 4개를 준다', () => {
+    const run = endlessRun();
+    expect(hasEndlessReward(4)).toBe(false);
+    expect(hasEndlessReward(5)).toBe(true);
+
+    run.endless!.wave = 5;
+    expect(endlessRewardChoices(run).length).toBe(3);
+    run.endless!.wave = 10;
+    expect(endlessRewardChoices(run).length).toBe(4);
+  });
+
+  it('물약 슬롯이 차면 물약 보상이 후보에서 빠진다', () => {
+    const run = endlessRun();
+    run.endless!.wave = 10;
+    run.player.potions = ['health_potion', 'health_potion', 'health_potion'];
+    expect(endlessRewardChoices(run)).not.toContain('potion');
+  });
+
+  it('힘 보상은 누적된다', () => {
+    const run = endlessRun();
+    expect(applyEndlessReward(run, 'str').amount).toBe(1);
+    expect(applyEndlessReward(run, 'str').amount).toBe(2);
+    expect(run.endless!.bonusStr).toBe(2);
+  });
+
+  it('최대 HP 보상은 최대치와 현재치를 같이 올린다', () => {
+    const run = endlessRun();
+    run.player.hp = 20;
+    const before = run.player.maxHp;
+    applyEndlessReward(run, 'maxhp');
+    expect(run.player.maxHp).toBe(before + 8);
+    expect(run.player.hp).toBe(28);
+  });
+
+  it('강화할 카드가 없으면 아무 일도 안 일어난다', () => {
+    const run = endlessRun();
+    run.player.deck = [];
+    expect(applyEndlessReward(run, 'upgrade').noop).toBe(true);
+  });
+
+  it('점수는 웨이브와 등반 단계를 함께 본다', () => {
+    const run = endlessRun();
+    run.endless!.wave = 10;
+    run.player.gold = 0;
+    const a0 = calcEndlessScore(run);
+    run.ascension = 5;
+    expect(calcEndlessScore(run)).toBe(Math.floor(a0 * 1.5));
   });
 });

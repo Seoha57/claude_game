@@ -12,7 +12,8 @@
     "sim:run": "vite-node tools/run-sim.ts",
     "sim:asc": "vite-node tools/asc-sim.ts",
     "test:e2e": "playwright test",
-    "test:e2e:ci": "playwright test --grep-invert @slow"
+    "test:e2e:ci": "playwright test --grep-invert @slow",
+    "sim:endless": "vite-node tools/endless-sim.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",

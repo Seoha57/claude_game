@@ -3,7 +3,7 @@ import { CHAR_NAMES } from './art';
 import { RELIC_DEFS } from '../content/relics';
 import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
-import { calcEndlessScore } from './endless-ui';
+import { calcEndlessScore } from '../run/rules';
 import { t } from '../i18n';
 
 function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
