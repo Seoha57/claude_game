@@ -464,8 +464,8 @@ export function usePotion(
 
 export function endlessEncounterTable(wave: number): string[][] {
   if (wave % 10 === 0) {
-    if (wave >= 30) return CH3_BOSS_ENCOUNTERS.concat(CH4_BOSS_ENCOUNTERS);
-    if (wave >= 20) return CH2_BOSS_ENCOUNTERS.concat(CH3_BOSS_ENCOUNTERS);
+    if (wave >= 40) return CH3_BOSS_ENCOUNTERS.concat(CH4_BOSS_ENCOUNTERS);
+    if (wave >= 30) return CH2_BOSS_ENCOUNTERS.concat(CH3_BOSS_ENCOUNTERS);
     return BOSS_ENCOUNTERS.concat(CH2_BOSS_ENCOUNTERS);
   }
   if (wave % 5 === 0) {
@@ -473,14 +473,13 @@ export function endlessEncounterTable(wave: number): string[][] {
     if (wave >= 15) return CH2_ELITE_ENCOUNTERS.concat(CH3_ELITE_ENCOUNTERS);
     return ELITE_ENCOUNTERS.concat(CH2_ELITE_ENCOUNTERS);
   }
-  if (wave <= 5) return NORMAL_ENCOUNTERS;
-  if (wave <= 10) return CH2_NORMAL_ENCOUNTERS;
-  if (wave <= 15) return CH3_NORMAL_ENCOUNTERS;
+  if (wave <= 5) return CH2_NORMAL_ENCOUNTERS;
+  if (wave <= 10) return CH3_NORMAL_ENCOUNTERS;
   return CH3_NORMAL_ENCOUNTERS.concat(CH4_NORMAL_ENCOUNTERS);
 }
 
 export function endlessHpMult(wave: number): number {
-  return 1 + wave * 0.12;
+  return 1.3 + wave * 0.07;
 }
 
 export function endlessStrBonus(wave: number): number {

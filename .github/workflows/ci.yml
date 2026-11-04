@@ -39,6 +39,9 @@ jobs:
       - name: 등반 곡선 스모크
         run: npm run sim:asc -- 2
 
+      - name: 무한 던전 스모크
+        run: npm run sim:endless -- 3
+
       - name: playwright 브라우저 캐시
         uses: actions/cache@v4
         id: pw-cache

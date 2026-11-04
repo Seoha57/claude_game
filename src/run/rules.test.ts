@@ -407,8 +407,8 @@ describe('무한 던전', () => {
   }
 
   it('웨이브가 오를수록 적이 세진다', () => {
-    expect(endlessHpMult(1)).toBeCloseTo(1.12);
-    expect(endlessHpMult(10)).toBeCloseTo(2.2);
+    expect(endlessHpMult(1)).toBeCloseTo(1.37);
+    expect(endlessHpMult(10)).toBeCloseTo(2.0);
     expect(endlessStrBonus(2)).toBe(0);
     expect(endlessStrBonus(3)).toBe(1);
   });
