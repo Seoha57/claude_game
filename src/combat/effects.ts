@@ -76,7 +76,7 @@ export function gainBlock(c: { block: number; statuses: any }, base: number): vo
  * 중독은 방어도를 무시해서, 도적이 장갑 두꺼운 적을 넘는 유일한 축이다.
  * 600런 A0에서 2 → 4로 올렸을 때 4.8% → 12.5%.
  */
-const VENOM_FANG_POISON = 4;
+const VENOM_FANG_POISON = 5;
 
 function applyVenomFang(isFirstAttack: boolean | undefined, target: Enemy, log: (s: string) => void): void {
   if (!isFirstAttack) return;
