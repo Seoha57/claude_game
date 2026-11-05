@@ -114,6 +114,28 @@ describe('구슬 주머니 (총잡이 시작 유물)', () => {
   });
 });
 
+describe('탄창 (총잡이 시그니처)', () => {
+  // 원래 3번째 공격마다 +5 데미지였다. 평평해서 적 HP가 불어나는 무한 던전·고단계에서
+  // 값이 떨어졌다 — 힘으로 바꾸면 짧은 전투에서는 약간 약하고 긴 전투에서 쌓인다.
+  it('공격 카드 3장마다 힘이 1씩 쌓인다', () => {
+    const s = fight('gunner');
+    beginPlayerTurn(s);
+    const shoot = () => {
+      const card = makeCard('g_rising_shot');
+      s.player.hand.push(card);
+      s.player.energy = 9;
+      playCard(s, card, s.enemies[0], () => { /* 로그 무시 */ });
+    };
+
+    shoot(); shoot();
+    expect(getStatus(s.player.statuses, 'strength')).toBe(0);
+    shoot();
+    expect(getStatus(s.player.statuses, 'strength'), '3장째에 +1').toBe(1);
+    shoot(); shoot(); shoot();
+    expect(getStatus(s.player.statuses, 'strength'), '6장째에 +1 더').toBe(2);
+  });
+});
+
 describe('성배 (성직자 시작 유물)', () => {
   it('재생이 소모돼도 매 턴 3으로 되돌아온다', () => {
     const s = fight('priest');

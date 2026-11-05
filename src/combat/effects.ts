@@ -497,7 +497,8 @@ export function playCard(
   if (run?.player.relics.includes('gunner_magazine') && def.type === 'attack') {
     if (state.flags.attackCount! % 3 === 0) {
       drawCards(state, 1);
-      log(`${t('탄창')} → ${t('카드')} +1`);
+      applyStatus(p, 'strength', 1);
+      log(`${t('탄창')} → ${t('카드')} +1, ${t('힘')} +1`);
     }
   }
 
@@ -572,10 +573,6 @@ export function modifyAttackAmount(state: CombatState, base: number, attackCount
   // 검혼: 5번째 공격마다 +6
   if (run.player.relics.includes('gwihon_charm') && ac % 5 === 0) {
     amount += 6;
-  }
-  // 탄창(총잡이): 3번째 공격마다 +5 데미지
-  if (run.player.relics.includes('gunner_magazine') && ac % 3 === 0) {
-    amount += 5;
   }
   // 펜촉: 10번째 공격마다 2배 (검혼/탄창 보너스도 같이 2배가 됨)
   if (run.player.relics.includes('pen_nib') && ac % 10 === 0) {

@@ -78,7 +78,7 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   gunner_magazine: {
     id: 'gunner_magazine',
     name: '탄창',
-    description: '공격 카드 3회 사용마다 +5 데미지, 카드 1장 드로우. 매 턴 시작 시 2 회복.',
+    description: '공격 카드 3회 사용마다 힘 +1, 카드 1장 드로우. 매 턴 시작 시 2 회복.',
     rarity: 'starter',
   },
   one_mind_belt: {
