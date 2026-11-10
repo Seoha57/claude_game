@@ -243,7 +243,7 @@ export function startNewRun(
   options: { goToScreen?: Screen; daily?: { date: string; constraint: DailyConstraint } } = {},
 ): void {
   const mods = getModifiers(ascension);
-  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 72, gunner: 67, fighter: 84, magician: 65, priest: 82, thief: 68, summoner: 62, engineer: 61, gambler: 66, blood_mage: 72 };
+  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 72, gunner: 67, fighter: 79, magician: 66, priest: 82, thief: 72, summoner: 67, engineer: 61, gambler: 62, blood_mage: 75 };
   let baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
   // 데일리 제약: HP 배율
   if (options.daily?.constraint.hpMult !== undefined) {
