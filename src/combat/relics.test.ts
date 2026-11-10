@@ -247,6 +247,38 @@ describe('시작 유물', () => {
   });
 });
 
+describe('램프형 시그니처 (2026-11-10)', () => {
+  // 600런에서 "A0만 오른다"고 읽고 한 번 되돌렸던 변경이다. 1,200런으로 다시
+  // 재보니 A10에서도 올랐다 (격투가 6.8 → 7.8%, 마법사 7.8 → 9.5%).
+  it('투혼은 5턴째부터 매 턴 힘이 쌓인다', () => {
+    startNewRun(1, 0, 'fighter');
+    const s = startCombat(getRun().player, ['jaw_worm'], 1);
+    expect(getStatus(s.player.statuses, 'strength'), '전투 시작 +1').toBe(1);
+    for (let turn = 2; turn <= 4; turn++) beginPlayerTurn(s);
+    expect(getStatus(s.player.statuses, 'strength'), '4턴까지는 그대로').toBe(1);
+    beginPlayerTurn(s);
+    expect(getStatus(s.player.statuses, 'strength'), '5턴째 +1').toBe(2);
+    beginPlayerTurn(s);
+    expect(getStatus(s.player.statuses, 'strength')).toBe(3);
+  });
+
+  it('마탑의 결정은 4턴째부터 데미지가 커진다', () => {
+    startNewRun(1, 0, 'magician');
+    const run = getRun();
+    const s = startCombat(run.player, ['jaw_worm'], 1);
+    const dmg = () => {
+      const before = s.enemies[0].hp;
+      beginPlayerTurn(s);
+      return before - s.enemies[0].hp;
+    };
+    // startCombat이 1턴을 이미 돌렸으므로 여기서부터 2·3·4·5턴
+    expect(dmg(), '2턴').toBe(4);
+    expect(dmg(), '3턴').toBe(4);
+    expect(dmg(), '4턴').toBe(5);
+    expect(dmg(), '5턴').toBe(6);
+  });
+});
+
 describe('마법사 시작 유물', () => {
   it('마탑의 결정은 턴마다 적을 때리고 HP를 돌려준다', () => {
     startNewRun(1, 0, 'magician');

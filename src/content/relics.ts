@@ -52,13 +52,13 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
   fighting_spirit: {
     id: 'fighting_spirit',
     name: '투혼',
-    description: '전투 시작 시 힘 +1.',
+    description: '전투 시작 시 힘 +1. 5턴째부터 매 턴 힘 +1.',
     rarity: 'starter',
   },
   mage_orb: {
     id: 'mage_orb',
     name: '마탑의 결정',
-    description: '매 턴 시작 시 무작위 적에게 4 데미지, HP +2 회복.',
+    description: '매 턴 시작 시 무작위 적에게 데미지(4, 4턴째부터 +1), HP +2 회복.',
     rarity: 'starter',
   },
   holy_chalice: {

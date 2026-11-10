@@ -137,14 +137,17 @@ export function beginPlayerTurn(state: CombatState): void {
       if (alive.length > 0) {
         const target = alive[Math.floor(state.rng() * alive.length)];
         // Direct damage (non-attack, no strength/vuln scaling)
-        const absorbed = Math.min(target.block, 4);
+        // 4로 시작해 4턴째부터 턴마다 1씩 커진다. 고정 4는 적 HP가 불어나는
+        // 고단계에서 값이 떨어졌다 (A10 7.8 → 9.5%).
+        const orb = 4 + Math.max(0, state.turn - 3);
+        const absorbed = Math.min(target.block, orb);
         target.block -= absorbed;
-        target.hp = Math.max(0, target.hp - (4 - absorbed));
+        target.hp = Math.max(0, target.hp - (orb - absorbed));
         // 마법사는 턴당 회복 수단이 없는 유일한 직업이었다 (65 HP, 10개 중 9위).
         // 런 시뮬에서 회복을 가진 직업들이 상위를 쓸고 있었고, 마법사는 보스도
         // 못 보고 평균 8.6노드에서 끝났다. 결정이 때린 만큼 조금 돌려받는다.
         p.hp = Math.min(p.maxHp, p.hp + 2);
-        state.log.push(`${t('마탑의 결정')} → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}${t('에게')} 4 ${t('데미지')}`);
+        state.log.push(`${t('마탑의 결정')} → ${ENEMY_DEFS[target.defId]?.name ?? target.defId}${t('에게')} ${orb} ${t('데미지')}`);
         maybeTriggerPhase(state, target);
       }
     }
@@ -175,6 +178,12 @@ export function beginPlayerTurn(state: CombatState): void {
     if (run.player.relics.includes('holy_chalice')) {
       const regen = getStatus(p.statuses, 'regen');
       if (regen > 0 && regen < 3) applyStatus(p, 'regen', 3 - regen);
+    }
+    // 투혼: 5턴째부터 매 턴 힘 +1. 원래 전투 시작 시 +1 한 번이 전부라 긴
+    // 전투에서 값이 떨어졌다 (A10 6.8 → 7.8%). 3턴째부터로 하면 A0가 터진다.
+    if (run.player.relics.includes('fighting_spirit') && state.turn >= 5) {
+      applyStatus(p, 'strength', 1);
+      state.log.push(`${t('투혼')} → ${t('힘')} +1`);
     }
     for (const [r, amount] of Object.entries(TURN_HEAL_RELICS)) {
       if (!run.player.relics.includes(r)) continue;
