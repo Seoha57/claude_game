@@ -412,6 +412,17 @@ export const ENGINEER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_per_card_this_turn', amount: 4 }],
     exhaust: true,
   },
+  n_shield_generator: {
+    id: 'n_shield_generator',
+    name: '방어막 발생기',
+    type: 'power',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '금속화 +6. 선천.',
+    effects: [{ kind: 'apply_self', status: 'metallicize', amount: 6 }],
+    innate: true,
+  },
 };
 
 const ENGINEER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -458,6 +469,7 @@ const ENGINEER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   n_overload:       { name: '과부하+',          description: 'HP -3. 모든 적에게 14 데미지.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_all', amount: 14 }] },
   n_railgun:        { name: '레일건+',          description: '22 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 22, times: 2 }] },
   n_final_count:    { name: '최종 카운트+',     description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.', effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
+  n_shield_generator: { name: '방어막 발생기+', description: '금속화 +8. 선천.', effects: [{ kind: 'apply_self', status: 'metallicize', amount: 8 }] },
 };
 
 export function engineerGetEffectiveDef(card: CardInstance): CardDef {

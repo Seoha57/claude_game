@@ -422,6 +422,34 @@ export const PRIEST_CARD_DEFS: Record<string, CardDef> = {
       { kind: 'apply_enemy', status: 'vulnerable', amount: 1 },
     ],
   },
+  p_sanctuary: {
+    id: 'p_sanctuary',
+    name: '성역',
+    type: 'power',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '금속화 +4. 재생 +3. 선천.',
+    effects: [
+      { kind: 'apply_self', status: 'metallicize', amount: 4 },
+      { kind: 'apply_self', status: 'regen', amount: 3 },
+    ],
+    innate: true,
+  },
+  p_martyrdom: {
+    id: 'p_martyrdom',
+    name: '순교',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 1,
+    target: 'all_enemies',
+    description: 'HP -6. 모든 적에게 취약 +2, 약화 +2.',
+    effects: [
+      { kind: 'lose_hp', amount: 6 },
+      { kind: 'apply_all', status: 'vulnerable', amount: 2 },
+      { kind: 'apply_all', status: 'weak', amount: 2 },
+    ],
+  },
 };
 
 // ── Upgrade map ──
@@ -467,6 +495,8 @@ export const PRIEST_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   p_wrath_of_god:      { name: '신의 진노+',     description: '모든 적에게 32 데미지. 소멸.',            effects: [{ kind: 'damage_all', amount: 32 }] },
   p_prayer:            { name: '기도+',          description: '12 회복. 1장 드로우.',                    effects: [{ kind: 'heal', amount: 12 }, { kind: 'draw', amount: 1 }] },
   p_smite:             { name: '응징+',          description: '10 데미지. 취약 +2.',                     effects: [{ kind: 'damage', amount: 10 }, { kind: 'apply_enemy', status: 'vulnerable', amount: 2 }] },
+  p_sanctuary: { name: '성역+', description: '금속화 +5. 재생 +4. 선천.', effects: [{ kind: 'apply_self', status: 'metallicize', amount: 5 }, { kind: 'apply_self', status: 'regen', amount: 4 }] },
+  p_martyrdom: { name: '순교+', description: 'HP -6. 모든 적에게 취약 +3, 약화 +3.', effects: [{ kind: 'lose_hp', amount: 6 }, { kind: 'apply_all', status: 'vulnerable', amount: 3 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
 };
 
 export function priestGetEffectiveDef(card: CardInstance): CardDef {

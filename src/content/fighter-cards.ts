@@ -402,6 +402,30 @@ export const FIGHTER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_per_card_this_turn', amount: 4 }],
     exhaust: true,
   },
+  f_steel_flesh: {
+    id: 'f_steel_flesh',
+    name: '강철 육신',
+    type: 'power',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '금속화 +5. 선천.',
+    effects: [{ kind: 'apply_self', status: 'metallicize', amount: 5 }],
+    innate: true,
+  },
+  f_counter_stance: {
+    id: 'f_counter_stance',
+    name: '반격 자세',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 1,
+    target: 'self',
+    description: '방어도 +10. 가시 +4.',
+    effects: [
+      { kind: 'block', amount: 10 },
+      { kind: 'apply_self', status: 'thorns', amount: 4 },
+    ],
+  },
 };
 
 const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -447,6 +471,8 @@ const FIGHTER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   f_rage_burst:     { name: '분노 폭발+',   description: 'HP -3. 모든 적에게 14 데미지.',          effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_all', amount: 14 }] },
   f_shadow_kick:    { name: '필살 연각+',      description: '19 데미지 2회. 소멸.',                   effects: [{ kind: 'damage', amount: 19, times: 2 }] },
   f_ten_count:      { name: '연타 카운트+',   description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.', effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
+  f_steel_flesh: { name: '강철 육신+', description: '금속화 +7. 선천.', effects: [{ kind: 'apply_self', status: 'metallicize', amount: 7 }] },
+  f_counter_stance: { name: '반격 자세+', description: '방어도 +13. 가시 +6.', effects: [{ kind: 'block', amount: 13 }, { kind: 'apply_self', status: 'thorns', amount: 6 }] },
 };
 
 export function fighterGetEffectiveDef(card: CardInstance): CardDef {

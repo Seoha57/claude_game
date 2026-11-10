@@ -261,6 +261,33 @@ export const SUMMONER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'apply_all', status: 'poison', amount: 10 }],
     exhaust: true,
   },
+  s_spirit_veil: {
+    id: 's_spirit_veil',
+    name: '정령의 장막',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 1,
+    target: 'self',
+    description: '방어도 +9. 민첩 +2.',
+    effects: [
+      { kind: 'block', amount: 9 },
+      { kind: 'apply_self', status: 'dexterity', amount: 2 },
+    ],
+  },
+  s_elemental_echo: {
+    id: 's_elemental_echo',
+    name: '원소 메아리',
+    type: 'power',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '재생 +3. 가시 +4. 선천.',
+    effects: [
+      { kind: 'apply_self', status: 'regen', amount: 3 },
+      { kind: 'apply_self', status: 'thorns', amount: 4 },
+    ],
+    innate: true,
+  },
 };
 
 // ── Upgrade map ──
@@ -299,6 +326,8 @@ export const SUMMONER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   s_void_explosion:    { name: '공허 폭발+',        description: '15 데미지 3회. 소멸.',                   effects: [{ kind: 'damage', amount: 15, times: 3 }] },
   s_spirit_pact:       { name: '정령 서약+',        description: '힘 +3. 턴 종료 시 방어도 +3. 선천.',     effects: [{ kind: 'apply_self', status: 'strength', amount: 3 }, { kind: 'apply_self', status: 'metallicize', amount: 3 }] },
   s_plague_spirit:     { name: '역병 정령+',        description: '모든 적에게 중독 +14. 소멸.',            effects: [{ kind: 'apply_all', status: 'poison', amount: 14 }] },
+  s_spirit_veil:     { name: '정령의 장막+',   description: '방어도 +12. 민첩 +3.',            effects: [{ kind: 'block', amount: 12 }, { kind: 'apply_self', status: 'dexterity', amount: 3 }] },
+  s_elemental_echo:  { name: '원소 메아리+',   description: '재생 +4. 가시 +6. 선천.',         effects: [{ kind: 'apply_self', status: 'regen', amount: 4 }, { kind: 'apply_self', status: 'thorns', amount: 6 }] },
 };
 
 export function summonerGetEffectiveDef(card: CardInstance): CardDef {

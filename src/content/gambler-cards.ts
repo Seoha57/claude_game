@@ -449,6 +449,46 @@ export const GAMBLER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'damage_per_card_this_turn', amount: 4 }],
     exhaust: true,
   },
+  b_house_edge: {
+    id: 'b_house_edge',
+    name: '하우스 엣지',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '3 × 🎲 방어도. 다음 턴 🎲 → 4.',
+    effects: [
+      { kind: 'block_dice', base: 3 },
+      { kind: 'fix_dice', value: 4 },
+    ],
+  },
+  b_tilted_table: {
+    id: 'b_tilted_table',
+    name: '기울어진 판',
+    type: 'power',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '🎲 최솟값 3. 카드 1장 드로우.',
+    effects: [
+      { kind: 'set_dice_minimum', value: 3 },
+      { kind: 'draw', amount: 1 },
+    ],
+  },
+  b_big_score: {
+    id: 'b_big_score',
+    name: '한탕',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '에너지 +2. 카드 1장 드로우. 소멸.',
+    effects: [
+      { kind: 'energy', amount: 2 },
+      { kind: 'draw', amount: 1 },
+    ],
+    exhaust: true,
+  },
 };
 
 const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -490,6 +530,9 @@ const GAMBLER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   b_ace_up_sleeve: { name: '에이스 업 슬리브+', description: '4 × 🎲 데미지 2회. 유지.',                                 effects: [{ kind: 'damage_dice', base: 4, times: 2 }] },
   b_death_match:  { name: '데스 매치+',       description: 'HP -3. 12 × 🎲 데미지.',                                   effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'damage_dice', base: 12 }] },
   b_last_stand:   { name: '라스트 스탠드+',   description: '데미지 = 5 × 이번 턴 사용한 카드 수. 소멸.',                effects: [{ kind: 'damage_per_card_this_turn', amount: 5 }] },
+  b_house_edge: { name: '하우스 엣지+', description: '4 × 🎲 방어도. 다음 턴 🎲 → 5.', effects: [{ kind: 'block_dice', base: 4 }, { kind: 'fix_dice', value: 5 }] },
+  b_tilted_table: { name: '기울어진 판+', description: '🎲 최솟값 4. 카드 1장 드로우.', effects: [{ kind: 'set_dice_minimum', value: 4 }, { kind: 'draw', amount: 1 }] },
+  b_big_score: { name: '한탕+', description: '에너지 +2. 카드 2장 드로우. 소멸.', effects: [{ kind: 'energy', amount: 2 }, { kind: 'draw', amount: 2 }] },
 };
 
 const GAMBLER_UPGRADE_PP_MAP: Record<string, Partial<CardDef>> = {

@@ -412,6 +412,33 @@ export const MAGICIAN_CARD_DEFS: Record<string, CardDef> = {
       { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'draw', amount: 1 }] },
     ],
   },
+  m_mana_veil: {
+    id: 'm_mana_veil',
+    name: '마나 장막',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '방어도 +11. 카드 1장 드로우.',
+    effects: [
+      { kind: 'block', amount: 11 },
+      { kind: 'draw', amount: 1 },
+    ],
+  },
+  m_absolute_zero: {
+    id: 'm_absolute_zero',
+    name: '절대 영도',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 2,
+    target: 'all_enemies',
+    description: '모든 적에게 빙결 +1, 약화 +2. 소멸.',
+    effects: [
+      { kind: 'apply_all', status: 'freeze', amount: 1 },
+      { kind: 'apply_all', status: 'weak', amount: 2 },
+    ],
+    exhaust: true,
+  },
 };
 
 const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -456,6 +483,8 @@ const MAGICIAN_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   m_time_warp:      { name: '타임 워프+',   description: '카드 5장 드로우. 에너지 +3. 소멸.',       effects: [{ kind: 'draw', amount: 5 }, { kind: 'energy', amount: 3 }] },
   m_arcane_orb:     { name: '비전 구체+',   description: '12 데미지. 직전이 공격이면 2장 드로우.',
                       effects: [{ kind: 'damage', amount: 12 }, { kind: 'conditional', condition: { kind: 'after_type', type: 'attack' }, then: [{ kind: 'draw', amount: 2 }] }] },
+  m_mana_veil: { name: '마나 장막+', description: '방어도 +15. 카드 1장 드로우.', effects: [{ kind: 'block', amount: 15 }, { kind: 'draw', amount: 1 }] },
+  m_absolute_zero: { name: '절대 영도+', description: '모든 적에게 빙결 +1, 약화 +4. 소멸.', effects: [{ kind: 'apply_all', status: 'freeze', amount: 1 }, { kind: 'apply_all', status: 'weak', amount: 4 }] },
 };
 
 export function magicianGetEffectiveDef(card: CardInstance): CardDef {

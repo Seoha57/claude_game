@@ -57,6 +57,25 @@ export function bossDefeatFlavor(bossId: string): string | null {
 
 // 카드 플레이버 — 덱 상세 보기에서 효과 아래 한 줄 표시.
 export const CARD_FLAVOR: Record<string, string> = {
+  b_house_edge: '판을 깔아둔 쪽은 오래 버틴다.',
+  b_tilted_table: '눈이 작게 나올 일은 없다. 그렇게 깎아뒀으니까.',
+  b_big_score: '한 번이면 된다. 한 번이면.',
+  f_steel_flesh: '맞을수록 단단해지는 몸이 있다.',
+  f_counter_stance: '먼저 치게 두어라. 대가는 받는다.',
+  m_mana_veil: '마력을 두르면 칼날이 비껴간다.',
+  m_absolute_zero: '소리도 얼어붙는 온도.',
+  p_sanctuary: '이 안에서는 누구도 다치지 않는다.',
+  p_martyrdom: '내 피로 저들의 죄를 비춘다.',
+  t_smoke_veil: '보이지 않는 적은 벨 수 없다.',
+  t_heart_piercer: '첫 칼이 가장 깊다.',
+  v_blood_ward: '흘린 피가 굳어 벽이 된다.',
+  v_thorn_of_blood: '건드리면 네 피도 흐른다.',
+  g_quick_reload: '탄창을 비우는 속도가 곧 실력이다.',
+  n_shield_generator: '전원만 들어오면 뚫리지 않는다.',
+  indomitable: '꺾이지 않으면 지지 않는다.',
+  second_wind: '숨을 고르면 다시 설 수 있다.',
+  s_spirit_veil: '정령들이 앞을 가로막는다.',
+  s_elemental_echo: '원소는 돌려준다. 받은 그대로.',
   // ── 검사 ──
   strike: '"베어라. 그게 전부다."',
   defend: '막지 못하면 벨 수도 없다.',

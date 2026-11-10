@@ -393,6 +393,33 @@ export const BLOOD_MAGE_CARD_DEFS: Record<string, CardDef> = {
     ],
     exhaust: true,
   },
+  v_blood_ward: {
+    id: 'v_blood_ward',
+    name: '혈벽',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: 'HP -3. 방어도 +20.',
+    effects: [
+      { kind: 'lose_hp', amount: 3 },
+      { kind: 'block', amount: 20 },
+    ],
+  },
+  v_thorn_of_blood: {
+    id: 'v_thorn_of_blood',
+    name: '피가시',
+    type: 'power',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '가시 +5. 재생 +2. 선천.',
+    effects: [
+      { kind: 'apply_self', status: 'thorns', amount: 5 },
+      { kind: 'apply_self', status: 'regen', amount: 2 },
+    ],
+    innate: true,
+  },
 };
 
 const BLOOD_MAGE_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -432,6 +459,8 @@ const BLOOD_MAGE_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   v_transfuse:       { name: '전혈 수혈+',     description: '20 회복. 소멸.',                      effects: [{ kind: 'heal', amount: 20 }] },
   v_hemomancer:      { name: '혈법+',          description: 'HP를 잃는 카드 사용 시 방어도 +2N, 힘 +2.', effects: [{ kind: 'apply_self', status: 'blood_armor', amount: 2 }, { kind: 'apply_self', status: 'blood_power', amount: 2 }] },
   v_last_drop:       { name: '마지막 한 방울+', description: 'HP -4. 30 데미지. 힘 +2. 소멸.',     effects: [{ kind: 'lose_hp', amount: 4 }, { kind: 'damage', amount: 30 }, { kind: 'apply_self', status: 'strength', amount: 2 }] },
+  v_blood_ward: { name: '혈벽+', description: 'HP -3. 방어도 +26.', effects: [{ kind: 'lose_hp', amount: 3 }, { kind: 'block', amount: 26 }] },
+  v_thorn_of_blood: { name: '피가시+', description: '가시 +7. 재생 +3. 선천.', effects: [{ kind: 'apply_self', status: 'thorns', amount: 7 }, { kind: 'apply_self', status: 'regen', amount: 3 }] },
 };
 
 export function bloodMageGetEffectiveDef(card: CardInstance): CardDef {

@@ -500,6 +500,30 @@ export const CARD_DEFS: Record<string, CardDef> = {
     exhaust: true,
     scaling: { kind: 'on_kill', amount: 4 },
   },
+  indomitable: {
+    id: 'indomitable',
+    name: '불굴',
+    type: 'power',
+    rarity: 'rare',
+    cost: 2,
+    target: 'self',
+    description: '금속화 +5. 선천.',
+    effects: [{ kind: 'apply_self', status: 'metallicize', amount: 5 }],
+    innate: true,
+  },
+  second_wind: {
+    id: 'second_wind',
+    name: '재정비',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 1,
+    target: 'self',
+    description: '방어도 +12. 카드 1장 드로우.',
+    effects: [
+      { kind: 'block', amount: 12 },
+      { kind: 'draw', amount: 1 },
+    ],
+  },
 };
 
 // Merge all character cards into CARD_DEFS so getEffectiveDef works universally
@@ -556,6 +580,8 @@ const UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   awakening:        { name: '각성+',          description: '힘 +5. 소멸.',                        effects: [{ kind: 'apply_self', status: 'strength', amount: 5 }] },
   demon_one_slash:  { name: '멸검+',      description: '36 데미지. 처치 시 영구 데미지 +5. 소멸.',
                       effects: [{ kind: 'damage', amount: 36 }], scaling: { kind: 'on_kill', amount: 5 } },
+  indomitable:    { name: '불굴+',         description: '금속화 +7. 선천.',                effects: [{ kind: 'apply_self', status: 'metallicize', amount: 7 }] },
+  second_wind:    { name: '재정비+',       description: '방어도 +16. 카드 1장 드로우.',    effects: [{ kind: 'block', amount: 16 }, { kind: 'draw', amount: 1 }] },
 };
 
 import type { CardInstance } from '../types';

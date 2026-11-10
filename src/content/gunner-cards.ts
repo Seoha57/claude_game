@@ -424,6 +424,20 @@ export const GUNNER_CARD_DEFS: Record<string, CardDef> = {
     effects: [{ kind: 'apply_self', status: 'ritual', amount: 2 }],
     innate: true,
   },
+  g_quick_reload: {
+    id: 'g_quick_reload',
+    name: '속사 장전',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 1,
+    target: 'self',
+    description: '카드 2장 드로우. 에너지 +1. 소멸.',
+    effects: [
+      { kind: 'draw', amount: 2 },
+      { kind: 'energy', amount: 1 },
+    ],
+    exhaust: true,
+  },
 };
 
 const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
@@ -469,6 +483,7 @@ const GUNNER_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   g_kevlar:         { name: '방탄조끼+',      description: '방어도 +12. 가시 +5.',                effects: [{ kind: 'block', amount: 12 }, { kind: 'apply_self', status: 'thorns', amount: 5 }] },
   g_helios:         { name: '최종 병기+',      description: '45 데미지. 모든 적 약화 +3. 소멸.',   effects: [{ kind: 'damage', amount: 45 }, { kind: 'apply_all', status: 'weak', amount: 3 }] },
   g_weapon_calibration: { name: '무기 보정+', description: '턴 시작 시 힘 +3. 선천.',              effects: [{ kind: 'apply_self', status: 'ritual', amount: 3 }] },
+  g_quick_reload: { name: '속사 장전+', description: '카드 3장 드로우. 에너지 +1. 소멸.', effects: [{ kind: 'draw', amount: 3 }, { kind: 'energy', amount: 1 }] },
 };
 
 export function gunnerGetEffectiveDef(card: CardInstance): CardDef {

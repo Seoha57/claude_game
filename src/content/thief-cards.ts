@@ -288,6 +288,32 @@ export const THIEF_CARD_DEFS: Record<string, CardDef> = {
     ],
     innate: true,
   },
+  t_smoke_veil: {
+    id: 't_smoke_veil',
+    name: '연막 장막',
+    type: 'skill',
+    rarity: 'rare',
+    cost: 1,
+    target: 'self',
+    description: '방어도 +8. 민첩 +2.',
+    effects: [
+      { kind: 'block', amount: 8 },
+      { kind: 'apply_self', status: 'dexterity', amount: 2 },
+    ],
+  },
+  t_heart_piercer: {
+    id: 't_heart_piercer',
+    name: '심장 찌르기',
+    type: 'attack',
+    rarity: 'rare',
+    cost: 1,
+    target: 'enemy',
+    description: '10 데미지. 이번 턴 첫 공격이면 +12.',
+    effects: [
+      { kind: 'damage', amount: 10 },
+      { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'damage', amount: 12 }] },
+    ],
+  },
 };
 
 // ── Upgrade map ──
@@ -331,6 +357,8 @@ export const THIEF_UPGRADE_MAP: Record<string, Partial<CardDef>> = {
   t_plague:          { name: '역병+',            description: '모든 적에게 중독 +14.',                  effects: [{ kind: 'apply_all', status: 'poison', amount: 14 }] },
   t_nightmare:       { name: '악몽+',             description: '15 데미지 3회. 소멸.',                   effects: [{ kind: 'damage', amount: 15, times: 3 }] },
   t_phantom_blade:   { name: '환영의 칼날+',     description: '민첩 +4. 1장 드로우. 선천.',             effects: [{ kind: 'apply_self', status: 'dexterity', amount: 4 }, { kind: 'draw', amount: 1 }] },
+  t_smoke_veil: { name: '연막 장막+', description: '방어도 +11. 민첩 +3.', effects: [{ kind: 'block', amount: 11 }, { kind: 'apply_self', status: 'dexterity', amount: 3 }] },
+  t_heart_piercer: { name: '심장 찌르기+', description: '13 데미지. 이번 턴 첫 공격이면 +15.', effects: [{ kind: 'damage', amount: 13 }, { kind: 'conditional', condition: { kind: 'first_this_turn' }, then: [{ kind: 'damage', amount: 15 }] }] },
 };
 
 export function thiefGetEffectiveDef(card: CardInstance): CardDef {
