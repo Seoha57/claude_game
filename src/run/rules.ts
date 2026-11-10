@@ -230,6 +230,11 @@ export function applyVictoryRewards(run: RunState, node: MapNode | null): void {
     if (syn.timing === 'combat_end' && syn.id === 'undying') heal(10);
   }
 
+  if (p.relics.includes('alchemist_kit') && p.potions.length < 3) {
+    const rng = makeRng(run.seed * 97 + (run.endless?.wave ?? run.floor) * 29);
+    if (rng() < 0.5) p.potions.push(pick(rng, POTION_LIST).id);
+  }
+
   if (p.potions.length < 3) {
     const isElite = node?.kind === 'elite' || !!run.endless;
     const rng = makeRng(run.seed * 71 + (run.endless?.wave ?? run.floor) * 13);
@@ -269,6 +274,21 @@ export function applyBossRelicOnPickup(run: RunState, id: string, addWound: () =
       p.maxEnergy += 1;
       addWound();
       addWound();
+      break;
+    case 'titan_heart':
+      p.maxHp = Math.max(1, p.maxHp - 15);
+      p.hp = Math.min(p.hp, p.maxHp);
+      break;
+    case 'void_crown':
+      p.maxHp = Math.max(1, p.maxHp - 10);
+      p.hp = Math.min(p.hp, p.maxHp);
+      break;
+    case 'eternal_flame':
+      addWound();
+      break;
+    case 'berserk_mask':
+      p.maxHp = Math.max(1, p.maxHp - 8);
+      p.hp = Math.min(p.hp, p.maxHp);
       break;
   }
 }

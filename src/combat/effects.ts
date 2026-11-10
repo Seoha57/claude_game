@@ -491,6 +491,10 @@ export function playCard(
     const ac = state.flags.attackCount;
     if (run?.player.relics.includes('gwihon_charm') && ac % 5 === 0) log(t('검혼 발동!'));
     if (run?.player.relics.includes('pen_nib') && ac % 10 === 0) log(`${t('펜촉')} → ${t('데미지 2배!')}`);
+    if (run?.player.relics.includes('battle_horn') && ac % 5 === 0) {
+      applyStatus(p, 'strength', 1);
+      log(`${t('전투 나팔')} → ${t('힘')} +1`);
+    }
   }
 
   // 탄창(총잡이): 공격 카드 3장마다 카드 1장 드로우 (attackCount 공용)

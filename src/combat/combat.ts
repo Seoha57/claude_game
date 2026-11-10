@@ -27,6 +27,7 @@ const TURN_HEAL_RELICS: Record<string, number> = {
   // 정령술사: HP가 62로 가장 낮은데 턴당 회복이 공용 유물(영혼의 등불) 2뿐이었다.
   // 회복만 늘려봤을 때 2.0% → 8.0%. HP를 75로 올려도 4.7%에 그쳐서 축은 회복이다.
   spirit_contract: 2,
+  eternal_flame: 2,
 };
 
 export function startCombat(player: Player, enemyDefIds: string[], seed: number): CombatState {
@@ -97,7 +98,10 @@ export function beginPlayerTurn(state: CombatState): void {
   state.turn += 1;
   state.phase = 'player';
   const p = state.player;
-  p.block = 0;
+  // 1턴째에는 방어도를 지우지 않는다. startCombat이 유물(닻·용의 비늘·튼튼한
+  // 장화·황금 칩)을 먼저 적용한 뒤 이 함수를 부르기 때문에, 지우면 "전투 시작 시
+  // 방어도 +N" 유물이 통째로 무효가 된다 — 실제로 네 개가 0을 주고 있었다.
+  if (state.turn > 1) p.block = 0;
   p.energy = p.maxEnergy;
   state.flags.firstAttackThisTurn = true;
   state.flags.lastPlayedType = undefined;
@@ -155,6 +159,14 @@ export function beginPlayerTurn(state: CombatState): void {
         maybeTriggerPhase(state, target);
       }
     }
+    if (run.player.relics.includes('frost_core')) {
+      const alive = state.enemies.filter((e) => e.hp > 0);
+      if (alive.length > 0) {
+        const target = alive[Math.floor(state.rng() * alive.length)];
+        applyStatus(target, 'weak', 1);
+        state.log.push(`${t('서리의 핵')} → ${ENEMY_DEFS[target.defId]?.name ?? target.defId} ${t('약화')} +1`);
+      }
+    }
     if (run.player.relics.includes('storm_banner')) p.block += 4;
     if (run.player.relics.includes('bag_of_marbles')) {
       for (const e of state.enemies) if (e.hp > 0) applyStatus(e, 'vulnerable', 1);
@@ -206,6 +218,7 @@ export function beginPlayerTurn(state: CombatState): void {
   drawCards(state, drawCount);
   if (run?.player.relics.includes('hourglass')) drawCards(state, 1);
   if (run?.player.relics.includes('eternal_hourglass')) drawCards(state, 2);
+  if (run?.player.relics.includes('void_crown')) drawCards(state, 1);
 }
 
 export function fireDrones(state: CombatState): void {
@@ -443,6 +456,13 @@ export function applyRelicCombatStart(relics: string[], cs: CombatState): void {
     drawCards(cs, 1);
   }
   if (relics.includes('spiked_armor')) applyStatus(cs.player, 'thorns', 3);
+  if (relics.includes('thorn_mail')) applyStatus(cs.player, 'thorns', 4);
+  if (relics.includes('spiked_shield')) { cs.player.block += 6; applyStatus(cs.player, 'thorns', 2); }
+  if (relics.includes('ember_stone')) {
+    for (const e of cs.enemies) applyStatus(e, 'burn', 3);
+  }
+  if (relics.includes('titan_heart')) applyStatus(cs.player, 'strength', 4);
+  if (relics.includes('berserk_mask')) applyStatus(cs.player, 'strength', 3);
   if (relics.includes('sturdy_boots')) cs.player.block += 8;
   if (relics.includes('kinetic_belt')) applyStatus(cs.player, 'dexterity', 2);
   if (relics.includes('fury_banner')) applyStatus(cs.player, 'strength', 3);

@@ -385,6 +385,66 @@ export const RELIC_DEFS: Record<string, RelicDef> = {
     description: '전투 시작 시 에너지 +1, 카드 1장 드로우.',
     rarity: 'boss',
   },
+  thorn_mail: {
+    id: 'thorn_mail',
+    name: '보복의 갑주',
+    description: '전투 시작 시 가시 +4.',
+    rarity: 'rare',
+  },
+  frost_core: {
+    id: 'frost_core',
+    name: '서리의 핵',
+    description: '매 턴 시작 시 무작위 적에게 약화 +1.',
+    rarity: 'rare',
+  },
+  alchemist_kit: {
+    id: 'alchemist_kit',
+    name: '연금술사 가방',
+    description: '전투 승리 시 50% 확률로 물약 1개.',
+    rarity: 'rare',
+  },
+  battle_horn: {
+    id: 'battle_horn',
+    name: '전투 나팔',
+    description: '공격 카드 5회마다 힘 +1.',
+    rarity: 'rare',
+  },
+  titan_heart: {
+    id: 'titan_heart',
+    name: '거인의 심장',
+    description: '전투 시작 시 힘 +4. 최대 HP -15.',
+    rarity: 'boss',
+  },
+  eternal_flame: {
+    id: 'eternal_flame',
+    name: '영원한 불꽃',
+    description: '매 턴 시작 시 2 회복. 덱에 상처 1장 추가.',
+    rarity: 'boss',
+  },
+  void_crown: {
+    id: 'void_crown',
+    name: '공허의 왕관',
+    description: '매 턴 시작 시 카드 1장 추가로 드로우. 최대 HP -10.',
+    rarity: 'boss',
+  },
+  berserk_mask: {
+    id: 'berserk_mask',
+    name: '광전사의 가면',
+    description: '전투 시작 시 힘 +3. 최대 HP -8.',
+    rarity: 'boss',
+  },
+  spiked_shield: {
+    id: 'spiked_shield',
+    name: '못 박힌 방패',
+    description: '전투 시작 시 방어도 +6, 가시 +2.',
+    rarity: 'uncommon',
+  },
+  ember_stone: {
+    id: 'ember_stone',
+    name: '불씨 돌',
+    description: '전투 시작 시 모든 적에게 화상 +3.',
+    rarity: 'uncommon',
+  },
 };
 
 // ── 시너지 세트 ──

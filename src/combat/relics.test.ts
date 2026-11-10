@@ -136,6 +136,66 @@ describe('탄창 (총잡이 시그니처)', () => {
   });
 });
 
+describe('새 유물 (2026-11-10)', () => {
+  /** 시작 유물 외에 유물을 끼운 전투를 만든다. */
+  function fightWith(extra: string[], enemies = ['jaw_worm']): CombatState {
+    startNewRun(1, 0, 'swordmaster');
+    const run = getRun();
+    run.player.relics.push(...extra);
+    return startCombat(run.player, enemies, 1);
+  }
+
+  it('보복의 갑주는 전투 시작 시 가시를 준다', () => {
+    const s = fightWith(['thorn_mail']);
+    expect(getStatus(s.player.statuses, 'thorns')).toBe(4);
+  });
+
+  it('못 박힌 방패는 방어도와 가시를 같이 준다', () => {
+    const s = fightWith(['spiked_shield']);
+    expect(s.player.block).toBe(6);
+    expect(getStatus(s.player.statuses, 'thorns')).toBe(2);
+  });
+
+  it('불씨 돌은 모든 적에게 화상을 건다', () => {
+    const s = fightWith(['ember_stone'], ['jaw_worm', 'jaw_worm']);
+    for (const e of s.enemies) expect(getStatus(e.statuses, 'burn')).toBe(3);
+  });
+
+  it('광전사의 가면은 전투 시작 시 힘을 준다', () => {
+    const s = fightWith(['berserk_mask']);
+    expect(getStatus(s.player.statuses, 'strength')).toBe(3);
+  });
+
+  it('전투 시작 방어도 유물이 1턴째에 살아 있다 (지워지던 버그)', () => {
+    for (const [relic, amount] of [['anchor', 10], ['dragon_scale', 20], ['sturdy_boots', 8], ['golden_chip', 12]] as const) {
+      expect(fightWith([relic]).player.block, relic).toBe(amount);
+    }
+  });
+
+  it('영원한 불꽃은 턴마다 2 회복한다', () => {
+    const s = fightWith(['eternal_flame']);
+    s.player.hp = s.player.maxHp - 10;
+    const before = s.player.hp;
+    beginPlayerTurn(s);
+    expect(s.player.hp - before, '불타는 피 2 + 영원한 불꽃 2').toBe(4);
+  });
+
+  it('전투 나팔은 공격 5장마다 힘 +1', () => {
+    const s = fightWith(['battle_horn']);
+    beginPlayerTurn(s);
+    const shoot = () => {
+      const card = makeCard('strike');
+      s.player.hand.push(card);
+      s.player.energy = 9;
+      playCard(s, card, s.enemies[0], () => { /* 로그 무시 */ });
+    };
+    for (let i = 0; i < 4; i++) shoot();
+    expect(getStatus(s.player.statuses, 'strength')).toBe(0);
+    shoot();
+    expect(getStatus(s.player.statuses, 'strength')).toBe(1);
+  });
+});
+
 describe('성배 (성직자 시작 유물)', () => {
   it('재생이 소모돼도 매 턴 3으로 되돌아온다', () => {
     const s = fight('priest');
