@@ -29,4 +29,6 @@ test('영어 모드에서 카드·유물이 영어로 보인다', async ({ page 
   expect(body, '기본 공격 설명문').toContain('Deal 6 damage.');
   expect(body, '방어 설명문').toContain('Gain 6 Block.');
   expect(body, '복합 설명문').toContain('Apply 2 Vulnerable.');
+  expect(body, '플레이버').toContain('Cut. That is all.');
+  expect(body, '플레이버').toContain('If you cannot block, you cannot cut.');
 });

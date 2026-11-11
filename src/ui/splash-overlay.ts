@@ -10,7 +10,7 @@ import {
   ENEMY_DEFS,
 } from '../content/enemies';
 import { ENEMY_ART } from './combat-ui';
-import { CHAPTER_LORE } from '../content/lore';
+import { chapterLore } from '../content/lore';
 import { CHAPTER_SVG } from './art';
 
 export interface NextBossInfo {
@@ -104,10 +104,10 @@ export function dismissSplash(): void {
 
 // ── Chapter info presets ──
 const CHAPTER_INFO: Record<number, { title: string; subtitle: string; emoji: string; flavor?: string }> = {
-  1: { title: t('잿빛 사원'), subtitle: 'Chapter 1', emoji: CHAPTER_SVG[1], flavor: CHAPTER_LORE[1] },
-  2: { title: t('기계 혁명의 폐허'), subtitle: 'Chapter 2', emoji: CHAPTER_SVG[2], flavor: CHAPTER_LORE[2] },
-  3: { title: t('심연의 균열'), subtitle: 'Chapter 3', emoji: CHAPTER_SVG[3], flavor: CHAPTER_LORE[3] },
-  4: { title: t('차원의 문 너머'), subtitle: `✦ Chapter 4 — ${t('진엔딩')} ✦`, emoji: CHAPTER_SVG[4], flavor: CHAPTER_LORE[4] },
+  1: { title: t('잿빛 사원'), subtitle: 'Chapter 1', emoji: CHAPTER_SVG[1], flavor: chapterLore(1) },
+  2: { title: t('기계 혁명의 폐허'), subtitle: 'Chapter 2', emoji: CHAPTER_SVG[2], flavor: chapterLore(2) },
+  3: { title: t('심연의 균열'), subtitle: 'Chapter 3', emoji: CHAPTER_SVG[3], flavor: chapterLore(3) },
+  4: { title: t('차원의 문 너머'), subtitle: `✦ Chapter 4 — ${t('진엔딩')} ✦`, emoji: CHAPTER_SVG[4], flavor: chapterLore(4) },
 };
 
 // Compute which boss the player will face for the given chapter.

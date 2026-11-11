@@ -1,3 +1,5 @@
+import { getLang } from '../i18n';
+import { CARD_FLAVOR_EN, CHAPTER_LORE_EN, BOSS_INTRO_FLAVOR_EN, BOSS_DEFEAT_FLAVOR_EN } from './lore-en';
 // ─────────────────────────────────────────────────────────────────
 // 스토리 / 플레이버 텍스트
 // ─────────────────────────────────────────────────────────────────
@@ -46,13 +48,28 @@ export const BOSS_DEFEAT_FLAVOR: Record<string, string> = {
   void_avatar: '공허가 흩어진다. 너의 존재가 그것을 이겨냈다.',
 };
 
+/** 영어면 영어 표를 먼저 본다. 없으면 한국어 원문으로 떨어진다. */
+function pick(en: Record<string, string>, ko: Record<string, string>, key: string): string | undefined {
+  return (getLang() === 'en' ? en[key] : undefined) ?? ko[key];
+}
+
 export function bossIntroFlavor(bossId: string, chapter: number): string {
-  return BOSS_INTRO_FLAVOR[bossId]
-    ?? (chapter === 4 ? '차원의 끝, 진정한 적이 길을 막아선다...' : '강력한 적이 길을 막아선다...');
+  const fallback = chapter === 4
+    ? '차원의 끝, 진정한 적이 길을 막아선다...'
+    : '강력한 적이 길을 막아선다...';
+  const fallbackEn = chapter === 4
+    ? 'At the edge of dimensions, the true enemy bars the way...'
+    : 'A powerful enemy bars the way...';
+  return pick(BOSS_INTRO_FLAVOR_EN, BOSS_INTRO_FLAVOR, bossId)
+    ?? (getLang() === 'en' ? fallbackEn : fallback);
 }
 
 export function bossDefeatFlavor(bossId: string): string | null {
-  return BOSS_DEFEAT_FLAVOR[bossId] ?? null;
+  return pick(BOSS_DEFEAT_FLAVOR_EN, BOSS_DEFEAT_FLAVOR, bossId) ?? null;
+}
+
+export function chapterLore(chapter: number): string {
+  return (getLang() === 'en' ? CHAPTER_LORE_EN[chapter] : undefined) ?? CHAPTER_LORE[chapter] ?? '';
 }
 
 // 카드 플레이버 — 덱 상세 보기에서 효과 아래 한 줄 표시.
@@ -272,5 +289,5 @@ export const CARD_FLAVOR: Record<string, string> = {
 export function cardFlavor(cardId: string): string | null {
   // 강화/이중강화 접미사 제거 후 기본 id로 조회
   const baseId = cardId.replace(/\+$/, '');
-  return CARD_FLAVOR[baseId] ?? CARD_FLAVOR[cardId] ?? null;
+  return pick(CARD_FLAVOR_EN, CARD_FLAVOR, baseId) ?? pick(CARD_FLAVOR_EN, CARD_FLAVOR, cardId) ?? null;
 }
