@@ -1,4 +1,6 @@
 import type { CardDef } from '../types';
+import { t, tName } from '../i18n';
+import { tDesc } from '../i18n-desc';
 import { applyPlusPlus } from './plusplus';
 import { GUNNER_CARD_DEFS, gunnerGetEffectiveDef, canUpgradeGunner } from './gunner-cards';
 import { FIGHTER_CARD_DEFS, fighterGetEffectiveDef, canUpgradeFighter } from './fighter-cards';
@@ -616,6 +618,8 @@ export function getEffectiveDef(card: CardInstance): CardDef {
     }
   }
   if ((card.upgraded ?? 0) >= 2 && !card.defId.startsWith('b_') && !card.defId.startsWith('v_')) def = applyPlusPlus(def);
+  // 언어 적용은 여기 한 곳에서. UI 56곳이 전부 이 함수를 거친다.
+  def = { ...def, name: tName(def.name), description: tDesc(def.description) };
   return applyScaling(card, def);
 }
 
@@ -632,7 +636,7 @@ function applyScaling(card: CardInstance, def: CardDef): CardDef {
       if (e.kind === 'damage_all') return { ...e, amount: e.amount + bonus };
       return e;
     }),
-    description: `${def.description} (현재 +${bonus})`,
+    description: `${def.description} (${t('현재')} +${bonus})`,
   };
 }
 

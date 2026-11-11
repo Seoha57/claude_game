@@ -4,8 +4,8 @@ import { showChapterIntro } from './splash-overlay';
 import { playSfx } from '../audio';
 import { recordRelics } from '../codex';
 import { unlockNextAscension, getUnlockedMax } from '../ascension';
-import { ENEMY_DEFS } from '../content/enemies';
-import { RELIC_DEFS } from '../content/relics';
+import { enemyName } from '../content/enemies';
+import { relicDef } from '../content/relics';
 import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
 import type { RunState } from '../types';
@@ -287,7 +287,7 @@ export function renderLose(): HTMLElement {
   // Try to identify the enemy that killed them
   const enemyIds = run.combatEnemyDefIds ?? [];
   const enemyNames = enemyIds
-    .map((id) => ENEMY_DEFS[id]?.name)
+    .map(enemyName)
     .filter(Boolean) as string[];
 
   // Death location
@@ -333,7 +333,7 @@ function renderRunSummary(run: RunState): HTMLElement {
     relicSection.appendChild(el('div', { class: 'run-summary-label' }, `${t('유물')} (${run.player.relics.length})`));
     const relicGrid = el('div', { class: 'run-summary-relics' });
     for (const id of run.player.relics) {
-      const def = RELIC_DEFS[id];
+      const def = relicDef(id);
       if (!def) continue;
       relicGrid.appendChild(
         el('div', { class: 'run-summary-relic', 'data-tooltip': def.description }, def.name),

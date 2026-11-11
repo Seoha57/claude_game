@@ -2,7 +2,7 @@ import { el } from './dom';
 import { startNewRun, setScreen } from '../state';
 import type { CharacterClass } from '../types';
 import { CHARACTER_SVG, CARD_TYPE_SVG, ic } from './art';
-import { RELIC_DEFS } from '../content/relics';
+import { relicDef } from '../content/relics';
 import { playSfx } from '../audio';
 import { t } from '../i18n';
 import { getMastery } from '../stats';
@@ -337,9 +337,9 @@ export function renderCharacterSelect(seed: number, ascension: number): HTMLElem
     // Stats row
     const stats = el('div', { class: 'cs-stats' });
     stats.appendChild(makeStatBox(ic('heart'), `${ch.hp}`, 'HP'));
-    const relicDef = RELIC_DEFS[ch.startRelicId];
+    const startRelic = relicDef(ch.startRelicId);
     const relicBox = makeStatBox(ic('gem'), ch.startRelic, t('시작 유물'));
-    if (relicDef) relicBox.setAttribute('data-tooltip', `${relicDef.name}\n${relicDef.description}`);
+    if (startRelic) relicBox.setAttribute('data-tooltip', `${startRelic.name}\n${startRelic.description}`);
     stats.appendChild(relicBox);
     stats.appendChild(makeStatBox(ic('lightning'), '3', t('에너지')));
     detail.appendChild(stats);

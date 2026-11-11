@@ -1,6 +1,6 @@
 import type { RunState } from '../types';
 import { CHAR_NAMES } from './art';
-import { RELIC_DEFS } from '../content/relics';
+import { relicDef } from '../content/relics';
 import { getEffectiveDef } from '../content/cards';
 import { isCurseLike } from './deck-overlay';
 import { calcEndlessScore } from '../run/rules';
@@ -119,7 +119,7 @@ function drawShareCard(run: RunState, won: boolean): HTMLCanvasElement {
   let rx = 40;
   let ry = sy + 110;
   for (const id of run.player.relics) {
-    const def = RELIC_DEFS[id];
+    const def = relicDef(id);
     if (!def) continue;
     const tw = c.measureText(def.name).width + 16;
     if (rx + tw > W - 40) {

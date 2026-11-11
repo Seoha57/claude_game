@@ -1,7 +1,7 @@
 import { el } from './dom';
 import { setScreen } from '../state';
 import { CARD_DEFS } from '../content/cards';
-import { RELIC_DEFS, SYNERGY_SETS } from '../content/relics';
+import { RELIC_DEFS, SYNERGY_SETS, localizeRelic, relicDef } from '../content/relics';
 import { getSeenCards, getSeenRelics, getEnemyKills, resetCodex } from '../codex';
 import { ENEMY_DEFS, ENEMY_INDEX } from '../content/enemies';
 import { isCurseLike } from './deck-overlay';
@@ -209,7 +209,7 @@ export function renderCodex(): HTMLElement {
   };
 
   const appendRelicsTab = () => {
-    const allRelics = Object.values(RELIC_DEFS);
+    const allRelics = Object.values(RELIC_DEFS).map(localizeRelic);
     let filtered = allRelics;
 
     // Rarity filter for relics
@@ -376,7 +376,7 @@ function renderRelicSlot(def: RelicDef, isSeen: boolean): HTMLElement {
   const synInfo = SYNERGY_SETS.filter((s) => s.relics.includes(def.id))
     .map((s) => {
       const partner = s.relics.find((r) => r !== def.id)!;
-      const partnerDef = RELIC_DEFS[partner];
+      const partnerDef = relicDef(partner);
       return `${ic('lightning')} ${partnerDef?.name ?? partner} → ${s.name}`;
     }).join('\n');
   const desc = unlocked

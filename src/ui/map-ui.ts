@@ -6,14 +6,9 @@ import { openDeckOverlay } from './deck-overlay';
 import { encounterFor, combatSeedFor } from '../run/rules';
 import { nodeById } from '../map/map';
 import { startCombat } from '../combat/combat';
-import {
-  BOSS_ENCOUNTERS,
-  CH2_BOSS_ENCOUNTERS,
-  CH3_BOSS_ENCOUNTERS,
-  CH4_BOSS_ENCOUNTERS,
-} from '../content/enemies';
+import { BOSS_ENCOUNTERS, CH2_BOSS_ENCOUNTERS, CH3_BOSS_ENCOUNTERS, CH4_BOSS_ENCOUNTERS, enemyName } from '../content/enemies';
 import type { MapNode } from '../types';
-import { RELIC_DEFS } from '../content/relics';
+import { relicName, relicDef } from '../content/relics';
 import { ENEMY_DEFS } from '../content/enemies';
 import { ENEMY_ART, resetCombatUiState } from './combat-ui';
 import { showBossIntro } from './splash-overlay';
@@ -65,10 +60,10 @@ export function renderMap(): HTMLElement {
         'span',
         {
           title: run.player.relics
-            .map((id) => `${RELIC_DEFS[id]?.name ?? id}: ${RELIC_DEFS[id]?.description ?? ''}`)
+            .map((id) => `${relicName(id)}: ${relicDef(id)?.description ?? ''}`)
             .join('\n'),
         },
-        `${t('유물')}: ${run.player.relics.map((id) => RELIC_DEFS[id]?.name ?? id).join(', ')}`,
+        `${t('유물')}: ${run.player.relics.map(relicName).join(', ')}`,
       ),
       ...(run.player.keys.length > 0
         ? [
@@ -259,7 +254,7 @@ function nodeLabel(n: MapNode, chapter?: number): string {
         chapter === 4 ? CH4_BOSS_ENCOUNTERS :
         chapter === 3 ? CH3_BOSS_ENCOUNTERS :
         chapter === 2 ? CH2_BOSS_ENCOUNTERS : BOSS_ENCOUNTERS;
-      const names = table.map((ids) => ids.map((id) => ENEMY_DEFS[id]?.name ?? id).join(' & ')).join(' / ');
+      const names = table.map((ids) => ids.map(enemyName).join(' & ')).join(' / ');
       return `${t('보스')}\n${t('후보')}: ${names}`;
     }
     case 'event':   return `${t('이벤트')}\n${t('예상치 못한 만남. 선택에 따라 다른 결과가...')}`;

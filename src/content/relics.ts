@@ -1,3 +1,5 @@
+import { tName } from '../i18n';
+import { tDesc } from '../i18n-desc';
 import type { RelicDef } from '../types';
 
 export const RELIC_DEFS: Record<string, RelicDef> = {
@@ -523,3 +525,17 @@ export const RELIC_LIST = Object.values(RELIC_DEFS);
 export const PICKABLE_RELICS = RELIC_LIST.filter((r) => r.rarity !== 'starter' && r.rarity !== 'boss' && r.rarity !== 'elite');
 export const ELITE_RELICS = RELIC_LIST.filter((r) => r.rarity === 'elite');
 export const BOSS_RELICS = RELIC_LIST.filter((r) => r.rarity === 'boss');
+
+/** 화면에 내보낼 유물 정의 — 이름·설명을 현재 언어로. */
+export function localizeRelic(def: RelicDef): RelicDef {
+  return { ...def, name: tName(def.name), description: tDesc(def.description) };
+}
+
+/** id로 가져오면서 번역까지. UI는 RELIC_DEFS 대신 이걸 쓴다. (RELIC_DEFS[id]와 같은 계약) */
+export function relicDef(id: string): RelicDef {
+  return localizeRelic(RELIC_DEFS[id]);
+}
+
+export function relicName(id: string): string {
+  return RELIC_DEFS[id] ? tName(RELIC_DEFS[id].name) : id;
+}

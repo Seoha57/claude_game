@@ -3,7 +3,7 @@ import { t } from '../i18n';
 import { kwDesc } from './keywords';
 import { getRun, makeCard, setScreen, canAddCard } from '../state';
 import { CARD_DEFS, getEffectiveDef } from '../content/cards';
-import { RELIC_DEFS } from '../content/relics';
+import { relicDef } from '../content/relics';
 import { POTION_DEFS } from '../content/potions';
 import { playSfx } from '../audio';
 import { recordCard, recordRelic } from '../codex';
@@ -171,7 +171,7 @@ function renderCardItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild:
 }
 
 function renderRelicItem(item: ShopItem, run: ReturnType<typeof getRun>, rebuild: () => void): HTMLElement {
-  const def = RELIC_DEFS[item.id!];
+  const def = relicDef(item.id!);
   const canAfford = run.player.gold >= item.price;
   const alreadyOwned = run.player.relics.includes(def.id);
 

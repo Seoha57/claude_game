@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import type { EnemyDef, Intent } from '../types';
 import { dealDamage, gainBlock } from '../combat/effects';
 import { applyStatus, getStatus } from '../combat/statuses';
@@ -1651,3 +1652,9 @@ export const ENEMY_INDEX: Record<string, { chapter: number; kind: EnemyKind }> =
   }
   return index;
 })();
+
+/** 화면용 적 이름 — 현재 언어로. */
+export function enemyName(defId: string): string {
+  const d = ENEMY_DEFS[defId];
+  return d ? t(d.name) : defId;
+}

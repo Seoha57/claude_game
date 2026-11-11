@@ -602,6 +602,59 @@ const EN: Record<string, string> = {
   // ── 캐릭터 선택 · 고유 유물 ──
   '검혼': 'Sword Soul',
   '탄창': 'Ammo Clip',
+  '거대 골렘': 'Giant Golem',
+  '거울 기사': 'Mirror Knight',
+  '고대 룬술사': 'Ancient Runemaster',
+  '고블린 광전사': 'Goblin Berserker',
+  '공허의 메아리': 'Void Echo',
+  '공허의 심장': 'Void Heart',
+  '공허의 화신': 'Void Avatar',
+  '광기의 속삭임': 'Whisper of Madness',
+  '광신자': 'Fanatic',
+  '광폭 그렘린': 'Frenzied Gremlin',
+  '광폭한 도살자': 'Frenzied Butcher',
+  '균열의 타이탄': 'Rift Titan',
+  '그렘린 두목': 'Gremlin Boss',
+  '기갑 정찰병': 'Armored Scout',
+  '꿈틀거리는 덩어리': 'Writhing Mass',
+  '독거미': 'Venom Spider',
+  '돌격 멧돼지': 'Charging Boar',
+  '마룡 새끼': 'Dragon Whelp',
+  '무의 파수꾼': 'Warden of Nothing',
+  '방패 그렘린': 'Shield Gremlin',
+  '백부장': 'Centurion',
+  '버섯괴수': 'Fungal Beast',
+  '부패한 마수': 'Rotting Beast',
+  '불꽃령': 'Flame Spirit',
+  '수집가': 'The Collector',
+  '숲의 정령': 'Forest Spirit',
+  '스타빙의 서': 'Book of Starving',
+  '시간의 군주': 'Time Lord',
+  '심연의 군림자': 'Abyss Sovereign',
+  '암흑 기사': 'Dark Knight',
+  '약탈자': 'Looter',
+  '어둠 슬라임': 'Dark Slime',
+  '어둠 학자': 'Dark Scholar',
+  '엔트로피 망령': 'Entropy Wraith',
+  '역설의 그림자': 'Paradox Shade',
+  '유랑 검사': 'Wandering Swordsman',
+  '저주 사제': 'Curse Priest',
+  '죽음의 사도': 'Death Apostle',
+  '중장 기갑병': 'Heavy Trooper',
+  '차원 술사': 'Dimension Caster',
+  '차원의 지배자': 'Dimension Overlord',
+  '차원의 파수꾼': 'Dimension Warden',
+  '청 노예상': 'Blue Slaver',
+  '태고의 환영': 'Primeval Phantom',
+  '태스크마스터': 'Taskmaster',
+  '턱벌레': 'Jaw Worm',
+  '퇴마 사냥꾼': 'Exorcist Hunter',
+  '파수병': 'Sentry',
+  '헥사고스트': 'Hexaghost',
+  '홍 노예상': 'Red Slaver',
+  '흑요암 골렘': 'Obsidian Golem',
+  '흑의 도살자': 'Black Butcher',
+  '흡혈 박쥐': 'Vampire Bat',
   '보복의 갑주': 'Retribution Mail',
   '서리의 핵': 'Frost Core',
   '연금술사 가방': 'Alchemist Kit',
@@ -1256,4 +1309,15 @@ const EN: Record<string, string> = {
 export function t(korean: string): string {
   if (currentLang === 'ko') return korean;
   return EN[korean] ?? korean;
+}
+
+/**
+ * 카드·유물 이름용. 강화 접미사(+, ++)는 번역 대상이 아니므로 떼었다 다시 붙인다
+ * — EN 표에는 기본 이름만 있다 ('검격'은 있고 '검격+'는 없다).
+ */
+export function tName(korean: string): string {
+  if (currentLang === 'ko') return korean;
+  const m = /^(.*?)(\+{1,2})$/.exec(korean);
+  if (!m) return EN[korean] ?? korean;
+  return (EN[m[1]] ?? m[1]) + m[2];
 }

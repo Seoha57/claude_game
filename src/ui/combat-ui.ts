@@ -1,6 +1,6 @@
 import { el } from './dom';
 import { getRunOrNull, getScreen, getCombatOrNull } from '../state';
-import { RELIC_DEFS, getActiveSynergies } from '../content/relics';
+import { getActiveSynergies, relicDef, relicName } from '../content/relics';
 import { getCombat, setScreen, rerender } from '../state';
 import { getEffectiveDef } from '../content/cards';
 import { openDeckOverlay } from './deck-overlay';
@@ -679,7 +679,7 @@ function renderRelicBar(relics: string[]): HTMLElement {
   const bar = el('div', { class: 'relic-bar' });
   const activeSynergies = getActiveSynergies(relics);
   for (const id of relics) {
-    const def = RELIC_DEFS[id];
+    const def = relicDef(id);
     if (!def) continue;
     const synFor = activeSynergies.filter((s) => s.relics.includes(id));
     const synText = synFor.map((s) => `${s.name}: ${s.description}`).join('\n');
@@ -698,7 +698,7 @@ function renderRelicBar(relics: string[]): HTMLElement {
   if (activeSynergies.length > 0) {
     const synRow = el('div', { class: 'synergy-row' });
     for (const s of activeSynergies) {
-      const relicNames = s.relics.map((rid: string) => RELIC_DEFS[rid]?.name ?? rid).join(' + ');
+      const relicNames = s.relics.map((rid: string) => relicName(rid)).join(' + ');
       const synTag = el('span', {
         class: 'synergy-tag',
         'data-tooltip': `${s.name}\n${s.description}\n\n${t('조합')}: ${relicNames}`,

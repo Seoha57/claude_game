@@ -5,7 +5,7 @@ import { getRun, makeCard, setScreen, rerender, canAddCard } from '../state';
 import { CARD_DEFS } from '../content/cards';
 import { kwDesc } from './keywords';
 
-import { RELIC_DEFS } from '../content/relics';
+import { relicDef } from '../content/relics';
 import { rollReward, rerollRewardCards } from '../run/rules';
 import { nodeById } from '../map/map';
 import { playSfx } from '../audio';
@@ -99,7 +99,7 @@ export function renderReward(): HTMLElement {
 
   const relicEl = reward.relicId
     ? (() => {
-        const def = RELIC_DEFS[reward.relicId!];
+        const def = relicDef(reward.relicId!);
         return el(
           'button',
           {
