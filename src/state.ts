@@ -244,7 +244,21 @@ export function startNewRun(
 ): void {
   const mods = getModifiers(ascension);
   const baseHpMap: Record<CharacterClass, number> = { swordmaster: 72, gunner: 67, fighter: 79, magician: 65, priest: 82, thief: 72, summoner: 67, engineer: 61, gambler: 62, blood_mage: 75 };
-  let baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty);
+  // 고단계 직업 보정 — A0은 0, 단계에 비례해 붙어서 A10에서 전액.
+  //
+  // A10 승률이 직업마다 5.7~17.6%로 3.1배 벌어진다 (2000판). 2026-11-11에 네
+  // 갈래를 재봤고 전부 안 통했다:
+  //  - 바닥 직업 파워 올리기(찌르기 2→1코스트, 가드 6→8): A10은 오르지만
+  //    A0이 1.7배 더 올라서, HP로 A0을 되돌리면 A10도 같이 내려온다.
+  //  - 시작 HP: A0 0.88%p/HP, A10 0.53%p/HP. 위와 교환비가 같다(0.6).
+  //  - 천장 깎기(피의 광기 턴당 1회 + HP 보정): 5000판에서 A10 -1.0, A0 -0.9.
+  //  - A10 제약 모양 바꾸기(적 힘을 HP로 환산, HP+55%/힘+0): 2000판에서
+  //    편차 13.8%p로 기준 13.1%p보다 나빴다. 600판에서 좋아 보였던 건 잡음.
+  // 손잡이마다 A10:A0이 0.6으로 똑같아서, 직업 파워로는 A10만 움직일 수 없다.
+  // 단계에 걸린 HP 보정은 A0을 전혀 건드리지 않는 유일한 손잡이다.
+  const ascHpAdjMap: Record<CharacterClass, number> = { swordmaster: 9, gunner: 6, fighter: 4, magician: 4, priest: -7, thief: -7, summoner: -5, engineer: 5, gambler: 4, blood_mage: -13 };
+  const ascHpAdj = Math.round((ascHpAdjMap[characterClass] * Math.max(0, Math.min(10, ascension))) / 10);
+  let baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty + ascHpAdj);
   // 데일리 제약: HP 배율
   if (options.daily?.constraint.hpMult !== undefined) {
     baseHp = Math.max(1, Math.floor(baseHp * options.daily.constraint.hpMult));

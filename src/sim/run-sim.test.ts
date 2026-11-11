@@ -19,6 +19,17 @@ describe('런 전체 시뮬', () => {
     expect(simulateRun('swordmaster', 555, 0)).toEqual(simulateRun('swordmaster', 555, 0));
   });
 
+  // 도감 보상(발견 93개 이상 → 최대 에너지 +1)이 런 중에 쌓여서, 앞 직업을
+  // 먼저 돌리면 뒤 직업이 4에너지로 돌았다 — 혈술사 A0이 50.3% vs 53.1%.
+  // reportRuns가 도감을 빈 상태로 고정하니 순서에 안 흔들린다.
+  it('앞서 쌓인 도감이 측정값을 바꾸지 않는다', () => {
+    const clean = reportRuns('gambler', 20, 0).winRate;
+    localStorage.setItem('dod_codex', JSON.stringify({
+      version: 1, cards: Array.from({ length: 120 }, (_, i) => `c${i}`), relics: [], enemies: {},
+    }));
+    expect(reportRuns('gambler', 20, 0).winRate).toBe(clean);
+  });
+
   it('시드가 다르면 런도 갈린다', () => {
     const seeds = [1, 2, 3, 4, 5, 6, 7, 8].map((s) => simulateRun('swordmaster', s, 0).nodesCleared);
     expect(new Set(seeds).size, '전부 같은 길이면 맵·전투 랜덤이 안 먹고 있다').toBeGreaterThan(1);

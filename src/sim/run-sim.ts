@@ -294,6 +294,12 @@ export interface RunReport {
  * checkRitual·checkBurnKill이 업적을 저장해서, 앞 캐릭터를 많이 돌릴수록 뒤
  * 캐릭터의 풀이 커졌다 — 열 직업을 한 번에 돌리면 갬블러가 40.3%, 혼자 돌리면
  * 43.2%로 나왔다. 전부 열어두고 재면 순서에 흔들리지 않는다.
+ *
+ * 2026-11-11: 도감도 같이 고정해야 했다. startNewRun의 도감 보상은 발견 수가
+ * 31/62/93을 넘으면 골드 +30, 최대 HP +5, **최대 에너지 +1**을 준다. 도감은
+ * 런 중에 쌓이고 여기서 지워지지 않아서, 먼저 잰 직업은 3에너지로 돌고 나중에
+ * 잰 직업은 4에너지로 돌았다 — 혈술사 A0이 혼자 재면 50.3%, 아홉 직업 뒤에
+ * 재면 53.1%였다. 직업 간 비교를 통째로 망치는 2.8%p다.
  */
 function unlockEverythingForSim(): void {
   try {
@@ -301,6 +307,10 @@ function unlockEverythingForSim(): void {
     localStorage.setItem('dod_achievements', JSON.stringify({
       version: 1, unlocked: ACHIEVEMENTS.map((a) => a.id), perCharClear: {}, perCharTrue: {},
     }));
+    // 빈 도감으로 고정한다. 도감을 전부 채우면 4에너지가 되고 A0 승률이 52%에서
+    // 80%로 뛴다 — 밸런스를 잰 적 없는 상태다. 지금까지의 모든 측정은 맨 처음
+    // 잰 직업(= 빈 도감) 기준이었으니 비교 가능성도 이쪽이 유지된다.
+    localStorage.setItem('dod_codex', JSON.stringify({ version: 1, cards: [], relics: [], enemies: {} }));
   } catch { /* 저장소가 없는 환경이면 기본 해금 상태로 잰다 */ }
 }
 

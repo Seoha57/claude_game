@@ -184,6 +184,22 @@ describe('덱 구성 규칙', () => {
     expect(countCardCopies(getRun().player.deck, 'v_drain')).toBe(0);
   });
 
+  // 2026-11-11: A10 직업 격차 11.5 → 2.9%p (5000판).
+  it('고단계 직업 보정은 A0에 안 붙고 A10에 전액 붙는다', () => {
+    startNewRun(1, 0, 'swordmaster');
+    expect(getRun().player.maxHp).toBe(72);
+    startNewRun(1, 0, 'blood_mage');
+    expect(getRun().player.maxHp).toBe(75);
+    // A10은 시작 HP -4(제약)에 직업 보정(검사 +9, 혈술사 -13)이 더 붙는다.
+    startNewRun(1, 10, 'swordmaster');
+    expect(getRun().player.maxHp).toBe(72 - 4 + 9);
+    startNewRun(1, 10, 'blood_mage');
+    expect(getRun().player.maxHp).toBe(75 - 4 - 13);
+    // 중간 단계는 비례해서 절반만.
+    startNewRun(1, 5, 'swordmaster');
+    expect(getRun().player.maxHp).toBe(72 - 4 + 5);
+  });
+
   it('등반 단계만큼 상처가 시작 덱에 섞인다', () => {
     for (const [asc, wounds] of [[0, 0], [2, 1], [7, 1], [8, 2], [10, 2]] as const) {
       startNewRun(1, asc, 'swordmaster');
