@@ -11,6 +11,11 @@ import { renderShop } from './shop-ui';
 import { renderRest } from './rest-ui';
 import { renderChapterClear } from './end-ui';
 import { restHealAmount, buildShopItems, rollReward } from '../run/rules';
+import { renderCharacterSelect } from './character-select-ui';
+import { startingHp, starterDeck, STARTING_RELICS, SIGNATURE_RELICS } from '../state';
+import { relicDef } from '../content/relics';
+import { ALL_CLASSES } from '../sim/simulator';
+import { getEffectiveDef } from '../content/cards';
 
 beforeEach(() => {
   localStorage.clear();
@@ -97,5 +102,38 @@ describe('챕터 클리어 화면', () => {
     const hp = run.player.hp;
     renderChapterClear();
     expect(run.player.hp).toBe(hp);
+  });
+});
+
+// 2026-11-11: 이 화면이 HP·유물·시작 덱을 손으로 적어두고 있었고 전부 어긋나
+// 있었다 — HP 열 직업 전부(검사 75 ↔ 72), 시그니처 설명 다섯 개, 시작 덱 네
+// 직업. 이제 정의에서 읽으므로, 화면에 그 숫자가 실제로 나오는지만 잠근다.
+describe('캐릭터 선택 화면', () => {
+  it('HP·유물·시작 덱을 정의에서 읽어 그린다', () => {
+    for (const asc of [0, 10]) {
+      const root = renderCharacterSelect(1, asc);
+      for (const cls of ALL_CLASSES) {
+        const item = root.querySelector(`.cs-item[data-class="${cls}"]`) as HTMLElement;
+        expect(item, `${cls}: 목록에 없다`).toBeTruthy();
+        item.click();
+        const text = root.textContent ?? '';
+        expect(text, `${cls} A${asc}: HP`).toContain(String(startingHp(cls, asc)));
+        for (const id of [STARTING_RELICS[cls], SIGNATURE_RELICS[cls]]) {
+          expect(text, `${cls}: ${id} 이름`).toContain(relicDef(id).name);
+        }
+        expect(relicDef(SIGNATURE_RELICS[cls]).description.length, cls).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it('시작 덱 미리보기가 실제 덱과 같다', () => {
+    for (const cls of ALL_CLASSES) {
+      const counts = new Map<string, number>();
+      for (const c of starterDeck(cls)) {
+        const n = getEffectiveDef(c).name;
+        counts.set(n, (counts.get(n) ?? 0) + 1);
+      }
+      expect([...counts.values()].reduce((a, b) => a + b, 0), `${cls}: 10장`).toBe(10);
+    }
   });
 });

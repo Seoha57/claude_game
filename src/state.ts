@@ -236,6 +236,79 @@ function bgmTrackForScreen(s: Screen): BgmTrack | null {
   return null;
 }
 
+/** 직업별 기본 최대 HP. 화면도 이 표를 봐야 한다 — 따로 적어두면 어긋난다. */
+const BASE_HP: Record<CharacterClass, number> = {
+  swordmaster: 72, gunner: 67, fighter: 79, magician: 65, priest: 82,
+  thief: 72, summoner: 67, engineer: 61, gambler: 62, blood_mage: 75,
+};
+
+// 고단계 직업 보정 — A0은 0, 단계에 비례해 붙어서 A10에서 전액.
+//
+// A10 승률이 직업마다 5.7~17.6%로 3.1배 벌어진다 (2000판). 2026-11-11에 네
+// 갈래를 재봤고 전부 안 통했다:
+//  - 바닥 직업 파워 올리기(찌르기 2→1코스트, 가드 6→8): A10은 오르지만
+//    A0이 1.7배 더 올라서, HP로 A0을 되돌리면 A10도 같이 내려온다.
+//  - 시작 HP: A0 0.88%p/HP, A10 0.53%p/HP. 위와 교환비가 같다(0.6).
+//  - 천장 깎기(피의 광기 턴당 1회 + HP 보정): 5000판에서 A10 -1.0, A0 -0.9.
+//  - A10 제약 모양 바꾸기(적 힘을 HP로 환산, HP+55%/힘+0): 2000판에서
+//    편차 13.8%p로 기준 13.1%p보다 나빴다. 600판에서 좋아 보였던 건 잡음.
+// 손잡이마다 A10:A0이 0.6으로 똑같아서, 직업 파워로는 A10만 움직일 수 없다.
+// 단계에 걸린 HP 보정은 A0을 전혀 건드리지 않는 유일한 손잡이다.
+const ASC_HP_ADJ: Record<CharacterClass, number> = {
+  swordmaster: 9, gunner: 6, fighter: 4, magician: 4, priest: -7,
+  thief: -7, summoner: -5, engineer: 5, gambler: 4, blood_mage: -13,
+};
+
+/** 이 직업이 이 등반 단계에서 들고 시작하는 최대 HP (데일리 제약은 별도). */
+export function startingHp(characterClass: CharacterClass, ascension = 0): number {
+  const l = Math.max(0, Math.min(10, ascension));
+  const adj = Math.round((ASC_HP_ADJ[characterClass] * l) / 10);
+  return Math.max(1, BASE_HP[characterClass] - getModifiers(l).startingHpPenalty + adj);
+}
+
+export const STARTING_RELICS: Record<CharacterClass, string> = {
+  swordmaster: 'burning_blood',
+  gunner: 'bag_of_marbles',
+  fighter: 'fighting_spirit',
+  magician: 'mage_orb',
+  priest: 'holy_chalice',
+  thief: 'oddly_smooth_stone',
+  summoner: 'soul_lantern',
+  engineer: 'energy_battery',
+  gambler: 'lucky_coin',
+  blood_mage: 'blood_chalice',
+};
+
+/** 시그니처 유물 — 캐릭터 정체성을 강화하는 두 번째 시작 유물. */
+export const SIGNATURE_RELICS: Record<CharacterClass, string> = {
+  swordmaster: 'gwihon_charm',
+  gunner: 'gunner_magazine',
+  fighter: 'one_mind_belt',
+  magician: 'elemental_resonance',
+  priest: 'holy_seal',
+  thief: 'venom_fang',
+  summoner: 'spirit_contract',
+  engineer: 'drone_core',
+  gambler: 'gamblers_instinct',
+  blood_mage: 'hemomancy_core',
+};
+
+/** 이 직업의 시작 덱 10장. 화면의 미리보기도 이걸 봐야 한다. */
+export function starterDeck(characterClass: CharacterClass): CardInstance[] {
+  switch (characterClass) {
+    case 'gunner': return makeGunnerStarterDeck();
+    case 'fighter': return makeFighterStarterDeck();
+    case 'magician': return makeMagicianStarterDeck();
+    case 'priest': return makePriestStarterDeck();
+    case 'thief': return makeThiefStarterDeck();
+    case 'summoner': return makeSummonerStarterDeck();
+    case 'engineer': return makeEngineerStarterDeck();
+    case 'gambler': return makeGamblerStarterDeck();
+    case 'blood_mage': return makeBloodMageStarterDeck();
+    default: return makeStarterDeck();
+  }
+}
+
 export function startNewRun(
   seed: number,
   ascension = 0,
@@ -243,69 +316,19 @@ export function startNewRun(
   options: { goToScreen?: Screen; daily?: { date: string; constraint: DailyConstraint } } = {},
 ): void {
   const mods = getModifiers(ascension);
-  const baseHpMap: Record<CharacterClass, number> = { swordmaster: 72, gunner: 67, fighter: 79, magician: 65, priest: 82, thief: 72, summoner: 67, engineer: 61, gambler: 62, blood_mage: 75 };
-  // 고단계 직업 보정 — A0은 0, 단계에 비례해 붙어서 A10에서 전액.
-  //
-  // A10 승률이 직업마다 5.7~17.6%로 3.1배 벌어진다 (2000판). 2026-11-11에 네
-  // 갈래를 재봤고 전부 안 통했다:
-  //  - 바닥 직업 파워 올리기(찌르기 2→1코스트, 가드 6→8): A10은 오르지만
-  //    A0이 1.7배 더 올라서, HP로 A0을 되돌리면 A10도 같이 내려온다.
-  //  - 시작 HP: A0 0.88%p/HP, A10 0.53%p/HP. 위와 교환비가 같다(0.6).
-  //  - 천장 깎기(피의 광기 턴당 1회 + HP 보정): 5000판에서 A10 -1.0, A0 -0.9.
-  //  - A10 제약 모양 바꾸기(적 힘을 HP로 환산, HP+55%/힘+0): 2000판에서
-  //    편차 13.8%p로 기준 13.1%p보다 나빴다. 600판에서 좋아 보였던 건 잡음.
-  // 손잡이마다 A10:A0이 0.6으로 똑같아서, 직업 파워로는 A10만 움직일 수 없다.
-  // 단계에 걸린 HP 보정은 A0을 전혀 건드리지 않는 유일한 손잡이다.
-  const ascHpAdjMap: Record<CharacterClass, number> = { swordmaster: 9, gunner: 6, fighter: 4, magician: 4, priest: -7, thief: -7, summoner: -5, engineer: 5, gambler: 4, blood_mage: -13 };
-  const ascHpAdj = Math.round((ascHpAdjMap[characterClass] * Math.max(0, Math.min(10, ascension))) / 10);
-  let baseHp = Math.max(1, baseHpMap[characterClass] - mods.startingHpPenalty + ascHpAdj);
+  let baseHp = startingHp(characterClass, ascension);
   // 데일리 제약: HP 배율
   if (options.daily?.constraint.hpMult !== undefined) {
     baseHp = Math.max(1, Math.floor(baseHp * options.daily.constraint.hpMult));
   }
-  const deck =
-    characterClass === 'gunner' ? makeGunnerStarterDeck() :
-    characterClass === 'fighter' ? makeFighterStarterDeck() :
-    characterClass === 'magician' ? makeMagicianStarterDeck() :
-    characterClass === 'priest' ? makePriestStarterDeck() :
-    characterClass === 'thief' ? makeThiefStarterDeck() :
-    characterClass === 'summoner' ? makeSummonerStarterDeck() :
-    characterClass === 'engineer' ? makeEngineerStarterDeck() :
-    characterClass === 'gambler' ? makeGamblerStarterDeck() :
-    characterClass === 'blood_mage' ? makeBloodMageStarterDeck() :
-    makeStarterDeck();
+  const deck = starterDeck(characterClass);
   for (let i = 0; i < mods.cursesInDeck; i++) deck.push(makeCard('wound'));
   // 데일리 제약: 시작 저주
   if (options.daily?.constraint.startCurses) {
     for (let i = 0; i < options.daily.constraint.startCurses; i++) deck.push(makeCard('wound'));
   }
-  const relicMap: Record<CharacterClass, string> = {
-    swordmaster: 'burning_blood',
-    gunner: 'bag_of_marbles',
-    fighter: 'fighting_spirit',
-    magician: 'mage_orb',
-    priest: 'holy_chalice',
-    thief: 'oddly_smooth_stone',
-    summoner: 'soul_lantern',
-    engineer: 'energy_battery',
-    gambler: 'lucky_coin',
-    blood_mage: 'blood_chalice',
-  };
-  // 시그니처 유물 — 캐릭터 정체성을 강화하는 두 번째 시작 유물
-  const signatureMap: Record<CharacterClass, string> = {
-    swordmaster: 'gwihon_charm',
-    gunner: 'gunner_magazine',
-    fighter: 'one_mind_belt',
-    magician: 'elemental_resonance',
-    priest: 'holy_seal',
-    thief: 'venom_fang',
-    summoner: 'spirit_contract',
-    engineer: 'drone_core',
-    gambler: 'gamblers_instinct',
-    blood_mage: 'hemomancy_core',
-  };
-  const startingRelic = relicMap[characterClass];
-  const signatureRelic = signatureMap[characterClass];
+  const startingRelic = STARTING_RELICS[characterClass];
+  const signatureRelic = SIGNATURE_RELICS[characterClass];
 
   // 데일리: 최대 에너지 조정
   const baseMaxEnergy = 3 + (options.daily?.constraint.bonusMaxEnergy ?? 0);

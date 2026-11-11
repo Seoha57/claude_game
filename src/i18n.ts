@@ -674,24 +674,14 @@ const EN: Record<string, string> = {
   '드론 코어': 'Drone Core',
   '갬블러의 직감': "Gambler's Instinct",
 
-  // ── 캐릭터 선택 · 고유 유물 설명 ──
-  '5번째 공격마다 +6 데미지': 'Every 5th attack deals +6 damage',
-  '3번째 공격마다 +5 데미지, 카드 1장 드로우': 'Every 3rd attack deals +5 damage, draw 1 card',
-  '한 턴 카드 3장 사용 시 힘 +1 (턴당 1회)': 'Play 3 cards in a turn: Strength +1 (once per turn)',
-  '방어 카드 사용 시 1장 드로우 (턴당 1회)': 'Playing a skill card draws 1 (once per turn)',
-  '회복/재생 발동 시 방어도 +2': 'Heal/Regen triggers grant +2 Block',
-  '매 턴 첫 공격이 적에게 중독 +2': 'First attack each turn applies Poison +2',
-  'power 카드 사용 시 방어도 +3': 'Playing a power card grants +3 Block',
-  'power 카드 사용 시 랜덤 적 4 데미지 + 방어도 +4': 'Playing a power: 4 dmg to random enemy + 4 Block',
-  '전투 시작 시 1장 드로우, 힘 +1': 'At combat start: draw 1, Strength +1',
 
   // ── 캐릭터 선택 · 설명 ──
-  '매 턴 시작 시 2 회복. 강력한 근접 검술로 적을 압도한다.': 'Heal 2 at the start of each turn. Overwhelms foes with powerful melee swordplay.',
-  '매 턴 시작 시 모든 적에게 취약 +1. 다양한 총기와 폭발물로 원거리를 지배한다.': 'Apply Vulnerable +1 to all enemies at the start of each turn. Dominates at range with guns and explosives.',
-  '전투 시작 시 힘 +2. 맨손과 기의 힘으로 적을 압도한다.': 'Strength +2 at combat start. Overwhelms with fists and ki.',
-  '매 턴 시작 시 무작위 적에게 3 데미지. 다양한 원소 마법으로 광역 전투에 강하다.': 'Deal 3 damage to a random enemy each turn. Excels at AoE with elemental magic.',
-  '재생 +3이 전투 내내 유지된다. 회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.': 'Regen +3 lasts the whole combat. A versatile priest with healing, combos, and HP-fueled smites.',
-  '전투 시작 시 민첩 +1. 중독과 다단히트, 그림자를 다루는 날렵한 암살자.': 'Dexterity +1 at combat start. A nimble assassin wielding poison, multi-hits, and shadows.',
+  '강력한 근접 검술로 적을 압도한다.': 'Overwhelms foes with powerful melee swordplay.',
+  '다양한 총기와 폭발물로 원거리를 지배한다.': 'Dominates at range with guns and explosives.',
+  '맨손과 기의 힘으로 적을 압도한다.': 'Overwhelms with fists and ki.',
+  '다양한 원소 마법으로 광역 전투에 강하다.': 'Excels at AoE with elemental magic.',
+  '회복과 콤보 타격, HP를 대가로 한 강타까지 다재다능한 성직자.': 'A versatile priest with healing, combos, and HP-fueled smites.',
+  '중독과 다단히트, 그림자를 다루는 날렵한 암살자.': 'A nimble assassin wielding poison, multi-hits, and shadows.',
   '정령 소환과 영혼 마법으로 전투를 지배하는 정령술사. HP가 낮지만 다양한 power 스케일링이 강하다.': 'A summoner who commands spirits and soul magic. Low HP but strong power scaling.',
   '드론을 배치해 자동 화력을 구축하는 공학자. 드론 데미지는 힘에 비례해 후반 보스전에도 강력하다.': 'An engineer who deploys drones for auto-fire. Drone damage scales with Strength.',
   '운에 모든 것을 건다. 카드 효과가 날카롭지만 일정하지 않아 매 전투가 도박이다.': 'Bets it all on luck. Sharp card effects but inconsistent — every fight is a gamble.',
@@ -1250,7 +1240,7 @@ const EN: Record<string, string> = {
   '30종 적 처치.': 'Defeat 30 enemy types.',
   '모든 적 53종 처치.': 'Defeat all 53 enemy types.',
   '전투 시작 시 힘 +1. 맨손과 기의 힘으로 적을 압도한다.': 'Strength +1 at combat start. Overwhelms foes with bare fists and inner force.',
-  '매 턴 시작 시 1 회복. HP를 자원으로 소모하고, 흡혈로 되찾는다.': 'Heal 1 at the start of each turn. Spends HP as a resource and takes it back with lifesteal.',
+  'HP를 자원으로 소모하고, 흡혈로 되찾는다.': 'Spends HP as a resource and takes it back with lifesteal.',
 
   // Blood Mage statuses
   'HP를 잃는 카드 사용 시 잃은 HP × N 방어도': 'Gain lost HP × N as Block when playing HP-cost cards',
