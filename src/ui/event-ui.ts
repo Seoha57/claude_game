@@ -35,12 +35,12 @@ export function renderEvent(): HTMLElement {
     if (eventSvg) eventIcon.innerHTML = eventSvg;
     else eventIcon.textContent = eventDef.emoji;
     hero.appendChild(eventIcon);
-    hero.appendChild(el('h2', { class: 'event-title' }, eventDef.title));
+    hero.appendChild(el('h2', { class: 'event-title' }, t(eventDef.title)));
     wrapper.appendChild(hero);
 
     // Description in a flavor panel
     wrapper.appendChild(
-      el('div', { class: 'event-description' }, eventDef.description),
+      el('div', { class: 'event-description' }, t(eventDef.description)),
     );
 
     if (resultText !== null) {
@@ -76,13 +76,13 @@ export function renderEvent(): HTMLElement {
           // 이미 해결된 이벤트면 재적용 방지
           if (resolvedEventKey === eventKey) return;
           applyEffects(choice.effects);
-          resultText = choice.result;
+          resultText = t(choice.result);
           resolvedEventKey = eventKey;
-          resolvedEventText = choice.result;
+          resolvedEventText = t(choice.result);
           rebuild();
         },
       },
-      el('div', { class: 'choice-label' }, choice.label),
+      el('div', { class: 'choice-label' }, t(choice.label)),
     );
 
     // Effect preview chips

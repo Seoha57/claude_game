@@ -1,3 +1,4 @@
+import { EVENT_EN } from './i18n-events';
 const STORAGE_KEY = 'dod_lang';
 
 export type Lang = 'ko' | 'en';
@@ -1308,7 +1309,7 @@ const EN: Record<string, string> = {
 
 export function t(korean: string): string {
   if (currentLang === 'ko') return korean;
-  return EN[korean] ?? korean;
+  return EN[korean] ?? EVENT_EN[korean] ?? korean;
 }
 
 /**

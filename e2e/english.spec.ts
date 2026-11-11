@@ -32,3 +32,27 @@ test('영어 모드에서 카드·유물이 영어로 보인다', async ({ page 
   expect(body, '플레이버').toContain('Cut. That is all.');
   expect(body, '플레이버').toContain('If you cannot block, you cannot cut.');
 });
+
+// 이벤트 텍스트(제목·본문·선택지)도 영어여야 한다. seed 1은 첫 갈래가 event다.
+test('영어 모드에서 이벤트가 영어로 보인다', async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.addInitScript(() => localStorage.setItem('dod_lang', 'en'));
+  await page.goto('/?seed=1', { waitUntil: 'load' });
+  await page.waitForTimeout(2000);
+  const ok = page.getByRole('button', { name: /^(OK|Confirm)$/ });
+  if (await ok.count()) { await ok.first().click(); await page.waitForTimeout(400); }
+  await page.locator('.cs-item').first().click();
+  await page.waitForTimeout(300);
+  await page.getByRole('button', { name: /Start/ }).last().click();
+  await page.waitForTimeout(1200);
+  const neow = page.getByRole('button', { name: /Refuse/ });
+  if (await neow.count()) { await neow.first().click(); await page.waitForTimeout(800); }
+
+  await page.locator('.map-node.event.accessible').first().click();
+  await page.waitForTimeout(900);
+  await expect(page.locator('.event-screen')).toBeVisible();
+  const body = await page.locator('body').innerText();
+  expect(body, '이벤트 제목').toContain('Dimensional Rift');
+  expect(body, '이벤트 본문').toContain('violet light');
+  expect(body, '선택지').toContain('Step back');
+});
