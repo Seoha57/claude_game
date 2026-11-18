@@ -237,11 +237,11 @@ function bgmTrackForScreen(s: Screen): BgmTrack | null {
 
 /** 직업별 기본 최대 HP. 화면도 이 표를 봐야 한다 — 따로 적어두면 어긋난다. */
 const BASE_HP: Record<CharacterClass, number> = {
-  swordmaster: 72, gunner: 67, fighter: 79, magician: 65, priest: 82,
-  thief: 72, summoner: 67, engineer: 61, gambler: 62, blood_mage: 75,
+  swordmaster: 71, gunner: 67, fighter: 77, magician: 64, priest: 80,
+  thief: 72, summoner: 70, engineer: 61, gambler: 64, blood_mage: 76,
 };
 
-// 고단계 직업 보정 — A0은 0, 단계에 비례해 붙어서 A10에서 전액.
+// 고단계 직업 보정 — A0은 0, A5와 A10에 직업별 값을 두고 그 사이를 직선으로 잇는다.
 //
 // A10 승률이 직업마다 5.7~17.6%로 3.1배 벌어진다 (2000판). 2026-11-11에 네
 // 갈래를 재봤고 전부 안 통했다:
@@ -253,16 +253,35 @@ const BASE_HP: Record<CharacterClass, number> = {
 //    편차 13.8%p로 기준 13.1%p보다 나빴다. 600판에서 좋아 보였던 건 잡음.
 // 손잡이마다 A10:A0이 0.6으로 똑같아서, 직업 파워로는 A10만 움직일 수 없다.
 // 단계에 걸린 HP 보정은 A0을 전혀 건드리지 않는 유일한 손잡이다.
-const ASC_HP_ADJ: Record<CharacterClass, number> = {
-  swordmaster: 9, gunner: 6, fighter: 4, magician: 4, priest: -7,
-  thief: -7, summoner: -5, engineer: 5, gambler: 4, blood_mage: -13,
+//
+// 2026-11-19에 A0~A10 전부를 직업당 2000판씩 재서 기본 HP와 함께 다시 맞췄다.
+//  - 보정이 A0→A10 직선이던 때는 중간 단계가 벌어져 있었다 (A5 5.6%p).
+//    정령술사·혈술사는 A10에서 HP를 깎아야 하는데, 그 절반이 A5에도 걸려서
+//    A1~A7 내내 2~3%p 처졌다. 그래서 A5 값을 따로 둔다.
+//  - HP 1당 승률은 A0~A5에서 0.9%p, A8 0.7, A10 0.5%p (같은 시드로 두 HP
+//    표를 비교해 잼).
+//  - 보정을 맞춘 시드로 다시 재면 결과가 부풀려진다. 맞춘 시드에서는 A0 편차가
+//    4.5 → 1.3%p였는데 처음 보는 시드에서는 6.1 → 4.3%p였다. 그래서 시드 세트
+//    두 개, HP 표 두 개의 측정 네 번(직업·단계당 8000판)을 합쳐서 맞췄고,
+//    세 번째 시드 세트로 검증했다.
+//  - 결과 (세 번째 시드, 2000판): A0 7.3 → 4.4%p, A5 7.1 → 3.2%p, A10 3.5 →
+//    2.2%p, 11단계 평균 6.5 → 4.2%p. 단계별 평균 승률과 기본 HP 합(702)은 그대로.
+//    2000판의 잡음만으로도 열 직업이 3%p쯤 벌어지므로 이 근처가 바닥이다.
+// [A5에서의 보정, A10에서의 보정]
+const ASC_HP_ADJ: Record<CharacterClass, [number, number]> = {
+  swordmaster: [5, 14], gunner: [2, 7], fighter: [3, 8], magician: [1, 4], priest: [-1, -6],
+  thief: [-5, -11], summoner: [-2, -10], engineer: [1, 4], gambler: [2, 2], blood_mage: [-4, -13],
 };
+
+function ascHpAdj(characterClass: CharacterClass, l: number): number {
+  const [mid, top] = ASC_HP_ADJ[characterClass];
+  return Math.round(l <= 5 ? (mid * l) / 5 : mid + ((top - mid) * (l - 5)) / 5);
+}
 
 /** 이 직업이 이 등반 단계에서 들고 시작하는 최대 HP (데일리 제약은 별도). */
 export function startingHp(characterClass: CharacterClass, ascension = 0): number {
   const l = Math.max(0, Math.min(10, ascension));
-  const adj = Math.round((ASC_HP_ADJ[characterClass] * l) / 10);
-  return Math.max(1, BASE_HP[characterClass] - getModifiers(l).startingHpPenalty + adj);
+  return Math.max(1, BASE_HP[characterClass] - getModifiers(l).startingHpPenalty + ascHpAdj(characterClass, l));
 }
 
 export const STARTING_RELICS: Record<CharacterClass, string> = {

@@ -185,19 +185,25 @@ describe('덱 구성 규칙', () => {
   });
 
   // 2026-11-11: A10 직업 격차 11.5 → 2.9%p (5000판).
-  it('고단계 직업 보정은 A0에 안 붙고 A10에 전액 붙는다', () => {
+  // 2026-11-19: A0→A5→A10 꺾은선으로 바꾸고 기본 HP도 다시 맞춤 (A5 7.1 → 3.2%p).
+  it('고단계 직업 보정은 A0에 안 붙고 A5·A10 값을 꺾은선으로 잇는다', () => {
     startNewRun(1, 0, 'swordmaster');
-    expect(getRun().player.maxHp).toBe(72);
+    expect(getRun().player.maxHp).toBe(71);
     startNewRun(1, 0, 'blood_mage');
-    expect(getRun().player.maxHp).toBe(75);
-    // A10은 시작 HP -4(제약)에 직업 보정(검사 +9, 혈술사 -13)이 더 붙는다.
+    expect(getRun().player.maxHp).toBe(76);
+    // A10은 시작 HP -4(제약)에 직업 보정(검사 +14, 혈술사 -13)이 더 붙는다.
     startNewRun(1, 10, 'swordmaster');
-    expect(getRun().player.maxHp).toBe(72 - 4 + 9);
+    expect(getRun().player.maxHp).toBe(71 - 4 + 14);
     startNewRun(1, 10, 'blood_mage');
-    expect(getRun().player.maxHp).toBe(75 - 4 - 13);
-    // 중간 단계는 비례해서 절반만.
+    expect(getRun().player.maxHp).toBe(76 - 4 - 13);
+    // A5는 직업별 중간값(검사 +5, 혈술사 -4) — A10의 절반이 아니다.
     startNewRun(1, 5, 'swordmaster');
-    expect(getRun().player.maxHp).toBe(72 - 4 + 5);
+    expect(getRun().player.maxHp).toBe(71 - 4 + 5);
+    startNewRun(1, 5, 'blood_mage');
+    expect(getRun().player.maxHp).toBe(76 - 4 - 4);
+    // 그 사이는 직선: A7 혈술사 = -4 + (-13 - -4) × 2/5 = -7.6 → -8.
+    startNewRun(1, 7, 'blood_mage');
+    expect(getRun().player.maxHp).toBe(76 - 4 - 8);
   });
 
   it('등반 단계만큼 상처가 시작 덱에 섞인다', () => {

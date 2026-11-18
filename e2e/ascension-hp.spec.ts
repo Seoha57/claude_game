@@ -3,7 +3,7 @@ import { dismissNotices, readStorage } from './helpers';
 
 // 고단계 직업 보정 — A10에서 직업마다 시작 HP가 다르게 붙는다.
 // A10 승률 편차를 11.5 → 2.9%p로 줄인 유일한 손잡이라, 화면까지 실제로
-// 먹히는지 본다 (검사 72-4+9=77, 혈술사 75-4-13=58).
+// 먹히는지 본다 (검사 71-4+14=81, 혈술사 76-4-13=59).
 async function startAt(page: import('@playwright/test').Page, asc: number, charName: string) {
   await page.goto(`/?seed=1&asc=${asc}`, { waitUntil: 'load' });
   await page.waitForTimeout(1500);
@@ -21,12 +21,12 @@ async function startAt(page: import('@playwright/test').Page, asc: number, charN
 
 test('A10에서는 직업별 시작 HP 보정이 붙는다', async ({ page }) => {
   test.setTimeout(180_000);
-  expect(await startAt(page, 10, '검사')).toBe(77);
-  expect(await startAt(page, 10, '혈술사')).toBe(58);
+  expect(await startAt(page, 10, '검사')).toBe(81);
+  expect(await startAt(page, 10, '혈술사')).toBe(59);
 });
 
 test('A0에서는 보정이 붙지 않는다', async ({ page }) => {
   test.setTimeout(180_000);
-  expect(await startAt(page, 0, '검사')).toBe(72);
-  expect(await startAt(page, 0, '혈술사')).toBe(75);
+  expect(await startAt(page, 0, '검사')).toBe(71);
+  expect(await startAt(page, 0, '혈술사')).toBe(76);
 });
