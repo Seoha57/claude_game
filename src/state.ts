@@ -16,6 +16,9 @@ import { loadStats } from './stats';
 import { recordRunHistory } from './run-history';
 import type { RunOutcome } from './run-history';
 import { ENEMY_DEFS } from './content/enemies';
+import { RELIC_LIST } from './content/relics';
+import { isCurseLike } from './ui/deck-overlay';
+import { showAchievementToast } from './ui/achievement-toast';
 import { t } from './i18n';
 
 let runState: RunState | null = null;
@@ -150,16 +153,12 @@ function snapshotWins(): { wins: number; trueWins: number } {
 }
 
 function maybeShowUnlockToast(prev: { wins: number; trueWins: number }): void {
-  // Lazy import to avoid cycles
-  void Promise.resolve().then(async () => {
+  // 화면 전환 렌더가 끝난 뒤에 토스트를 띄운다.
+  void Promise.resolve().then(() => {
     try {
-      const { CARD_DEFS } = await import('./content/cards');
-      const { RELIC_LIST } = await import('./content/relics');
-      const { isCurseLike } = await import('./ui/deck-overlay');
       const allCards = Object.values(CARD_DEFS).filter((c) => !isCurseLike(c.id));
       const news = newUnlocksAfterWin(prev, allCards, RELIC_LIST);
       if (news.cardCount === 0 && news.relicCount === 0) return;
-      const { showAchievementToast } = await import('./ui/achievement-toast');
       showAchievementToast({
         id: 'unlock_toast',
         emoji: '🔓',
