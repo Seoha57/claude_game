@@ -3,6 +3,10 @@
 //
 //   npm run sim:level -- 2000 10     # A10, 직업당 2000판
 //   npm run sim:level -- 2000 0      # A0
+//   npm run sim:level -- 2000 5 9000000  # 시드 시작값을 바꿔서 (검증용)
+//
+// 손잡이를 맞춘 시드로 다시 재면 결과가 부풀려진다. 맞출 때와 다른 시드로
+// 검증할 것 (2026-11-19: 맞춘 시드 A0 편차 1.3%p, 처음 보는 시드 4.3%p).
 //
 // 주의 — 직업 비교는 2000판 아래로는 하지 말 것. 승률 10% 근처에서 600판의
 // 표준오차가 1.2%p다. 2026-11-11에 600판으로 "A10 제약을 HP 쪽으로 몰면
@@ -15,12 +19,13 @@ const { ALL_CLASSES } = await import('../src/sim/simulator');
 
 const runs = Number(process.argv[2] ?? 2000);
 const lvl = Number(process.argv[3] ?? 10);
+const seedBase = Number(process.argv[4] ?? 1000);
 
 const rows = ALL_CLASSES
-  .map((cls) => ({ cls, r: reportRuns(cls, runs, lvl) }))
+  .map((cls) => ({ cls, r: reportRuns(cls, runs, lvl, seedBase) }))
   .sort((a, b) => a.r.winRate - b.r.winRate);
 
-console.log(`\nA${lvl} · 직업당 ${runs}판\n`);
+console.log(`\nA${lvl} · 직업당 ${runs}판${seedBase !== 1000 ? ` · 시드 ${seedBase}부터` : ''}\n`);
 console.log(pad('캐릭터', 12) + '승률'.padStart(8) + 'ch1통과'.padStart(10) + '  챕터  주요 사인');
 console.log('─'.repeat(60));
 for (const { cls, r } of rows) {

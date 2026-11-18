@@ -314,14 +314,15 @@ function unlockEverythingForSim(): void {
   } catch { /* 저장소가 없는 환경이면 기본 해금 상태로 잰다 */ }
 }
 
-export function reportRuns(cls: CharacterClass, runs: number, ascension = 0): RunReport {
+/** seedBase를 바꾸면 처음 보는 시드로 잰다 — 맞춘 시드로 검증하면 결과가 부풀려진다. */
+export function reportRuns(cls: CharacterClass, runs: number, ascension = 0, seedBase = 1000): RunReport {
   unlockEverythingForSim();
   let wins = 0, timeouts = 0, pastCh1 = 0;
   let chapterSum = 0, nodeSum = 0, hpSum = 0, deckSum = 0, relicSum = 0;
   const killers = new Map<string, number>();
 
   for (let i = 0; i < runs; i++) {
-    const o = simulateRun(cls, 1000 + i * 7919, ascension);
+    const o = simulateRun(cls, seedBase + i * 7919, ascension);
     if (o.result === 'won') { wins++; hpSum += o.hpLeftPct; }
     else {
       if (o.result === 'timeout') timeouts++;
