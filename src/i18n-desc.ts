@@ -94,6 +94,7 @@ const FRAGMENTS: Record<string, string> = {
   '드론 배치: {n}턴마다 랜덤 적에게 {n} 데미지.': 'Deploy drone: every {n} turns, deal {n} damage to a random enemy.',
   '{n} × 🎲 데미지를 두 번.': 'Deal {n} × 🎲 damage twice.',
   '빙결 +🎲.': 'Apply 🎲 Freeze.',
+  '{n} × 🎲 빙결.': 'Apply {n} × 🎲 Freeze.',
   '직전이 공격이면 방어도 +{n}.': 'If the last card was an Attack, gain {n} Block.',
   '이번 턴 첫 공격이면 +{n}.': 'If this is your first attack this turn, +{n}.',
   '이번 턴 첫 카드면 에너지 +{n}, {n}장 드로우.': 'If this is your first card this turn, gain {n} Energy and draw {n}.',
@@ -108,8 +109,8 @@ const FRAGMENTS: Record<string, string> = {
   '직전이 방어카드면 에너지 +{n}.': 'If the last card was a Skill, gain {n} Energy.',
   '턴 종료 시 손에 있으면 약화 +{n}.': 'If held at end of turn, gain {n} Weak.',
   '적 방어도를 무시한다.': 'Ignores enemy Block.',
-  '.': '.',
-  '정도의 강타.': '...or so the legend goes.',
+  '.': '',
+  '정도의 강타.': '... or so the legend goes.',
   '공격 카드 {n}회마다 힘 +{n}.': 'Every {n} attack cards, gain {n} Strength.',
   '매 턴 시작 시 무작위 적에게 데미지({n}, {n}턴째부터 +{n}), HP +{n} 회복.': 'At the start of each turn, deal {n} damage to a random enemy (from turn {n}, +{n}) and heal {n} HP.',
   '전투 승리 시 {n}% 확률로 물약 {n}개.': 'On combat victory, {n}% chance for {n} potion.',
@@ -179,9 +180,15 @@ export function tDesc(korean: string): string {
       const nums: string[] = [];
       const key = part.replace(/\d+/g, (m) => { nums.push(m); return '{n}'; });
       const en = FRAGMENTS[key];
-      if (!en) return part;
+      if (en === undefined) return part;
       let i = 0;
       return en.replace(/\{n\}/g, () => nums[i++] ?? '?');
     })
-    .join(' ');
+    .filter((s) => s.length > 0)
+    .join(' ')
+    // '무시한다... 정도의'처럼 말줄임표가 마침표 조각으로 쪼개진 것을 다시 붙인다.
+    .replace(/\. \.\.\./g, '...')
+    // 조각은 숫자 자리가 {n} 하나라 단수·복수를 모른다. 1이면 단수로, 2 이상이면 복수로.
+    .replace(/\b1 (random |extra )?(card|time|hit)s\b/g, '1 $1$2')
+    .replace(/\b(?!1 )(\d+) extra card\b/g, '$1 extra cards');
 }
